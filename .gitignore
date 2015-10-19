@@ -39,4 +39,6 @@
 ehthumbs.db
 Thumbs.db
 
-NT-Template\ntechnium\libsImport\**
+NT-Template/ntechnium/ibsImport/**
+
+NT-Template/ntechnium/output/
