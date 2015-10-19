@@ -39,7 +39,7 @@ void ntTruss::init(){
 	def_KG();
 	def_BC();
 
-	eval_GPUcs();
+	//eval_GPUcs();
 	eval_GPU();
 	eval_CPU();
 

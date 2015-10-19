@@ -13,9 +13,9 @@ void trussApp02::init() {
 	/// CONSTRUCTOR FROM DIMS, E, Ai 
 
 	string prefix = "ptPos_01";
-	string suffix = "_1sq";
+	//string suffix = "_1sq";
 	//string suffix = "_4sq";
-	//string suffix = "_9sq";
+	string suffix = "_9sq";
 	string ext = ".txt";
 	string filename = prefix + suffix + ext;
 	ntTextIO ptData00 = ntTextIO(filename);
