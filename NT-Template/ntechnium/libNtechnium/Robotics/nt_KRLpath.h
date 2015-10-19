@@ -1,0 +1,29 @@
+///////////////////////////////////////////////////////////////////
+////////////////////////////////////////////////////// nt_KRLpath.h
+// KUKA Robot Language Generator				///////////////////
+//												///////////////////
+// created by James Warton on 05/28/2014		///////////////////
+///////////////////////////////////////////////////////////////////
+
+#ifndef SRC_KRL_PATH_INIT_JPW_NTECHNIUM
+#define SRC_KRL_PATH_INIT_JPW_NTECHNIUM
+
+
+class ntKRLpath;
+typedef ntKRLpath KRLpath;
+
+class ntKRLpath{
+public:
+	ntKRLpath();
+
+private:
+
+
+
+};
+#endif
+
+inline ntKRLpath::ntKRLpath()
+{
+}
+
