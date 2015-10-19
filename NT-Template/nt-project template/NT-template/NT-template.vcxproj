@@ -1,0 +1,263 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project DefaultTargets="Build" ToolsVersion="14.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup Label="ProjectConfigurations">
+    <ProjectConfiguration Include="Debug|Win32">
+      <Configuration>Debug</Configuration>
+      <Platform>Win32</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Debug|x64">
+      <Configuration>Debug</Configuration>
+      <Platform>x64</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Release|Win32">
+      <Configuration>Release</Configuration>
+      <Platform>Win32</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Release|x64">
+      <Configuration>Release</Configuration>
+      <Platform>x64</Platform>
+    </ProjectConfiguration>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="..\..\ntechnium\appNtechnium\nt_BaseApp.cpp" />
+    <ClCompile Include="..\..\ntechnium\appNtechnium\nt_GLFWsetup.cpp" />
+    <ClCompile Include="..\..\ntechnium\appNtechnium\nt_Main.cpp" />
+    <ClCompile Include="..\..\ntechnium\appNtechnium\nt_AppContent.cpp" />
+    <ClCompile Include="..\..\ntechnium\appNtechnium\nt_Utility.cpp" />
+    <ClCompile Include="..\..\ntechnium\libNtechnium\Arch\ntPanel.cpp" />
+    <ClCompile Include="..\..\ntechnium\libNtechnium\FEM\ntElement.cpp" />
+    <ClCompile Include="..\..\ntechnium\libNtechnium\FEM\ntTruss3d.cpp" />
+    <ClCompile Include="..\..\ntechnium\libNtechnium\Geometry\ntBaseGeom.cpp" />
+    <ClCompile Include="..\..\ntechnium\libNtechnium\Geometry\ntBaseShape.cpp" />
+    <ClCompile Include="..\..\ntechnium\libNtechnium\Geometry\ntEdge.cpp" />
+    <ClCompile Include="..\..\ntechnium\libNtechnium\Geometry\ntFace3.cpp" />
+    <ClCompile Include="..\..\ntechnium\libNtechnium\Geometry\ntMeshPts.cpp" />
+    <ClCompile Include="..\..\ntechnium\libNtechnium\Geometry\ntNormal.cpp" />
+    <ClCompile Include="..\..\ntechnium\libNtechnium\Geometry\ntPlane.cpp" />
+    <ClCompile Include="..\..\ntechnium\libNtechnium\Geometry\ntSphere.cpp" />
+    <ClCompile Include="..\..\ntechnium\libNtechnium\Geometry\ntTetra.cpp" />
+    <ClCompile Include="..\..\ntechnium\libNtechnium\Geometry\ntTree.cpp" />
+    <ClCompile Include="..\..\ntechnium\libNtechnium\Geometry\ntVertex.cpp" />
+    <ClCompile Include="..\..\ntechnium\libNtechnium\Graph\ntGraph.cpp" />
+    <ClCompile Include="..\..\ntechnium\libNtechnium\IOdata\ntPtsTxt.cpp" />
+    <ClCompile Include="..\..\ntechnium\libNtechnium\Math\ntMatrix4.cpp" />
+    <ClCompile Include="..\..\ntechnium\libNtechnium\Math\ntVec3.cpp" />
+    <ClCompile Include="..\..\ntechnium\libNtechnium\Physics\ntAttractor.cpp" />
+    <ClCompile Include="..\..\ntechnium\libNtechnium\Physics\ntBasePhysics.cpp" />
+    <ClCompile Include="..\..\ntechnium\libNtechnium\Physics\ntParticle.cpp" />
+    <ClCompile Include="..\..\ntechnium\libNtechnium\Physics\ntSpring.cpp" />
+    <ClCompile Include="..\..\ntechnium\libNtechnium\Robotics\nt_KRLprogram.cpp" />
+    <ClCompile Include="..\..\ntechnium\libNtechnium\Robotics\nt_SRCwriter.cpp" />
+    <ClCompile Include="..\..\ntechnium\libNtechnium\Scene\ntLight.cpp" />
+    <ClCompile Include="..\..\ntechnium\libNtechnium\Scene\ntShader.cpp" />
+    <ClCompile Include="..\..\ntechnium\src\kuka\krl_focalPlane.cpp" />
+    <ClCompile Include="..\..\ntechnium\src\kuka\krl_rhinoTemp.cpp" />
+    <ClCompile Include="..\..\ntechnium\src\kuka\krl_scanLines.cpp" />
+    <ClCompile Include="..\..\ntechnium\src\kuka\krl_textTemp.cpp" />
+    <ClCompile Include="..\..\ntechnium\src\kuka\krl_xaxisDemo.cpp" />
+    <ClCompile Include="..\..\ntechnium\src\nt_00_meshApp.cpp" />
+    <ClCompile Include="..\..\ntechnium\src\nt_01_meshApp.cpp" />
+    <ClCompile Include="..\..\ntechnium\src\nt_02_treeApp-v01.cpp" />
+    <ClCompile Include="..\..\ntechnium\src\nt_02_treeApp-v02.cpp" />
+    <ClCompile Include="..\..\ntechnium\src\nt_02_treeApp-v03.cpp" />
+    <ClCompile Include="..\..\ntechnium\src\nt_04_emitterApp.cpp" />
+    <ClCompile Include="..\..\ntechnium\src\nt_05_shapeApp.cpp" />
+    <ClCompile Include="..\..\ntechnium\src\nt_06_krlApp.cpp" />
+    <ClCompile Include="..\..\ntechnium\src\nt_07_trussApp-v01.cpp" />
+    <ClCompile Include="..\..\ntechnium\src\nt_07_trussApp-v02.cpp" />
+    <ClCompile Include="..\..\ntechnium\src\nt_07_trussApp-v03.cpp" />
+    <ClCompile Include="..\..\ntechnium\src\nt_08_afireApp-v01.cpp" />
+    <ClCompile Include="..\..\ntechnium\src\nt_08_afireApp-v02.cpp" />
+    <ClCompile Include="..\..\ntechnium\src\nt_09_ovisApp.cpp" />
+    <ClCompile Include="..\..\ntechnium\src\nt_App.cpp" />
+    <ClCompile Include="..\..\ntechnium\src\nt_genApp.cpp" />
+    <ClCompile Include="..\..\ntechnium\src\nt_simpleApp.cpp" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="..\..\ntechnium\appNtechnium\nt_BaseApp.h" />
+    <ClInclude Include="..\..\ntechnium\appNtechnium\nt_CoutTemp.h" />
+    <ClInclude Include="..\..\ntechnium\appNtechnium\nt_GLFWsetup.h" />
+    <ClInclude Include="..\..\ntechnium\appNtechnium\nt_AppContent.h" />
+    <ClInclude Include="..\..\ntechnium\appNtechnium\nt_Utility.h" />
+    <ClInclude Include="..\..\ntechnium\libNtechnium\Arch\ntPanel.h" />
+    <ClInclude Include="..\..\ntechnium\libNtechnium\FEM\ntElement.h" />
+    <ClInclude Include="..\..\ntechnium\libNtechnium\FEM\ntNode.h" />
+    <ClInclude Include="..\..\ntechnium\libNtechnium\FEM\ntTruss3d.h" />
+    <ClInclude Include="..\..\ntechnium\libNtechnium\Geometry\ntBaseGeom.h" />
+    <ClInclude Include="..\..\ntechnium\libNtechnium\Geometry\ntBaseShape.h" />
+    <ClInclude Include="..\..\ntechnium\libNtechnium\Geometry\ntColor4f.h" />
+    <ClInclude Include="..\..\ntechnium\libNtechnium\Geometry\ntEdge.h" />
+    <ClInclude Include="..\..\ntechnium\libNtechnium\Geometry\ntFace3.h" />
+    <ClInclude Include="..\..\ntechnium\libNtechnium\Geometry\ntMeshPts.h" />
+    <ClInclude Include="..\..\ntechnium\libNtechnium\Geometry\ntNormal.h" />
+    <ClInclude Include="..\..\ntechnium\libNtechnium\Geometry\ntPlane.h" />
+    <ClInclude Include="..\..\ntechnium\libNtechnium\Geometry\ntSphere.h" />
+    <ClInclude Include="..\..\ntechnium\libNtechnium\Geometry\ntTetra.h" />
+    <ClInclude Include="..\..\ntechnium\libNtechnium\Geometry\ntTree.h" />
+    <ClInclude Include="..\..\ntechnium\libNtechnium\Geometry\ntVertex.h" />
+    <ClInclude Include="..\..\ntechnium\libNtechnium\Graph\ntGraph.h" />
+    <ClInclude Include="..\..\ntechnium\libNtechnium\IOdata\ntPtsTxt.h" />
+    <ClInclude Include="..\..\ntechnium\libNtechnium\Math\ntMath.h" />
+    <ClInclude Include="..\..\ntechnium\libNtechnium\Math\ntMatrix4.h" />
+    <ClInclude Include="..\..\ntechnium\libNtechnium\Math\ntMatrixBS.h" />
+    <ClInclude Include="..\..\ntechnium\libNtechnium\Math\ntTup3i.h" />
+    <ClInclude Include="..\..\ntechnium\libNtechnium\Math\ntVec3.h" />
+    <ClInclude Include="..\..\ntechnium\libNtechnium\Physics\ntAttractor.h" />
+    <ClInclude Include="..\..\ntechnium\libNtechnium\Physics\ntBasePhysics.h" />
+    <ClInclude Include="..\..\ntechnium\libNtechnium\Physics\ntParticle.h" />
+    <ClInclude Include="..\..\ntechnium\libNtechnium\Physics\ntSpring.h" />
+    <ClInclude Include="..\..\ntechnium\libNtechnium\Robotics\nt_KRLfunctions.h" />
+    <ClInclude Include="..\..\ntechnium\libNtechnium\Robotics\nt_KRLpath.h" />
+    <ClInclude Include="..\..\ntechnium\libNtechnium\Robotics\nt_KRLprogram.h" />
+    <ClInclude Include="..\..\ntechnium\libNtechnium\Robotics\nt_SRCwriter.h" />
+    <ClInclude Include="..\..\ntechnium\libNtechnium\Scene\ntLight.h" />
+    <ClInclude Include="..\..\ntechnium\libNtechnium\Scene\ntShader.h" />
+    <ClInclude Include="..\..\ntechnium\src\kuka\krl_focalPlane.h" />
+    <ClInclude Include="..\..\ntechnium\src\kuka\krl_rhinoTemp.h" />
+    <ClInclude Include="..\..\ntechnium\src\kuka\krl_scanLines.h" />
+    <ClInclude Include="..\..\ntechnium\src\kuka\krl_textTemp.h" />
+    <ClInclude Include="..\..\ntechnium\src\kuka\krl_xaxisDemo.h" />
+    <ClInclude Include="..\..\ntechnium\src\nt_00_meshApp.h" />
+    <ClInclude Include="..\..\ntechnium\src\nt_01_meshApp.h" />
+    <ClInclude Include="..\..\ntechnium\src\nt_02_treeApp-v01.h" />
+    <ClInclude Include="..\..\ntechnium\src\nt_02_treeApp-v02.h" />
+    <ClInclude Include="..\..\ntechnium\src\nt_02_treeApp-v03.h" />
+    <ClInclude Include="..\..\ntechnium\src\nt_04_emitterApp.h" />
+    <ClInclude Include="..\..\ntechnium\src\nt_05_shapeApp.h" />
+    <ClInclude Include="..\..\ntechnium\src\nt_06_krlApp.h" />
+    <ClInclude Include="..\..\ntechnium\src\nt_07_trussApp-v01.h" />
+    <ClInclude Include="..\..\ntechnium\src\nt_07_trussApp-v02.h" />
+    <ClInclude Include="..\..\ntechnium\src\nt_07_trussApp-v03.h" />
+    <ClInclude Include="..\..\ntechnium\src\nt_08_afireApp-v01.h" />
+    <ClInclude Include="..\..\ntechnium\src\nt_08_afireApp-v02.h" />
+    <ClInclude Include="..\..\ntechnium\src\nt_09_ovisApp.h" />
+    <ClInclude Include="..\..\ntechnium\src\nt_App.h" />
+    <ClInclude Include="..\..\ntechnium\src\nt_genApp.h" />
+    <ClInclude Include="..\..\ntechnium\src\nt_simpleApp.h" />
+  </ItemGroup>
+  <PropertyGroup Label="Globals">
+    <ProjectGuid>{2D1ECA13-C305-4871-A173-023E73CBB3F7}</ProjectGuid>
+    <RootNamespace>NTtemplate</RootNamespace>
+  </PropertyGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">
+    <ConfigurationType>Application</ConfigurationType>
+    <UseDebugLibraries>true</UseDebugLibraries>
+    <PlatformToolset>v140</PlatformToolset>
+    <CharacterSet>MultiByte</CharacterSet>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'" Label="Configuration">
+    <ConfigurationType>Application</ConfigurationType>
+    <UseDebugLibraries>true</UseDebugLibraries>
+    <PlatformToolset>v120</PlatformToolset>
+    <CharacterSet>MultiByte</CharacterSet>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'" Label="Configuration">
+    <ConfigurationType>Application</ConfigurationType>
+    <UseDebugLibraries>false</UseDebugLibraries>
+    <PlatformToolset>v140</PlatformToolset>
+    <WholeProgramOptimization>true</WholeProgramOptimization>
+    <CharacterSet>MultiByte</CharacterSet>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'" Label="Configuration">
+    <ConfigurationType>Application</ConfigurationType>
+    <UseDebugLibraries>false</UseDebugLibraries>
+    <PlatformToolset>v120</PlatformToolset>
+    <WholeProgramOptimization>true</WholeProgramOptimization>
+    <CharacterSet>MultiByte</CharacterSet>
+  </PropertyGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.props" />
+  <ImportGroup Label="ExtensionSettings">
+  </ImportGroup>
+  <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <ImportGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'" Label="PropertySheets">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <ImportGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'" Label="PropertySheets">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <PropertyGroup Label="UserMacros" />
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
+    <IncludePath>$(IncludePath)</IncludePath>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
+    <IncludePath>..\..\ntechnium\libNtechnium\FEM;$(IncludePath)</IncludePath>
+    <OutDir>$(SolutionDir)$(Platform)\$(Configuration)\</OutDir>
+  </PropertyGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+    <ClCompile>
+      <WarningLevel>Level3</WarningLevel>
+      <Optimization>Disabled</Optimization>
+      <SDLCheck>true</SDLCheck>
+      <AdditionalIncludeDirectories>..\..\ntechnium\src\kuka;..\..\ntechnium\libsImport\armadillo-4.500.0\include;..\..\ntechnium;..\..\ntechnium\src;..\..\ntechnium\libNtechnium\scene;..\..\ntechnium\libNtechnium\integration;..\..\ntechnium\libNtechnium\guinterface;..\..\ntechnium\libNtechnium\iodata;..\..\ntechnium\libNtechnium\agents;..\..\ntechnium\libNtechnium\robotics;..\..\ntechnium\libNtechnium\physics;..\..\ntechnium\libNtechnium\math;..\..\ntechnium\libNtechnium\fem;..\..\ntechnium\libNtechnium\geometry;..\..\ntechnium\appNtechnium;..\..\ntechnium\libsImport\FreeImage.WIN32\Dist;..\..\ntechnium\libsImport\glm;..\..\ntechnium\libsImport\glfw-3.0.4.bin.WIN32\include;..\..\ntechnium\libsImport\glfw-3.0.4.bin.WIN32\include\GLFW;..\..\ntechnium\libsImport\glew-1.10.0-win32\glew-1.10.0\include;..\..\ntechnium\libsImport\glew-1.10.0-win32\glew-1.10.0\bin\Release\x64;..\..\ntechnium\libsImport\glew-1.10.0-win32\glew-1.10.0\bin\Release\Win32;..\..\ntechnium\libsImport\freetype-2.5.3\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <WholeProgramOptimization>false</WholeProgramOptimization>
+    </ClCompile>
+    <Link>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
+      <AdditionalLibraryDirectories>..\..\ntechnium\libsImport\armadillo-4.500.0\examples\lib_win64;..\..\ntechnium\libsImport\freetype-2.5.3\lib;..\..\ntechnium\libsImport\glew-1.10.0-win32\glew-1.10.0\include;..\..\ntechnium\libsImport\glew-1.10.0-win32\glew-1.10.0\include\GL;..\..\ntechnium\libsImport\glew-1.10.0-win32\glew-1.10.0\lib\Release\Win32;..\..\ntechnium\libsImport\FreeImage.WIN32\Dist;..\..\ntechnium\libsImport\glfw-3.0.4.bin.WIN32\lib-msvc110;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <AdditionalDependencies>glew32.lib;opengl32.lib;glu32.lib;glfw3.lib;freeImage.lib;freetype.lib;blas_win64_MT.lib;lapack_win64_MT.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <SubSystem>NotSet</SubSystem>
+    </Link>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
+    <ClCompile>
+      <WarningLevel>Level3</WarningLevel>
+      <Optimization>Disabled</Optimization>
+      <SDLCheck>true</SDLCheck>
+      <AdditionalIncludeDirectories>..\..\ntechnium;..\..\ntechnium\src;..\..\ntechnium\src\kuka;..\..\ntechnium\appNtechnium;..\..\ntechnium\libNtechnium\Scene;..\..\ntechnium\libNtechnium\Robotics;..\..\ntechnium\libNtechnium\Physics;..\..\ntechnium\libNtechnium\Math;..\..\ntechnium\libNtechnium\IOdata;..\..\ntechnium\libNtechnium\Integration;..\..\ntechnium\libNtechnium\GUInterface;..\..\ntechnium\libNtechnium\Geometry;..\..\ntechnium\libNtechnium\FEM;..\..\ntechnium\libNtechnium\Agents;..\..\ntechnium\libsImport\FreeImage.WIN32\Dist;..\..\ntechnium\libsImport\glm;..\..\ntechnium\libsImport\glfw-3.0.4.bin.WIN64\include;..\..\ntechnium\libsImport\glfw-3.0.4.bin.WIN64\include\GLFW;..\..\ntechnium\libsImport\glew-1.10.0-win32\glew-1.10.0\include\GL;..\..\ntechnium\libsImport\glew-1.10.0-win32\glew-1.10.0\include;..\..\ntechnium\libsImport\freetype-2.5.3\include;..\..\ntechnium\libsImport\armadillo-4.500.0\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <WholeProgramOptimization>false</WholeProgramOptimization>
+    </ClCompile>
+    <Link>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
+      <AdditionalLibraryDirectories>..\..\ntechnium\libsImport\armadillo-4.500.0\examples\lib_win64;..\..\ntechnium\libsImport\freetype-2.5.3\lib;..\..\ntechnium\libsImport\glew-1.10.0-win32\glew-1.10.0\lib\Release\x64;..\..\ntechnium\libsImport\glew-1.10.0-win32\glew-1.10.0\bin\Release\x64;..\..\ntechnium\libsImport\FreeImage.WIN32\Dist;..\..\ntechnium\libsImport\glfw-3.0.4.bin.WIN64\lib-msvc110;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <AdditionalDependencies>glew32.lib;opengl32.lib;glu32.lib;glfw3.lib;freeImage.lib;freetype.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <SubSystem>NotSet</SubSystem>
+    </Link>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
+    <ClCompile>
+      <WarningLevel>Level3</WarningLevel>
+      <Optimization>MaxSpeed</Optimization>
+      <FunctionLevelLinking>true</FunctionLevelLinking>
+      <IntrinsicFunctions>true</IntrinsicFunctions>
+      <SDLCheck>true</SDLCheck>
+      <AdditionalIncludeDirectories>..\..\ntechnium;..\..\ntechnium\src;..\..\ntechnium\src\kuka;..\..\ntechnium\libNtechnium\integration;..\..\ntechnium\libNtechnium\iodata;..\..\ntechnium\libNtechnium\agents;..\..\ntechnium\libNtechnium\math;..\..\ntechnium\libNtechnium\fem;..\..\ntechnium\libNtechnium\robotics;..\..\ntechnium\libNtechnium\physics;..\..\ntechnium\libNtechnium\scene;..\..\ntechnium\libNtechnium\geometry;..\..\ntechnium\appNtechnium;..\..\ntechnium\libsImport\glm;..\..\ntechnium\libsImport\glfw-3.0.4.bin.WIN32\include;..\..\ntechnium\libsImport\glfw-3.0.4.bin.WIN32\include\GLFW;..\..\ntechnium\libsImport\glew-1.10.0-win32\glew-1.10.0\include;..\..\ntechnium\libsImport\glew-1.10.0-win32\glew-1.10.0\bin\Release\Win32;..\..\ntechnium\libsImport\FreeImage.WIN32\Dist;..\..\ntechnium\libsImport\freetype-2.5.3\include;..\..\ntechnium\libsImport\armadillo-4.500.0\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+    </ClCompile>
+    <Link>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
+      <EnableCOMDATFolding>true</EnableCOMDATFolding>
+      <OptimizeReferences>true</OptimizeReferences>
+      <AdditionalLibraryDirectories>..\..\ntechnium\libsImport\armadillo-4.500.0\examples\lib_win64;..\..\ntechnium\libsImport\freetype-2.5.3\lib;..\..\ntechnium\libsImport\glew-1.10.0-win32\glew-1.10.0\include;..\..\ntechnium\libsImport\glew-1.10.0-win32\glew-1.10.0\include\GL;..\..\ntechnium\libsImport\glew-1.10.0-win32\glew-1.10.0\lib\Release\Win32;..\..\ntechnium\libsImport\FreeImage.WIN32\Dist;..\..\ntechnium\libsImport\glfw-3.0.4.bin.WIN32\lib-msvc110;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <AdditionalDependencies>glfw3.lib;glu32.lib;glew32.lib;opengl32.lib;freeImage.lib;freetype.lib;blas_win64_MT.lib;lapack_win64_MT.lib;%(AdditionalDependencies)</AdditionalDependencies>
+    </Link>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
+    <ClCompile>
+      <WarningLevel>Level3</WarningLevel>
+      <Optimization>MaxSpeed</Optimization>
+      <FunctionLevelLinking>true</FunctionLevelLinking>
+      <IntrinsicFunctions>true</IntrinsicFunctions>
+      <SDLCheck>true</SDLCheck>
+      <AdditionalIncludeDirectories>..\..\ntechnium\libNtechnium\graph;$(AF_PATH)\include;..\..\ntechnium;..\..\ntechnium\src;..\..\ntechnium\src\kuka;..\..\ntechnium\libNtechnium\arch;..\..\ntechnium\libNtechnium\integration;..\..\ntechnium\libNtechnium\iodata;..\..\ntechnium\libNtechnium\agents;..\..\ntechnium\libNtechnium\math;..\..\ntechnium\libNtechnium\fem;..\..\ntechnium\libNtechnium\robotics;..\..\ntechnium\libNtechnium\physics;..\..\ntechnium\libNtechnium\scene;..\..\ntechnium\libNtechnium\geometry;..\..\ntechnium\appNtechnium;..\..\ntechnium\libsImport\glm;..\..\ntechnium\libsImport\glfw-3.1.1.bin.WIN64\include;..\..\ntechnium\libsImport\glfw-3.1.1.bin.WIN64\include\GLFW;..\..\ntechnium\libsImport\glfw-3.0.4.bin.WIN64\include;..\..\ntechnium\libsImport\glfw-3.0.4.bin.WIN64\include\GLFW;..\..\ntechnium\libsImport\glew-1.10.0-win32\glew-1.10.0\include;..\..\ntechnium\libsImport\FreeImage.WIN32\Dist;..\..\ntechnium\libsImport\freetype-2.5.3\include;..\..\ntechnium\libsImport\armadillo-5.600.2\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+    </ClCompile>
+    <Link>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
+      <EnableCOMDATFolding>true</EnableCOMDATFolding>
+      <OptimizeReferences>true</OptimizeReferences>
+      <AdditionalLibraryDirectories>$(AF_PATH)\lib;..\..\ntechnium\libsImport\armadillo-5.600.2\examples\lib_win64;..\..\ntechnium\libsImport\freetype-2.5.3\lib;..\..\ntechnium\libsImport\glew-1.10.0-win32\glew-1.10.0\lib\include;..\..\ntechnium\libsImport\glew-1.10.0-win32\glew-1.10.0\lib\include\GL;..\..\ntechnium\libsImport\glew-1.10.0-win32\glew-1.10.0\bin\Release\x64;..\..\ntechnium\libsImport\glew-1.10.0-win32\glew-1.10.0\lib\Release\x64;..\..\ntechnium\libsImport\FreeImage.WIN32\Dist;..\..\ntechnium\libsImport\glfw-3.0.4.bin.WIN64\lib-msvc110;..\..\ntechnium\libsImport\glfw-3.1.1.bin.WIN64\lib-vc2013;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <AdditionalDependencies>afcuda.lib;afopencl.lib;afcpu.lib;glfw3.lib;glu32.lib;glew32.lib;opengl32.lib;freeImage.lib;freetype.lib;blas_win64_MT.lib;lapack_win64_MT.lib;%(AdditionalDependencies)</AdditionalDependencies>
+    </Link>
+    <PostBuildEvent>
+      <Command>echo copy "$(CUDA_PATH)\nvvm\bin\nvvm64*.dll" "$(OutDir)" 
+copy "$(CUDA_PATH)\nvvm\bin\nvvm64*.dll" "$(OutDir)"</Command>
+    </PostBuildEvent>
+  </ItemDefinitionGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
+  <ImportGroup Label="ExtensionTargets">
+  </ImportGroup>
+</Project>

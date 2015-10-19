@@ -1,0 +1,390 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <Filter Include="app">
+      <UniqueIdentifier>{f175381a-200a-48ae-8925-8ba48a9f3633}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="lib_agents">
+      <UniqueIdentifier>{4561101d-20a2-4906-98dd-4211af6be909}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="lib_physics">
+      <UniqueIdentifier>{bb0da0fe-e875-452a-b548-7448ede05db1}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="lib_integration">
+      <UniqueIdentifier>{46e1cc13-a1b5-45ef-b63a-5d5b08c16228}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="lib_robotics">
+      <UniqueIdentifier>{14434d7b-d083-47fe-b3bf-5f786f9b1b3c}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="lib_scene">
+      <UniqueIdentifier>{ce5046d0-d362-43bc-95d6-891714169be0}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="lib_geometry">
+      <UniqueIdentifier>{953044bc-1a9c-4ec9-9cd9-058adc1331fe}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="lib_math">
+      <UniqueIdentifier>{79d9734e-6202-4216-878e-02e82cad8dae}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="lib_data">
+      <UniqueIdentifier>{76b26e7b-c0fd-487b-bc29-2e4bcfc0d745}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="src programs">
+      <UniqueIdentifier>{d6ee2795-9ddb-443c-b8b9-4e6ad81bde58}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="lib_robotics\krl programs">
+      <UniqueIdentifier>{14f3d8df-91f1-41af-9903-6821eeade869}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="lib_fem">
+      <UniqueIdentifier>{0409c01d-fc42-444e-889a-77ab47df7f50}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="lib_graph">
+      <UniqueIdentifier>{a6eda9e6-9c0b-4bf9-bfef-7e608c9912c4}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="lib_arch">
+      <UniqueIdentifier>{78d8ea85-670d-42ca-aa44-246999caf85d}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="..\..\ntechnium\appNtechnium\nt_Main.cpp">
+      <Filter>app</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\ntechnium\appNtechnium\nt_BaseApp.cpp">
+      <Filter>app</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\ntechnium\appNtechnium\nt_GLFWsetup.cpp">
+      <Filter>app</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\ntechnium\appNtechnium\nt_AppContent.cpp">
+      <Filter>app</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\ntechnium\libNtechnium\Scene\ntLight.cpp">
+      <Filter>lib_scene</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\ntechnium\libNtechnium\Geometry\ntEdge.cpp">
+      <Filter>lib_geometry</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\ntechnium\libNtechnium\Geometry\ntFace3.cpp">
+      <Filter>lib_geometry</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\ntechnium\libNtechnium\Geometry\ntNormal.cpp">
+      <Filter>lib_geometry</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\ntechnium\libNtechnium\Geometry\ntVertex.cpp">
+      <Filter>lib_geometry</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\ntechnium\src\nt_App.cpp">
+      <Filter>src programs</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\ntechnium\src\nt_genApp.cpp">
+      <Filter>src programs</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\ntechnium\src\nt_simpleApp.cpp">
+      <Filter>src programs</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\ntechnium\libNtechnium\Geometry\ntSphere.cpp">
+      <Filter>lib_geometry</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\ntechnium\libNtechnium\Geometry\ntTetra.cpp">
+      <Filter>lib_geometry</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\ntechnium\libNtechnium\Geometry\ntBaseShape.cpp">
+      <Filter>lib_geometry</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\ntechnium\src\nt_00_meshApp.cpp">
+      <Filter>src programs</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\ntechnium\libNtechnium\Geometry\ntMeshPts.cpp">
+      <Filter>lib_geometry</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\ntechnium\libNtechnium\IOdata\ntPtsTxt.cpp">
+      <Filter>lib_data</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\ntechnium\libNtechnium\Physics\ntAttractor.cpp">
+      <Filter>lib_physics</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\ntechnium\libNtechnium\Physics\ntBasePhysics.cpp">
+      <Filter>lib_physics</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\ntechnium\libNtechnium\Physics\ntParticle.cpp">
+      <Filter>lib_physics</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\ntechnium\libNtechnium\Physics\ntSpring.cpp">
+      <Filter>lib_physics</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\ntechnium\src\nt_01_meshApp.cpp">
+      <Filter>src programs</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\ntechnium\src\nt_04_emitterApp.cpp">
+      <Filter>src programs</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\ntechnium\libNtechnium\Geometry\ntPlane.cpp">
+      <Filter>lib_geometry</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\ntechnium\libNtechnium\Geometry\ntTree.cpp">
+      <Filter>lib_geometry</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\ntechnium\src\nt_05_shapeApp.cpp">
+      <Filter>src programs</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\ntechnium\libNtechnium\Math\ntVec3.cpp">
+      <Filter>lib_math</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\ntechnium\libNtechnium\Math\ntMatrix4.cpp">
+      <Filter>lib_math</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\ntechnium\appNtechnium\nt_Utility.cpp">
+      <Filter>lib_data</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\ntechnium\libNtechnium\Robotics\nt_SRCwriter.cpp">
+      <Filter>lib_robotics</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\ntechnium\libNtechnium\Robotics\nt_KRLprogram.cpp">
+      <Filter>lib_robotics</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\ntechnium\libNtechnium\Geometry\ntBaseGeom.cpp">
+      <Filter>lib_geometry</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\ntechnium\src\nt_06_krlApp.cpp">
+      <Filter>src programs</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\ntechnium\src\kuka\krl_scanLines.cpp">
+      <Filter>lib_robotics\krl programs</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\ntechnium\src\kuka\krl_focalPlane.cpp">
+      <Filter>lib_robotics\krl programs</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\ntechnium\src\kuka\krl_rhinoTemp.cpp">
+      <Filter>lib_robotics\krl programs</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\ntechnium\src\nt_02_treeApp-v01.cpp">
+      <Filter>src programs</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\ntechnium\src\nt_02_treeApp-v02.cpp">
+      <Filter>src programs</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\ntechnium\src\nt_02_treeApp-v03.cpp">
+      <Filter>src programs</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\ntechnium\libNtechnium\Scene\ntShader.cpp">
+      <Filter>lib_scene</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\ntechnium\src\kuka\krl_xaxisDemo.cpp">
+      <Filter>lib_robotics\krl programs</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\ntechnium\src\kuka\krl_textTemp.cpp">
+      <Filter>lib_robotics\krl programs</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\ntechnium\src\nt_08_afireApp-v01.cpp">
+      <Filter>src programs</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\ntechnium\src\nt_08_afireApp-v02.cpp">
+      <Filter>src programs</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\ntechnium\libNtechnium\FEM\ntElement.cpp">
+      <Filter>lib_fem</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\ntechnium\libNtechnium\FEM\ntTruss3d.cpp">
+      <Filter>lib_fem</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\ntechnium\src\nt_07_trussApp-v02.cpp">
+      <Filter>src programs</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\ntechnium\src\nt_07_trussApp-v01.cpp">
+      <Filter>src programs</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\ntechnium\src\nt_07_trussApp-v03.cpp">
+      <Filter>src programs</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\ntechnium\libNtechnium\Graph\ntGraph.cpp">
+      <Filter>lib_graph</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\ntechnium\src\nt_09_ovisApp.cpp">
+      <Filter>src programs</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\ntechnium\libNtechnium\Arch\ntPanel.cpp">
+      <Filter>lib_arch</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="..\..\ntechnium\appNtechnium\nt_BaseApp.h">
+      <Filter>app</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\ntechnium\appNtechnium\nt_GLFWsetup.h">
+      <Filter>app</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\ntechnium\appNtechnium\nt_AppContent.h">
+      <Filter>app</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\ntechnium\libNtechnium\Scene\ntLight.h">
+      <Filter>lib_scene</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\ntechnium\libNtechnium\Geometry\ntColor4f.h">
+      <Filter>lib_geometry</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\ntechnium\appNtechnium\nt_CoutTemp.h">
+      <Filter>app</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\ntechnium\libNtechnium\Geometry\ntEdge.h">
+      <Filter>lib_geometry</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\ntechnium\libNtechnium\Geometry\ntFace3.h">
+      <Filter>lib_geometry</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\ntechnium\libNtechnium\Geometry\ntNormal.h">
+      <Filter>lib_geometry</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\ntechnium\libNtechnium\Geometry\ntVertex.h">
+      <Filter>lib_geometry</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\ntechnium\src\nt_App.h">
+      <Filter>src programs</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\ntechnium\src\nt_genApp.h">
+      <Filter>src programs</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\ntechnium\src\nt_simpleApp.h">
+      <Filter>src programs</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\ntechnium\libNtechnium\Geometry\ntSphere.h">
+      <Filter>lib_geometry</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\ntechnium\libNtechnium\Geometry\ntTetra.h">
+      <Filter>lib_geometry</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\ntechnium\libNtechnium\Geometry\ntBaseShape.h">
+      <Filter>lib_geometry</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\ntechnium\src\nt_00_meshApp.h">
+      <Filter>src programs</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\ntechnium\libNtechnium\Geometry\ntMeshPts.h">
+      <Filter>lib_geometry</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\ntechnium\libNtechnium\IOdata\ntPtsTxt.h">
+      <Filter>lib_data</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\ntechnium\libNtechnium\Physics\ntAttractor.h">
+      <Filter>lib_physics</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\ntechnium\libNtechnium\Physics\ntBasePhysics.h">
+      <Filter>lib_physics</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\ntechnium\libNtechnium\Physics\ntParticle.h">
+      <Filter>lib_physics</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\ntechnium\libNtechnium\Physics\ntSpring.h">
+      <Filter>lib_physics</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\ntechnium\src\nt_01_meshApp.h">
+      <Filter>src programs</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\ntechnium\src\nt_04_emitterApp.h">
+      <Filter>src programs</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\ntechnium\libNtechnium\Geometry\ntPlane.h">
+      <Filter>lib_geometry</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\ntechnium\libNtechnium\Geometry\ntTree.h">
+      <Filter>lib_geometry</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\ntechnium\src\nt_05_shapeApp.h">
+      <Filter>src programs</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\ntechnium\libNtechnium\Math\ntVec3.h">
+      <Filter>lib_math</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\ntechnium\libNtechnium\Math\ntMath.h">
+      <Filter>lib_math</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\ntechnium\libNtechnium\Math\ntMatrix4.h">
+      <Filter>lib_math</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\ntechnium\libNtechnium\Math\ntTup3i.h">
+      <Filter>lib_math</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\ntechnium\appNtechnium\nt_Utility.h">
+      <Filter>lib_data</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\ntechnium\libNtechnium\Robotics\nt_SRCwriter.h">
+      <Filter>lib_robotics</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\ntechnium\libNtechnium\Robotics\nt_KRLprogram.h">
+      <Filter>lib_robotics</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\ntechnium\libNtechnium\Robotics\nt_KRLfunctions.h">
+      <Filter>lib_robotics</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\ntechnium\libNtechnium\Robotics\nt_KRLpath.h">
+      <Filter>lib_robotics</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\ntechnium\libNtechnium\Geometry\ntBaseGeom.h">
+      <Filter>lib_geometry</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\ntechnium\src\nt_06_krlApp.h">
+      <Filter>src programs</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\ntechnium\src\kuka\krl_scanLines.h">
+      <Filter>lib_robotics\krl programs</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\ntechnium\src\kuka\krl_focalPlane.h">
+      <Filter>lib_robotics\krl programs</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\ntechnium\src\kuka\krl_rhinoTemp.h">
+      <Filter>lib_robotics\krl programs</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\ntechnium\src\nt_02_treeApp-v01.h">
+      <Filter>src programs</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\ntechnium\src\nt_02_treeApp-v02.h">
+      <Filter>src programs</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\ntechnium\src\nt_02_treeApp-v03.h">
+      <Filter>src programs</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\ntechnium\libNtechnium\Math\ntMatrixBS.h">
+      <Filter>lib_math</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\ntechnium\libNtechnium\Scene\ntShader.h">
+      <Filter>lib_scene</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\ntechnium\src\kuka\krl_xaxisDemo.h">
+      <Filter>lib_robotics\krl programs</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\ntechnium\src\kuka\krl_textTemp.h">
+      <Filter>lib_robotics\krl programs</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\ntechnium\src\nt_08_afireApp-v01.h">
+      <Filter>src programs</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\ntechnium\src\nt_08_afireApp-v02.h">
+      <Filter>src programs</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\ntechnium\libNtechnium\FEM\ntElement.h">
+      <Filter>lib_fem</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\ntechnium\libNtechnium\FEM\ntNode.h">
+      <Filter>lib_fem</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\ntechnium\libNtechnium\FEM\ntTruss3d.h">
+      <Filter>lib_fem</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\ntechnium\src\nt_07_trussApp-v02.h">
+      <Filter>src programs</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\ntechnium\src\nt_07_trussApp-v01.h">
+      <Filter>src programs</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\ntechnium\src\nt_07_trussApp-v03.h">
+      <Filter>src programs</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\ntechnium\libNtechnium\Graph\ntGraph.h">
+      <Filter>lib_graph</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\ntechnium\src\nt_09_ovisApp.h">
+      <Filter>src programs</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\ntechnium\libNtechnium\Arch\ntPanel.h">
+      <Filter>lib_arch</Filter>
+    </ClInclude>
+  </ItemGroup>
+</Project>
