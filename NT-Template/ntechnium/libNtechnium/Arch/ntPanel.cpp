@@ -101,38 +101,6 @@ std::vector<ntVec3*> ntPanel::get_Perf() {
 std::vector<float> ntPanel::get_Perf_R() {
 	return p_Rad;
 }
-void ntPanel::display_Perf() {
-	int dim = p_Pos.size();
-	if (dim > 0) {
-		for (int i = 0; i < dim; i++) {
-
-			float r = p_Rad.at(i); 
-			r = r * 0.015;				///temporary scale solution
-
-			draw_Circ(p_Pos.at(i),r);
-			//draw_Circ(p_Pos.at(i), r + (.25 * 0.015), Col4(.1, .1, .1, 1));
-		}
-	}
-	else {
-		std::cout << "ERROR:  ZERO PERFORATIONS FOUND" << endl;
-	}
-}
-void ntPanel::draw_Circ(Vec3* pos, float rad, Col4 col) {
-	int n_seg = 36;
-	glBegin(GL_LINE_LOOP);
-	//glBegin(GL_POINTS);
-	//glPointSize(1);
-	glColor4f(col.r, col.g, col.b, col.a);
-	for (int j = 0; j<n_seg; ++j) {
-
-		float theta = 2.0f * 3.1415926f * j / n_seg;//get the current angle
-		float x = rad * cosf(theta);//calculate the x component
-		float y = rad * sinf(theta);//calculate the y component
-
-		glVertex2f(x + pos->x, y + pos->y);//output vertex
-	}
-	glEnd();
-}
 void ntPanel::calc_Perf() {
 	//POSITION VARIABLE
 	int x_Div = ceil((v1->x - v0->x) / (r_Max * 2));
@@ -153,7 +121,7 @@ void ntPanel::calc_Perf() {
 			}
 			y = (sp * j) + edge_Offset;//cent->y - (sp * p_Div*0.5) + (sp * j); 
 
-			//PERFORATION SIZE 
+									   //PERFORATION SIZE 
 			float r = image_Val * ((rand() % 10)*.1);
 			//std::cout << r << endl;
 			r = round(r * 10) * 0.1;
@@ -169,7 +137,6 @@ void ntPanel::calc_Perf() {
 		}
 	}
 }
-
 bool ntPanel::pt_isInside(ntVec3* point) {
 	int i, j, nvert = verts.size();
 	bool c = false;
@@ -181,6 +148,34 @@ bool ntPanel::pt_isInside(ntVec3* point) {
 			c = !c;
 	}
 	return c;
+}
+void ntPanel::display_Perf() {
+	if (p_Pos.size() > 0) {
+		for (int i = 0; i < p_Pos.size(); i++) {
+
+			float r = p_Rad.at(i); 
+			r = r * 0.015;				///temporary scale solution
+			draw_Circ(p_Pos.at(i),r);
+			//draw_Circ(p_Pos.at(i), r + (.25 * 0.015), Col4(.1, .1, .1, 1));
+		}
+	} else {
+		//std::cout << "ERROR:  ZERO PERFORATIONS FOUND" << endl;
+	}
+}
+void ntPanel::draw_Circ(Vec3* pos, float rad, Col4 col) {
+	glColor4f(col.r, col.g, col.b, col.a);
+	glBegin(GL_LINE_LOOP);
+	//glBegin(GL_POINTS);
+	//glPointSize(1);
+	for (int j = 0; j<n_seg; ++j) {
+
+		float theta = 2.0f * 3.1415926f * j / n_seg;//get the current angle
+		float x = rad * cosf(theta);//calculate the x component
+		float y = rad * sinf(theta);//calculate the y component
+		//glVertex2f(pos->x, pos->y);
+		glVertex2f(x + pos->x, y + pos->y);//output vertex
+	}
+	glEnd();
 }
 
 void ntPanel::display(){
