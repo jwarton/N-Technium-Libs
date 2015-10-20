@@ -1,6 +1,5 @@
 git@github.com:jwarton/OpenGL-Projects.git
-
-git@github.com:jwarton/OpenGL-Projects.git
+git@github.com:jwarton/N-Technium-Libs.git
 
 Directions for new workstation to access git repositories
 https://help.github.com/articles/generating-ssh-keys/#platform-windows
@@ -10,7 +9,7 @@ https://help.github.com/articles/generating-ssh-keys/#platform-windows
 $ git config --global user.name "James Warton"
 $ git config --global user.email jwarton@smu.edu
 
-
+git 
 //
 //GENERATE NEW SSH KEY
 
@@ -22,7 +21,7 @@ $ ssh-keygen -t rsa -b 4096 -C "jwarton@smu.edu"
 
 //You'll be asked to enter a passphrase.
 Enter passphrase (empty for no passphrase): [Type a passphrase]
-# Enter same passphrase again: [Type passphrase again]
+# Enter same passphrase again: [Type passphrase again]:
 
 //
 //ADD YOUR KEY TO THE ssh-agent

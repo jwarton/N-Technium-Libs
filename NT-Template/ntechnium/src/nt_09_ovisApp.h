@@ -33,7 +33,7 @@ private:
 	string url;
 	string path = nt_Utility::getPathToOutput();;
 	string pathExtension = "ovis\\";
-	string fileName = "ptPos_04_OvisTriPts";
+	string fileName = "ptPos_05_OvisTriPts";
 	string fileExt = ".txt";
 
 	bool isStartFile = false;
@@ -63,8 +63,6 @@ private:
 
 	void read_DATA();
 	Vec3 add_Vert(string line);
-	//Vec3 add_Norm(string line);
-	//void add_Panel();
 
 	string format_Norm(string line);
 	string format_POS(string line);

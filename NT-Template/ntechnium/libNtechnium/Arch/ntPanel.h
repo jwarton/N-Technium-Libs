@@ -15,7 +15,8 @@
 #include "ntVec3.h"
 #include "ntEdge.h"
 #include "ntNormal.h"
- 
+#include "ntMath.h"
+
 using namespace jpw;
 
 class ntPanel{
@@ -29,6 +30,8 @@ private:
 	std::vector<ntVec3*> v_L;		// LOCAL PANEL VERTEX POSTION
 
 	void set_vG();
+
+	bool ntPanel::pt_isInside(Vec3 point);
 public:
 
 	ntVec3 *v0,*v1,*v2;
@@ -52,11 +55,26 @@ public:
 	void calcNorm();
 	void calcCentroid();
 
+	////////////////////////////////// PERFORATION PARAMETERS
+	float image_Val;				// VALUE OF MEAN PIXEL
+
+	void display_Perf();
+	void calc_PerfPos();
+
+	std::vector<ntVec3> p_Pos;
+	std::vector<float>  p_Rad;
+
+	float r_Min = .375;
+	float r_Max = 1.5;
+	int p_Div = 15;
+	float edge_Offset = .75;
+
 	//float calcArea();
 
 	void set_ID(string panel_ID);
 	void set_nG(string n_G);
 	void set_pG(string p_G);
+	void set_IMG(float val);
 
 	string get_ID();	//PANEL ID
 	string get_n_G();	//GLOBAL NORMAL

@@ -20,11 +20,18 @@ void ovisApp::init() {
 		edge_X.sub(panels.at(i)->v0);
 		align_Panel(panels.at(i), axis_X, &edge_X, panels.at(i)->v0); 
 
-		write_Panel(panels.at(i));
-
+		float val = (rand() % 255 + 1);		//TEMPORARY VALUES FOR PANEL PERFORATION DRIVER
+		val = mapRange(0,1,0,255,val);
+		panels.at(i)->set_IMG(val);
+		//write_Panel(panels.at(i));
+		panels.at(i)->calc_PerfPos();
 		for (int j = 0; j < 3; j++) {
 			ntMatrix4 SC1 = ntMatrix4(panels.at(i)->vecs[j]);
 			SC1.scale3d(0.015);
+		}
+		for (int j = 0; j < panels.at(i)->p_Pos.size(); j++) {
+			ntMatrix4 SC2 = ntMatrix4(&panels.at(i)->p_Pos.at(j));
+			SC2.scale3d(0.015);
 		}
 	}
 }
@@ -415,90 +422,7 @@ void ovisApp::write_Panel(ntPanel* panel_ptr) {
 	file << "//  PERFORATION DATA:          {POS:  RADIUS:  }\n";
 	file.close();
 }
-//void ovisApp::add_Panel() {
-//	//panel_Dim = verts.size() / 3;
-//	//Vec3 * v0;
-//	//Vec3 * v1;
-//	//Vec3 * v2;
-//
-//	//for (int i = 0; i < verts.size(); i++) {
-//	//	if (i % 3 == 0) {
-//	//		v0 = verts.at(i);
-//	//		v1 = verts.at(i + 1);
-//	//		v2 = verts.at(i + 2);
-//
-//	//		//float x1 = v0->distance(v1);
-//	//		//float d2 = v0->distance(v2);
-//	//		//float theta = v0->dot(v2);
-//	//		//theta = (M_PI / 180) * theta;
-//	//		//std::cout << theta << endl;
-//
-//	//		Vec3 * v0p = new Vec3(v0->x, v0->y, v0->z);
-//	//		Vec3 * v1p = new Vec3(v1->x, v1->y, v1->z);
-//	//		Vec3 * v2p = new Vec3(v2->x, v2->y, v2->z);
-//
-//	//		Vec3 trans_V = Vec3(v0->x, v0->y, v0->z);	//TRANSLATION VECTOR
-//	//		Vec3 dir_V = v0->cross(v1);					//FACE NORMAL
-//
-//	//		v0p->sub(&trans_V);
-//	//		v1p->sub(&trans_V);
-//	//		v2p->sub(&trans_V);
-//
-//	//		ntMatrix4 mat0 = ntMatrix4(v0p);
-//	//		ntMatrix4 mat1 = ntMatrix4(v1p);
-//	//		ntMatrix4 mat2 = ntMatrix4(v2p);
-//
-//	//		//std::cout << "x_  " << v0p->x << endl;
-//	//		//std::cout << "y_  " << v0p->y << endl;
-//	//		//std::cout << "z_  " << v0p->z << endl;
-//
-//	//		float theta = v0p->dot(v1p);					//ROTATION IN XY PLANE
-//	//		theta = (M_PI / 180) * theta;
-//
-//	//		//mat1.rotateZ(theta);
-//	//		//mat2.rotateZ(theta);
-//
-//	//		mat1.scale3d(0.015);
-//	//		mat2.scale3d(0.015);
-//
-//	//		ntPanel * panel = new ntPanel(v0p, v1p, v2p);
-//	//		panels.push_back(panel);
-//	//	}
-//	//}
-//	//int n = verts.size();
-//}
-//Vec3 ovisApp::add_Norm(string line) {
-//	string token = "PANEL";
-//	Vec3 normal;
-//
-//	if (line.find(token) != string::npos) {
-//		char chars[] = "/PANELNORM:{";
-//		for (unsigned int j = 0; j < strlen(chars); ++j)
-//		{
-//			line.erase(std::remove(line.begin(), line.end(), chars[j]), line.end());
-//		}
-//		/////split stream at comma and insert into position array = posXYZ
-//		string str;
-//		stringstream stream(line);
-//		float val;
-//		int cnt = 0;
-//
-//		while (getline(stream, str, ',')) {
-//
-//			if (cnt == 1) {
-//				normal.x = val;
-//			}
-//			else if (cnt == 2) {
-//				normal.y = val;
-//			}
-//			else if (cnt == 3) {
-//				normal.z = val;
-//			}
-//			cnt += 1;
-//		}
-//		return normal;
-//	}
-//}
+
 Vec3 ovisApp::add_Vert(string line) {
 	string token = "POS:";
 
@@ -540,106 +464,6 @@ Vec3 ovisApp::add_Vert(string line) {
 	}
 }
 
-//void ovisApp::demo() {
-//
-//	fileName = "ptPos_04_OvisTriPts";
-//	path = nt_Utility::getPathToOutput();
-//	pathExtension = "ovis\\";
-//
-//	//READ SRC INSTRUCTION CODE FROM GRASSHOPPER TEXT OUTPUT
-//	string pathI = nt_Utility::getPathToResources() + "data\\" + fileName + ".txt";
-//
-//	ifstream file(pathI);
-//	string lines;
-//	string line;
-//	string local;
-//	string panel_ID = "<< ERROR >>";
-//	string panel_norm = "<< ERROR >>";
-//
-//	bool isStartFile = false;
-//	bool isEndSubs = false;
-//	bool isSubNext = false;
-//	bool isEndFile = false;
-//
-//	int panel_NUM = 0;
-//
-//	while (std::getline(file, line) && isEndSubs == false) {
-//
-//		if (line.find(";BEGIN") != string::npos) {
-//			isStartFile = true;
-//		}
-//		if (isStartFile == true && line.find("PAN:") != string::npos) {
-//			panel_ID = line;
-//		}
-//		if (isStartFile == true && line.find("PANELNORM:") != string::npos) {
-//			line = format_POS(line);
-//			panel_norm = line + "\n";
-//		}
-//		if (isStartFile == true && line.find("POS:") != string::npos) {
-//			line = format_POS(line);
-//			//local = get_local(panel_NUM);
-//			lines = lines + line + "\n";
-//		}
-//		if (line.find("NEXT") != string::npos) {
-//			isSubNext = true;
-//		}
-//		else { isSubNext = false; }
-//
-//		if (line.find(";END") != string::npos) {
-//			isEndFile = true;
-//		}
-//
-//		if (isSubNext == true || isEndFile == true) {
-//			stringstream ss;
-//			ss << std::setw(5) << std::setfill('0');
-//			ss << panel_NUM;
-//
-//			fileName = "OP_" + ss.str();
-//			url = path + pathExtension + fileName + fileExt;
-//			///////////////////////////////////////////////////// SET TIME STAP
-//			timeStamp = time(0);
-//			localtime_s(&timeData, &timeStamp);
-//			string Y = to_string(timeData.tm_year + 1900);
-//			string M = to_string(timeData.tm_mon + 1);
-//			string D = to_string(timeData.tm_mday);
-//			string Hr = to_string(timeData.tm_hour);
-//			string Mn = to_string(timeData.tm_min);
-//			string Sc = to_string(timeData.tm_sec);
-//			string date = "DATE: " + Y + ":" + M + ":" + D + " | " + "TIME: " + Hr + ":" + Mn + ":" + Sc + "\n";
-//
-//			ofstream file(url);
-//			
-//			file << "//  HKS | LINE\n";
-//			file << "//  00603.000:: OVIS STADIUM\n";
-//			file << "//  PANEL PARAMETERS\n";
-//			file << "//  RELEASE " << date << "\n";
-//			file << "//  " << panel_ID << "\n";
-//			file << "//  PANEL ORIENTATION VECTOR:\n";
-//			file << "//" << panel_norm << "\n";
-//			file << "//  NODE POSITIONS:\n";
-//			file << "//  [ WORLD COORDINATES ]\n";
-//			file << "//        (                 X,                  Y,                  Z)\n";
-//			file << lines;
-//			lines = "";
-//			file << "\n";
-//			file << "//  NODE POSITIONS:\n";
-//			file << "//  [ LOCAL COORDINATES ]\n";
-//			file << local;
-//			file << "\n";
-//			file << "//  CORNER POSITIONS:          {POS:           }	\n";
-//			file << "\n";
-//			file << "//  FASTENER POSITIONS:        {POS:  RADIUS:  }\n";
-//			file << "\n";
-//			file << "//  PERFORATION DATA:          {POS:  RADIUS:  }\n";
-//			file.close();
-//
-//			panel_ID = "<< ERROR >>";
-//			panel_norm = "<< ERROR >>";
-//			panel_NUM = panel_NUM + 1;
-//		}
-//	}
-//}
-
 void ovisApp::run(){
 	if (glfwGetKey(window, GLFW_KEY_PAGE_UP) == GLFW_PRESS) {
 		if (panel_Index < panel_Dim) {
@@ -668,6 +492,7 @@ void ovisApp::display(){
 	///////////////////////////////////////////////////////////////
 	if (panel_Index >= 0 && panel_Index < panel_Dim) {
 		for (int i = 0; i < panels.size(); i++) {
+			panels.at(panel_Index)->display();
 			panels.at(panel_Index)->edges.at(0).display(1);
 			panels.at(panel_Index)->edges.at(1).display(1);
 			panels.at(panel_Index)->edges.at(2).display(1);
