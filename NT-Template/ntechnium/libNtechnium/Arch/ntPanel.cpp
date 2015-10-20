@@ -95,69 +95,91 @@ string ntPanel::get_p_G() {
 std::vector<ntVec3*> ntPanel::get_v_G() {
 	return v_G;
 }
+std::vector<ntVec3*> ntPanel::get_Perf() {
+	return p_Pos;
+}
+std::vector<float> ntPanel::get_Perf_R() {
+	return p_Rad;
+}
 void ntPanel::display_Perf() {
-	int n_seg = 36;
+	int dim = p_Pos.size();
+	if (dim > 0) {
+		for (int i = 0; i < dim; i++) {
 
-	float r = mapRange(r_Min, r_Max, 0, 1, image_Val);
-	//r = r_Max;
-	r = r * 0.015;///temporary scale solution
-	
+			float r = p_Rad.at(i); 
+			r = r * 0.015;				///temporary scale solution
 
-	for (int i = 0; i < p_Pos.size(); i++) {
-		glBegin(GL_LINE_LOOP);
-		//glBegin(GL_POINTS);
-		//glPointSize(1);
-		glColor4f(.25, .25, .25, 1);
-		for (int j = 0; j<n_seg; ++j) {
-
-			float cx = p_Pos.at(i).x;
-			float cy = p_Pos.at(i).y;
-
-			float theta = 2.0f * 3.1415926f * j / n_seg;//get the current angle
-			float x = r * cosf(theta);//calculate the x component
-			float y = r * sinf(theta);//calculate the y component
-
-			glVertex2f(x + cx, y + cy);//output vertex
+			draw_Circ(p_Pos.at(i),r);
+			//draw_Circ(p_Pos.at(i), r + (.25 * 0.015), Col4(.1, .1, .1, 1));
 		}
-		glEnd();
+	}
+	else {
+		std::cout << "ERROR:  ZERO PERFORATIONS FOUND" << endl;
 	}
 }
-void ntPanel::calc_PerfPos() {
+void ntPanel::draw_Circ(Vec3* pos, float rad, Col4 col) {
+	int n_seg = 36;
+	glBegin(GL_LINE_LOOP);
+	//glBegin(GL_POINTS);
+	//glPointSize(1);
+	glColor4f(col.r, col.g, col.b, col.a);
+	for (int j = 0; j<n_seg; ++j) {
 
+		float theta = 2.0f * 3.1415926f * j / n_seg;//get the current angle
+		float x = rad * cosf(theta);//calculate the x component
+		float y = rad * sinf(theta);//calculate the y component
+
+		glVertex2f(x + pos->x, y + pos->y);//output vertex
+	}
+	glEnd();
+}
+void ntPanel::calc_Perf() {
+	//POSITION VARIABLE
+	int x_Div = ceil((v1->x - v0->x) / (r_Max * 2));
+	int y_Div = ceil((v2->y - v0->y) / (r_Max * 2));
 	float w = (v1->x - v0->x) - (edge_Offset * 2);
-	float sp = (w / p_Div);
+	float sp = (r_Max * 2) + .5;
 	float y;
 	float x;
+	ntVec3* vec;
 
-	for (int i = 0; i < p_Div; i++) {
-		for (int j = 0; j < p_Div; j++) {
+	for (int i = 0; i <= x_Div; i++) {
+		for (int j = 0; j <= y_Div; j++) {
 			if (j % 2 == 0) {
-				x = v2->x - (sp * p_Div*0.5) + (sp * i) + (sp/2);//(sp * i) + edge_Offset + r_Max;//cent->x - (sp * p_Div*0.5) + (sp * i); 
+				x = v2->x - (sp * x_Div * 0.5) + (sp * i) + (sp * 0.5);//(sp * i) + edge_Offset + r_Max;//cent->x - (sp * p_Div*0.5) + (sp * i); 
 			}
 			else {
-				x = v2->x - (sp * p_Div*0.5) + (sp * i);//(sp * i) + edge_Offset + r_Max;//cent->x - (sp * p_Div*0.5) + (sp * i); 
+				x = v2->x - (sp * x_Div * 0.5) + (sp * i);//(sp * i) + edge_Offset + r_Max;//cent->x - (sp * p_Div*0.5) + (sp * i); 
 			}
-			y = (sp * j) + edge_Offset + r_Max;//cent->y - (sp * p_Div*0.5) + (sp * j); 
+			y = (sp * j) + edge_Offset;//cent->y - (sp * p_Div*0.5) + (sp * j); 
 
-			if (pt_isInside(Vec3(x, y, 0))) {
-				p_Pos.push_back(Vec3(x, y, 0));
+			//PERFORATION SIZE 
+			float r = image_Val * ((rand() % 10)*.1);
+			//std::cout << r << endl;
+			r = round(r * 10) * 0.1;
+			if (r > 1) {
+				r = 1;
+			}
+			r = mapRange(r_Min, r_Max, 0, 1, r);
+			vec = new ntVec3(x, y, 0);
+			if (pt_isInside(vec) && r > r_Min) {
+				p_Pos.push_back(vec);
+				p_Rad.push_back(r);
 			}
 		}
 	}
 }
 
-bool ntPanel::pt_isInside(Vec3 point) {
-
+bool ntPanel::pt_isInside(ntVec3* point) {
 	int i, j, nvert = verts.size();
 	bool c = false;
 
 	for (i = 0, j = nvert - 1; i < nvert; j = i++) {
-		if (((vecs[i]->y >= point.y) != (vecs[j]->y >= point.y)) &&
-			(point.x <= (vecs[j]->x - vecs[i]->x) * (point.y - vecs[i]->y) / (vecs[j]->y - vecs[i]->y) + vecs[i]->x)
+		if (((vecs[i]->y >= point->y) != (vecs[j]->y >= point->y)) &&
+			(point->x <= (vecs[j]->x - vecs[i]->x) * (point->y - vecs[i]->y) / (vecs[j]->y - vecs[i]->y) + vecs[i]->x)
 			)
 			c = !c;
 	}
-
 	return c;
 }
 

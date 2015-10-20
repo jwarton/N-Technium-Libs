@@ -70,7 +70,7 @@ private:
 
 	void align_Panel(ntPanel* panel_ptr, ntVec3* axis);
 	void align_Panel(ntPanel* panel_ptr, ntVec3* axis_A, ntVec3* axis_B, ntVec3* pos);
-	void round_Pos(ntPanel* panel_ptr,float tolerence);
+	void round_Pos(ntPanel* panel_ptr,float tolerance);
 	void write_Panel(ntPanel* panel_ptr);
 	double calc_Area(ntPanel* panel_ptr);
 

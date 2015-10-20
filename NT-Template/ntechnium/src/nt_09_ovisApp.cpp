@@ -23,14 +23,14 @@ void ovisApp::init() {
 		float val = (rand() % 255 + 1);		//TEMPORARY VALUES FOR PANEL PERFORATION DRIVER
 		val = mapRange(0,1,0,255,val);
 		panels.at(i)->set_IMG(val);
-		//write_Panel(panels.at(i));
-		panels.at(i)->calc_PerfPos();
+		panels.at(i)->calc_Perf();
+		write_Panel(panels.at(i));
 		for (int j = 0; j < 3; j++) {
 			ntMatrix4 SC1 = ntMatrix4(panels.at(i)->vecs[j]);
 			SC1.scale3d(0.015);
 		}
 		for (int j = 0; j < panels.at(i)->p_Pos.size(); j++) {
-			ntMatrix4 SC2 = ntMatrix4(&panels.at(i)->p_Pos.at(j));
+			ntMatrix4 SC2 = ntMatrix4(panels.at(i)->p_Pos.at(j));
 			SC2.scale3d(0.015);
 		}
 	}
@@ -324,8 +324,8 @@ void ovisApp::align_Panel(ntPanel* panel_ptr, Vec3* axis_A, Vec3* axis_B, ntVec3
 
 	//http://math.stackexchange.com/questions/180418/calculate-rotation-matrix-to-align-vector-a-to-vector-b-in-3d
 }
-void ovisApp::round_Pos(ntPanel* panel_ptr, float tolerence) {
-	float t = tolerence;
+void ovisApp::round_Pos(ntPanel* panel_ptr, float tolerance) {
+	float t = tolerance;
 	for (int i = 0; i < 3; i++) {
 		if (panel_ptr->vecs[i]->x < t && panel_ptr->vecs[i]->x > -t) {
 			panel_ptr->vecs[i]->x = round(panel_ptr->vecs[i]->x);
@@ -390,7 +390,7 @@ void ovisApp::write_Panel(ntPanel* panel_ptr) {
 
 	file << "//  HKS | LINE\n";
 	file << "//  00603.000:: OVIS STADIUM\n";
-	file << "//  PANEL PARAMETERS\n";
+	file << "//  PANEL PARAMETERS  | UNITS [ INCHES ]\n";
 	file << "//  RELEASE " << date << "\n";
 	file << "//  OVIS PANEL_" << ss.str() << "\n";
 	file << "//  NODE POSITIONS:\n";
@@ -402,7 +402,8 @@ void ovisApp::write_Panel(ntPanel* panel_ptr) {
 	file << format_VEC(panel_ptr->get_v_G().at(2)) << "\n";
 	file << "\n";
 	file << "//  PANEL ORIENTATION VECTOR:\n";
-	file << "//" << panel_ptr->get_n_G() << "\n";
+	file << "//" << panel_ptr->get_n_G();
+	file << "//  AREA:  " << to_string(calc_Area(panel_ptr)) << "            [ SQ.INCH ]\n\n";
 	file << "//////////////////////////////////////////////////////////////////////\n";
 	file << "//  NODE POSITIONS:\n";
 	file << "//  [ LOCAL COORDINATES ]\n";
@@ -413,13 +414,15 @@ void ovisApp::write_Panel(ntPanel* panel_ptr) {
 	file << "\n";
 	file << "//  PANEL ORIENTATION VECTOR:\n";
 	file << format_VEC(&panel_ptr->norm) << "\n";
-	file << "//  AREA:  " << to_string(calc_Area(panel_ptr)) << "\n";
 	file << "\n";
 	file << "//  CORNER POSITIONS:          {POS:           }	\n";
 	file << "\n";
 	file << "//  FASTENER POSITIONS:        {POS:  RADIUS:  }\n";
 	file << "\n";
 	file << "//  PERFORATION DATA:          {POS:  RADIUS:  }\n";
+	for (int i = 0; i < panel_ptr->get_Perf().size(); i++) {
+		file << format_VEC(panel_ptr->get_Perf().at(i)) << "       RAD:  "<< panel_ptr->get_Perf_R().at(i) << "\n";
+	}
 	file.close();
 }
 

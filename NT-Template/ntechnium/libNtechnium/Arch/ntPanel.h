@@ -16,7 +16,7 @@
 #include "ntEdge.h"
 #include "ntNormal.h"
 #include "ntMath.h"
-
+#include "ntColor4f.h"
 using namespace jpw;
 
 class ntPanel{
@@ -31,7 +31,7 @@ private:
 
 	void set_vG();
 
-	bool ntPanel::pt_isInside(Vec3 point);
+	bool ntPanel::pt_isInside(ntVec3* point);
 public:
 
 	ntVec3 *v0,*v1,*v2;
@@ -59,14 +59,14 @@ public:
 	float image_Val;				// VALUE OF MEAN PIXEL
 
 	void display_Perf();
-	void calc_PerfPos();
+	void draw_Circ(Vec3* pos, float rad, Col4 col = Col4(.25,.25,.25,1));
+	void calc_Perf();
 
-	std::vector<ntVec3> p_Pos;
+	std::vector<ntVec3*> p_Pos;
 	std::vector<float>  p_Rad;
 
-	float r_Min = .375;
-	float r_Max = 1.5;
-	int p_Div = 15;
+	float r_Min = .1625;
+	float r_Max = 1;
 	float edge_Offset = .75;
 
 	//float calcArea();
@@ -80,6 +80,8 @@ public:
 	string get_n_G();	//GLOBAL NORMAL
 	string get_p_G();
 	std::vector<ntVec3*> get_v_G();	//GLOBAL VERTICES
+	std::vector<ntVec3*> get_Perf();
+	std::vector<float> get_Perf_R();
 
 	void display();
 };
