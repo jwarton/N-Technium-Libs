@@ -19,21 +19,25 @@
 #include <armadillo>
 
 #include "ntMath.h"
+#include "ntColor4f.h"
 #include "ntMatrix4.h"
 #include "nt_AppContent.h"
 
 #include "ntPtsTxt.h"
 #include "ntPanel.h"
+#include "ntFace3.h"
 
 using namespace jpw;
+
 class ovisApp : public AppContent {
 private:
 	int panel_Index = 0;	//DISPLAY INDEX
+	D_mode m = vF;										//CURRENT DISPLAY MODE
 
 	string url;
-	string path = nt_Utility::getPathToOutput();;
+	string path = nt_Utility::getPathToOutput();
 	string pathExtension = "ovis\\";
-	string fileName = "ptPos_05_OvisTriPts";
+	string fileName = "ptPos_03_OvisTriPts";
 	string fileExt = ".txt";
 
 	bool isStartFile = false;
@@ -59,7 +63,8 @@ private:
 	ntVec3 norms[3];
 	ntVec3 norm_G;
 
-	vector<ntPanel*> panels;
+	std::vector<ntPanel*> panels;
+	std::vector<ntFace3*> faces;
 
 	void read_DATA();
 	Vec3 add_Vert(string line);

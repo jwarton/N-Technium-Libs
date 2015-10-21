@@ -29,7 +29,7 @@
 using namespace jpw;
 //using namespace arma;
 
-enum D_mode{ vQ, vF, vP, vS, vW};
+//enum D_mode{ vQ, vF, vP, vS, vW};  ///RELOCATED TO MATH CLASS
 
 class ntTruss {
 private:

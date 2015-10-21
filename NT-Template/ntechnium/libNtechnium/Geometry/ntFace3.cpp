@@ -7,16 +7,15 @@ v0(v0),v1(v1),v2(v2){
 	this->vecs[0] = v0;
 	this->vecs[1] = v1;
 	this->vecs[2] = v2;
-	this->col = ntColor4f(1,1,1,1);
+	col = ntColor4f(1,1,1,1);
 	init();
 }
 
 ntFace3::ntFace3(ntVec3* v0,ntVec3* v1,ntVec3* v2,ntColor4f col):
-v0(v0),v1(v1),v2(v2){
+v0(v0),v1(v1),v2(v2),col(col){
 	this->vecs[0] = v0;
 	this->vecs[1] = v1;
 	this->vecs[2] = v2;
-	this->col = col;
 	init();
 }
 
@@ -42,9 +41,10 @@ v0(v0),v1(v1),v2(v2),vert0(vert0),vert1(vert1),vert2(vert2){
 
 void ntFace3::init(){
 	//initialize vertex
-	vert0 = &ntVertex (v0,col);
-	vert1 = &ntVertex (v1,col);
-	vert2 = &ntVertex (v2,col);
+	vert0 = new ntVertex (v0,col);
+	vert1 = new ntVertex (v1,col);
+	vert2 = new ntVertex (v2,col);
+
 	verts.push_back(vert0);
 	verts.push_back(vert1);
 	verts.push_back(vert2);
@@ -92,11 +92,11 @@ void ntFace3::setColor(ntColor4f col){
 
 void ntFace3::display(){
 	glBegin(GL_TRIANGLES);
-	glColor4f(vert0->col.r, vert0->col.g, vert0->col.b, vert0->col.a);
+	glColor4f(verts.at(0)->col.r, verts.at(0)->col.g, verts.at(0)->col.b, verts.at(0)->col.a);
     glVertex3f(v0->x, v0->y, v0->z);
-	glColor4f(vert1->col.r, vert1->col.g, vert1->col.b, vert1->col.a);
+	glColor4f(verts.at(1)->col.r, verts.at(1)->col.g, verts.at(1)->col.b, verts.at(1)->col.a);
     glVertex3f(v1->x, v1->y, v1->z);	
-	glColor4f(vert2->col.r, vert2->col.g, vert2->col.b, vert2->col.a);
+	glColor4f(verts.at(2)->col.r, verts.at(2)->col.g, verts.at(2)->col.b, verts.at(2)->col.a);
     glVertex3f(v2->x, v2->y, v2->z);
     glEnd();
 	///TODO centroid functionality needs work

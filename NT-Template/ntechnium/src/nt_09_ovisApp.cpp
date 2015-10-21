@@ -9,7 +9,15 @@ void ovisApp::init() {
 	
 	panel_Dim = panels.size();
 	for (int i = 0; i < panel_Dim; i++) {
-		
+		if (i < faces.size()) {
+			for (int j = 0; j < 3; j++) {
+				ntMatrix4 SC3 = ntMatrix4(faces.at(i)->vecs[j]);
+				SC3.scale3d(0.0001);
+			}
+			float r = mapRange(0, 1, 0, panel_Dim, i);
+			float b = mapRange(0, 1, 0, panel_Dim, i, false);
+			faces.at(i)->setColor(Col4(r, 0, b, 1));
+		}
 		/////////////////////////////////////////////////////////////////////////////  ALIGN CENTROID/NORMAL TO Z-AXIS
 		panels.at(i)->calcCentroid();
 		panels.at(i)->calcNorm();
@@ -24,7 +32,7 @@ void ovisApp::init() {
 		val = mapRange(0,1,0,255,val);
 		panels.at(i)->set_IMG(val);
 		panels.at(i)->calc_Perf();
-		write_Panel(panels.at(i));
+		//write_Panel(panels.at(i));
 		for (int j = 0; j < 3; j++) {
 			ntMatrix4 SC1 = ntMatrix4(panels.at(i)->vecs[j]);
 			SC1.scale3d(0.015);
@@ -81,6 +89,13 @@ void ovisApp::read_DATA(){
 
 		//DISTRIBUTE DATA TO PANEL DEFINITION
 		if (isSubNext == true || isEndFile == true) {
+			ntVec3 * n0 = new ntVec3(verts[0].x, verts[0].y, verts[0].z);
+			ntVec3 * n1 = new ntVec3(verts[1].x, verts[1].y, verts[1].z);
+			ntVec3 * n2 = new ntVec3(verts[2].x, verts[2].y, verts[2].z);
+			ntFace3 * face = new ntFace3(n0, n1, n2);
+
+			faces.push_back(face);
+
 			ntVec3 * v0 = new ntVec3(verts[0].x, verts[0].y, verts[0].z);
 			ntVec3 * v1 = new ntVec3(verts[1].x, verts[1].y, verts[1].z);
 			ntVec3 * v2 = new ntVec3(verts[2].x, verts[2].y, verts[2].z);
@@ -488,18 +503,31 @@ void ovisApp::run(){
 			std::cout << panel_Index << endl;
 		}
 	}
+	if (glfwGetKey(window, GLFW_KEY_Q) == GLFW_PRESS) {
+		m = vQ;
+	}
+	if (glfwGetKey(window, GLFW_KEY_F) == GLFW_PRESS) {
+		m = vF;
+	}
 	display();
 }
 
 void ovisApp::display(){
 	///////////////////////////////////////////////////////////////
-	if (panel_Index >= 0 && panel_Index < panel_Dim) {
-		for (int i = 0; i < panels.size(); i++) {
-			panels.at(panel_Index)->display();
-			panels.at(panel_Index)->edges.at(0).display(1);
-			panels.at(panel_Index)->edges.at(1).display(1);
-			panels.at(panel_Index)->edges.at(2).display(1);
-			panels.at(panel_Index)->verts.at(0)->display(2);
+	if (m == vQ) {
+		if (panel_Index >= 0 && panel_Index < panel_Dim) {
+			for (int i = 0; i < panels.size(); i++) {
+				//panels.at(panel_Index)->display();
+				panels.at(panel_Index)->edges.at(0).display(1);
+				panels.at(panel_Index)->edges.at(1).display(1);
+				panels.at(panel_Index)->edges.at(2).display(1);
+				panels.at(panel_Index)->verts.at(0)->display(2);
+			}
+		}
+	}
+	if (m == vF) {
+		for (int i = 0; i < faces.size(); i++) {
+			faces.at(i)->display();
 		}
 	}
 }
