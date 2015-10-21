@@ -16,7 +16,13 @@ void ovisApp::init() {
 			}
 			float r = mapRange(0, 1, 0, panel_Dim, i);
 			float b = mapRange(0, 1, 0, panel_Dim, i, false);
-			faces.at(i)->setColor(Col4(r, 0, b, 1));
+			if (i % 2 == 0) {
+				faces.at(i)->setColor(Col4(r, 0, b, 1));
+			}
+			else {
+				faces.at(i)->setColor(Col4(r, 0, b, 1));
+			}
+			faces.at(i)->edges.at(0).setCol(ntColor4f(0, 0, 0, 1));
 		}
 		/////////////////////////////////////////////////////////////////////////////  ALIGN CENTROID/NORMAL TO Z-AXIS
 		panels.at(i)->calcCentroid();
@@ -508,6 +514,35 @@ void ovisApp::run(){
 	}
 	if (glfwGetKey(window, GLFW_KEY_F) == GLFW_PRESS) {
 		m = vF;
+		for (int i = 0; i < faces.size(); i++) {
+			float r = mapRange(0, 1, 0, panel_Dim, i);
+			float b = mapRange(0, 1, 0, panel_Dim, i, false);
+			if (i % 2 == 0) {
+				faces.at(i)->setColor(Col4(r, 0, b, 1));
+			}
+			else {
+				faces.at(i)->setColor(Col4(r, 0, b, 1));
+			}
+			faces.at(i)->edges.at(0).setCol(ntColor4f(0, 0, 0, .5));
+			faces.at(i)->edges.at(1).setCol(ntColor4f(0, 0, 0, .5));
+			faces.at(i)->edges.at(2).setCol(ntColor4f(0, 0, 0, .5));
+		}
+	}
+	if (glfwGetKey(window, GLFW_KEY_S) == GLFW_PRESS) {
+		m = vS;
+		for (int i = 0; i < faces.size(); i++) {
+			float c = panels.at(i)->image_Val;
+			faces.at(i)->setColor(Col4(c, c, c, 1));
+			faces.at(i)->setColor(Col4(c, c, c, 1));
+		}
+	}
+	if (glfwGetKey(window, GLFW_KEY_W) == GLFW_PRESS) {
+		m = vW;
+		for (int i = 0; i < faces.size(); i++) {
+			faces.at(i)->edges.at(0).setCol(ntColor4f(1, 1, 1, .5));
+			faces.at(i)->edges.at(1).setCol(ntColor4f(1, 1, 1, .5));
+			faces.at(i)->edges.at(2).setCol(ntColor4f(1, 1, 1, .5));
+		}
 	}
 	display();
 }
@@ -528,6 +563,19 @@ void ovisApp::display(){
 	if (m == vF) {
 		for (int i = 0; i < faces.size(); i++) {
 			faces.at(i)->display();
+			faces.at(i)->edges.at(0).display();
+		}
+	}
+	if (m == vS) {
+		for (int i = 0; i < faces.size(); i++) {
+			faces.at(i)->display();
+		}
+	}
+	if (m == vW) {
+		for (int i = 0; i < faces.size(); i++) {
+			faces.at(i)->edges.at(0).display();
+			faces.at(i)->edges.at(1).display();
+			faces.at(i)->edges.at(2).display();
 		}
 	}
 }

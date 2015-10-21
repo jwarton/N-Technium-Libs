@@ -78,8 +78,8 @@ void ntGLFWsetup::init(){
 	glLightModelf(GL_LIGHT_MODEL_COLOR_CONTROL, GL_SEPARATE_SPECULAR_COLOR);
 	///glEnable(GL_LIGHTING);
 	//glFrontFace(GL_CCW); // default
-	//glEnable(GL_CULL_FACE);
-	//glCullFace(GL_BACK);
+	glEnable(GL_CULL_FACE);
+	glCullFace(GL_BACK);
 	//glDisable(GL_CULL_FACE);
 	glHint(GL_PERSPECTIVE_CORRECTION_HINT, GL_NICEST);
 	//glShadeModel(GL_FLAT); // option
