@@ -11,12 +11,14 @@
 
 #include <iostream>
 #include <vector>
-#include "ntVertex.h"
 #include "ntVec3.h"
+#include "ntColor4f.h"
+#include "ntVertex.h"
 #include "ntEdge.h"
 #include "ntNormal.h"
+#include "ntCircle.h"
 #include "ntMath.h"
-#include "ntColor4f.h"
+
 using namespace jpw;
 
 class ntPanel{
@@ -39,6 +41,7 @@ public:
 	ntVertex *vert0,*vert1,*vert2;
 	std::vector<ntVertex*> verts;
 	std::vector<ntEdge> edges;
+	std::vector<ntCircle*> perfs;
 	ntColor4f col;
 	ntColor4f col_0;
 
@@ -58,8 +61,8 @@ public:
 	////////////////////////////////// PERFORATION PARAMETERS
 	float image_Val;				// VALUE OF MEAN PIXEL
 
+	void add_Perf();
 	void display_Perf();
-	void draw_Circ(Vec3* pos, float rad, Col4 col = Col4(.25,.25,.25,1));
 	void calc_Perf();
 
 	std::vector<ntVec3*> p_Pos;

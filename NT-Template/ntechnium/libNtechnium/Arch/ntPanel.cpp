@@ -136,6 +136,7 @@ void ntPanel::calc_Perf() {
 			}
 		}
 	}
+	add_Perf();
 }
 bool ntPanel::pt_isInside(ntVec3* point) {
 	int i, j, nvert = verts.size();
@@ -149,37 +150,27 @@ bool ntPanel::pt_isInside(ntVec3* point) {
 	}
 	return c;
 }
-void ntPanel::display_Perf() {
+void ntPanel::add_Perf() {
 	if (p_Pos.size() > 0) {
 		for (int i = 0; i < p_Pos.size(); i++) {
 
 			float r = p_Rad.at(i); 
-			r = r * 0.015;				///temporary scale solution
-			draw_Circ(p_Pos.at(i),r);
-			//draw_Circ(p_Pos.at(i), r + (.25 * 0.015), Col4(.1, .1, .1, 1));
+			ntCircle * perf = new ntCircle(p_Pos.at(i), r, Col4(.25, .25, .25, 1));
+			perfs.push_back(perf);
 		}
 	} else {
 		//std::cout << "ERROR:  ZERO PERFORATIONS FOUND" << endl;
 	}
 }
-void ntPanel::draw_Circ(Vec3* pos, float rad, Col4 col) {
-	glColor4f(col.r, col.g, col.b, col.a);
-	glBegin(GL_LINE_LOOP);
-	//glBegin(GL_POINTS);
-	//glPointSize(1);
-	for (int j = 0; j<n_seg; ++j) {
+void ntPanel::display_Perf() {
 
-		float theta = 2.0f * 3.1415926f * j / n_seg;//get the current angle
-		float x = rad * cosf(theta);//calculate the x component
-		float y = rad * sinf(theta);//calculate the y component
-		//glVertex2f(pos->x, pos->y);
-		glVertex2f(x + pos->x, y + pos->y);//output vertex
+	for (int i = 0; i<perfs.size(); i++) {
+		perfs.at(i)->display();
 	}
-	glEnd();
 }
 
 void ntPanel::display(){
-	display_Perf();
+	//display_Perf();
 	//glBegin(GL_TRIANGLES);
 	//glColor4f(vert0->col.r, vert0->col.g, vert0->col.b, vert0->col.a);
 	//glVertex3f(v0->x, v0->y, v0->z);

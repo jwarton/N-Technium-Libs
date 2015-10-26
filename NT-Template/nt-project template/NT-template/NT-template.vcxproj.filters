@@ -204,6 +204,9 @@
     <ClCompile Include="..\..\ntechnium\libNtechnium\Arch\ntPanel.cpp">
       <Filter>lib_arch</Filter>
     </ClCompile>
+    <ClCompile Include="..\..\ntechnium\libNtechnium\Geometry\ntCircle.cpp">
+      <Filter>lib_geometry</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\ntechnium\appNtechnium\nt_BaseApp.h">
@@ -385,6 +388,9 @@
     </ClInclude>
     <ClInclude Include="..\..\ntechnium\libNtechnium\Arch\ntPanel.h">
       <Filter>lib_arch</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\ntechnium\libNtechnium\Geometry\ntCircle.h">
+      <Filter>lib_geometry</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

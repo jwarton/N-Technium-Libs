@@ -43,9 +43,11 @@ void ovisApp::init() {
 			ntMatrix4 SC1 = ntMatrix4(panels.at(i)->vecs[j]);
 			SC1.scale3d(0.015);
 		}
-		for (int j = 0; j < panels.at(i)->p_Pos.size(); j++) {
-			ntMatrix4 SC2 = ntMatrix4(panels.at(i)->p_Pos.at(j));
-			SC2.scale3d(0.015);
+		for (int j = 0; j < panels.at(i)->perfs.size(); j++) {
+			for (int k = 0; k < panels.at(i)->perfs.at(j)->seg; k++) {
+				ntMatrix4 SC2 = ntMatrix4(panels.at(i)->perfs.at(j)->vecs.at(k));
+				SC2.scale3d(0.015);
+			}
 		}
 	}
 }
@@ -552,7 +554,7 @@ void ovisApp::display(){
 	if (m == vQ) {
 		if (panel_Index >= 0 && panel_Index < panel_Dim) {
 			for (int i = 0; i < panels.size(); i++) {
-				//panels.at(panel_Index)->display();
+				panels.at(panel_Index)->display();
 				panels.at(panel_Index)->edges.at(0).display(1);
 				panels.at(panel_Index)->edges.at(1).display(1);
 				panels.at(panel_Index)->edges.at(2).display(1);
