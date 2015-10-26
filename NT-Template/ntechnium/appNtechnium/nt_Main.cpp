@@ -53,7 +53,7 @@ int main(int argc, char const** argv){
 	///////////////////////////////////////////////////////////////////////////////////////////////////////////
 	
 	///GRAPHICS
-	AppContent* c = new meshImportApp();
+	//AppContent* c = new meshImportApp();
 	//AppContent* c = new meshApp();
 	//AppContent* c = new treeApp01();
 	//AppContent* c = new treeApp02();
@@ -71,7 +71,7 @@ int main(int argc, char const** argv){
 	//AppContent* c = new afApp02();		
 
 	///OVIS
-	//AppContent* c = new ovisApp();
+	AppContent* c = new ovisApp();
 
 	///KUKA SOURCE CODE APPLICATIONS
 	//AppContent* c = new krlApp();

@@ -170,7 +170,7 @@ void ntPanel::display_Perf() {
 }
 
 void ntPanel::display(){
-	//display_Perf();
+	display_Perf();
 	//glBegin(GL_TRIANGLES);
 	//glColor4f(vert0->col.r, vert0->col.g, vert0->col.b, vert0->col.a);
 	//glVertex3f(v0->x, v0->y, v0->z);

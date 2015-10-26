@@ -106,7 +106,7 @@ void ntCircle::display(){
 	//glBegin(GL_POINTS);
 	//glPointSize(1);															
 	for (int i = 0; i<seg; ++i) {
-		glVertex2f(vecs.at(i)->x, vecs.at(i)->y);
+		glVertex3f(vecs.at(i)->x, vecs.at(i)->y, 0);
 	}
 	glEnd();
 }
