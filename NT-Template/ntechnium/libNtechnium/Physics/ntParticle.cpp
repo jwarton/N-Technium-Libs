@@ -46,7 +46,7 @@ void ntParticle::reset(){
 //void ntParticle::display(){
 //	//////emitter of lost souls, The 500,000,000 year reign
 //	if ((pos->x > 5) || (pos->x < -5) || (pos->y < -5) || (pos->y > 5)){
-//		reset();
+//		view_Reset();
 //	}
 //
 //	vert.display();

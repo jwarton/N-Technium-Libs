@@ -120,7 +120,6 @@ void ntGLFWsetup::init(){
 	glClearDepth(1.0f);				//  0 is near, 1 is far
 	glDepthFunc(GL_LESS);			//  glDepthFunc(GL_LEQUAL);  
 	
-	///
 	/////////////////////////////////////////////////////////|ACTIVATE INIT FUNCTION IN DERIVED APPLICATIONS|//////
 	///////////////////////////////////////////////////////////////////////////////////////////////////////////////
 	baseApp->window = window;//////////////////////////////////////////////////////////////////////////////////////
@@ -128,50 +127,16 @@ void ntGLFWsetup::init(){
 	///////////////////////////////////////////////////////////////////////////////////////////////////////////////
 	///////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-
-
 	////////////////////////////////////////////////////////////////////// 3D CONNEXION TEST AND INITIALIZATION
 	///////////////////////////////////////////////////////////////////////////////////////////////////////////
 	SiOpenData		oData;
 	SiInitialize();
 	SiOpenWinInit(&oData, hWin32);
-	SiSetUiMode(devHdl, SI_UI_ALL_CONTROLS);								///// CONFIG SOFTBUTTON WIN DISPLAY
+	SiSetUiMode(devHdl, SI_UI_ALL_CONTROLS);
 	devHdl = SiOpen("NT_FRAMEWORK", SI_ANY_DEVICE, SI_NO_MASK, SI_EVENT, &oData);
 	
-	//SiGrabDevice(devHdl, SPW_TRUE);
 	SiDeviceName devName;
 	SiGetDeviceName(devHdl, &devName);
-	//std:cout << "\n" << "////////////////////////////////////////////////////" << endl;
-	//sprintf_s(devicename, _T("%S"), devName.name);
-	//std::cout << "DEVICE:  " << devicename <<endl;
-
-}
-void ntGLFWsetup::reset(){
-	baseApp->rotX = 0.0f;
-	baseApp->rotY = 0.0f;
-	baseApp->rotZ = 0.0f;
-	baseApp->camX = -3.0f;
-	baseApp->camY = -3.0f;
-	baseApp->camZ = 3.0f;
-	baseApp->tarX = 0.0f;
-	baseApp->tarY = 0.0f;
-	baseApp->tarZ = 0.0f;
-	baseApp->rolX = 0.0f;
-	baseApp->rolY = 0.0f;
-	baseApp->rolZ = 1.0f;
-	baseApp->focal = 50.0f;
-	baseApp->zoom = 0.0f;
-}
-void ntGLFWsetup::update(){
-	glMatrixMode(GL_PROJECTION);
-	glLoadIdentity();
-	gluPerspective(baseApp->focal + baseApp->zoom, baseApp->width / baseApp->height, baseApp->zNear, baseApp->zFar);
-	glMatrixMode(GL_MODELVIEW);
-	glLoadIdentity();
-	gluLookAt(baseApp->camX, baseApp->camY, baseApp->camZ, baseApp->tarX, baseApp->tarY, baseApp->tarZ, baseApp->rolX, baseApp->rolY, baseApp->rolZ);
-	glRotatef(baseApp->rotX, 1.f, 0.f, 0.f);
-	glRotatef(baseApp->rotY, 0.f, 1.f, 0.f);
-	glRotatef(baseApp->rotZ, 0.f, 0.f, 1.f);
 }
 void ntGLFWsetup::run(){
 	while (!glfwWindowShouldClose(window)) {
@@ -198,13 +163,6 @@ void ntGLFWsetup::run(){
 	exit(EXIT_SUCCESS);
 }
 
-HWND ntGLFWsetup::getWindow() {
-	return hWin32;
-}
-///////////////////////////////////////////////////footnote *01
-//reference: http://bankslab.berkeley.edu/members/chris/AntiAliasing/AntiAliasingInOpenGL.html
-
-
 void ntGLFWsetup::EventHandler_3DX() {
 	MSG				msg;			//INCOMING MESSAGE TO EVALUATE
 	BOOL			handled;		//IS MESSAGE HANDLED
@@ -218,7 +176,7 @@ void ntGLFWsetup::EventHandler_3DX() {
 	SiGetEventWinInit(&EData, msg.message, msg.wParam, msg.lParam);
 	hdc = GetDC(hWin32);
 	if (SiGetEvent(devHdl, SI_AVERAGE_EVENTS, &EData, &Event) == SI_IS_EVENT) {
-		std::cout << "3DX EVENT RECEIVED" << endl;
+		//std::cout << "3DX EVENT RECEIVED" << endl;
 		if (Event.type == SI_MOTION_EVENT) {
 			Event_3DX_gimbalM(&Event);										///// PROCESS 3DX MOTION EVENT
 		} 		
@@ -228,26 +186,26 @@ void ntGLFWsetup::EventHandler_3DX() {
 		else if (Event.type == SI_BUTTON_PRESS_EVENT) {
 
 
-			std::cout << "3DX BUTTON PRESS" << Event.u.hwButtonEvent.buttonNumber << endl;
+			//std::cout << "3DX BUTTON PRESS" << Event.u.hwButtonEvent.buttonNumber << endl;
 			Event_3DX_buttonP(Event.u.hwButtonEvent.buttonNumber);			///// PROCESS BUTTON PRESS EVENT	
 
 		} 		
 		else if (Event.type == SI_BUTTON_RELEASE_EVENT) {
 
-			std::cout << "3DX BUTTON RELEASE" << Event.u.hwButtonEvent.buttonNumber << endl;
+			//std::cout << "3DX BUTTON RELEASE" << Event.u.hwButtonEvent.buttonNumber << endl;
 			Event_3DX_buttonR(Event.u.hwButtonEvent.buttonNumber);			///// PROCESS BUTTON RELEASE EVENT
 
 
 		}
 		else if (Event.type == SI_BUTTON_EVENT) {
-			std::cout << "3DX BUTTON" << Event.u.hwButtonEvent.buttonNumber << endl;
+			//std::cout << "3DX BUTTON" << Event.u.hwButtonEvent.buttonNumber << endl;
 		}
 		else if (Event.type == SI_DEVICE_CHANGE_EVENT) {
-			std::cout << "3DX DEVICE" << endl;
+			//std::cout << "3DX DEVICE" << endl;
 			Event_3DX_dChange(&Event);										///// PROCESS 3DX DEVICE CHANGE EVENT
 		} 		
 		else if (Event.type == SI_CMD_EVENT) {
-			std::cout << "3DX COMMAND" << endl;
+			//std::cout << "3DX COMMAND" << endl;
 			Event_3DX_command(&Event);										///// V3DX COMMAND EVENTS
 		}
 
@@ -268,138 +226,112 @@ void ntGLFWsetup::EventHandler_3DX() {
 	}
 }
 void ntGLFWsetup::EventHandler_KEYBD(){
-	///KEYBOARD INPUT FUNCTIONALITY:
-	if (glfwGetKey(window, GLFW_KEY_0) == GLFW_PRESS & glfwGetKey(window, GLFW_KEY_LEFT_CONTROL) == GLFW_PRESS) {
-		reset();
-		update();
+	// KEYBOARD INPUT FUNCTIONALITY:
+	bool ctrl_Status = false;
+	if (glfwGetKey(window, GLFW_KEY_LEFT_CONTROL) == GLFW_PRESS || glfwGetKey(window, GLFW_KEY_RIGHT_CONTROL) == GLFW_PRESS) {
+		ctrl_Status = true;
+	}
+	else {
+		ctrl_Status = false;
 	}
 
-	//CAMERA JOG FUNCTIONALITY
+	if (glfwGetKey(window, GLFW_KEY_0) == GLFW_PRESS && ctrl_Status == true) {
+		view_Fit();
+		view_Update();
+	}
+	///////////////////////////////////////////////////////////////
+	////////////////////////////////////// CAMERA JOG FUNCTIONALITY
 	if (glfwGetKey(window, GLFW_KEY_RIGHT) == GLFW_PRESS & glfwGetKey(window, GLFW_KEY_LEFT_CONTROL) == GLFW_PRESS) {
-		baseApp->camZ += 0.1;
-		update();
+		baseApp->camZ += 1;
+		view_Update();
 	}
 	if (glfwGetKey(window, GLFW_KEY_LEFT) == GLFW_PRESS & glfwGetKey(window, GLFW_KEY_LEFT_CONTROL) == GLFW_PRESS) {
-		baseApp->camZ -= 0.1;
-		update();
+		baseApp->camZ -= 1;
+		view_Update();
 	}
 	if (glfwGetKey(window, GLFW_KEY_UP) == GLFW_PRESS & glfwGetKey(window, GLFW_KEY_LEFT_CONTROL) == GLFW_PRESS) {
-		baseApp->camX += 0.1;
-		update();
+		baseApp->camX += 1;
+		view_Update();
 	}
 	if (glfwGetKey(window, GLFW_KEY_DOWN) == GLFW_PRESS & glfwGetKey(window, GLFW_KEY_LEFT_CONTROL) == GLFW_PRESS) {
-		baseApp->camX -= 0.1;
-		update();
+		baseApp->camX -= 1;
+		view_Update();
 	}
 	if (glfwGetKey(window, GLFW_KEY_PAGE_UP) == GLFW_PRESS & glfwGetKey(window, GLFW_KEY_LEFT_CONTROL) == GLFW_PRESS) {
-		baseApp->camY += 0.1;
-		update();
+		baseApp->camY += 1;
+		view_Update();
 	}
 	if (glfwGetKey(window, GLFW_KEY_PAGE_DOWN) == GLFW_PRESS & glfwGetKey(window, GLFW_KEY_LEFT_CONTROL) == GLFW_PRESS) {
-		baseApp->camY -= 0.1;
-		update();
+		baseApp->camY -= 1;
+		view_Update();
 	}
-	//ORBIT FUNCTIONALITY
+	///////////////////////////////////////////////////////////////
+	/////////////////////////////////////////// ORBIT FUNCTIONALITY
 	if (glfwGetKey(window, GLFW_KEY_RIGHT) == GLFW_PRESS) {
 		baseApp->rotZ += 0.2;
-		update();
+		view_Update();
 		//glRotatef(.2, 0.f, 0.f, 1.f);
 	}
 	if (glfwGetKey(window, GLFW_KEY_LEFT) == GLFW_PRESS) {
 		baseApp->rotZ -= 0.2;
-		update();
+		view_Update();
 		//glRotatef(-.2, 0.f, 0.f, 1.f);
 	}
 	if (glfwGetKey(window, GLFW_KEY_UP) == GLFW_PRESS) {
 		baseApp->rotX += 0.2;
-		update();
+		view_Update();
 		//glRotatef(.2, 1.f, 0.f, 0.f);
 	}
 	if (glfwGetKey(window, GLFW_KEY_DOWN) == GLFW_PRESS) {
 		baseApp->rotX -= 0.2;
-		update();
+		view_Update();
 		//glRotatef(-.2, 1.f, 0.f, 0.f);
 	}
 	if (glfwGetKey(window, GLFW_KEY_PAGE_UP) == GLFW_PRESS) {
 		//baseApp->rotY += 0.2;
-		update();
+		view_Update();
 		//glRotatef(.2, 0.f, 1.f, 0.f);
 	}
 	if (glfwGetKey(window, GLFW_KEY_PAGE_DOWN) == GLFW_PRESS) {
 		//baseApp->rotY -= 0.2;
-		update();
+		view_Update();
 		//glRotatef(-.2, 0.f, 1.f, 0.f);
 	}
-
-	//ZOOM FUNCTIONS
+	///////////////////////////////////////////////////////////////
+	//////////////////////////////////////////////// ZOOM FUNCTIONS
 	if (glfwGetKey(window, baseApp->view_ZI) == GLFW_PRESS) {
 		baseApp->zoom += 0.1;
-		update();
+		view_Update();
 	}
 	if (glfwGetKey(window, baseApp->view_ZO) == GLFW_PRESS) {
 		baseApp->zoom -= 0.1;
-		update();
+		view_Update();
 	}
-	//STANDARD VIEW TOGGLE
+	///////////////////////////////////////////////////////////////
+	////////////////////////////////////////// STANDARD VIEW TOGGLE
 	if (glfwGetKey(window, baseApp->view_P) == GLFW_PRESS) {
-		reset();
-		update();
+		view_Reset();
+		view_Update();
 	}
 	if (glfwGetKey(window, baseApp->view_T) == GLFW_PRESS) {
-		reset();
-		baseApp->camX = 0.0f;
-		baseApp->camY = 0.0f;
-		baseApp->camZ = 3.0f;
-		baseApp->rolX = 0.0f;
-		baseApp->rolY = 1.0f;
-		baseApp->rolZ = 0.0f;
-		update();
+		view_Top();
 	}
 	if (glfwGetKey(window, baseApp->view_B) == GLFW_PRESS) {
-		reset();
-		baseApp->camX = 0.0f;
-		baseApp->camY = 0.0f;
-		baseApp->camZ = -3.0f;
-		baseApp->rolX = 0.0f;
-		baseApp->rolY = 1.0f;
-		baseApp->rolZ = 0.0f;
-		update();
+		view_Bottom();
 	}
 	if (glfwGetKey(window, baseApp->view_L) == GLFW_PRESS) {
-		reset();
-		baseApp->camX = 3.0f;
-		baseApp->camY = 0.0f;
-		baseApp->camZ = 0.0f;
-		baseApp->rolX = 0.0f;
-		baseApp->rolY = 0.0f;
-		baseApp->rolZ = 1.0f;
-		update();
+		view_Left();
 	}
 	if (glfwGetKey(window, baseApp->view_R) == GLFW_PRESS) {
-		reset();
-		baseApp->camX = 0.0f;
-		baseApp->camY = 3.0f;
-		baseApp->camZ = 0.0f;
-		baseApp->rolX = 0.0f;
-		baseApp->rolY = 0.0f;
-		baseApp->rolZ = 1.0f;
-		update();
+		view_Right();
 	}
 	if (glfwGetKey(window, baseApp->view_F) == GLFW_PRESS) {
-		reset();
-		baseApp->camX = 0.0f;
-		baseApp->camY = -3.0f;
-		baseApp->camZ = 0.0f;
-		baseApp->rolX = 0.0f;
-		baseApp->rolY = 0.0f;
-		baseApp->rolZ = 1.0f;
-		update();
+		view_Front();
 	}
-
 }
 void ntGLFWsetup::EventHandler_MOUSE(){
 
-	///MOUSE EVENT FUNCTIONALITY:
+	// MOUSE EVENT FUNCTIONALITY:
 	int state_m1 = glfwGetMouseButton(window, GLFW_MOUSE_BUTTON_LEFT);
 	int state_m2 = glfwGetMouseButton(window, GLFW_MOUSE_BUTTON_RIGHT);
 	int state_m3 = glfwGetMouseButton(window, GLFW_MOUSE_BUTTON_MIDDLE);
@@ -409,47 +341,42 @@ void ntGLFWsetup::EventHandler_MOUSE(){
 	int state_m7 = glfwGetMouseButton(window, GLFW_MOUSE_BUTTON_7);
 	int state_m8 = glfwGetMouseButton(window, GLFW_MOUSE_BUTTON_LAST);
 
-	///	GLFW SCROLL FUNCTIONALITY
+	// GLFW SCROLL FUNCTIONALITY
 	glfwSetScrollCallback(window, scroll_callback);
 
-	// mouse press events
+	// MOUSE PRESS EVENTS
 	glfwSetMouseButtonCallback(window, mouseBtn_callback);
-	///
 
 	if (state_m1 == GLFW_PRESS) {
 		//std::cout << "LEFT MOUSE BUTTON_1" << endl;
 		//baseApp->camZ -= 0.1;
-		//update();
+		//view_Update();
 	}
 	if (state_m2 == GLFW_PRESS) {
 		//std::cout << "RIGHT MOUSE BUTTON_2" << endl;
 		//baseApp->camZ -= 0.1;
-		//update();
+		//view_Update();
 	}
 	if (state_m3 == GLFW_PRESS) {
 		//std::cout << "MIDDLE MOUSE BUTTON_3" << endl;
 		//baseApp->camZ -= 0.1;
-		//update();
+		//view_Update();
 	}
 	if (state_m4 == GLFW_PRESS) {
 		//std::cout << "BACK MOUSE BUTTON_4" << endl;
-		update();
+		view_Fit();
 	}
 	if (state_m5 == GLFW_PRESS) {
 		//std::cout << "FORWARD MOUSE BUTTON_5" << endl;
-		update();
 	}
 	if (state_m6 == GLFW_PRESS) {
 		//std::cout << "MOUSE BUTTON_6" << endl;
-		update();
 	}
 	if (state_m7 == GLFW_PRESS) {
 		//std::cout << "MOUSE BUTTON_7" << endl;
-		update();
 	}
 	if (state_m8 == GLFW_PRESS) {
 		//std::cout << "MOUSE BUTTON_8" << endl;
-		update();
 	}
 }
 
@@ -463,11 +390,11 @@ void ntGLFWsetup::Event_3DX_gimbalM(SiSpwEvent *pEvent){
 
 	baseApp->camX += tx * .0001;
 	baseApp->camY += ty * .0001;
-	baseApp->camZ += tz * .0001;
+	baseApp->zoom += tz * .0001;
 	baseApp->rotX += rx * .001;
 	baseApp->rotY += ry * .001;
 	baseApp->rotZ += rz * .001;
-	update();
+	view_Update();
 
 	ReleaseDC(hWin32, hdc);
 }
@@ -549,3 +476,108 @@ void ntGLFWsetup::Event_3DX_command(SiSpwEvent *pEvent) {
 	ReleaseDC(hWin32, hdc);
 
 }
+/////////////////////////////////////////////////////////////////////////////////
+///////////////////////////////////////////////////////// STANDARD VIEW FUNCTIONS
+void ntGLFWsetup::view_Reset() {
+	baseApp->rotX = 0.0f;
+	baseApp->rotY = 0.0f;
+	baseApp->rotZ = 0.0f;
+	baseApp->camX = -3.0f;
+	baseApp->camY = -3.0f;
+	baseApp->camZ = 3.0f;
+	baseApp->tarX = 0.0f;
+	baseApp->tarY = 0.0f;
+	baseApp->tarZ = 0.0f;
+	baseApp->rolX = 0.0f;
+	baseApp->rolY = 0.0f;
+	baseApp->rolZ = 1.0f;
+	baseApp->focal = 50.0f;
+	baseApp->zoom = 0.0f;
+}
+void ntGLFWsetup::view_Update() {
+	glMatrixMode(GL_PROJECTION);
+	glLoadIdentity();
+	gluPerspective(baseApp->focal + baseApp->zoom, baseApp->width / baseApp->height, baseApp->zNear, baseApp->zFar);
+	glMatrixMode(GL_MODELVIEW);
+	glLoadIdentity();
+	gluLookAt(baseApp->camX, baseApp->camY, baseApp->camZ, baseApp->tarX, baseApp->tarY, baseApp->tarZ, baseApp->rolX, baseApp->rolY, baseApp->rolZ);
+	glRotatef(baseApp->rotX, 1.f, 0.f, 0.f);
+	glRotatef(baseApp->rotY, 0.f, 1.f, 0.f);
+	glRotatef(baseApp->rotZ, 0.f, 0.f, 1.f);
+}
+void ntGLFWsetup::view_Fit(){
+
+	Vec3 target = Vec3(baseApp->tarX, baseApp->tarY, baseApp->tarZ);
+	Vec3 eye    = Vec3(baseApp->camX, baseApp->camY, baseApp->camZ);
+	Vec3 dir_V; 
+
+	eye.sub(&target);
+	dir_V.set(&eye);
+
+	double fov_X = 2;		///REPLACE WITH POINT CLOUD RADIUS FOR OBJECTS WITHIN SCENE
+	double fov_Y = 2;		///REPLACE WITH POINT CLOUD RADIUS FOR OBJECTS WITHIN SCENE
+	double rad = min(fov_X, fov_Y) * 0.5;
+	double theta = sin(rad);
+	double dist = (rad / theta);
+
+	dir_V.mult(dist);
+	target.add(&dir_V);
+	eye.set(&target);
+
+	baseApp->camX = eye.x;
+	baseApp->camY = eye.y;
+	baseApp->camZ = eye.z;
+
+	view_Update();
+}
+void ntGLFWsetup::view_Top(){
+	view_Reset();
+	baseApp->camX = 0.0f;
+	baseApp->camY = 0.0f;
+	baseApp->camZ = 3.0f;
+	baseApp->rolX = 0.0f;
+	baseApp->rolY = 1.0f;
+	baseApp->rolZ = 0.0f;
+	view_Update();
+}
+void ntGLFWsetup::view_Bottom(){
+	view_Reset();
+	baseApp->camX = 0.0f;
+	baseApp->camY = 0.0f;
+	baseApp->camZ = -3.0f;
+	baseApp->rolX = 0.0f;
+	baseApp->rolY = 1.0f;
+	baseApp->rolZ = 0.0f;
+	view_Update();
+}
+void ntGLFWsetup::view_Right(){
+	view_Reset();
+	baseApp->camX = 0.0f;
+	baseApp->camY = 3.0f;
+	baseApp->camZ = 0.0f;
+	baseApp->rolX = 0.0f;
+	baseApp->rolY = 0.0f;
+	baseApp->rolZ = 1.0f;
+	view_Update();
+}
+void ntGLFWsetup::view_Left(){
+	view_Reset();
+	baseApp->camX = 3.0f;
+	baseApp->camY = 0.0f;
+	baseApp->camZ = 0.0f;
+	baseApp->rolX = 0.0f;
+	baseApp->rolY = 0.0f;
+	baseApp->rolZ = 1.0f;
+	view_Update();
+}
+void ntGLFWsetup::view_Front(){
+	view_Reset();
+	baseApp->camX = 0.0f;
+	baseApp->camY = -3.0f;
+	baseApp->camZ = 0.0f;
+	baseApp->rolX = 0.0f;
+	baseApp->rolY = 0.0f;
+	baseApp->rolZ = 1.0f;
+	view_Update();
+}
+void ntGLFWsetup::view_Back(){}

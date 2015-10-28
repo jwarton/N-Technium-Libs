@@ -30,7 +30,8 @@
 //#include <windows.h>
 //#include <tchar.h>
 //#include <stdio.h>
-//#include <math.h>
+#include <math.h>
+#include <algorithm>
 //#include <float.h>
 //#include <stdlib.h>
 //#include <crtdbg.h>
@@ -63,8 +64,6 @@ namespace jpw{
 	private:
 
 		void init();
-		void reset();
-		void update();
 		void run();
 
 		GLFWwindow* window;
@@ -123,8 +122,8 @@ namespace jpw{
 		int frameCount;
 		float frameRate;
 
-		friend void mouseBtn_callback(GLFWwindow* window, int button, int action, int mods);
-		friend void scroll_callback(GLFWwindow* window, float xoffset, float yoffset);
+		//friend void mouseBtn_callback(GLFWwindow* window, int button, int action, int mods);
+		//friend void scroll_callback(GLFWwindow* window, float xoffset, float yoffset);
 
 		void EventHandler_3DX();
 		void EventHandler_MOUSE();
@@ -137,6 +136,16 @@ namespace jpw{
 		void Event_3DX_dChange(SiSpwEvent *pEvent);
 		void Event_3DX_command(SiSpwEvent *pEvent);
 
+		void view_Reset();
+		void view_Update();
+		void view_Fit();
+		void view_Top();
+		void view_Bottom();
+		void view_Right();
+		void view_Left();
+		void view_Front();
+		void view_Back();
+
 		///////////////////////////////////////////////////////////////
 		////////////////////////////////////////////////// CONSTRUCTORS
 		explicit ntGLFWsetup();
@@ -144,9 +153,6 @@ namespace jpw{
 		//ntGLFWsetup(int appWidth, int appHeight);
 		//ntGLFWsetup(int appWidth, int appHeight, ntBaseApp* baseApp);
 		ntGLFWsetup(int appWidth, int appHeight, std::string appTitle, ntBaseApp* baseApp);
-
-		//void scroll_callback(GLFWwindow* window, float xoffset, float yoffset);
-		HWND getWindow();
 	};
 }
 #endif
