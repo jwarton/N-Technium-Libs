@@ -55,6 +55,8 @@ void ntGLFWsetup::init(){
 	glfwWindowHint(GLFW_SAMPLES, 8);
 
 	window = glfwCreateWindow(appWidth, appHeight, appTitle.c_str(), NULL, NULL);
+	hWin32 = glfwGetWin32Window(window);
+
 	///DEFINE FUNCTION FOR POSITON
 	glfwSetWindowPos(window, xpos, ypos); ///added 12.13.2014
 	//FULL SCREEN:  
@@ -125,6 +127,24 @@ void ntGLFWsetup::init(){
 	baseApp->init();///////////////////////////////////////////////////////////////////////////////////////////////
 	///////////////////////////////////////////////////////////////////////////////////////////////////////////////
 	///////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+
+
+	////////////////////////////////////////////////////////////////////// 3D CONNEXION TEST AND INITIALIZATION
+	///////////////////////////////////////////////////////////////////////////////////////////////////////////
+	SiOpenData		oData;
+	SiInitialize();
+	SiOpenWinInit(&oData, hWin32);
+	SiSetUiMode(devHdl, SI_UI_ALL_CONTROLS);								///// CONFIG SOFTBUTTON WIN DISPLAY
+	devHdl = SiOpen("NT_FRAMEWORK", SI_ANY_DEVICE, SI_NO_MASK, SI_EVENT, &oData);
+	
+	//SiGrabDevice(devHdl, SPW_TRUE);
+	SiDeviceName devName;
+	SiGetDeviceName(devHdl, &devName);
+	//std:cout << "\n" << "////////////////////////////////////////////////////" << endl;
+	//sprintf_s(devicename, _T("%S"), devName.name);
+	//std::cout << "DEVICE:  " << devicename <<endl;
+
 }
 void ntGLFWsetup::reset(){
 	baseApp->rotX = 0.0f;
@@ -161,7 +181,74 @@ void ntGLFWsetup::run(){
 		baseApp->run();////////////////////////////////////////////////////////////////////////////////////////////
 		///////////////////////////////////////////////////////////////////////////////////////////////////////////
 		///////////////////////////////////////////////////////////////////////////////////////////////////////////
-		
+		///3D CONNEXION DEVICE FUNCTIONALITY:
+		GetMessage(&msg, NULL, 0, 0);
+		//while (GetMessage(&msg, NULL, 0, 0)){
+		handled = SPW_FALSE;
+		SiGetEventWinInit(&EData, msg.message, msg.wParam, msg.lParam);
+
+		if (SiGetEvent(devHdl, SI_AVERAGE_EVENTS, &EData, &Event) == SPW_ERROR) {
+			std::cout << "3DX ERROR" << endl;
+		}
+		if (SiGetEvent(devHdl, SI_AVERAGE_EVENTS, &EData, &Event) == SI_BAD_HANDLE) {
+			std::cout << "3DX BAD DEVICE HANDLE" << endl;
+		}
+		if (SiGetEvent(devHdl, SI_AVERAGE_EVENTS, &EData, &Event) == SI_NOT_EVENT) {
+			std::cout << "3DX NO EVENT RECEIVED" << endl;
+		}
+		if (SiGetEvent(devHdl, SI_AVERAGE_EVENTS, &EData, &Event) == SI_IS_EVENT)
+		{
+			std::cout << "3DX EVENT RECEIVED" << endl;
+			if (Event.type == SI_MOTION_EVENT)
+			{
+				//SbMotionEvent(&Event);        /////// PROCESS 3D MOUSE MOTION EVENT
+				std::cout << "TX_EVENT:  " << Event.u.spwData.mData[SI_TX] << endl;
+				std::cout << "TY_EVENT:  " << Event.u.spwData.mData[SI_TY] << endl;
+				std::cout << "TZ_EVENT:  " << Event.u.spwData.mData[SI_TZ] << endl;
+				std::cout << "RX_EVENT:  " << Event.u.spwData.mData[SI_RX] << endl;
+				std::cout << "RY_EVENT:  " << Event.u.spwData.mData[SI_RY] << endl;
+				std::cout << "RZ_EVENT:  " << Event.u.spwData.mData[SI_RZ] << endl;
+			} else if (Event.type == SI_ZERO_EVENT) {
+				//SbZeroEvent();                /* process 3D mouse zero event */
+				hdc = GetDC(hWin32);
+
+				/* print null data */
+				TextOut(hdc, 0, 0, _T("Zero Event                  "), 28);
+				TextOut(hdc, 0, 20, devicename, (int)_tcslen(devicename));
+				TextOut(hdc, 15, 100, _T("TX: 0          "), 15);
+				TextOut(hdc, 15, 120, _T("TY: 0          "), 15);
+				TextOut(hdc, 15, 140, _T("TZ: 0          "), 15);
+				TextOut(hdc, 15, 160, _T("RX: 0          "), 15);
+				TextOut(hdc, 15, 180, _T("RY: 0          "), 15);
+				TextOut(hdc, 15, 200, _T("RZ: 0          "), 15);
+				TextOut(hdc, 15, 220, _T(" P: 0          "), 15);
+
+				/*release our window handle */
+				ReleaseDC(hWin32, hdc);
+			} else if (Event.type == SI_BUTTON_PRESS_EVENT)	{
+				std::cout << "BUTTON PRESS" << endl;
+				//SbButtonPressEvent(Event.u.hwButtonEvent.buttonNumber);  /* process button press event */
+			} else if (Event.type == SI_BUTTON_RELEASE_EVENT) {
+				//SbButtonReleaseEvent(Event.u.hwButtonEvent.buttonNumber); /* process button release event */
+			} else if (Event.type == SI_DEVICE_CHANGE_EVENT) {
+				//HandleDeviceChangeEvent(&Event); /* process 3D mouse device change event */
+			} else if (Event.type == SI_CMD_EVENT) {
+				//HandleV3DCMDEvent(&Event); /* V3DCMD_* events */
+			}
+		}
+		if (SiGetEvent(devHdl, SI_AVERAGE_EVENTS, &EData, &Event) == SI_SKIP_EVENT) {
+			std::cout << "SKIP" << endl;
+
+			std::cout << "TX_EVENT:  " << Event.u.spwData.mData[SI_TX] << endl;
+			std::cout << "TY_EVENT:  " << Event.u.spwData.mData[SI_TY] << endl;
+			std::cout << "TZ_EVENT:  " << Event.u.spwData.mData[SI_TZ] << endl;
+			std::cout << "RX_EVENT:  " << Event.u.spwData.mData[SI_RX] << endl;
+			std::cout << "RY_EVENT:  " << Event.u.spwData.mData[SI_RY] << endl;
+			std::cout << "RZ_EVENT:  " << Event.u.spwData.mData[SI_RZ] << endl;
+		}
+		//}
+		//ReleaseDC(hWin32, hdc);
+
 		///MOUSE EVENT FUNCTIONALITY:
 		int state_m1 = glfwGetMouseButton(window, GLFW_MOUSE_BUTTON_LEFT);
 		int state_m2 = glfwGetMouseButton(window, GLFW_MOUSE_BUTTON_RIGHT);
@@ -172,13 +259,12 @@ void ntGLFWsetup::run(){
 		int state_m7 = glfwGetMouseButton(window, GLFW_MOUSE_BUTTON_7);
 		int state_m8 = glfwGetMouseButton(window, GLFW_MOUSE_BUTTON_LAST);
 
-		///	GLFWscrollfun
+		///	GLFW SCROLL FUNCTIONALITY
 		glfwSetScrollCallback(window, scroll_callback);
 
 		// mouse press events
 		glfwSetMouseButtonCallback(window, mouseBtn_callback);
 		///
-
 
 		if (state_m1 == GLFW_PRESS){
 			//std::cout << "LEFT MOUSE BUTTON_1" << endl;
@@ -358,5 +444,8 @@ void ntGLFWsetup::run(){
 	exit(EXIT_SUCCESS);
 }
 
+HWND ntGLFWsetup::getWindow() {
+	return hWin32;
+}
 ///////////////////////////////////////////////////footnote *01
 //reference: http://bankslab.berkeley.edu/members/chris/AntiAliasing/AntiAliasingInOpenGL.html

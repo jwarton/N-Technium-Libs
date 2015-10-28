@@ -37,8 +37,8 @@ private:
 	string url;
 	string path = nt_Utility::getPathToOutput();
 	string pathExtension = "ovis\\";
-	//string fileName = "ptPos_09_OvisTriPts";
-	string fileName = "ptPos_04_OvisTriPts";
+	string fileName = "ptPos_09_OvisTriPts";
+	//string fileName = "ptPos_04_OvisTriPts";
 	string fileExt = ".txt";
 
 	bool isStartFile = false;

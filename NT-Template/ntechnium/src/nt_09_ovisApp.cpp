@@ -6,16 +6,14 @@ void ovisApp::init() {
 
 	Vec3* axis_Z = new Vec3( 0, 0, 1 );
 	Vec3* axis_X = new Vec3( 1, 0, 0 );
-	
-	panel_Dim = panels.size();
-	for (int i = 0; i < panel_Dim; i++) {
-		if (i < faces.size()) {
+
+	for (int i = 0; i < faces.size(); i++) {
 			for (int j = 0; j < 3; j++) {
 				ntMatrix4 SC3 = ntMatrix4(faces.at(i)->vecs[j]);
 				SC3.scale3d(0.0001);
 			}
-			float r = mapRange(0, 1, 0, panel_Dim, i);
-			float b = mapRange(0, 1, 0, panel_Dim, i, false);
+			float r = mapRange(0, 1, 0, faces.size(), i);
+			float b = mapRange(0, 1, 0, faces.size(), i, false);
 			if (i % 2 == 0) {
 				faces.at(i)->setColor(Col4(r, 0, b, 1));
 			}
@@ -23,7 +21,10 @@ void ovisApp::init() {
 				faces.at(i)->setColor(Col4(r, 0, b, 1));
 			}
 			faces.at(i)->edges.at(0).setCol(ntColor4f(0, 0, 0, 1));
-		}
+	}
+
+	panel_Dim = panels.size();
+	for (int i = 0; i < panel_Dim; i++) {		
 		/////////////////////////////////////////////////////////////////////////////  ALIGN CENTROID/NORMAL TO Z-AXIS
 		panels.at(i)->calcCentroid();
 		panels.at(i)->calcNorm();
@@ -103,15 +104,19 @@ void ovisApp::read_DATA(){
 			ntFace3 * face = new ntFace3(n0, n1, n2);
 
 			faces.push_back(face);
+			///  REMOVE CONDITION
+			/////////////////////////////////////////////////////////////////////////////////
+			if (std::stof(panel_ID) < 1000) {	
+				ntVec3 * v0 = new ntVec3(verts[0].x, verts[0].y, verts[0].z);
+				ntVec3 * v1 = new ntVec3(verts[1].x, verts[1].y, verts[1].z);
+				ntVec3 * v2 = new ntVec3(verts[2].x, verts[2].y, verts[2].z);
+				ntPanel * panel = new ntPanel(v0, v1, v2);
+				panel->set_ID(panel_ID);
+				panel->set_nG(panel_Norm);
+				panel->set_pG(vertex_Pos);
+				panels.push_back(panel);
+			}
 
-			ntVec3 * v0 = new ntVec3(verts[0].x, verts[0].y, verts[0].z);
-			ntVec3 * v1 = new ntVec3(verts[1].x, verts[1].y, verts[1].z);
-			ntVec3 * v2 = new ntVec3(verts[2].x, verts[2].y, verts[2].z);
-			ntPanel * panel = new ntPanel(v0, v1, v2);
-			panel->set_ID(panel_ID);
-			panel->set_nG(panel_Norm);
-			panel->set_pG(vertex_Pos);
-			panels.push_back(panel);
 			panel_ID = "<< ERROR >>";
 			panel_Norm = "<< ERROR >>";
 			vertex_Pos = "";
@@ -517,8 +522,8 @@ void ovisApp::run(){
 	if (glfwGetKey(window, GLFW_KEY_F) == GLFW_PRESS) {
 		m = vF;
 		for (int i = 0; i < faces.size(); i++) {
-			float r = mapRange(0, 1, 0, panel_Dim, i);
-			float b = mapRange(0, 1, 0, panel_Dim, i, false);
+			float r = mapRange(0, 1, 0, faces.size(), i);
+			float b = mapRange(0, 1, 0, faces.size(), i, false);
 			if (i % 2 == 0) {
 				faces.at(i)->setColor(Col4(r, 0, b, 1));
 			}
@@ -552,7 +557,7 @@ void ovisApp::run(){
 void ovisApp::display(){
 	///////////////////////////////////////////////////////////////
 	if (m == vQ) {
-		if (panel_Index >= 0 && panel_Index < panel_Dim) {
+		if (panel_Index >= 0 && panel_Index < panels.size()) {
 			for (int i = 0; i < panels.size(); i++) {
 				panels.at(panel_Index)->display();
 				panels.at(panel_Index)->edges.at(0).display(1);

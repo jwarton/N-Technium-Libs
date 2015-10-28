@@ -110,7 +110,7 @@ Add Environment Paths to Advanced System Settings
 https://github.com/arrayfire/arrayfire/wiki/Using-ArrayFire-on-Microsoft-Windows-with-Visual-Studio
 
 1. Append Existing Path with ;%AF_PATH%
-2  Add New Path Variable 
+2.  Add New Path Variable 
 		variable name:  AF_PATH
 		variable value: C:\Users\jwarton\00_Workspace\01_NTlibs\NT-Template\ntechnium\libsImport\ArrayFire\v3
 
@@ -138,6 +138,26 @@ CUDA_PATH\nvvm\bin\nvvm64_30_0.dll
 
  to:
  C:\Users\jwarton\00_Workspace\01_NTlibs\NT-Template\nt-project template\x64\Release
+/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+3dCONNEXION SUPPORT SETUP
+
+1.  Add New Path Variable 
+		variable name:  TDX_PATH
+		variable value: C:\Program Files (x86)\3Dconnexion\3DxWare SDK
+
+3.  VS Project Properties 
+		C/C++  	General	|  Additional Include Directories
+
+			$(TDX_PATH)\inc;
+
+		Linker  	General	|	Additional Include Directories:
+
+			$(TDX_PATH)\lib\x64
+
+		Input	|	Additional Include Directories:	
+
+			siapp.lib
+			spwmath.lib
 
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 AF changes from v3.beta to v3

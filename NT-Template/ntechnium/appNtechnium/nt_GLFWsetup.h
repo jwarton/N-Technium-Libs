@@ -8,17 +8,36 @@
 #ifndef GLFW_SETUP_JPW_NTECHNIUM
 #define GLFW_SETUP_JPW_NTECHNIUM
 #define GLFW_INCLUDE_GLU
+
+#define GLFW_EXPOSE_NATIVE_WIN32
+#define GLFW_EXPOSE_NATIVE_WGL
+
 //////////////////////////////////////////////////// GLFW WINDOWING 
 
 #include <GL/glew.h>
 #include <GL/glu.h>
 #include <GLFW/glfw3.h>
+#include <GLFW/glfw3native.h>
 
 #include <iostream>
 #include <stdlib.h>
 #include <stdio.h>
 #include "nt_BaseApp.h"
 #include <memory>
+
+////3d connecion library includes
+//#include <windows.h>
+//#include <tchar.h>
+//#include <stdio.h>
+//#include <math.h>
+//#include <float.h>
+//#include <stdlib.h>
+//#include <crtdbg.h>
+
+#include "spwmacro.h"
+#include "si.h"
+#include "siapp.h"
+//#include "virtualkeys.hpp"
 
 #define GLFW_INCLUDE_GLCOREARB//MAY NOT BE REQUIRED
 
@@ -48,7 +67,6 @@ namespace jpw{
 		void run();
 
 		GLFWwindow* window;
-
 		///////////////////////////////////////////////////////////////
 		///////////////////// BASE APP CONST FOR USER DEFINED APP CLASS
 		ntBaseApp* baseApp;
@@ -95,6 +113,14 @@ namespace jpw{
 		//int key = GLFW_KEY_RIGHT;
 		//int action = GLFW_PRESS;
 		//int state = glfwGetKey(window, key);
+		HDC				hdc;
+		HWND			hWin32;
+		SiHdl			devHdl;
+		MSG				msg;
+		BOOL			handled;
+		SiSpwEvent		Event;
+		SiGetEventData	EData;
+		TCHAR devicename[100];
 
 	public:
 		int frameCount;
@@ -112,7 +138,7 @@ namespace jpw{
 		ntGLFWsetup(int appWidth, int appHeight, std::string appTitle, ntBaseApp* baseApp);
 
 		//void scroll_callback(GLFWwindow* window, float xoffset, float yoffset);
-
+		HWND getWindow();
 	};
 }
 #endif

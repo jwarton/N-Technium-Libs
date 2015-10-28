@@ -75,6 +75,7 @@
     <ClCompile Include="..\..\ntechnium\src\nt_simpleApp.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="..\..\ntechnium\appNtechnium\nt_3dNav.h" />
     <ClInclude Include="..\..\ntechnium\appNtechnium\nt_BaseApp.h" />
     <ClInclude Include="..\..\ntechnium\appNtechnium\nt_CoutTemp.h" />
     <ClInclude Include="..\..\ntechnium\appNtechnium\nt_GLFWsetup.h" />
@@ -245,14 +246,14 @@
       <FunctionLevelLinking>true</FunctionLevelLinking>
       <IntrinsicFunctions>true</IntrinsicFunctions>
       <SDLCheck>true</SDLCheck>
-      <AdditionalIncludeDirectories>..\..\ntechnium\libNtechnium\graph;$(AF_PATH)\include;..\..\ntechnium;..\..\ntechnium\src;..\..\ntechnium\src\kuka;..\..\ntechnium\libNtechnium\arch;..\..\ntechnium\libNtechnium\integration;..\..\ntechnium\libNtechnium\iodata;..\..\ntechnium\libNtechnium\agents;..\..\ntechnium\libNtechnium\math;..\..\ntechnium\libNtechnium\fem;..\..\ntechnium\libNtechnium\robotics;..\..\ntechnium\libNtechnium\physics;..\..\ntechnium\libNtechnium\scene;..\..\ntechnium\libNtechnium\geometry;..\..\ntechnium\appNtechnium;..\..\ntechnium\libsImport\glm;..\..\ntechnium\libsImport\glfw-3.1.1.bin.WIN64\include;..\..\ntechnium\libsImport\glfw-3.1.1.bin.WIN64\include\GLFW;..\..\ntechnium\libsImport\glfw-3.0.4.bin.WIN64\include;..\..\ntechnium\libsImport\glfw-3.0.4.bin.WIN64\include\GLFW;..\..\ntechnium\libsImport\glew-1.10.0-win32\glew-1.10.0\include;..\..\ntechnium\libsImport\FreeImage.WIN32\Dist;..\..\ntechnium\libsImport\freetype-2.5.3\include;..\..\ntechnium\libsImport\armadillo-5.600.2\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(TDX_PATH)\inc;..\..\ntechnium\libNtechnium\graph;$(AF_PATH)\include;..\..\ntechnium;..\..\ntechnium\src;..\..\ntechnium\src\kuka;..\..\ntechnium\libNtechnium\arch;..\..\ntechnium\libNtechnium\integration;..\..\ntechnium\libNtechnium\iodata;..\..\ntechnium\libNtechnium\agents;..\..\ntechnium\libNtechnium\math;..\..\ntechnium\libNtechnium\fem;..\..\ntechnium\libNtechnium\robotics;..\..\ntechnium\libNtechnium\physics;..\..\ntechnium\libNtechnium\scene;..\..\ntechnium\libNtechnium\geometry;..\..\ntechnium\appNtechnium;..\..\ntechnium\libsImport\glm;..\..\ntechnium\libsImport\glfw-3.1.1.bin.WIN64\include;..\..\ntechnium\libsImport\glfw-3.1.1.bin.WIN64\include\GLFW;..\..\ntechnium\libsImport\glfw-3.0.4.bin.WIN64\include;..\..\ntechnium\libsImport\glfw-3.0.4.bin.WIN64\include\GLFW;..\..\ntechnium\libsImport\glew-1.10.0-win32\glew-1.10.0\include;..\..\ntechnium\libsImport\FreeImage.WIN32\Dist;..\..\ntechnium\libsImport\freetype-2.5.3\include;..\..\ntechnium\libsImport\armadillo-5.600.2\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
       <OptimizeReferences>true</OptimizeReferences>
-      <AdditionalLibraryDirectories>$(AF_PATH)\lib;..\..\ntechnium\libsImport\armadillo-5.600.2\examples\lib_win64;..\..\ntechnium\libsImport\freetype-2.5.3\lib;..\..\ntechnium\libsImport\glew-1.10.0-win32\glew-1.10.0\lib\include;..\..\ntechnium\libsImport\glew-1.10.0-win32\glew-1.10.0\lib\include\GL;..\..\ntechnium\libsImport\glew-1.10.0-win32\glew-1.10.0\bin\Release\x64;..\..\ntechnium\libsImport\glew-1.10.0-win32\glew-1.10.0\lib\Release\x64;..\..\ntechnium\libsImport\FreeImage.WIN32\Dist;..\..\ntechnium\libsImport\glfw-3.0.4.bin.WIN64\lib-msvc110;..\..\ntechnium\libsImport\glfw-3.1.1.bin.WIN64\lib-vc2013;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
-      <AdditionalDependencies>afcuda.lib;afopencl.lib;afcpu.lib;glfw3.lib;glu32.lib;glew32.lib;opengl32.lib;freeImage.lib;freetype.lib;blas_win64_MT.lib;lapack_win64_MT.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalLibraryDirectories>$(TDX_PATH)\lib\x64;$(AF_PATH)\lib;..\..\ntechnium\libsImport\armadillo-5.600.2\examples\lib_win64;..\..\ntechnium\libsImport\freetype-2.5.3\lib;..\..\ntechnium\libsImport\glew-1.10.0-win32\glew-1.10.0\lib\include;..\..\ntechnium\libsImport\glew-1.10.0-win32\glew-1.10.0\lib\include\GL;..\..\ntechnium\libsImport\glew-1.10.0-win32\glew-1.10.0\bin\Release\x64;..\..\ntechnium\libsImport\glew-1.10.0-win32\glew-1.10.0\lib\Release\x64;..\..\ntechnium\libsImport\FreeImage.WIN32\Dist;..\..\ntechnium\libsImport\glfw-3.0.4.bin.WIN64\lib-msvc110;..\..\ntechnium\libsImport\glfw-3.1.1.bin.WIN64\lib-vc2013;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <AdditionalDependencies>afcuda.lib;afopencl.lib;afcpu.lib;glfw3.lib;glu32.lib;glew32.lib;opengl32.lib;freeImage.lib;freetype.lib;blas_win64_MT.lib;lapack_win64_MT.lib;siapp.lib;spwmath.lib;spwmathD.lib;spwmathMT.lib;spwmathMTD.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
     <PostBuildEvent>
       <Command>echo copy "$(CUDA_PATH)\nvvm\bin\nvvm64*.dll" "$(OutDir)" 
