@@ -537,7 +537,7 @@ void ovisApp::run(){
 	}
 	if (glfwGetKey(window, GLFW_KEY_S) == GLFW_PRESS) {
 		m = vS;
-		for (int i = 0; i < faces.size(); i++) {
+		for (int i = 0; i < panels.size(); i++) {
 			float c = panels.at(i)->image_Val;
 			faces.at(i)->setColor(Col4(c, c, c, 1));
 			faces.at(i)->setColor(Col4(c, c, c, 1));

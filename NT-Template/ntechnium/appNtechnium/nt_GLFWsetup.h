@@ -11,6 +11,7 @@
 
 #define GLFW_EXPOSE_NATIVE_WIN32
 #define GLFW_EXPOSE_NATIVE_WGL
+#define _CRT_SECURE_NO_WARNINGS ///ONLY NEEDED FOR _stprintf
 
 //////////////////////////////////////////////////// GLFW WINDOWING 
 
@@ -116,10 +117,6 @@ namespace jpw{
 		HDC				hdc;
 		HWND			hWin32;
 		SiHdl			devHdl;
-		MSG				msg;
-		BOOL			handled;
-		SiSpwEvent		Event;
-		SiGetEventData	EData;
 		TCHAR devicename[100];
 
 	public:
@@ -128,6 +125,17 @@ namespace jpw{
 
 		friend void mouseBtn_callback(GLFWwindow* window, int button, int action, int mods);
 		friend void scroll_callback(GLFWwindow* window, float xoffset, float yoffset);
+
+		void EventHandler_3DX();
+		void EventHandler_MOUSE();
+		void EventHandler_KEYBD();
+
+		void Event_3DX_gimbalM(SiSpwEvent *pEvent);
+		void Event_3DX_gimbalZ();
+		void Event_3DX_buttonR(int num);
+		void Event_3DX_buttonP(int num);
+		void Event_3DX_dChange(SiSpwEvent *pEvent);
+		void Event_3DX_command(SiSpwEvent *pEvent);
 
 		///////////////////////////////////////////////////////////////
 		////////////////////////////////////////////////// CONSTRUCTORS

@@ -70,7 +70,7 @@ public:
 	//std::vector<ntCirc*> perfs;
 
 	float r_Min = .1625;
-	float r_Max = 1;
+	float r_Max = .625;
 	float edge_Offset = .75;
 	int n_seg = 36;
 
