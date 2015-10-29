@@ -65,14 +65,14 @@ int main(int argc, char const** argv){
 	///FEM
 	//AppContent* c = new trussApp01();		//VALIDATION 3D TRUSS ELEMENTS
 	//AppContent* c = new trussApp02();		//SPACE FRAME CELL
-	//AppContent* c = new trussApp03();		//SPACE FRAME FROM COMPOUND CURVED SURFACE
+	AppContent* c = new trussApp03();		//SPACE FRAME FROM COMPOUND CURVED SURFACE
 	//AppContent* c = new beamApp01();		//VALIDATION FOR 3D BEAM ELEMENTS
 	///IMAGE PROCESSING
 	//AppContent* c = new afApp01();		//ARRAY FIRE IMPELEMENTATION PROTOTYPE
 	//AppContent* c = new afApp02();		
 
 	///OVIS
-	AppContent* c = new ovisApp();
+	//AppContent* c = new ovisApp();
 
 	///KUKA SOURCE CODE APPLICATIONS
 	//AppContent* c = new krlApp();

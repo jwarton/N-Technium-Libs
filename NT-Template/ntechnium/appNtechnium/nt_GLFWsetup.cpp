@@ -186,19 +186,20 @@ void ntGLFWsetup::EventHandler_3DX() {
 		else if (Event.type == SI_BUTTON_PRESS_EVENT) {
 
 
-			//std::cout << "3DX BUTTON PRESS" << Event.u.hwButtonEvent.buttonNumber << endl;
+			std::cout << "3DX BUTTON PRESS" << Event.u.hwButtonEvent.buttonNumber << endl;
 			Event_3DX_buttonP(Event.u.hwButtonEvent.buttonNumber);			///// PROCESS BUTTON PRESS EVENT	
 
 		} 		
 		else if (Event.type == SI_BUTTON_RELEASE_EVENT) {
 
-			//std::cout << "3DX BUTTON RELEASE" << Event.u.hwButtonEvent.buttonNumber << endl;
+			std::cout << "3DX BUTTON RELEASE" << Event.u.hwButtonEvent.buttonNumber << endl;
 			Event_3DX_buttonR(Event.u.hwButtonEvent.buttonNumber);			///// PROCESS BUTTON RELEASE EVENT
 
 
 		}
 		else if (Event.type == SI_BUTTON_EVENT) {
 			//std::cout << "3DX BUTTON" << Event.u.hwButtonEvent.buttonNumber << endl;
+			Event_3DX_buttonR(Event.u.hwButtonEvent.buttonNumber);
 		}
 		else if (Event.type == SI_DEVICE_CHANGE_EVENT) {
 			//std::cout << "3DX DEVICE" << endl;
@@ -388,12 +389,58 @@ void ntGLFWsetup::Event_3DX_gimbalM(SiSpwEvent *pEvent){
 	int ry = pEvent->u.spwData.mData[SI_RY];
 	int rz = pEvent->u.spwData.mData[SI_RZ];
 
-	baseApp->camX += tx * .0001;
-	baseApp->camY += ty * .0001;
-	baseApp->zoom += tz * .0001;
-	baseApp->rotX += rx * .001;
-	baseApp->rotY += ry * .001;
-	baseApp->rotZ -= rz * .001;
+	if (c == c0) {
+		baseApp->camX += tx * .0001 + (tx * .0001);
+		baseApp->camY += ty * .0001 + (ty * .0001);
+		baseApp->zoom += tz * .001;
+		baseApp->rotX += rx * .001;
+		baseApp->rotY += ry * .001;
+		baseApp->rotZ -= rz * .001;
+	}
+	else if (c == c1) {
+		baseApp->tarX += tx * .0001;
+		baseApp->tarY += ty * .0001;
+		baseApp->tarZ += tz * .0001;
+		baseApp->camX += tx * .0001;
+		baseApp->camY += ty * .0001;
+		baseApp->camZ += tz * .0001;
+		//baseApp->rotX += rx * .001;
+		//baseApp->rotY += ry * .001;
+		//baseApp->rotZ -= rz * .001;
+	} else if (c == c2) {
+		if (baseApp->tarX != 0) {
+			if (baseApp->tarX < .02 & baseApp->tarX > -.02){
+				baseApp->tarX = 0;
+			} else if (baseApp->tarX < 0) {
+				baseApp->tarX += abs(ty * .0005);
+			} else if (baseApp->tarX > 0) {
+				baseApp->tarX -= abs(ty * .0005);
+			}
+		}
+		if (baseApp->tarY != 0) {
+			if (baseApp->tarY < .02 & baseApp->tarY > -.02) {
+				baseApp->tarY = 0;
+			}
+			else if (baseApp->tarY < 0) {
+				baseApp->tarY += abs(ty * .0005);
+			}
+			else if (baseApp->tarY> 0) {
+				baseApp->tarY -= abs(ty * .0005);
+			}
+		}
+		if (baseApp->tarZ != 0) {
+			if (baseApp->tarZ < .02 & baseApp->tarZ > -.02) {
+				baseApp->tarZ = 0;
+			}
+			else if (baseApp->tarZ < 0) {
+				baseApp->tarZ += abs(ty * .0005);
+			}
+			else if (baseApp->tarZ > 0) {
+				baseApp->tarZ -= abs(ty * .0005);
+			}
+		}
+	}
+
 	view_Update();
 
 	ReleaseDC(hWin32, hdc);
@@ -403,7 +450,21 @@ void ntGLFWsetup::Event_3DX_gimbalZ(){
 	ReleaseDC(hWin32, hdc);
 }
 void ntGLFWsetup::Event_3DX_buttonR(int num){
-	std::cout << "3DX BUTTON RELEASES" << endl;
+	if (num == 2) {
+		if (c == c0) {
+			c = c1;
+		} else {
+			c = c0;
+		}
+	}
+	if (num == 4) {
+		if (c == c2) {
+			c = c3;
+		} else {
+			c = c2;
+			std::cout << "c2" << endl;
+		}
+	}
 	ReleaseDC(hWin32, hdc);
 }
 void ntGLFWsetup::Event_3DX_buttonP(int num){

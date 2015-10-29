@@ -78,52 +78,19 @@ namespace jpw{
 		int xpos = 910;
 		int ypos = 28;
 
-		//GLfloat rotX = 0.0f;
-		//GLfloat rotY = 0.0f;
-		//GLfloat rotZ = 0.0f;
-
-		//GLfloat camX = -3.0f;
-		//GLfloat camY = -3.0f;
-		//GLfloat camZ =  3.0f;
-		//GLfloat tarX =  0.0f;
-		//GLfloat tarY =  0.0f;
-		//GLfloat tarZ =  0.0f;
-		//GLfloat rolX =  0.0f;
-		//GLfloat rolY =  0.0f;
-		//GLfloat rolZ =  1.0f;
-		//GLfloat focal =50.0f;
-		//GLfloat zoom =  0.0f;
-
-		//float width = 1.0;
-		//float height = 1.0;
-		//float zNear = 1.0;
-		//float zFar = 100.0;
-		//
-
-		//int view_T = GLFW_KEY_T;
-		//int view_B = GLFW_KEY_B;
-		//int view_L = GLFW_KEY_L;
-		//int view_R = GLFW_KEY_R;
-		//int view_F = GLFW_KEY_F;
-		//int view_P = GLFW_KEY_P;
-
-		//int view_ZI = GLFW_KEY_LEFT_BRACKET;
-		//int view_ZO = GLFW_KEY_RIGHT_BRACKET;
-
-		//int key = GLFW_KEY_RIGHT;
-		//int action = GLFW_PRESS;
-		//int state = glfwGetKey(window, key);
 		HDC				hdc;
 		HWND			hWin32;
 		SiHdl			devHdl;
 		TCHAR devicename[100];
 
+		enum C_mode {c0, c1, c2, c3, c4};
+
 	public:
+
+		C_mode c = c0;
+
 		int frameCount;
 		float frameRate;
-
-		//friend void mouseBtn_callback(GLFWwindow* window, int button, int action, int mods);
-		//friend void scroll_callback(GLFWwindow* window, float xoffset, float yoffset);
 
 		void EventHandler_3DX();
 		void EventHandler_MOUSE();

@@ -58,7 +58,15 @@ namespace jpw{
 		void setMouseButton(int mouseAction, int mouseButton, int mouseMods);
 		void setMouseScroll(float xoffset, float yoffset);
 		void testFun();
+		
+		//SAVED CAMERA SETTINGS
+		/// ADD FUNCTIONS TO ACCESS AND UPDATE ACTIVE CAMERA
+		GLfloat cam00[14];
+		GLfloat cam01[14];
+		GLfloat cam02[14];
+		GLfloat cam03[14];
 
+		//ACTIVE CAMERA SETTINGS
 		GLfloat rotX = 0.0f;
 		GLfloat rotY = 0.0f;
 		GLfloat rotZ = 0.0f;
