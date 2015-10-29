@@ -393,7 +393,7 @@ void ntGLFWsetup::Event_3DX_gimbalM(SiSpwEvent *pEvent){
 	baseApp->zoom += tz * .0001;
 	baseApp->rotX += rx * .001;
 	baseApp->rotY += ry * .001;
-	baseApp->rotZ += rz * .001;
+	baseApp->rotZ -= rz * .001;
 	view_Update();
 
 	ReleaseDC(hWin32, hdc);

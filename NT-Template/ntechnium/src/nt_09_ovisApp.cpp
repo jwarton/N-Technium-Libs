@@ -497,23 +497,37 @@ Vec3 ovisApp::add_Vert(string line) {
 
 void ovisApp::run(){
 	if (glfwGetKey(window, GLFW_KEY_PAGE_UP) == GLFW_PRESS) {
-		if (panel_Index < panel_Dim) {
+		if (panel_Index < panel_Dim-1) {
+			float c = panels.at(panel_Index)->image_Val;
+			faces.at(panel_Index)->setColor(Col4(c, c, c, 1));
 			panel_Index = panel_Index + 1;
 			std::cout << panel_Index << endl;
 		}
 		else {
+			float c = panels.at(panel_Dim-1)->image_Val;
+			faces.at(panel_Dim-1)->setColor(Col4(c, c, c, 1));
 			panel_Index = 0;
 			std::cout << panel_Index << endl;
 		}
+		if (m == vW) {
+			faces.at(panel_Index)->setColor(Col4(1, 0, 0, 1));
+		}
 	}
 	if (glfwGetKey(window, GLFW_KEY_PAGE_DOWN) == GLFW_PRESS) {
-		if (panel_Index > 0) {
+		if (panel_Index > 0 && panel_Index < panel_Dim) {
+			float c = panels.at(panel_Index)->image_Val;
+			faces.at(panel_Index)->setColor(Col4(c, c, c, 1));
 			panel_Index = panel_Index - 1;
 			std::cout << panel_Index << endl;
 		}
 		else {
-			panel_Index = panel_Dim;
+			float c = panels.at(0)->image_Val;
+			faces.at(0)->setColor(Col4(c, c, c, 1));
+			panel_Index = panel_Dim-1;
 			std::cout << panel_Index << endl;
+		}
+		if (m == vW) {
+			faces.at(panel_Index)->setColor(Col4(1, 0, 0, 1));
 		}
 	}
 	if (glfwGetKey(window, GLFW_KEY_Q) == GLFW_PRESS) {
@@ -549,6 +563,9 @@ void ovisApp::run(){
 			faces.at(i)->edges.at(0).setCol(ntColor4f(1, 1, 1, .5));
 			faces.at(i)->edges.at(1).setCol(ntColor4f(1, 1, 1, .5));
 			faces.at(i)->edges.at(2).setCol(ntColor4f(1, 1, 1, .5));
+			if (i == panel_Index) {
+				faces.at(i)->setColor(Col4(1, 0, 0, 1));
+			}
 		}
 	}
 	display();
@@ -584,5 +601,6 @@ void ovisApp::display(){
 			faces.at(i)->edges.at(1).display();
 			faces.at(i)->edges.at(2).display();
 		}
+		faces.at(panel_Index)->display();
 	}
 }
