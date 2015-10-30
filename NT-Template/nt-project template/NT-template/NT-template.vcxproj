@@ -75,7 +75,6 @@
     <ClCompile Include="..\..\ntechnium\src\nt_simpleApp.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="..\..\ntechnium\appNtechnium\nt_3dNav.h" />
     <ClInclude Include="..\..\ntechnium\appNtechnium\nt_BaseApp.h" />
     <ClInclude Include="..\..\ntechnium\appNtechnium\nt_CoutTemp.h" />
     <ClInclude Include="..\..\ntechnium\appNtechnium\nt_GLFWsetup.h" />

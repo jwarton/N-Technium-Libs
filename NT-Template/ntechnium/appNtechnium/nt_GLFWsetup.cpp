@@ -126,14 +126,14 @@ void ntGLFWsetup::init(){
 	baseApp->init();///////////////////////////////////////////////////////////////////////////////////////////////
 	///////////////////////////////////////////////////////////////////////////////////////////////////////////////
 	///////////////////////////////////////////////////////////////////////////////////////////////////////////////
-
+	view_Save();
 	////////////////////////////////////////////////////////////////////// 3D CONNEXION TEST AND INITIALIZATION
 	///////////////////////////////////////////////////////////////////////////////////////////////////////////
 	SiOpenData		oData;
 	SiInitialize();
 	SiOpenWinInit(&oData, hWin32);
 	SiSetUiMode(devHdl, SI_UI_ALL_CONTROLS);
-	devHdl = SiOpen("NT_FRAMEWORK", SI_ANY_DEVICE, SI_NO_MASK, SI_EVENT, &oData);
+	devHdl = SiOpen("NT_FRAMEWORK_02", SI_ANY_DEVICE, SI_NO_MASK, SI_EVENT, &oData);
 	
 	SiDeviceName devName;
 	SiGetDeviceName(devHdl, &devName);
@@ -184,29 +184,23 @@ void ntGLFWsetup::EventHandler_3DX() {
 			Event_3DX_gimbalZ();											///// PROCESS 3DX ZERO EVENT
 		} 		
 		else if (Event.type == SI_BUTTON_PRESS_EVENT) {
-
-
 			std::cout << "3DX BUTTON PRESS" << Event.u.hwButtonEvent.buttonNumber << endl;
 			Event_3DX_buttonP(Event.u.hwButtonEvent.buttonNumber);			///// PROCESS BUTTON PRESS EVENT	
-
 		} 		
 		else if (Event.type == SI_BUTTON_RELEASE_EVENT) {
-
 			std::cout << "3DX BUTTON RELEASE" << Event.u.hwButtonEvent.buttonNumber << endl;
 			Event_3DX_buttonR(Event.u.hwButtonEvent.buttonNumber);			///// PROCESS BUTTON RELEASE EVENT
-
-
 		}
 		else if (Event.type == SI_BUTTON_EVENT) {
-			//std::cout << "3DX BUTTON" << Event.u.hwButtonEvent.buttonNumber << endl;
+			std::cout << "3DX BUTTON" << Event.u.hwButtonEvent.buttonNumber << endl;
 			Event_3DX_buttonR(Event.u.hwButtonEvent.buttonNumber);
 		}
 		else if (Event.type == SI_DEVICE_CHANGE_EVENT) {
-			//std::cout << "3DX DEVICE" << endl;
+			std::cout << "3DX DEVICE" << endl;
 			Event_3DX_dChange(&Event);										///// PROCESS 3DX DEVICE CHANGE EVENT
 		} 		
 		else if (Event.type == SI_CMD_EVENT) {
-			//std::cout << "3DX COMMAND" << endl;
+			std::cout << "3DX COMMAND" << endl;
 			Event_3DX_command(&Event);										///// V3DX COMMAND EVENTS
 		}
 
@@ -239,6 +233,23 @@ void ntGLFWsetup::EventHandler_KEYBD(){
 	if (glfwGetKey(window, GLFW_KEY_0) == GLFW_PRESS && ctrl_Status == true) {
 		view_Fit();
 		view_Update();
+	}
+	if (glfwGetKey(window, GLFW_KEY_C) == GLFW_PRESS && ctrl_Status == true) {
+		view_Save();
+		view_Update();
+	}
+	if (glfwGetKey(window, GLFW_KEY_A) == GLFW_PRESS) {
+		view_Save();
+		view_Top();
+	}
+	if (glfwGetKey(window, GLFW_KEY_F) == GLFW_PRESS) {
+		view_Pers();
+	}
+	if (glfwGetKey(window, GLFW_KEY_S) == GLFW_PRESS) {
+		view_Pers();
+	}
+	if (glfwGetKey(window, GLFW_KEY_W) == GLFW_PRESS) {
+		view_Pers();
 	}
 	///////////////////////////////////////////////////////////////
 	////////////////////////////////////// CAMERA JOG FUNCTIONALITY
@@ -311,8 +322,7 @@ void ntGLFWsetup::EventHandler_KEYBD(){
 	///////////////////////////////////////////////////////////////
 	////////////////////////////////////////// STANDARD VIEW TOGGLE
 	if (glfwGetKey(window, baseApp->view_P) == GLFW_PRESS) {
-		view_Reset();
-		view_Update();
+		view_Pers();
 	}
 	if (glfwGetKey(window, baseApp->view_T) == GLFW_PRESS) {
 		view_Top();
@@ -389,7 +399,7 @@ void ntGLFWsetup::Event_3DX_gimbalM(SiSpwEvent *pEvent){
 	int ry = pEvent->u.spwData.mData[SI_RY];
 	int rz = pEvent->u.spwData.mData[SI_RZ];
 
-	if (c == c0) {
+	if (button == b0) {
 		baseApp->camX += tx * .0001 + (tx * .0001);
 		baseApp->camY += ty * .0001 + (ty * .0001);
 		baseApp->zoom += tz * .001;
@@ -397,7 +407,7 @@ void ntGLFWsetup::Event_3DX_gimbalM(SiSpwEvent *pEvent){
 		baseApp->rotY += ry * .001;
 		baseApp->rotZ -= rz * .001;
 	}
-	else if (c == c1) {
+	else if (button == b1) {
 		baseApp->tarX += tx * .0001;
 		baseApp->tarY += ty * .0001;
 		baseApp->tarZ += tz * .0001;
@@ -407,7 +417,7 @@ void ntGLFWsetup::Event_3DX_gimbalM(SiSpwEvent *pEvent){
 		//baseApp->rotX += rx * .001;
 		//baseApp->rotY += ry * .001;
 		//baseApp->rotZ -= rz * .001;
-	} else if (c == c2) {
+	} else if (button == b2) {
 		if (baseApp->tarX != 0) {
 			if (baseApp->tarX < .02 & baseApp->tarX > -.02){
 				baseApp->tarX = 0;
@@ -451,18 +461,17 @@ void ntGLFWsetup::Event_3DX_gimbalZ(){
 }
 void ntGLFWsetup::Event_3DX_buttonR(int num){
 	if (num == 2) {
-		if (c == c0) {
-			c = c1;
+		if (button == b0) {
+			button = b1;
 		} else {
-			c = c0;
+			button = b0;
 		}
 	}
 	if (num == 4) {
-		if (c == c2) {
-			c = c3;
+		if (button == b2) {
+			button = b3;
 		} else {
-			c = c2;
-			std::cout << "c2" << endl;
+			button = b2;
 		}
 	}
 	ReleaseDC(hWin32, hdc);
@@ -592,6 +601,10 @@ void ntGLFWsetup::view_Fit(){
 	view_Update();
 }
 void ntGLFWsetup::view_Top(){
+	if (view == vP) {
+		view_Save();
+	}
+	view = vT;
 	view_Reset();
 	baseApp->camX = 0.0f;
 	baseApp->camY = 0.0f;
@@ -602,6 +615,10 @@ void ntGLFWsetup::view_Top(){
 	view_Update();
 }
 void ntGLFWsetup::view_Bottom(){
+	if (view == vP) {
+		view_Save();
+	}
+	view = vB;
 	view_Reset();
 	baseApp->camX = 0.0f;
 	baseApp->camY = 0.0f;
@@ -612,6 +629,10 @@ void ntGLFWsetup::view_Bottom(){
 	view_Update();
 }
 void ntGLFWsetup::view_Right(){
+	if (view == vP) {
+		view_Save();
+	}
+	view = vR;
 	view_Reset();
 	baseApp->camX = 0.0f;
 	baseApp->camY = 3.0f;
@@ -622,6 +643,10 @@ void ntGLFWsetup::view_Right(){
 	view_Update();
 }
 void ntGLFWsetup::view_Left(){
+	if (view == vP) {
+		view_Save();
+	}
+	view = vL;
 	view_Reset();
 	baseApp->camX = 3.0f;
 	baseApp->camY = 0.0f;
@@ -632,6 +657,10 @@ void ntGLFWsetup::view_Left(){
 	view_Update();
 }
 void ntGLFWsetup::view_Front(){
+	if (view == vP) {
+		view_Save();
+	}
+	view = vF;
 	view_Reset();
 	baseApp->camX = 0.0f;
 	baseApp->camY = -3.0f;
@@ -641,4 +670,39 @@ void ntGLFWsetup::view_Front(){
 	baseApp->rolZ = 1.0f;
 	view_Update();
 }
-void ntGLFWsetup::view_Back(){}
+void ntGLFWsetup::view_Pers(){
+	view = vP;
+	baseApp->rotX =  baseApp->cam00[0];
+	baseApp->rotY =  baseApp->cam00[1];
+	baseApp->rotZ =  baseApp->cam00[2];
+	baseApp->camX =  baseApp->cam00[3];
+	baseApp->camY =  baseApp->cam00[4];
+	baseApp->camZ =  baseApp->cam00[5];
+	baseApp->tarX =  baseApp->cam00[6];
+	baseApp->tarY =  baseApp->cam00[7];
+	baseApp->tarZ =  baseApp->cam00[8];
+	baseApp->rolX =  baseApp->cam00[9];
+	baseApp->rolY =  baseApp->cam00[10];
+	baseApp->rolZ =  baseApp->cam00[11];
+	baseApp->focal = baseApp->cam00[12];
+	baseApp->zoom =  baseApp->cam00[13];
+
+	view_Update();
+}
+
+void ntGLFWsetup::view_Save() {
+	baseApp->cam00[0]  = baseApp->rotX;
+	baseApp->cam00[1]  = baseApp->rotY;
+	baseApp->cam00[2]  = baseApp->rotZ;
+	baseApp->cam00[3]  = baseApp->camX;
+	baseApp->cam00[4]  = baseApp->camY;
+	baseApp->cam00[5]  = baseApp->camZ;
+	baseApp->cam00[6]  = baseApp->tarX;
+	baseApp->cam00[7]  = baseApp->tarY;
+	baseApp->cam00[8]  = baseApp->tarZ;
+	baseApp->cam00[9]  = baseApp->rolX;
+	baseApp->cam00[10] = baseApp->rolY;
+	baseApp->cam00[11] = baseApp->rolZ;
+	baseApp->cam00[12] = baseApp->focal;
+	baseApp->cam00[13] = baseApp->zoom;
+}

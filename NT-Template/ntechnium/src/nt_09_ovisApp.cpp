@@ -530,8 +530,8 @@ void ovisApp::run(){
 			faces.at(panel_Index)->setColor(Col4(1, 0, 0, 1));
 		}
 	}
-	if (glfwGetKey(window, GLFW_KEY_Q) == GLFW_PRESS) {
-		m = vQ;
+	if (glfwGetKey(window, GLFW_KEY_A) == GLFW_PRESS) {
+		m = vA;
 	}
 	if (glfwGetKey(window, GLFW_KEY_F) == GLFW_PRESS) {
 		m = vF;
@@ -573,9 +573,13 @@ void ovisApp::run(){
 
 void ovisApp::display(){
 	///////////////////////////////////////////////////////////////
-	if (m == vQ) {
+	if (m == vA) {
 		if (panel_Index >= 0 && panel_Index < panels.size()) {
 			for (int i = 0; i < panels.size(); i++) {
+
+				//_stprintf(buf, _T("Device ID %d connected"), panel_Index);
+				//TextOut(hdc, 0, 20, buf, (int)_tcslen(buf));
+
 				panels.at(panel_Index)->display();
 				panels.at(panel_Index)->edges.at(0).display(1);
 				panels.at(panel_Index)->edges.at(1).display(1);

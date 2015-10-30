@@ -32,7 +32,6 @@ using namespace jpw;
 class ovisApp : public AppContent {
 private:
 	int panel_Index = 0;	//DISPLAY INDEX
-	D_mode m = vF;										//CURRENT DISPLAY MODE
 
 	string url;
 	string path = nt_Utility::getPathToOutput();
@@ -80,6 +79,9 @@ private:
 	void write_Panel(ntPanel* panel_ptr);
 	double calc_Area(ntPanel* panel_ptr);
 
+protected:
+
+
 public:
 	//////////////////////////////VARIABLES UNIQUE TO DERIVED CLASS
 	///////////////////////////////////////////////////////////////
@@ -91,6 +93,7 @@ public:
 	void run();
 	/////////////////////////////////////////////////// CONVIENENCE
 	///////////////////////////////////////////////////////////////
+	D_mode m = vF;							 //CURRENT DISPLAY MODE
 	void display();
 };
 #endif

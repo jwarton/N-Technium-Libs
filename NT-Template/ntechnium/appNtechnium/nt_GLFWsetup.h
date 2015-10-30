@@ -83,11 +83,13 @@ namespace jpw{
 		SiHdl			devHdl;
 		TCHAR devicename[100];
 
-		enum C_mode {c0, c1, c2, c3, c4};
+		enum V_mode {vT, vB, vF, vL, vR, vP, c0, c1, c2, c3, c4};
+		V_mode view = vP;
+
+		enum B_mode {b0, b1, b2, b3};
+		B_mode button = b0;
 
 	public:
-
-		C_mode c = c0;
 
 		int frameCount;
 		float frameRate;
@@ -111,7 +113,9 @@ namespace jpw{
 		void view_Right();
 		void view_Left();
 		void view_Front();
-		void view_Back();
+		//void view_Back();
+		void view_Pers();
+		void view_Save();
 
 		///////////////////////////////////////////////////////////////
 		////////////////////////////////////////////////// CONSTRUCTORS
