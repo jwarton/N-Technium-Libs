@@ -59,6 +59,8 @@ void ntGLFWsetup::init(){
 
 	///DEFINE FUNCTION FOR POSITON
 	glfwSetWindowPos(window, xpos, ypos); ///added 12.13.2014
+	//glViewport(0,0 , appWidth, appHeight);
+
 	//FULL SCREEN:  
 	//window = glfwCreateWindow(appWidth, appHeight, appTitle.c_str(), glfwGetPrimaryMonitor(), NULL);
 	(!window) ? glfwTerminate() : NULL;
@@ -114,6 +116,7 @@ void ntGLFWsetup::init(){
 	glHint(GL_POINT_SMOOTH_HINT, GL_NICEST);
 	glEnable(GL_BLEND);
 	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+	//glDisable(GL_DEPTH_CLAMP);
 	//glEnable(GL_DEPTH_TEST);
 	glEnable(GL_NORMALIZE);			//  good for uniform scaling
 	glClearStencil(0);				//  clear stencil buffer
@@ -222,22 +225,37 @@ void ntGLFWsetup::EventHandler_3DX() {
 }
 void ntGLFWsetup::EventHandler_KEYBD(){
 	// KEYBOARD INPUT FUNCTIONALITY:
-	bool ctrl_Status = false;
+	bool CTRL_status = false;
+	bool ALT_status = false;
 	if (glfwGetKey(window, GLFW_KEY_LEFT_CONTROL) == GLFW_PRESS || glfwGetKey(window, GLFW_KEY_RIGHT_CONTROL) == GLFW_PRESS) {
-		ctrl_Status = true;
+		CTRL_status = true;
 	}
 	else {
-		ctrl_Status = false;
+		CTRL_status = false;
 	}
-
-	if (glfwGetKey(window, GLFW_KEY_0) == GLFW_PRESS && ctrl_Status == true) {
+	if (glfwGetKey(window, GLFW_KEY_LEFT_ALT) == GLFW_PRESS || glfwGetKey(window, GLFW_KEY_RIGHT_ALT) == GLFW_PRESS) {
+		ALT_status = true;
+	}
+	else {
+		ALT_status = false;
+	}
+	// FIT SELECTED
+	if (glfwGetKey(window, GLFW_KEY_0) == GLFW_PRESS && CTRL_status == true) {
 		view_Fit();
 		view_Update();
 	}
-	if (glfwGetKey(window, GLFW_KEY_C) == GLFW_PRESS && ctrl_Status == true) {
+	// SAVE CAMERA
+	if (glfwGetKey(window, GLFW_KEY_C) == GLFW_PRESS && CTRL_status == true) {
 		view_Save();
 		view_Update();
 	}
+	// PERSPECTIVE RESET
+	if (glfwGetKey(window, GLFW_KEY_P) == GLFW_PRESS && CTRL_status == true) {
+		view_Reset();
+		view_Update();
+	}
+	/// TEMPORARY PERSPECTIVE VIEW COORDINATED TO CONTENT SPECIFIC DISPLAY MODES
+	// PANEL VIEW
 	if (glfwGetKey(window, GLFW_KEY_A) == GLFW_PRESS) {
 		view_Save();
 		view_Top();
@@ -282,32 +300,18 @@ void ntGLFWsetup::EventHandler_KEYBD(){
 	if (glfwGetKey(window, GLFW_KEY_RIGHT) == GLFW_PRESS) {
 		baseApp->rotZ += 0.2;
 		view_Update();
-		//glRotatef(.2, 0.f, 0.f, 1.f);
 	}
 	if (glfwGetKey(window, GLFW_KEY_LEFT) == GLFW_PRESS) {
 		baseApp->rotZ -= 0.2;
 		view_Update();
-		//glRotatef(-.2, 0.f, 0.f, 1.f);
 	}
 	if (glfwGetKey(window, GLFW_KEY_UP) == GLFW_PRESS) {
 		baseApp->rotX += 0.2;
 		view_Update();
-		//glRotatef(.2, 1.f, 0.f, 0.f);
 	}
 	if (glfwGetKey(window, GLFW_KEY_DOWN) == GLFW_PRESS) {
 		baseApp->rotX -= 0.2;
 		view_Update();
-		//glRotatef(-.2, 1.f, 0.f, 0.f);
-	}
-	if (glfwGetKey(window, GLFW_KEY_PAGE_UP) == GLFW_PRESS) {
-		//baseApp->rotY += 0.2;
-		view_Update();
-		//glRotatef(.2, 0.f, 1.f, 0.f);
-	}
-	if (glfwGetKey(window, GLFW_KEY_PAGE_DOWN) == GLFW_PRESS) {
-		//baseApp->rotY -= 0.2;
-		view_Update();
-		//glRotatef(-.2, 0.f, 1.f, 0.f);
 	}
 	///////////////////////////////////////////////////////////////
 	//////////////////////////////////////////////// ZOOM FUNCTIONS
@@ -322,21 +326,27 @@ void ntGLFWsetup::EventHandler_KEYBD(){
 	///////////////////////////////////////////////////////////////
 	////////////////////////////////////////// STANDARD VIEW TOGGLE
 	if (glfwGetKey(window, baseApp->view_P) == GLFW_PRESS) {
+		button = b0;
 		view_Pers();
 	}
 	if (glfwGetKey(window, baseApp->view_T) == GLFW_PRESS) {
+		button = b1;
 		view_Top();
 	}
 	if (glfwGetKey(window, baseApp->view_B) == GLFW_PRESS) {
+		button = b1;
 		view_Bottom();
 	}
 	if (glfwGetKey(window, baseApp->view_L) == GLFW_PRESS) {
+		button = b1;
 		view_Left();
 	}
 	if (glfwGetKey(window, baseApp->view_R) == GLFW_PRESS) {
+		button = b1;
 		view_Right();
 	}
 	if (glfwGetKey(window, baseApp->view_F) == GLFW_PRESS) {
+		button = b1;
 		view_Front();
 	}
 }
@@ -399,60 +409,65 @@ void ntGLFWsetup::Event_3DX_gimbalM(SiSpwEvent *pEvent){
 	int ry = pEvent->u.spwData.mData[SI_RY];
 	int rz = pEvent->u.spwData.mData[SI_RZ];
 
-	if (button == b0) {
-		baseApp->camX += tx * .0001 + (tx * .0001);
-		baseApp->camY += ty * .0001 + (ty * .0001);
-		baseApp->zoom += tz * .001;
-		baseApp->rotX += rx * .001;
-		baseApp->rotY += ry * .001;
-		baseApp->rotZ -= rz * .001;
-	}
-	else if (button == b1) {
-		baseApp->tarX += tx * .0001;
-		baseApp->tarY += ty * .0001;
-		baseApp->tarZ += tz * .0001;
-		baseApp->camX += tx * .0001;
-		baseApp->camY += ty * .0001;
-		baseApp->camZ += tz * .0001;
-		//baseApp->rotX += rx * .001;
-		//baseApp->rotY += ry * .001;
-		//baseApp->rotZ -= rz * .001;
-	} else if (button == b2) {
-		if (baseApp->tarX != 0) {
-			if (baseApp->tarX < .02 & baseApp->tarX > -.02){
-				baseApp->tarX = 0;
-			} else if (baseApp->tarX < 0) {
-				baseApp->tarX += abs(ty * .0005);
-			} else if (baseApp->tarX > 0) {
-				baseApp->tarX -= abs(ty * .0005);
+		// STANDARD ORBIT
+		if (button == b0) {
+			baseApp->camX += tx * .0001 + (tx * .0001);
+			baseApp->camY += ty * .0001 + (ty * .0001);
+			baseApp->zoom += tz * .001;
+			baseApp->rotX += rx * .001;
+			baseApp->rotY += ry * .001;
+			baseApp->rotZ -= rz * .001;
+		}
+		// 3D PAN
+		else if (button == b1) {
+			baseApp->tarX += tx * .0001;
+			baseApp->tarY += ty * .0001;
+			baseApp->tarZ += tz * .0001;
+			baseApp->camX += tx * .0001;
+			baseApp->camY += ty * .0001;
+			baseApp->camZ += tz * .0001;
+		}
+		else if (button == b2) {
+		// RETARGET TO ORIGIN
+			if (baseApp->tarX != 0) {
+				if (baseApp->tarX < .02 & baseApp->tarX > -.02) {
+					baseApp->tarX = 0;
+				}
+				else if (baseApp->tarX < 0) {
+					baseApp->tarX += abs(ty * .0005);
+				}
+				else if (baseApp->tarX > 0) {
+					baseApp->tarX -= abs(ty * .0005);
+				}
+			}
+			if (baseApp->tarY != 0) {
+				if (baseApp->tarY < .02 & baseApp->tarY > -.02) {
+					baseApp->tarY = 0;
+				}
+				else if (baseApp->tarY < 0) {
+					baseApp->tarY += abs(ty * .0005);
+				}
+				else if (baseApp->tarY> 0) {
+					baseApp->tarY -= abs(ty * .0005);
+				}
+			}
+			if (baseApp->tarZ != 0) {
+				if (baseApp->tarZ < .02 & baseApp->tarZ > -.02) {
+					baseApp->tarZ = 0;
+				}
+				else if (baseApp->tarZ < 0) {
+					baseApp->tarZ += abs(ty * .0005);
+				}
+				else if (baseApp->tarZ > 0) {
+					baseApp->tarZ -= abs(ty * .0005);
+				}
 			}
 		}
-		if (baseApp->tarY != 0) {
-			if (baseApp->tarY < .02 & baseApp->tarY > -.02) {
-				baseApp->tarY = 0;
-			}
-			else if (baseApp->tarY < 0) {
-				baseApp->tarY += abs(ty * .0005);
-			}
-			else if (baseApp->tarY> 0) {
-				baseApp->tarY -= abs(ty * .0005);
-			}
+		else if (button == b3) {
+			baseApp->fovA += tz * .0001;
 		}
-		if (baseApp->tarZ != 0) {
-			if (baseApp->tarZ < .02 & baseApp->tarZ > -.02) {
-				baseApp->tarZ = 0;
-			}
-			else if (baseApp->tarZ < 0) {
-				baseApp->tarZ += abs(ty * .0005);
-			}
-			else if (baseApp->tarZ > 0) {
-				baseApp->tarZ -= abs(ty * .0005);
-			}
-		}
-	}
 
 	view_Update();
-
 	ReleaseDC(hWin32, hdc);
 }
 void ntGLFWsetup::Event_3DX_gimbalZ(){
@@ -561,19 +576,24 @@ void ntGLFWsetup::view_Reset() {
 	baseApp->rolX = 0.0f;
 	baseApp->rolY = 0.0f;
 	baseApp->rolZ = 1.0f;
-	baseApp->focal = 50.0f;
+	baseApp->fovA = 50.0f;
 	baseApp->zoom = 0.0f;
 }
 void ntGLFWsetup::view_Update() {
-	glMatrixMode(GL_PROJECTION);
-	glLoadIdentity();
-	gluPerspective(baseApp->focal + baseApp->zoom, baseApp->width / baseApp->height, baseApp->zNear, baseApp->zFar);
-	glMatrixMode(GL_MODELVIEW);
-	glLoadIdentity();
-	gluLookAt(baseApp->camX, baseApp->camY, baseApp->camZ, baseApp->tarX, baseApp->tarY, baseApp->tarZ, baseApp->rolX, baseApp->rolY, baseApp->rolZ);
-	glRotatef(baseApp->rotX, 1.f, 0.f, 0.f);
-	glRotatef(baseApp->rotY, 0.f, 1.f, 0.f);
-	glRotatef(baseApp->rotZ, 0.f, 0.f, 1.f);
+		glMatrixMode(GL_PROJECTION);
+		glLoadIdentity();
+		gluPerspective(baseApp->fovA + baseApp->zoom, baseApp->width / baseApp->height, baseApp->zNear, baseApp->zFar);
+		glMatrixMode(GL_MODELVIEW);
+		glLoadIdentity();
+		gluLookAt(baseApp->camX, baseApp->camY, baseApp->camZ, baseApp->tarX, baseApp->tarY, baseApp->tarZ, baseApp->rolX, baseApp->rolY, baseApp->rolZ);
+		glRotatef(baseApp->rotX, 1.f, 0.f, 0.f);
+		glRotatef(baseApp->rotY, 0.f, 1.f, 0.f);
+		glRotatef(baseApp->rotZ, 0.f, 0.f, 1.f);
+		//if (is_vOrtho == true) {
+		//glMatrixMode(GL_PROJECTION);
+		//glLoadIdentity();
+		//glOrtho(baseApp->tarX -1.0, baseApp->tarX + 1.0, baseApp->tarY -1.0, baseApp->tarY + 1.0, baseApp->zNear, baseApp->zFar);
+		//}
 }
 void ntGLFWsetup::view_Fit(){
 
@@ -605,6 +625,8 @@ void ntGLFWsetup::view_Top(){
 		view_Save();
 	}
 	view = vT;
+	is_vOrtho = true;
+
 	view_Reset();
 	baseApp->camX = 0.0f;
 	baseApp->camY = 0.0f;
@@ -619,6 +641,8 @@ void ntGLFWsetup::view_Bottom(){
 		view_Save();
 	}
 	view = vB;
+	is_vOrtho = true;
+
 	view_Reset();
 	baseApp->camX = 0.0f;
 	baseApp->camY = 0.0f;
@@ -633,6 +657,8 @@ void ntGLFWsetup::view_Right(){
 		view_Save();
 	}
 	view = vR;
+	is_vOrtho = true;
+
 	view_Reset();
 	baseApp->camX = 0.0f;
 	baseApp->camY = 3.0f;
@@ -647,6 +673,8 @@ void ntGLFWsetup::view_Left(){
 		view_Save();
 	}
 	view = vL;
+	is_vOrtho = true;
+
 	view_Reset();
 	baseApp->camX = 3.0f;
 	baseApp->camY = 0.0f;
@@ -661,6 +689,8 @@ void ntGLFWsetup::view_Front(){
 		view_Save();
 	}
 	view = vF;
+	is_vOrtho = true;
+
 	view_Reset();
 	baseApp->camX = 0.0f;
 	baseApp->camY = -3.0f;
@@ -672,6 +702,8 @@ void ntGLFWsetup::view_Front(){
 }
 void ntGLFWsetup::view_Pers(){
 	view = vP;
+	is_vOrtho = false;
+
 	baseApp->rotX =  baseApp->cam00[0];
 	baseApp->rotY =  baseApp->cam00[1];
 	baseApp->rotZ =  baseApp->cam00[2];
@@ -684,7 +716,7 @@ void ntGLFWsetup::view_Pers(){
 	baseApp->rolX =  baseApp->cam00[9];
 	baseApp->rolY =  baseApp->cam00[10];
 	baseApp->rolZ =  baseApp->cam00[11];
-	baseApp->focal = baseApp->cam00[12];
+	baseApp->fovA = baseApp->cam00[12];
 	baseApp->zoom =  baseApp->cam00[13];
 
 	view_Update();
@@ -703,6 +735,6 @@ void ntGLFWsetup::view_Save() {
 	baseApp->cam00[9]  = baseApp->rolX;
 	baseApp->cam00[10] = baseApp->rolY;
 	baseApp->cam00[11] = baseApp->rolZ;
-	baseApp->cam00[12] = baseApp->focal;
+	baseApp->cam00[12] = baseApp->fovA;
 	baseApp->cam00[13] = baseApp->zoom;
 }

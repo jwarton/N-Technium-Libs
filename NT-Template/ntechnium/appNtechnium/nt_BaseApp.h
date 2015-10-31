@@ -80,13 +80,13 @@ namespace jpw{
 		GLfloat rolX = 0.0f;
 		GLfloat rolY = 0.0f;
 		GLfloat rolZ = 1.0f;
-		GLfloat focal = 50.0f;
+		GLfloat fovA = 50.0f;
 		GLfloat zoom = 0.0f;
 
 		float width = 1.0;
 		float height = 1.0;
-		float zNear = 1.0;
-		float zFar = 100.0;
+		float zNear = 0;
+		float zFar = 100;
 
 
 		int view_T = GLFW_KEY_T;

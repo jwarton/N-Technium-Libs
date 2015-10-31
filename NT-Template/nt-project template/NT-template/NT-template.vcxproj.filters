@@ -207,6 +207,12 @@
     <ClCompile Include="..\..\ntechnium\libNtechnium\Geometry\ntCircle.cpp">
       <Filter>lib_geometry</Filter>
     </ClCompile>
+    <ClCompile Include="..\..\ntechnium\src\nt_05_cubeApp.cpp">
+      <Filter>src programs</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\ntechnium\libNtechnium\Geometry\ntCube.cpp">
+      <Filter>lib_geometry</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\ntechnium\appNtechnium\nt_BaseApp.h">
@@ -390,6 +396,12 @@
       <Filter>lib_arch</Filter>
     </ClInclude>
     <ClInclude Include="..\..\ntechnium\libNtechnium\Geometry\ntCircle.h">
+      <Filter>lib_geometry</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\ntechnium\src\nt_05_cubeApp.h">
+      <Filter>src programs</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\ntechnium\libNtechnium\Geometry\ntCube.h">
       <Filter>lib_geometry</Filter>
     </ClInclude>
   </ItemGroup>

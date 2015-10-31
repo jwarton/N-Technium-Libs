@@ -83,10 +83,12 @@ namespace jpw{
 		SiHdl			devHdl;
 		TCHAR devicename[100];
 
+
 		enum V_mode {vT, vB, vF, vL, vR, vP, c0, c1, c2, c3, c4};
 		V_mode view = vP;
+		bool is_vOrtho = false;
 
-		enum B_mode {b0, b1, b2, b3};
+		enum B_mode {b0, b1, b2, b3};	// BUTTON MODES
 		B_mode button = b0;
 
 	public:
