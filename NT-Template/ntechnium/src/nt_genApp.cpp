@@ -92,6 +92,7 @@ void genApp::run(){
 	glUniform4fv(lightSpecular0_U, 1, &light0.getSpecular().r);
 
 	///
+	//display();
 	content->run();
 	content->grid();
 	content->grid_display();
@@ -122,10 +123,6 @@ void genApp::display(){
 	glUniformMatrix4fv(MVP_U, 1, GL_FALSE, &MVP[0][0]);
 	glUniformMatrix3fv(N_U, 1, GL_FALSE, &N[0][0]);
 	///////////////////////////////////////////////////////////////
-
-	///
-	//content->display();
-	///
 }
 ///////////////////////////////////////////////////footnote *01
 //reference: http://www.opengl.org/discussion_boards/showthread.php/171184-GLM-to-create-gl_NormalMatrix

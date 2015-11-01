@@ -116,8 +116,8 @@ void ntGLFWsetup::init(){
 	glHint(GL_POINT_SMOOTH_HINT, GL_NICEST);
 	glEnable(GL_BLEND);
 	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
-	//glDisable(GL_DEPTH_CLAMP);
-	//glEnable(GL_DEPTH_TEST);
+	glDisable(GL_DEPTH_CLAMP);
+	glEnable(GL_DEPTH_TEST);
 	glEnable(GL_NORMALIZE);			//  good for uniform scaling
 	glClearStencil(0);				//  clear stencil buffer
 	glClearDepth(1.0f);				//  0 is near, 1 is far
@@ -151,6 +151,11 @@ void ntGLFWsetup::run(){
 		EventHandler_3DX();
 		EventHandler_MOUSE();
 		EventHandler_KEYBD();
+
+		view_Orth();
+		display_HUD();
+		view_Switch();
+		view_Update();
 		///////////////////////////////////////////////////////////////////////////////////////////////////////////
 		///////////////////////////////////////////////////////////////////////////////////////////////////////////
 		/////HANDLE GLFW ENVENTS
@@ -589,11 +594,6 @@ void ntGLFWsetup::view_Update() {
 		glRotatef(baseApp->rotX, 1.f, 0.f, 0.f);
 		glRotatef(baseApp->rotY, 0.f, 1.f, 0.f);
 		glRotatef(baseApp->rotZ, 0.f, 0.f, 1.f);
-		//if (is_vOrtho == true) {
-		//glMatrixMode(GL_PROJECTION);
-		//glLoadIdentity();
-		//glOrtho(baseApp->tarX -1.0, baseApp->tarX + 1.0, baseApp->tarY -1.0, baseApp->tarY + 1.0, baseApp->zNear, baseApp->zFar);
-		//}
 }
 void ntGLFWsetup::view_Fit(){
 
@@ -722,6 +722,25 @@ void ntGLFWsetup::view_Pers(){
 	view_Update();
 }
 
+void  ntGLFWsetup::view_Orth() {
+	glDisable(GL_DEPTH_TEST);
+	glMatrixMode(GL_PROJECTION);
+	glPushMatrix();
+	glLoadIdentity();
+	//glOrtho(0, appWidth, 0, appHeight, .1, 100);
+	gluOrtho2D(0, appWidth, 0, appHeight);
+	//glOrthof(0, appWidth, 0, appHeight, -1, 1); /// crashes
+	//glOrtho(0, appWidth, appHeight, 0, -1, 1);
+	glMatrixMode(GL_MODELVIEW);
+	glLoadIdentity();
+}
+
+void ntGLFWsetup::view_Switch() {
+	glEnable(GL_DEPTH_TEST);
+	glMatrixMode(GL_PROJECTION);
+	glPopMatrix();
+	glMatrixMode(GL_MODELVIEW);
+}
 void ntGLFWsetup::view_Save() {
 	baseApp->cam00[0]  = baseApp->rotX;
 	baseApp->cam00[1]  = baseApp->rotY;
@@ -737,4 +756,83 @@ void ntGLFWsetup::view_Save() {
 	baseApp->cam00[11] = baseApp->rolZ;
 	baseApp->cam00[12] = baseApp->fovA;
 	baseApp->cam00[13] = baseApp->zoom;
+}
+
+void ntGLFWsetup::display_HUD() {
+	///////////////////////////////////////////UPPER BAR
+	glColor4f(0.78, 0.95, .98, 0.2);
+	glLineWidth(1);
+	glBegin(GL_LINES);
+	glVertex2f(5, appHeight - 25);
+	glVertex2f(appWidth - 5, appHeight - 25);
+	glEnd();
+
+	///////////////////////////////////////////MIDDLE BARS
+	glLineWidth(.5);
+	glBegin(GL_LINES);
+	glVertex2f(appWidth - 55, appHeight * 0.5);
+	glVertex2f(appWidth - 5, appHeight * 0.5);
+	glEnd();
+
+	glBegin(GL_LINES);
+	glVertex2f(5, appHeight * 0.5);
+	glVertex2f(55, appHeight * 0.5);
+	glEnd();
+
+	///////////////////////////////////////////LOWER BARS
+	glColor4f(1.0, 1.0, 1.0, 0.9);
+	glLineWidth(0.5);
+	glBegin(GL_LINES);
+	glVertex2f(5, 155);
+	glVertex2f(appWidth - 5, 155);
+	glEnd();
+
+	glColor4f(0.78, 0.95, .98, 0.2);
+	
+	for (int i = 0; i < appWidth * 0.1; i++) {
+		glLineWidth(1);
+		glBegin(GL_LINES);
+		glVertex2f((i * 10) + 5, 140); //appHeight * 0.5
+		glVertex2f((i * 10) + 5, 150); //appHeight * 0.5
+		glEnd();
+
+		
+		if (i % 5 == 0 && i < 50) {
+			glBegin(GL_LINES);
+			glVertex2f((i * 10) + 5, 55); //appHeight * 0.5
+			glVertex2f((i * 10) + 5, 132); //appHeight * 0.5
+			glEnd();
+		}
+
+		glLineWidth(15);
+		if (i % 5 == 0 && i < 45) {
+			glBegin(GL_LINES);
+			glVertex2f((i * 10) + 8, 80); //appHeight * 0.5
+			glVertex2f((i * 10) + 52, 80); //appHeight * 0.5
+			glEnd();
+		}
+	}
+	
+	glColor4f(0.78, 0.95, .98, .1);
+
+	glLineWidth(15);
+	glBegin(GL_LINES);
+	glVertex2f(5, 40); //appHeight * 0.5
+	glVertex2f(appWidth - 5, 40); //appHeight * 0.5
+	glEnd();
+
+	glLineWidth(1);
+	glBegin(GL_LINES);
+	glVertex2f(appWidth - 5, 48);
+	glVertex2f(5, 52);
+	glEnd();
+
+	glColor4f(0.78, 0.95, .98, .2);
+
+	glPointSize(1);
+	glBegin(GL_POINTS);
+	for (int i = 0; i < appWidth * 0.1; i++) {
+		glVertex2f((i * 10) + 5, 135); //appHeight * 0.5
+	}
+	glEnd();
 }

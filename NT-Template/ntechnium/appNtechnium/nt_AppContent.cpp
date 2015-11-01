@@ -28,3 +28,4 @@ void AppContent::grid_display(){
 		glDisable(GL_LINE_STIPPLE);
 	}
 }
+

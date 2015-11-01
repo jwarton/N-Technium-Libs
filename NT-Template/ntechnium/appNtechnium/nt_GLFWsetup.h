@@ -81,7 +81,7 @@ namespace jpw{
 		HDC				hdc;
 		HWND			hWin32;
 		SiHdl			devHdl;
-		TCHAR devicename[100];
+		TCHAR  devicename[100];
 
 
 		enum V_mode {vT, vB, vF, vL, vR, vP, c0, c1, c2, c3, c4};
@@ -116,9 +116,14 @@ namespace jpw{
 		void view_Left();
 		void view_Front();
 		//void view_Back();
+
 		void view_Pers();
+		void view_Orth();
+		void view_Switch();
+
 		void view_Save();
 
+		void display_HUD();
 		///////////////////////////////////////////////////////////////
 		////////////////////////////////////////////////// CONSTRUCTORS
 		explicit ntGLFWsetup();
