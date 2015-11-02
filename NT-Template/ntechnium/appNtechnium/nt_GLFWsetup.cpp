@@ -59,7 +59,6 @@ void ntGLFWsetup::init(){
 
 	///DEFINE FUNCTION FOR POSITON
 	glfwSetWindowPos(window, xpos, ypos); ///added 12.13.2014
-	//glViewport(0,0 , appWidth, appHeight);
 
 	//FULL SCREEN:  
 	//window = glfwCreateWindow(appWidth, appHeight, appTitle.c_str(), glfwGetPrimaryMonitor(), NULL);

@@ -57,7 +57,7 @@ int main(int argc, char const** argv){
 	///GRAPHICS
 	//AppContent* c = new meshImportApp();
 	//AppContent* c = new meshApp();
-	AppContent* c = new treeApp01();
+	//AppContent* c = new treeApp01();
 	//AppContent* c = new treeApp02();
 	//AppContent* c = new treeApp03();
 	//AppContent* c = new swarmApp();
@@ -75,7 +75,7 @@ int main(int argc, char const** argv){
 	//AppContent* c = new afApp02();		
 
 	///OVIS
-	//AppContent* c = new ovisApp();
+	AppContent* c = new ovisApp();
 
 	///KUKA SOURCE CODE APPLICATIONS
 	//AppContent* c = new krlApp();
@@ -86,7 +86,7 @@ int main(int argc, char const** argv){
 	//AppContent* c = new krlMatLab;
 
 	//jpw::ntGLFWsetup program(100, 100, "NT-INTERFACE", new genApp(c));
-	jpw::ntGLFWsetup program(1900,1000, "NT-INTERFACE", new genApp(c)); 
+	jpw::ntGLFWsetup program(1920,1080, "NT-INTERFACE", new genApp(c)); 
 	//simple app minimal ogl setup/ test
 	//jpw::ntSimpleApp simpleApp = ntSimpleApp(900, 900,"SIMPLE APP_TITLE");
 

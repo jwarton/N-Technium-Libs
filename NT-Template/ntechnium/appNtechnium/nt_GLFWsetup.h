@@ -75,7 +75,7 @@ namespace jpw{
 		int appHeight;
 		std::string appTitle;
 		///DEFINE SEPARATE FUNCTION FOR WINDOW POSITION
-		int xpos = 910;
+		int xpos = 0;  //int xpos = 910;
 		int ypos = 28;
 
 		HDC				hdc;
