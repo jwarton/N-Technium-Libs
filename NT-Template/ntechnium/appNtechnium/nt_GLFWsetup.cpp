@@ -58,7 +58,7 @@ void ntGLFWsetup::init(){
 	hWin32 = glfwGetWin32Window(window);
 
 	///DEFINE FUNCTION FOR POSITON
-	glfwSetWindowPos(window, xpos, ypos); ///added 12.13.2014
+	glfwSetWindowPos(window, xpos, ypos);
 
 	//FULL SCREEN:  
 	//window = glfwCreateWindow(appWidth, appHeight, appTitle.c_str(), glfwGetPrimaryMonitor(), NULL);
@@ -122,6 +122,11 @@ void ntGLFWsetup::init(){
 	glClearDepth(1.0f);				//  0 is near, 1 is far
 	glDepthFunc(GL_LESS);			//  glDepthFunc(GL_LEQUAL);  
 	
+	///////////////////////////////////////////////////////////////
+	/////////////////////////////////////////////// SET VIEW MATRIX
+	glLoadIdentity();// clear matrix
+	view_Reset();
+	view_Update();
 	/////////////////////////////////////////////////////////|ACTIVATE INIT FUNCTION IN DERIVED APPLICATIONS|//////
 	///////////////////////////////////////////////////////////////////////////////////////////////////////////////
 	baseApp->window = window;//////////////////////////////////////////////////////////////////////////////////////
@@ -147,6 +152,7 @@ void ntGLFWsetup::run(){
 		baseApp->run();////////////////////////////////////////////////////////////////////////////////////////////
 		///////////////////////////////////////////////////////////////////////////////////////////////////////////
 		///////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 		EventHandler_3DX();
 		EventHandler_MOUSE();
 		EventHandler_KEYBD();
@@ -571,9 +577,9 @@ void ntGLFWsetup::view_Reset() {
 	baseApp->rotX = 0.0f;
 	baseApp->rotY = 0.0f;
 	baseApp->rotZ = 0.0f;
-	baseApp->camX = -3.0f;
-	baseApp->camY = -3.0f;
-	baseApp->camZ = 3.0f;
+	baseApp->camX = -1.0f;
+	baseApp->camY = -1.0f;
+	baseApp->camZ = 1.0f;
 	baseApp->tarX = 0.0f;
 	baseApp->tarY = 0.0f;
 	baseApp->tarZ = 0.0f;
@@ -728,8 +734,6 @@ void  ntGLFWsetup::view_Orth() {
 	glLoadIdentity();
 	//glOrtho(0, appWidth, 0, appHeight, .1, 100);
 	gluOrtho2D(0, appWidth, 0, appHeight);
-	//glOrthof(0, appWidth, 0, appHeight, -1, 1); /// crashes
-	//glOrtho(0, appWidth, appHeight, 0, -1, 1);
 	glMatrixMode(GL_MODELVIEW);
 	glLoadIdentity();
 }
@@ -801,6 +805,14 @@ void ntGLFWsetup::display_HUD() {
 			glVertex2f((i * 10) + 5, 55); //appHeight * 0.5
 			glVertex2f((i * 10) + 5, 132); //appHeight * 0.5
 			glEnd();
+
+			if (i % 5 == 0 && i == 45) {
+				// SIDE BAR
+				glBegin(GL_LINES);
+				glVertex2f((i * 10) + 5, 160); //appHeight * 0.5
+				glVertex2f((i * 10) + 5, appHeight - 30); //appHeight * 0.5
+				glEnd();
+			}
 		}
 
 		glLineWidth(15);

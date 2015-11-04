@@ -41,7 +41,7 @@ public:
 	ntVertex *vert0,*vert1,*vert2;
 	std::vector<ntVertex*> verts;
 	std::vector<ntEdge> edges;
-	std::vector<ntCircle*> perfs;
+	std::vector<ntCircle> perfs;
 	ntColor4f col;
 	ntColor4f col_0;
 
@@ -89,5 +89,6 @@ public:
 	std::vector<float> get_Perf_R();
 
 	void display();
+	void display_Edge();
 };
 #endif

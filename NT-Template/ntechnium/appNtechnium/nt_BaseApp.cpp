@@ -112,16 +112,8 @@ void ntBaseApp::setMouseButton(int mouseAction, int mouseButton, int mouseMods){
 	}
 }
 void ntBaseApp::setMouseScroll(float xoffset, float yoffset){
-
-	testFun();
-
 	//std::cout << "X OFFSET:  " << xoffset << endl;
 	//std::cout << "Y OFFSET:  " << yoffset << endl;
-}
-void ntBaseApp::testFun(){
-	//zoom += yoffset;
-	//std::cout << "ZOOM:  " << zoom << endl;
-	//std::cout << zFar << endl;
 }
 int ntBaseApp::getWidth()	const{
 	return width;

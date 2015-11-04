@@ -57,7 +57,6 @@ namespace jpw{
 		//GLFW MOUSE EVENTS
 		void setMouseButton(int mouseAction, int mouseButton, int mouseMods);
 		void setMouseScroll(float xoffset, float yoffset);
-		void testFun();
 		
 		//SAVED CAMERA SETTINGS
 		/// ADD FUNCTIONS TO ACCESS AND UPDATE ACTIVE CAMERA
@@ -71,9 +70,9 @@ namespace jpw{
 		GLfloat rotY = 0.0f;
 		GLfloat rotZ = 0.0f;
 
-		GLfloat camX = -3.0f;
-		GLfloat camY = -3.0f;
-		GLfloat camZ = 3.0f;
+		GLfloat camX = -1.0f;
+		GLfloat camY = -1.0f;
+		GLfloat camZ = 1.0f;
 		GLfloat tarX = 0.0f;
 		GLfloat tarY = 0.0f;
 		GLfloat tarZ = 0.0f;

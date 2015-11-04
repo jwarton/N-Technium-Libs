@@ -155,7 +155,7 @@ void ntPanel::add_Perf() {
 		for (int i = 0; i < p_Pos.size(); i++) {
 
 			float r = p_Rad.at(i); 
-			ntCircle * perf = new ntCircle(p_Pos.at(i), r, Col4(.25, .25, .25, 1));
+			ntCircle perf = ntCircle(p_Pos.at(i), r, Col4(.25, .25, .25, 1));
 			perfs.push_back(perf);
 		}
 	} else {
@@ -163,22 +163,26 @@ void ntPanel::add_Perf() {
 	}
 }
 void ntPanel::display_Perf() {
-
-	for (int i = 0; i<perfs.size(); i++) {
-		perfs.at(i)->display();
+	for (int i = 0; i < 50; i++) {
+//	for (int i = 0; i < perfs.size(); i++) {
+		if (i < i < perfs.size()) {
+			perfs.at(i).display();
+		}
 	}
 }
-
+void ntPanel::display_Edge() {
+	edges.at(0).display(1);
+	edges.at(1).display(1);
+	edges.at(2).display(1);
+	verts.at(0)->display(2);
+}
 void ntPanel::display(){
-	display_Perf();
-	//glBegin(GL_TRIANGLES);
-	//glColor4f(vert0->col.r, vert0->col.g, vert0->col.b, vert0->col.a);
-	//glVertex3f(v0->x, v0->y, v0->z);
-	//glColor4f(vert1->col.r, vert1->col.g, vert1->col.b, vert1->col.a);
-	//glVertex3f(v1->x, v1->y, v1->z);	
-	//glColor4f(vert2->col.r, vert2->col.g, vert2->col.b, vert2->col.a);
-	//glVertex3f(v2->x, v2->y, v2->z);
-	//glEnd();
-	///TODO centroid functionality needs work
-	//centroid.display();
+	glBegin(GL_TRIANGLES);
+	glColor4f(vert0->col.r, vert0->col.g, vert0->col.b, vert0->col.a);
+	glVertex3f(v0->x, v0->y, v0->z);
+	glColor4f(vert1->col.r, vert1->col.g, vert1->col.b, vert1->col.a);
+	glVertex3f(v1->x, v1->y, v1->z);	
+	glColor4f(vert2->col.r, vert2->col.g, vert2->col.b, vert2->col.a);
+	glVertex3f(v2->x, v2->y, v2->z);
+	glEnd();
 }

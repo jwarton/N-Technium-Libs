@@ -26,6 +26,7 @@ void genApp::init() {
 	///
 	content->window = window;
 	content->init();
+	content->grid();
 	///
 	shader = ntShader("shader1.vert", "shader1.frag");
 
@@ -93,9 +94,8 @@ void genApp::run(){
 
 	///
 	//display();
-	content->run();
-	content->grid();
 	content->grid_display();
+	content->run();
 	///
 }
 

@@ -18,6 +18,13 @@
 #include <iomanip>
 #include <armadillo>
 
+#include <cstdio>
+#include <arrayfire.h>
+#include <af/util.h>
+#include <af/dim4.hpp>
+#include <af/traits.hpp>
+#include <cstdlib>
+
 #include "ntMath.h"
 #include "ntColor4f.h"
 #include "ntMatrix4.h"
@@ -40,10 +47,22 @@ private:
 	//string fileName = "ptPos_04_OvisTriPts";
 	string fileExt = ".txt";
 
+	string url_IMG;
+	string path_IMG = nt_Utility::getPathToResources();
+	string pathExtension_IMG = "imgs\\ovis\\";
+	string fileName_IMG = "ovis_002";
+	string fileExt_IMG = ".jpg";
+	af::array img_IN;
+	arma::mat img_00;
+
+	int img_X;
+	int img_Y;
+
 	bool isStartFile = false;
 	bool isEndSubs = false;
 	bool isSubNext = false;
 	bool isEndFile = false;
+	bool isImgLoaded = false;
 
 	struct tm timeData;
 	time_t timeStamp;
@@ -67,6 +86,8 @@ private:
 	std::vector<ntFace3*> faces;
 
 	void read_DATA();
+	void read_IMG();
+
 	Vec3 add_Vert(string line);
 
 	string format_Norm(string line);
@@ -93,8 +114,9 @@ public:
 	void run();
 	/////////////////////////////////////////////////// CONVIENENCE
 	///////////////////////////////////////////////////////////////
-	D_mode m = vF;							 //CURRENT DISPLAY MODE
+	D_mode m = vQ;							 //CURRENT DISPLAY MODE
 	void display();
+	void display_IMG();
 };
 #endif
 ///////////////////////////////////////////////////////////////////

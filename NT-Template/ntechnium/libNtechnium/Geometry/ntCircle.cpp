@@ -11,37 +11,8 @@ ntCircle::ntCircle(ntVec3* pos, float rad, ntCol4 col):
 	pos(pos), rad(rad), col(col) {
 	init();
 }
-//
-//ntCircle::ntCircle(ntVec3* v0,ntVec3* v1,ntVec3* v2,ntColor4f col):
-//v0(v0),v1(v1),v2(v2),col(col){
-//	this->vecs[0] = v0;
-//	this->vecs[1] = v1;
-//	this->vecs[2] = v2;
-//	init();
-//}
-//
-//ntCircle::ntCircle(ntVec3* v0,ntVec3* v1,ntVec3* v2,ntVertex* vert0,ntVertex* vert1,ntVertex* vert2):
-//v0(v0),v1(v1),v2(v2),vert0(vert0),vert1(vert1),vert2(vert2){
-//
-//	this->vecs[0] = v0;
-//	this->vecs[1] = v1;
-//	this->vecs[2] = v2;
-//
-//	verts.push_back(this->vert0);
-//	verts.push_back(this->vert1);
-//	verts.push_back(this->vert2);
-//
-//	edges.push_back(ntEdge(v0,v1,vert0,vert1));
-//	edges.push_back(ntEdge(v1,v2,vert1,vert2));
-//	edges.push_back(ntEdge(v2,v0,vert2,vert0));
-//
-//	//initialize centroid and normal
-//	calcCentroid();
-//	calcNorm();
-//}
 
-void ntCircle::init(){
-	seg = 18;															//add set function and unique constructor
+void ntCircle::init(){															//add set function and unique constructor
 	for (int j = 0; j < seg; ++j) {
 
 		float theta = 2.0f * M_PI * j / seg;							//get the current angle
@@ -89,8 +60,6 @@ void ntCircle::setColor(ntColor4f col){
 		verts.at(i)->setColor(col);
 	}
 }
-
-
 void ntCircle::display_dots() {
 	glColor4f(col.r, col.g, col.b, col.a);
 	glBegin(GL_POINTS);
@@ -102,10 +71,9 @@ void ntCircle::display_dots() {
 }
 void ntCircle::display(){
 	glColor4f(col.r, col.g, col.b, col.a);
-	glBegin(GL_LINE_LOOP);
-	//glBegin(GL_POINTS);
-	//glPointSize(1);															
-	for (int i = 0; i<seg; ++i) {
+	glLineWidth(1);
+	glBegin(GL_LINES);													
+	for (int i = 0; i<seg; i++) {
 		glVertex3f(vecs.at(i)->x, vecs.at(i)->y, 0);
 	}
 	glEnd();

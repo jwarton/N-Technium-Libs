@@ -1,8 +1,10 @@
 #include "nt_09_ovisApp.h"
+#include <GL/glu.h>
 
 void ovisApp::init() {
 
 	read_DATA();
+	read_IMG();
 
 	Vec3* axis_Z = new Vec3( 0, 0, 1 );
 	Vec3* axis_X = new Vec3( 1, 0, 0 );
@@ -35,21 +37,36 @@ void ovisApp::init() {
 		edge_X.sub(panels.at(i)->v0);
 		align_Panel(panels.at(i), axis_X, &edge_X, panels.at(i)->v0); 
 
-		float val = (rand() % 255 + 1);		//TEMPORARY VALUES FOR PANEL PERFORATION DRIVER
-		val = mapRange(0,1,0,255,val);
-		panels.at(i)->set_IMG(val);
-		panels.at(i)->calc_Perf();
+		float col;
+		if (isImgLoaded == true) {
+			col = img_00(i);				//assign pixel value to val
+		}
+		else {
+			col = (rand() % 255 + 1);		//TEMPORARY VALUES FOR PANEL PERFORATION DRIVER
+		}
+		col = mapRange(0, 1, 0, 255, col);
+		panels.at(i)->set_IMG(col);
+
+		//panels.at(i)->calc_Perf();
 		//write_Panel(panels.at(i));
+		
+		ntVec3 posXY = ntVec3( 55, 640, 0);
+
 		for (int j = 0; j < 3; j++) {
 			ntMatrix4 SC1 = ntMatrix4(panels.at(i)->vecs[j]);
-			SC1.scale3d(0.015);
+			//SC1.scale3d(0.015);
+			SC1.scale3d(5);
+			SC1.translate(posXY);
 		}
 		for (int j = 0; j < panels.at(i)->perfs.size(); j++) {
-			for (int k = 0; k < panels.at(i)->perfs.at(j)->seg; k++) {
-				ntMatrix4 SC2 = ntMatrix4(panels.at(i)->perfs.at(j)->vecs.at(k));
-				SC2.scale3d(0.015);
+			for (int k = 0; k < panels.at(i)->perfs.at(j).seg; k++) {
+				ntMatrix4 SC2 = ntMatrix4(panels.at(i)->perfs.at(j).vecs.at(k));
+				//SC2.scale3d(0.015);
+				SC2.scale3d(5);
+				SC2.translate(posXY);
 			}
 		}
+
 	}
 }
 
@@ -106,7 +123,7 @@ void ovisApp::read_DATA(){
 			faces.push_back(face);
 			///  REMOVE CONDITION
 			/////////////////////////////////////////////////////////////////////////////////
-			if (std::stof(panel_ID) < 1000) {	
+			//if (std::stof(panel_ID) < 1000) {	
 				ntVec3 * v0 = new ntVec3(verts[0].x, verts[0].y, verts[0].z);
 				ntVec3 * v1 = new ntVec3(verts[1].x, verts[1].y, verts[1].z);
 				ntVec3 * v2 = new ntVec3(verts[2].x, verts[2].y, verts[2].z);
@@ -115,7 +132,7 @@ void ovisApp::read_DATA(){
 				panel->set_nG(panel_Norm);
 				panel->set_pG(vertex_Pos);
 				panels.push_back(panel);
-			}
+			//}
 
 			panel_ID = "<< ERROR >>";
 			panel_Norm = "<< ERROR >>";
@@ -123,7 +140,30 @@ void ovisApp::read_DATA(){
 		}
 	}
 }
+void ovisApp::read_IMG() {
+	using namespace arma;
 
+	url_IMG = path_IMG + pathExtension_IMG + fileName_IMG + fileExt_IMG;
+	std::cout << url_IMG << endl;
+	const char * file = url_IMG.c_str();
+	img_IN = af::loadImage(file, false);
+	
+	img_X = img_IN.dims(0);
+	img_Y = img_IN.dims(1);
+	img_00 = zeros<mat>(img_X, img_Y);
+
+	af::array img_LOADER(img_X, img_Y, img_00.memptr());
+	img_LOADER += img_IN;
+	
+	img_LOADER.host((void*)img_00.memptr());
+	img_00 = flipud(img_00);
+
+	isImgLoaded = true;
+	//af::array varAvg = af::mean(img_IN);
+	//float valAvg = af::mean<float>(varAvg);
+	//af_print(img_IN);
+
+}
 string ovisApp::format_Norm(string line){
 	string token = "PANEL";
 	string norm = "   VEC: <";
@@ -533,8 +573,8 @@ void ovisApp::run(){
 	if (glfwGetKey(window, GLFW_KEY_A) == GLFW_PRESS) {
 		m = vA;
 	}
-	if (glfwGetKey(window, GLFW_KEY_F) == GLFW_PRESS) {
-		m = vF;
+	if (glfwGetKey(window, GLFW_KEY_Q) == GLFW_PRESS) {
+		m = vQ;
 		for (int i = 0; i < faces.size(); i++) {
 			float r = mapRange(0, 1, 0, faces.size(), i);
 			float b = mapRange(0, 1, 0, faces.size(), i, false);
@@ -572,23 +612,8 @@ void ovisApp::run(){
 }
 
 void ovisApp::display(){
-	///////////////////////////////////////////////////////////////
-	if (m == vA) {
-		if (panel_Index >= 0 && panel_Index < panels.size()) {
-			for (int i = 0; i < panels.size(); i++) {
 
-				//_stprintf(buf, _T("Device ID %d connected"), panel_Index);
-				//TextOut(hdc, 0, 20, buf, (int)_tcslen(buf));
-
-				panels.at(panel_Index)->display();
-				panels.at(panel_Index)->edges.at(0).display(1);
-				panels.at(panel_Index)->edges.at(1).display(1);
-				panels.at(panel_Index)->edges.at(2).display(1);
-				panels.at(panel_Index)->verts.at(0)->display(2);
-			}
-		}
-	}
-	if (m == vF) {
+	if (m == vQ) {
 		for (int i = 0; i < faces.size(); i++) {
 			faces.at(i)->display();
 			faces.at(i)->edges.at(0).display();
@@ -607,4 +632,39 @@ void ovisApp::display(){
 		}
 		faces.at(panel_Index)->display();
 	}
+
+	glDisable(GL_DEPTH_TEST);
+	glMatrixMode(GL_PROJECTION);
+	glPushMatrix();
+	glLoadIdentity();
+	gluOrtho2D(0, 1920, 0, 1080);
+	glMatrixMode(GL_MODELVIEW);
+	glLoadIdentity();
+
+	///////////////////////////////////////////////////////////////
+	if (panel_Index >= 0 && panel_Index < panels.size()) {
+		for (int i = 0; i < panels.size(); i++) {
+			// panels.at(panel_Index)->display();
+			// panels.at(panel_Index)->display_Perf();
+			panels.at(panel_Index)->display_Edge();
+		}
+	}
+
+	display_IMG();
+
+}
+void ovisApp::display_IMG() {
+
+	float col;
+	glPointSize(1);
+	glBegin(GL_POINTS);
+	for (int i = 0; i < 448; i++){
+		for (int j = 0; j < 375; j++) {
+			col = img_00(j, i);
+			col = mapRange(0, 1, 0, 255, col);
+			glColor4f(col, col, col, 1);
+			glVertex3f(i +5, j + 161, 0);
+		}
+	}
+	glEnd();
 }
