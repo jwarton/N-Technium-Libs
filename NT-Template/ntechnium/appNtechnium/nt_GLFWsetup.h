@@ -27,19 +27,12 @@
 #include <memory>
 
 ////3d connecion library includes
-//#include <windows.h>
-//#include <tchar.h>
-//#include <stdio.h>
 #include <math.h>
 #include <algorithm>
-//#include <float.h>
-//#include <stdlib.h>
-//#include <crtdbg.h>
 
 #include "spwmacro.h"
 #include "si.h"
 #include "siapp.h"
-//#include "virtualkeys.hpp"
 
 #define GLFW_INCLUDE_GLCOREARB//MAY NOT BE REQUIRED
 
