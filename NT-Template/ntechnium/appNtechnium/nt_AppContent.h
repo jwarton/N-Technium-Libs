@@ -20,6 +20,9 @@ class AppContent{
 	ntEdge axisY;
 	ntEdge axisZ;
 	///
+protected:
+	int appWidth;
+	int appHeight;
 public:
 	GLFWwindow* window = NULL;
 
@@ -29,7 +32,10 @@ public:
 	virtual void run();
 	virtual void display();
 
+	void set_AppDim(int x, int y);
+
 	void grid();
 	void grid_display();
+	void view_Orth();
 };
 #endif

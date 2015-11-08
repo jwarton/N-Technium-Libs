@@ -54,6 +54,8 @@ int main(int argc, char const** argv){
 	/////////////////////////////////////////////////////////////////////////// INSTANTIATE DERIVED APPLICATION
 	///////////////////////////////////////////////////////////////////////////////////////////////////////////
 	
+	int x = 1920;
+	int y = 1080;
 	///GRAPHICS
 	//AppContent* c = new meshImportApp();
 	//AppContent* c = new meshApp();
@@ -85,8 +87,9 @@ int main(int argc, char const** argv){
 	//AppContent* c = new krlRhino;
 	//AppContent* c = new krlMatLab;
 
+	c->set_AppDim(x, y);
 	//jpw::ntGLFWsetup program(100, 100, "NT-INTERFACE", new genApp(c));
-	jpw::ntGLFWsetup program(1920,1080, "NT-INTERFACE", new genApp(c)); 
+	jpw::ntGLFWsetup program(x,y, "NT-INTERFACE", new genApp(c)); 
 	//simple app minimal ogl setup/ test
 	//jpw::ntSimpleApp simpleApp = ntSimpleApp(900, 900,"SIMPLE APP_TITLE");
 

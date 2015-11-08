@@ -38,8 +38,21 @@ using namespace jpw;
 
 class ovisApp : public AppContent {
 private:
-	int panel_Index = 0;	//DISPLAY INDEX
+	///////////////////////////////////////////////////////////////
+	//////////////////////////////////////// SOURCE IMAGE VARIABLES
+	string url_IMG;
+	string path_IMG = nt_Utility::getPathToResources();
+	string pathExtension_IMG = "imgs\\ovis\\";
+	string fileName_IMG = "ovis_002";
+	string fileExt_IMG = ".jpg";
 
+	af::array img_IN;
+	arma::mat img_00;
+
+	int img_X;
+	int img_Y;
+	///////////////////////////////////////////////////////////////
+	///////////////////////////////////////// SOURCE DATA VARIABLES
 	string url;
 	string path = nt_Utility::getPathToOutput();
 	string pathExtension = "ovis\\";
@@ -47,46 +60,34 @@ private:
 	//string fileName = "ptPos_04_OvisTriPts";
 	string fileExt = ".txt";
 
-	string url_IMG;
-	string path_IMG = nt_Utility::getPathToResources();
-	string pathExtension_IMG = "imgs\\ovis\\";
-	string fileName_IMG = "ovis_002";
-	string fileExt_IMG = ".jpg";
-	af::array img_IN;
-	arma::mat img_00;
-
-	int img_X;
-	int img_Y;
-
-	bool isStartFile = false;
-	bool isEndSubs = false;
-	bool isSubNext = false;
-	bool isEndFile = false;
-	bool isImgLoaded = false;
+	bool isStartFile =	false;
+	bool isEndSubs =	false;
+	bool isSubNext =	false;
+	bool isEndFile =	false;
+	bool isImgLoaded =	false;
 
 	struct tm timeData;
 	time_t timeStamp;
 
 	int panel_NUM = 0;
 	int panel_Dim = 0;
-
-	float vertPos[3];
-	float normVec[3];
-
-	///////TEMPORARY PANEL DETAILS
-	string panel_ID = "<< ERROR >>";
+	///////////////////////////////////////////////////////////////
+	/////////////////////////////////////// TEMPORARY PANEL DETAILS
+	string panel_ID =	"<< ERROR >>";
 	string panel_Norm = "<< ERROR >>";
-	string vertex_Pos = "";
-	string panel_UVW = "<< ERROR >>";
+	string panel_Vert = "";
+	string panel_UVW =	"<< ERROR >>";
 	
 	ntVec3 verts[3];
-	ntVec3 norms[3];
 	ntVec3 norm_G;
 	ntVec3 param_UVW;
-
+	///////////////////////////////////////////////////////////////
+	//////////////////////////////////////////// LIST OF ALL PANELS
 	std::vector<ntPanel*> panels;
 	std::vector<ntFace3*> faces;
 
+	///////////////////////////////////////////////////////////////
+	//////////////////////////////////////////// UTILITIY FUNCTIONS
 	void read_DATA();
 	void read_IMG();
 
@@ -101,8 +102,7 @@ private:
 	void write_Panel(ntPanel* panel_ptr);
 	double calc_Area(ntPanel* panel_ptr);
 
-protected:
-
+	int panel_Index = 0;	// DISPLAY INDEX FOR CURRENT PANEL
 
 public:
 	//////////////////////////////VARIABLES UNIQUE TO DERIVED CLASS

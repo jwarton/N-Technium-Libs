@@ -1,10 +1,17 @@
+
 #include "nt_AppContent.h"
+//#include <GL/glu.h>
 
 AppContent::AppContent(){}
 
 void AppContent::init(){}
 void AppContent::run(){}
 void AppContent::display(){}
+
+void AppContent::set_AppDim(int x, int y) {
+	this->appWidth = x;
+	this->appHeight = y;
+}
 
 void AppContent::grid(){
 	/// TEMPORARY MODEL SPACE GRAPHIC
@@ -28,4 +35,14 @@ void AppContent::grid_display(){
 		glDisable(GL_LINE_STIPPLE);
 	}
 }
-
+void  AppContent::view_Orth() {
+	glDisable(GL_DEPTH_TEST);
+	glMatrixMode(GL_PROJECTION);
+	glPushMatrix();
+	glLoadIdentity();
+	//glOrtho(0, appWidth, 0, appHeight, .1, 100);
+	///#include <GL/glu.h> causes confict with GLFWsetup????
+	//gluOrtho2D(0, appWidth, 0, appHeight);
+	glMatrixMode(GL_MODELVIEW);
+	glLoadIdentity();
+}

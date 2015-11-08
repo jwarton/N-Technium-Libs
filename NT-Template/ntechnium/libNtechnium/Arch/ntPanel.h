@@ -28,7 +28,7 @@ private:
 	string panel_ID;
 	string n_G;						//GLOBAL PANEL NORMAL
 	string p_G;
-	string string_UVW;						//GLOBAL PARAMETER
+	string string_UVW;				//GLOBAL PARAMETER
 	std::vector<ntVec3*> v_G;		//GLOBAL PANEL VERTEX POSITON
 	std::vector<ntVec3*> v_L;		// LOCAL PANEL VERTEX POSTION
 

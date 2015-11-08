@@ -40,11 +40,11 @@ void ovisApp::init() {
 		float col;
 		if (isImgLoaded == true) {
 
-			int x = panels.at(i)->vec_UVW.x;
-			int y = panels.at(i)->vec_UVW.y;
+			float x = panels.at(i)->vec_UVW.x;
+			float y = panels.at(i)->vec_UVW.y;
 
-			x = mapRange(0, img_X, 0, 1, x);
-			y = mapRange(0, img_Y, 0, 1, y);
+			x = floor(mapRange(0, img_X, 0, 1, x));
+			y = floor(mapRange(0, img_Y, 0, 1, y));
 
 			col = img_00(x, y);				//assign pixel value to val
 		}
@@ -107,7 +107,6 @@ void ovisApp::read_DATA(){
 			param_UVW.y = uvw.y;
 			param_UVW.z = uvw.z;
 
-
 			std::cout << "PIXEL X:  " << param_UVW.x << endl;
 			std::cout << "PIXEL Y:  " << param_UVW.y << endl;
 
@@ -151,14 +150,14 @@ void ovisApp::read_DATA(){
 				panel->set_ID(panel_ID);
 				panel->set_nG(panel_Norm);
 				panel->set_UVW(panel_UVW, param_UVW);
-				panel->set_pG(vertex_Pos);
+				panel->set_pG(panel_Vert);
 				panels.push_back(panel);
 			//}
 
 			panel_ID = "<< ERROR >>";
 			panel_Norm = "<< ERROR >>";
 			panel_UVW = "<< ERROR >>";
-			vertex_Pos = "";
+			panel_Vert = "";
 		}
 	}
 }
@@ -188,7 +187,6 @@ void ovisApp::read_IMG() {
 	//af::array varAvg = af::mean(img_IN);
 	//float valAvg = af::mean<float>(varAvg);
 	//af_print(img_IN);
-
 }
 string ovisApp::format_STR(string line){
 	string token = "PANEL";
@@ -471,44 +469,37 @@ void ovisApp::write_Panel(ntPanel* panel_ptr) {
 }
 
 Vec3 ovisApp::add_VEC(string line) {
-	string token = "POS:";
+	float vertPos[3];
 
-	//if (line.find(token) != string::npos) {
-		char chars[] = "/POS:{}NRMAELUV";
-		for (unsigned int j = 0; j < strlen(chars); ++j)
-		{
-			line.erase(std::remove(line.begin(), line.end(), chars[j]), line.end());
+	char chars[] = "/POS:{}NRMAELUV";
+	for (unsigned int j = 0; j < strlen(chars); ++j)
+	{
+		line.erase(std::remove(line.begin(), line.end(), chars[j]), line.end());
+	}
+	/////split stream at comma and insert into position array = posXYZ
+	string str;
+	stringstream stream(line);
+	float val;
+	int cnt = 0;
+	
+	while (getline(stream, str, ',')) {
+		stringstream ss;
+		ss << str;
+		ss.precision(5);
+		ss << std::setw(18) << std::setfill(' ');
+		ss >> val;
+		str = ss.str();
+		
+		if (cnt <2) {
+			vertPos[cnt] = val;
 		}
-		/////split stream at comma and insert into position array = posXYZ
-		string str;
-		stringstream stream(line);
-		float val;
-		int cnt = 0;
-
-		while (getline(stream, str, ',')) {
-			stringstream ss;
-			ss << str;
-			ss.precision(5);
-			ss << std::setw(18) << std::setfill(' ');
-			ss >> val;
-			str = ss.str();
-
-			if (cnt == 0) {
-				vertex_Pos += "     POS: (  ";
-			}
-			if (cnt <2) {
-				vertex_Pos += str + ", ";
-				vertPos[cnt] = val;
-			}
-			else if (cnt == 2) {
-				vertex_Pos += str + ")\n";
-				vertPos[cnt] = val;
-			}
+		else if (cnt == 2) {
+			vertPos[cnt] = val;
+		}
 			cnt += 1;
 		}
 		ntVec3 vertex = ntVec3(vertPos[0], vertPos[1], vertPos[2]);
 		return vertex;
-	//}
 }
 
 void ovisApp::run(){
@@ -608,12 +599,16 @@ void ovisApp::display(){
 		}
 		faces.at(panel_Index)->display();
 	}
+	///////////////////////////////////////////////////////////////
+	////////////////////////////////////////////  2D DISPLAY CONENT
+	//view_Orth();
 
 	glDisable(GL_DEPTH_TEST);
 	glMatrixMode(GL_PROJECTION);
 	glPushMatrix();
 	glLoadIdentity();
-	gluOrtho2D(0, 1920, 0, 1080);
+	//glOrtho(0, appWidth, 0, appHeight, .1, 100);
+	gluOrtho2D(0, appWidth, 0, appHeight);
 	glMatrixMode(GL_MODELVIEW);
 	glLoadIdentity();
 
