@@ -80,6 +80,10 @@ void ntPanel::set_vG() {
 void ntPanel::set_pG(string p_G) {
 	this->p_G = p_G;
 };
+void ntPanel::set_UVW(string string_UVW, ntVec3 param_UVW){
+	this->string_UVW = string_UVW;
+	this->vec_UVW = param_UVW;
+}
 void ntPanel::set_IMG(float val) {
 	image_Val = val;
 }
@@ -91,6 +95,9 @@ string ntPanel::get_n_G() {
 }
 string ntPanel::get_p_G() {
 	return p_G;
+}
+string ntPanel::get_UVW() {
+	return string_UVW;
 }
 std::vector<ntVec3*> ntPanel::get_v_G() {
 	return v_G;

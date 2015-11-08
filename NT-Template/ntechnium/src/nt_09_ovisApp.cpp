@@ -39,7 +39,14 @@ void ovisApp::init() {
 
 		float col;
 		if (isImgLoaded == true) {
-			col = img_00(i);				//assign pixel value to val
+
+			int x = panels.at(i)->vec_UVW.x;
+			int y = panels.at(i)->vec_UVW.y;
+
+			x = mapRange(0, img_X, 0, 1, x);
+			y = mapRange(0, img_Y, 0, 1, y);
+
+			col = img_00(x, y);				//assign pixel value to val
 		}
 		else {
 			col = (rand() % 255 + 1);		//TEMPORARY VALUES FOR PANEL PERFORATION DRIVER
@@ -91,11 +98,24 @@ void ovisApp::read_DATA(){
 			panel_ID = line;
 		}
 		if (isStartFile == true && line.find("PANELNORM:") != string::npos) {
-			line = format_Norm(line);
+			line = format_STR(line);
 			panel_Norm = line + "\n";
 		}
+		if (isStartFile == true && line.find("PANELUV:") != string::npos) {
+			ntVec3 uvw = add_VEC(line);
+			param_UVW.x = uvw.x;
+			param_UVW.y = uvw.y;
+			param_UVW.z = uvw.z;
+
+
+			std::cout << "PIXEL X:  " << param_UVW.x << endl;
+			std::cout << "PIXEL Y:  " << param_UVW.y << endl;
+
+			line = format_STR(line);
+			panel_UVW = line + "\n";
+		}
 		if (isStartFile == true && line.find("POS:") != string::npos) {
-			ntVec3 vec = add_Vert(line);
+			ntVec3 vec = add_VEC(line);
 			verts[cnt] = vec;
 			if (cnt < 2) {
 				cnt = cnt + 1;
@@ -130,12 +150,14 @@ void ovisApp::read_DATA(){
 				ntPanel * panel = new ntPanel(v0, v1, v2);
 				panel->set_ID(panel_ID);
 				panel->set_nG(panel_Norm);
+				panel->set_UVW(panel_UVW, param_UVW);
 				panel->set_pG(vertex_Pos);
 				panels.push_back(panel);
 			//}
 
 			panel_ID = "<< ERROR >>";
 			panel_Norm = "<< ERROR >>";
+			panel_UVW = "<< ERROR >>";
 			vertex_Pos = "";
 		}
 	}
@@ -150,6 +172,10 @@ void ovisApp::read_IMG() {
 	
 	img_X = img_IN.dims(0);
 	img_Y = img_IN.dims(1);
+
+	//std::cout << "IMAGE X DIM:  " << img_X << endl;
+	//std::cout << "IMAGE Y DIM:  " << img_Y << endl;
+
 	img_00 = zeros<mat>(img_X, img_Y);
 
 	af::array img_LOADER(img_X, img_Y, img_00.memptr());
@@ -164,12 +190,12 @@ void ovisApp::read_IMG() {
 	//af_print(img_IN);
 
 }
-string ovisApp::format_Norm(string line){
+string ovisApp::format_STR(string line){
 	string token = "PANEL";
-	string norm = "   VEC: <";
+	string norm = ": (";
 
 	if (line.find(token) != string::npos) {
-		char chars[] = "/PANELNORM:{";
+		char chars[] = "/PANELNORMUV:{";
 		for (unsigned int j = 0; j < strlen(chars); ++j)
 		{
 			line.erase(std::remove(line.begin(), line.end(), chars[j]), line.end());
@@ -191,77 +217,26 @@ string ovisApp::format_Norm(string line){
 				norm += ss.str() + ", ";
 			}
 			else if (cnt == 2) {
-				norm += ss.str() + ">";
+				norm += ss.str() + ")";
 			}
 			cnt += 1;
 		}
 		return norm;
 	}
 }
-string ovisApp::format_POS(string line) {
-	string token = "POS:";
-	string pos = "     POS: (";
-	string norm ="   VEC: <" ;
-
-	if (line.find(token) != string::npos) {
-		char chars[] = "/POS:{}NRM";
-		for (unsigned int j = 0; j < strlen(chars); ++j)
-		{
-			line.erase(std::remove(line.begin(), line.end(), chars[j]), line.end());
-		}
-		/////split stream at comma and insert into position array = posXYZ
-		string str;
-		stringstream stream(line);
-		float val;
-		int cnt = 0;
-
-		while (getline(stream, str, ',')) {
-			stringstream ss;
-			ss.precision(5);
-			ss << std::setw(18) << std::setfill(' ');
-			ss << str;
-			ss >> val;
-
-			if (cnt < 2) {
-				pos += ss.str() + ", " ;
-			} 
-			else if (cnt == 2) {
-				pos += ss.str() + ")";
-			}
-			else if (cnt >2 && cnt < 5) {
-				norm += ss.str() + ", ";
-			}
-			else {
-				norm += ss.str() + ">";
-			}
-			cnt += 1;
-		}
-		return pos;// +norm;
-	}
-}
 string ovisApp::format_VEC(ntVec3* vec) {
-	string pos = "     POS: (";
-	string norm = "   VEC: <";
+	string pos = "(";
 	float val;
 
 	for (int i = 0; i < 3; i++) {
 		if (i == 0) {
 			val = vec->x;
-			//if (val < .001 && val > -.001){
-			//	val = 0;
-			//}
 		}
 		else if (i == 1) {
 			val = vec->y;
-			//if (val < .001 && val > -.001) {
-			//	val = 0;
-			//}
 		}
 		else if (i == 2) {
 			val = vec->z;
-			//if (val < .001 && val > -.001) {
-			//	val = 0;
-			//}
 		}
 
 		stringstream ss;
@@ -465,23 +440,24 @@ void ovisApp::write_Panel(ntPanel* panel_ptr) {
 	file << "//  [ WORLD COORDINATES ]\n";
 	file << "//        (                 X,                  Y,                  Z)\n";
 	file << panel_ptr->get_p_G() << "\n";
-	file << format_VEC(panel_ptr->get_v_G().at(0)) << "\n";
-	file << format_VEC(panel_ptr->get_v_G().at(1)) << "\n";
-	file << format_VEC(panel_ptr->get_v_G().at(2)) << "\n";
+	file << "     POS:  " << format_VEC(panel_ptr->get_v_G().at(0)) << "\n";
+	file << "     POS:  " << format_VEC(panel_ptr->get_v_G().at(1)) << "\n";
+	file << "     POS:  " << format_VEC(panel_ptr->get_v_G().at(2)) << "\n";
 	file << "\n";
 	file << "//  PANEL ORIENTATION VECTOR:\n";
-	file << "//" << panel_ptr->get_n_G();
+	file << "//   VEC" << panel_ptr->get_n_G();
+	file << "//    UV" << panel_ptr->get_UVW();
 	file << "//  AREA:  " << to_string(calc_Area(panel_ptr)) << "            [ SQ.INCH ]\n\n";
 	file << "//////////////////////////////////////////////////////////////////////\n";
 	file << "//  NODE POSITIONS:\n";
 	file << "//  [ LOCAL COORDINATES ]\n";
 	file << "//        (                 X,                  Y,                  Z)\n";
-	file << format_VEC(panel_ptr->v0) << "\n";
-	file << format_VEC(panel_ptr->v1) << "\n";
-	file << format_VEC(panel_ptr->v2) << "\n";
+	file << "     POS: " << format_VEC(panel_ptr->v0) << "\n";
+	file << "     POS: " << format_VEC(panel_ptr->v1) << "\n";
+	file << "     POS: " << format_VEC(panel_ptr->v2) << "\n";
 	file << "\n";
 	file << "//  PANEL ORIENTATION VECTOR:\n";
-	file << format_VEC(&panel_ptr->norm) << "\n";
+	file << "//   VEC: " << format_VEC(&panel_ptr->norm) << "\n";
 	file << "\n";
 	file << "//  CORNER POSITIONS:          {POS:           }	\n";
 	file << "\n";
@@ -489,16 +465,16 @@ void ovisApp::write_Panel(ntPanel* panel_ptr) {
 	file << "\n";
 	file << "//  PERFORATION DATA:          {POS:  RADIUS:  }\n";
 	for (int i = 0; i < panel_ptr->get_Perf().size(); i++) {
-		file << format_VEC(panel_ptr->get_Perf().at(i)) << "       RAD:  "<< panel_ptr->get_Perf_R().at(i) << "\n";
+		file << "     POS:  " << format_VEC(panel_ptr->get_Perf().at(i)) << "       RAD:  "<< panel_ptr->get_Perf_R().at(i) << "\n";
 	}
 	file.close();
 }
 
-Vec3 ovisApp::add_Vert(string line) {
+Vec3 ovisApp::add_VEC(string line) {
 	string token = "POS:";
 
-	if (line.find(token) != string::npos) {
-		char chars[] = "/POS:{}NRM";
+	//if (line.find(token) != string::npos) {
+		char chars[] = "/POS:{}NRMAELUV";
 		for (unsigned int j = 0; j < strlen(chars); ++j)
 		{
 			line.erase(std::remove(line.begin(), line.end(), chars[j]), line.end());
@@ -532,7 +508,7 @@ Vec3 ovisApp::add_Vert(string line) {
 		}
 		ntVec3 vertex = ntVec3(vertPos[0], vertPos[1], vertPos[2]);
 		return vertex;
-	}
+	//}
 }
 
 void ovisApp::run(){
@@ -645,7 +621,7 @@ void ovisApp::display(){
 	if (panel_Index >= 0 && panel_Index < panels.size()) {
 		for (int i = 0; i < panels.size(); i++) {
 			// panels.at(panel_Index)->display();
-			// panels.at(panel_Index)->display_Perf();
+			panels.at(panel_Index)->display_Perf();
 			panels.at(panel_Index)->display_Edge();
 		}
 	}

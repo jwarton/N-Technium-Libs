@@ -75,18 +75,18 @@ int main(int argc, char const** argv){
 	//AppContent* c = new afApp02();		
 
 	///OVIS
-	//AppContent* c = new ovisApp();
+	AppContent* c = new ovisApp();
 
 	///KUKA SOURCE CODE APPLICATIONS
 	//AppContent* c = new krlApp();
 	//AppContent* c = new krlFPlane;
 	//AppContent* c = new krlSLines;
 	//AppContent* c = new krlXAxis;
-	AppContent* c = new krlRhino;
+	//AppContent* c = new krlRhino;
 	//AppContent* c = new krlMatLab;
 
 	//jpw::ntGLFWsetup program(100, 100, "NT-INTERFACE", new genApp(c));
-	//jpw::ntGLFWsetup program(1920,1080, "NT-INTERFACE", new genApp(c)); 
+	jpw::ntGLFWsetup program(1920,1080, "NT-INTERFACE", new genApp(c)); 
 	//simple app minimal ogl setup/ test
 	//jpw::ntSimpleApp simpleApp = ntSimpleApp(900, 900,"SIMPLE APP_TITLE");
 

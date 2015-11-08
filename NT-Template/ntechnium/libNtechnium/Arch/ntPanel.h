@@ -28,6 +28,7 @@ private:
 	string panel_ID;
 	string n_G;						//GLOBAL PANEL NORMAL
 	string p_G;
+	string string_UVW;						//GLOBAL PARAMETER
 	std::vector<ntVec3*> v_G;		//GLOBAL PANEL VERTEX POSITON
 	std::vector<ntVec3*> v_L;		// LOCAL PANEL VERTEX POSTION
 
@@ -47,6 +48,7 @@ public:
 
 	ntVec3 norm;
 	ntVec3* cent;
+	ntVec3 vec_UVW;
 	ntVertex centroid;
 	ntNormal normal;
 	float area;
@@ -79,11 +81,13 @@ public:
 	void set_ID(string panel_ID);
 	void set_nG(string n_G);
 	void set_pG(string p_G);
+	void set_UVW(string string_UVW, ntVec3 param_UVW);
 	void set_IMG(float val);
 
 	string get_ID();	//PANEL ID
 	string get_n_G();	//GLOBAL NORMAL
 	string get_p_G();
+	string get_UVW();	
 	std::vector<ntVec3*> get_v_G();	//GLOBAL VERTICES
 	std::vector<ntVec3*> get_Perf();
 	std::vector<float> get_Perf_R();

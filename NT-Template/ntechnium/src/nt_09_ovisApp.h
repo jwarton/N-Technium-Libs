@@ -43,7 +43,7 @@ private:
 	string url;
 	string path = nt_Utility::getPathToOutput();
 	string pathExtension = "ovis\\";
-	string fileName = "ptPos_09_OvisTriPts";
+	string fileName = "ptPos_10_OvisTriPts";
 	//string fileName = "ptPos_04_OvisTriPts";
 	string fileExt = ".txt";
 
@@ -77,10 +77,12 @@ private:
 	string panel_ID = "<< ERROR >>";
 	string panel_Norm = "<< ERROR >>";
 	string vertex_Pos = "";
-
+	string panel_UVW = "<< ERROR >>";
+	
 	ntVec3 verts[3];
 	ntVec3 norms[3];
 	ntVec3 norm_G;
+	ntVec3 param_UVW;
 
 	std::vector<ntPanel*> panels;
 	std::vector<ntFace3*> faces;
@@ -88,10 +90,9 @@ private:
 	void read_DATA();
 	void read_IMG();
 
-	Vec3 add_Vert(string line);
+	Vec3 add_VEC(string line);
 
-	string format_Norm(string line);
-	string format_POS(string line);
+	string format_STR(string line);
 	string format_VEC(ntVec3* vec);
 
 	void align_Panel(ntPanel* panel_ptr, ntVec3* axis);
