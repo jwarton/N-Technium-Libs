@@ -54,8 +54,8 @@ void ovisApp::init() {
 		col = mapRange(0, 1, 0, 255, col);
 		panels.at(i)->set_IMG(col);
 
-		//panels.at(i)->calc_Perf();
-		//write_Panel(panels.at(i));
+		panels.at(i)->calc_Perf();
+		write_Panel(panels.at(i));
 		
 		ntVec3 posXY = ntVec3( 55, 640, 0);
 
@@ -106,9 +106,6 @@ void ovisApp::read_DATA(){
 			param_UVW.x = uvw.x;
 			param_UVW.y = uvw.y;
 			param_UVW.z = uvw.z;
-
-			std::cout << "PIXEL X:  " << param_UVW.x << endl;
-			std::cout << "PIXEL Y:  " << param_UVW.y << endl;
 
 			line = format_STR(line);
 			panel_UVW = line + "\n";
