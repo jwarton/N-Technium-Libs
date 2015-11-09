@@ -56,7 +56,7 @@ private:
 	string url;
 	string path = nt_Utility::getPathToOutput();
 	string pathExtension = "ovis\\";
-	string fileName = "ptPos_10_OvisTriPts";
+	string fileName = "ptPos_12_OvisTriPts";
 	//string fileName = "ptPos_04_OvisTriPts";
 	string fileExt = ".txt";
 
@@ -75,7 +75,7 @@ private:
 	/////////////////////////////////////// TEMPORARY PANEL DETAILS
 	string panel_ID =	"<< ERROR >>";
 	string panel_Norm = "<< ERROR >>";
-	string panel_Vert = "";
+	string panel_Vert = "<< ERROR >>";
 	string panel_UVW =	"<< ERROR >>";
 	
 	ntVec3 verts[3];

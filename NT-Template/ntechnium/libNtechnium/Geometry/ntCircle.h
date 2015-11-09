@@ -28,7 +28,7 @@ public:
 	std::vector<ntVertex*> verts;
 	std::vector<ntEdge> edges;
 	ntColor4f col;
-	float seg = 12;
+	float seg = 8;
 
 	ntVec3 norm;
 	ntVec3* cent;

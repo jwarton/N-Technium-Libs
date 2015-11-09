@@ -17,6 +17,8 @@ using namespace jpw;
 class ntFace3{
 private:
 	void init();
+	bool isSubD = false;
+	void display_SubD();
 
 public:
 	ntVec3 *v0,*v1,*v2;
@@ -24,7 +26,9 @@ public:
 	ntVertex *vert0,*vert1,*vert2;
 	std::vector<ntVertex*> verts;
 	std::vector<ntEdge> edges;
+
 	ntColor4f col;
+	std::vector<ntCol4> cols;
 
 	ntVec3 norm;
 	ntVec3* cent;
@@ -37,8 +41,11 @@ public:
 	ntFace3(ntVec3* v0,ntVec3* v1,ntVec3* v2,ntVertex* vert0,ntVertex* vert1,ntVertex* vert2);
 
 	void setColor(ntColor4f col);
+	void setSubD(bool state);
+
 	void calcNorm();
 	void calcCentroid();
 	void display();
+	
 };
 #endif

@@ -89,16 +89,48 @@ void ntFace3::setColor(ntColor4f col){
 		verts.at(i)->setColor(col);
 	}
 }
+void ntFace3::setSubD(bool state) {
+	isSubD = state;
+}
 
 void ntFace3::display(){
-	glBegin(GL_TRIANGLES);
-	glColor4f(verts.at(0)->col.r, verts.at(0)->col.g, verts.at(0)->col.b, verts.at(0)->col.a);
-    glVertex3f(v0->x, v0->y, v0->z);
-	glColor4f(verts.at(1)->col.r, verts.at(1)->col.g, verts.at(1)->col.b, verts.at(1)->col.a);
-    glVertex3f(v1->x, v1->y, v1->z);	
-	glColor4f(verts.at(2)->col.r, verts.at(2)->col.g, verts.at(2)->col.b, verts.at(2)->col.a);
-    glVertex3f(v2->x, v2->y, v2->z);
-    glEnd();
-	///TODO centroid functionality needs work
-	//centroid.display();
+	if (isSubD == false) {
+		glBegin(GL_TRIANGLES);
+		glColor4f(verts.at(0)->col.r, verts.at(0)->col.g, verts.at(0)->col.b, verts.at(0)->col.a);
+		glVertex3f(v0->x, v0->y, v0->z);
+		glColor4f(verts.at(1)->col.r, verts.at(1)->col.g, verts.at(1)->col.b, verts.at(1)->col.a);
+		glVertex3f(v1->x, v1->y, v1->z);
+		glColor4f(verts.at(2)->col.r, verts.at(2)->col.g, verts.at(2)->col.b, verts.at(2)->col.a);
+		glVertex3f(v2->x, v2->y, v2->z);
+		glEnd();
+		///TODO centroid functionality needs work
+		//centroid.display();
+	}
+	else {
+		display_SubD();
+	}
+}
+void ntFace3::display_SubD() {
+	if (cols.size() > 3) {
+		glBegin(GL_TRIANGLES);
+		glColor4f(cols.at(1).r, cols.at(1).g, cols.at(1).b, cols.at(1).a);
+		glVertex3f(cent->x, cent->y, cent->z);
+		glVertex3f(v0->x, v0->y, v0->z);
+		glVertex3f(v1->x, v1->y, v1->z);
+		glEnd();
+
+		glBegin(GL_TRIANGLES);
+		glColor4f(cols.at(2).r, cols.at(2).g, cols.at(2).b, cols.at(2).a);
+		glVertex3f(cent->x, cent->y, cent->z);
+		glVertex3f(v1->x, v1->y, v1->z);
+		glVertex3f(v2->x, v2->y, v2->z);
+		glEnd();
+
+		glBegin(GL_TRIANGLES);
+		glColor4f(cols.at(3).r, cols.at(3).g, cols.at(3).b, cols.at(3).a);
+		glVertex3f(cent->x, cent->y, cent->z);
+		glVertex3f(v2->x, v2->y, v2->z);
+		glVertex3f(v0->x, v0->y, v0->z);
+		glEnd();
+	}
 }

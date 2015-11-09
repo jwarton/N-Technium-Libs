@@ -49,6 +49,8 @@ public:
 	ntVec3 norm;
 	ntVec3* cent;
 	ntVec3 vec_UVW;
+	std::vector<ntVec3> vecs_UV;
+
 	ntVertex centroid;
 	ntNormal normal;
 	float area;
@@ -62,6 +64,7 @@ public:
 
 	////////////////////////////////// PERFORATION PARAMETERS
 	float image_Val;				// VALUE OF MEAN PIXEL
+	std::vector <float> image_Vals;
 
 	void add_Perf();
 	void display_Perf();

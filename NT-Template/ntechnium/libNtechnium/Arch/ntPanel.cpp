@@ -128,7 +128,7 @@ void ntPanel::calc_Perf() {
 			}
 			y = (sp * j) + edge_Offset;//cent->y - (sp * p_Div*0.5) + (sp * j); 
 
-									   //PERFORATION SIZE 
+			//PERFORATION SIZE 
 			float r = image_Val * ((rand() % 10)*.1);
 			//std::cout << r << endl;
 			r = round(r * 10) * 0.1;
@@ -170,9 +170,9 @@ void ntPanel::add_Perf() {
 	}
 }
 void ntPanel::display_Perf() {
-	for (int i = 0; i < 50; i++) {
-//	for (int i = 0; i < perfs.size(); i++) {
-		if (i < i < perfs.size()) {
+//	for (int i = 0; i < 50; i++) {
+	for (int i = 0; i < perfs.size(); i++) {
+		if (i < perfs.size()) {
 			perfs.at(i).display();
 		}
 	}

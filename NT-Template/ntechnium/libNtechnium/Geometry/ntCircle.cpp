@@ -72,9 +72,9 @@ void ntCircle::display_dots() {
 void ntCircle::display(){
 	glColor4f(col.r, col.g, col.b, col.a);
 	glLineWidth(1);
-	glBegin(GL_LINES);													
+	glBegin(GL_LINE_LOOP);													
 	for (int i = 0; i<seg; i++) {
-		glVertex3f(vecs.at(i)->x, vecs.at(i)->y, 0);
+		glVertex2f(vecs.at(i)->x, vecs.at(i)->y);
 	}
 	glEnd();
 }

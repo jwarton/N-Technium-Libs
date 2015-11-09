@@ -77,14 +77,14 @@ int main(int argc, char const** argv){
 	//AppContent* c = new afApp02();		
 
 	///OVIS
-	//AppContent* c = new ovisApp();
+	AppContent* c = new ovisApp();
 
 	///KUKA SOURCE CODE APPLICATIONS
 	//AppContent* c = new krlApp();
 	//AppContent* c = new krlFPlane;
 	//AppContent* c = new krlSLines;
 	//AppContent* c = new krlXAxis;
-	AppContent* c = new krlRhino;
+	//AppContent* c = new krlRhino;
 	//AppContent* c = new krlMatLab;
 
 	c->set_AppDim(x, y);
