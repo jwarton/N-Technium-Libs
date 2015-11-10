@@ -86,12 +86,11 @@ void ntPanel::sub_Div(int gen) {
 			face->push_back(ntFace3(v2, n2, n1));
 			face->push_back(ntFace3(n0, n1, n2));
 		}
-
 		gen--;
 		cnt_SubDiv += 1;
 		sub_Div(gen);
-
 	} else {
+		
 		is_SubDiv = true;  ///exception prevents multiple subdivision calls
 	}
 }
@@ -208,8 +207,21 @@ void ntPanel::add_Perf() {
 		//std::cout << "ERROR:  ZERO PERFORATIONS FOUND" << endl;
 	}
 }
+
+///////////////////////////////////////////////////////////////
+/////////////////////////// DISPLAYS 2D TRANSFORMATION OF PANEL
+void ntPanel::display(){
+	glBegin(GL_TRIANGLES);
+	glColor4f(vert0->col.r, vert0->col.g, vert0->col.b, vert0->col.a);
+	glVertex3f(v0->x, v0->y, v0->z);
+	glColor4f(vert1->col.r, vert1->col.g, vert1->col.b, vert1->col.a);
+	glVertex3f(v1->x, v1->y, v1->z);	
+	glColor4f(vert2->col.r, vert2->col.g, vert2->col.b, vert2->col.a);
+	glVertex3f(v2->x, v2->y, v2->z);
+	glEnd();
+}
 void ntPanel::display_Perf() {
-//	for (int i = 0; i < 50; i++) {
+	//	for (int i = 0; i < 50; i++) {
 	for (int i = 0; i < perfs.size(); i++) {
 		if (i < perfs.size()) {
 			perfs.at(i).display();
@@ -222,27 +234,16 @@ void ntPanel::display_Edge() {
 	edges.at(2).display(1);
 	verts.at(0)->display(2);
 }
+///////////////////////////////////////////////////////////////
+////////////////////////// DISPLAYS 3D MODELSPACE VIEW OF PANEL
 void  ntPanel::display_Face(int gen) {
 	if (gen <= faces.size()) {
 		for (int i = 0; i < faces.at(gen)->size(); i++) {
-			//faces.at(gen)->at(i).display();
-			faces.at(gen)->at(i).edges.at(0).display();
-			faces.at(gen)->at(i).edges.at(1).display();
-			faces.at(gen)->at(i).edges.at(2).display();
+			faces.at(gen)->at(i).display();
 		}
 	}
 	else {
 		// EXCEPTION FOR EXCEEDING GERERATIONS WITHIN BOUNDS
 		display_Face(gen - 1);
 	}
-}
-void ntPanel::display(){
-	glBegin(GL_TRIANGLES);
-	glColor4f(vert0->col.r, vert0->col.g, vert0->col.b, vert0->col.a);
-	glVertex3f(v0->x, v0->y, v0->z);
-	glColor4f(vert1->col.r, vert1->col.g, vert1->col.b, vert1->col.a);
-	glVertex3f(v1->x, v1->y, v1->z);	
-	glColor4f(vert2->col.r, vert2->col.g, vert2->col.b, vert2->col.a);
-	glVertex3f(v2->x, v2->y, v2->z);
-	glEnd();
 }

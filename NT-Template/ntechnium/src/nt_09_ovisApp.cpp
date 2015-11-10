@@ -22,9 +22,22 @@ void ovisApp::init() {
 		edge_X.sub(panels.at(i)->v0);
 		align_Panel(panels.at(i), axis_X, &edge_X, panels.at(i)->v0); 
 
+
+		for (int j = 0; j < 3; j++) {
+			ntMatrix4 SC3 = ntMatrix4(panels.at(i)->faces.at(0)->at(0).vecs[j]);
+			SC3.scale3d(0.0001);
+			panels.at(i)->faces.at(0)->at(0).calcCentroid();	//REQUIRED AFTER SCALING
+			panels.at(i)->faces.at(0)->at(0).calcNorm();		//REQUIRED AFTER SCALING
+		}
+		panels.at(i)->sub_Div(gen);
+
 		float col;
 		if (isImgLoaded == true) {
+
 			int dim = panels.at(i)->vecs_UV.size();
+			int gen_ID = 0;
+			int face_ID = 0;
+
 			for (int j = 0; j < dim; j++) {
 
 				float x = panels.at(i)->vecs_UV.at(j).x;
@@ -36,8 +49,17 @@ void ovisApp::init() {
 				col = img_00(x, y);
 				col = mapRange(0, 1, 0, 255, col);
 
-				panels.at(i)->faces.at(0)->at(0).cols.push_back(ntCol4(col,col,col,1));
-				panels.at(i)->faces.at(0)->at(0).setColor(ntCol4(col, col, col, 1));
+				if (gen_ID < panels.at(i)->faces.size()) {
+
+					panels.at(i)->faces.at(gen_ID)->at(face_ID).setColor(ntCol4(col, col, col, 1));
+
+					if (face_ID < (panels.at(i)->faces.at(gen_ID)->size()-1)) {
+						face_ID++;
+					} else {
+						face_ID = 0;
+						gen_ID++;
+					}
+				}
 
 				if (j == 0) {
 					panels.at(i)->set_IMG(col);
@@ -70,13 +92,6 @@ void ovisApp::init() {
 				SC2.translate(posXY);
 			}
 		}
-		for (int j = 0; j < 3; j++) {
-			ntMatrix4 SC3 = ntMatrix4(panels.at(i)->faces.at(0)->at(0).vecs[j]);
-			SC3.scale3d(0.0001);
-			panels.at(i)->faces.at(0)->at(0).calcCentroid();	//REQUIRED AFTER SCALING
-			panels.at(i)->faces.at(0)->at(0).calcNorm();		//REQUIRED AFTER SCALING
-		}
-		panels.at(i)->sub_Div(3);
 	}
 }
 
@@ -182,6 +197,7 @@ void ovisApp::read_IMG() {
 	//float valAvg = af::mean<float>(varAvg);
 	//af_print(img_IN);
 }
+
 string ovisApp::format_STR(string line){
 	string token = "PANEL";
 	string norm = ": (";
@@ -532,7 +548,6 @@ void ovisApp::run(){
 	if (glfwGetKey(window, GLFW_KEY_Q) == GLFW_PRESS) {
 		m = vQ;
 		for (int i = 0; i < panels.size(); i++) {
-			///faces.at(i)->setSubD(false);
 			float r = mapRange(0, 1, 0, panels.size(), i);
 			float b = mapRange(0, 1, 0, panels.size(), i, false);
 			if (i % 2 == 0) {
@@ -550,10 +565,12 @@ void ovisApp::run(){
 	/////////////////////////////////////////  IMAGE MAPPED DISPLAY
 	if (glfwGetKey(window, GLFW_KEY_S) == GLFW_PRESS) {
 		m = vS;
+	}
+	if (glfwGetKey(window, GLFW_KEY_D) == GLFW_PRESS) {
+		m = vD;
 		for (int i = 0; i < panels.size(); i++) {
-			///faces.at(i)->setSubD(true);
-			ntColor4f col = panels.at(i)->faces.at(0)->at(0).cols[0];
-			panels.at(i)->faces.at(0)->at(0).setColor(col);
+			float col = panels.at(i)->image_Val;
+			panels.at(i)->faces.at(0)->at(0).setColor(ntColor4f(col, col, col, 1));
 		}
 	}
 	///////////////////////////////////////////////////////////////
@@ -561,7 +578,6 @@ void ovisApp::run(){
 	if (glfwGetKey(window, GLFW_KEY_W) == GLFW_PRESS) {
 		m = vW;
 		for (int i = 0; i < panels.size(); i++) {
-			///faces.at(i)->setSubD(false);
 			panels.at(i)->faces.at(0)->at(0).edges.at(0).setCol(ntColor4f(1, 1, 1, .5));
 			panels.at(i)->faces.at(0)->at(0).edges.at(1).setCol(ntColor4f(1, 1, 1, .5));
 			panels.at(i)->faces.at(0)->at(0).edges.at(2).setCol(ntColor4f(1, 1, 1, .5));
@@ -578,6 +594,11 @@ void ovisApp::display(){
 		for (int i = 0; i < panels.size(); i++) {
 			panels.at(i)->faces.at(0)->at(0).display();
 			panels.at(i)->faces.at(0)->at(0).edges.at(0).display();
+		}
+	}
+	if (m == vD) {
+		for (int i = 0; i < panels.size(); i++) {
+			panels.at(i)->faces.at(0)->at(0).display();
 		}
 	}
 	if (m == vS) {

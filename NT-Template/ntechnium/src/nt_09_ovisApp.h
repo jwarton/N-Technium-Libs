@@ -56,7 +56,7 @@ private:
 	string url;
 	string path = nt_Utility::getPathToOutput();
 	string pathExtension = "ovis\\";
-	string fileName = "ptPos_12_OvisTriPts";
+	string fileName = "ptPos_13_OvisTriPts";
 	//string fileName = "ptPos_04_OvisTriPts";
 	string fileExt = ".txt";
 
@@ -71,6 +71,7 @@ private:
 
 	int panel_NUM = 0;
 	int panel_Dim = 0;
+	int gen = 2;
 	///////////////////////////////////////////////////////////////
 	/////////////////////////////////////// TEMPORARY PANEL DETAILS
 	string panel_ID =	"<< ERROR >>";
@@ -115,7 +116,7 @@ public:
 	void run();
 	/////////////////////////////////////////////////// CONVIENENCE
 	///////////////////////////////////////////////////////////////
-	D_mode m = vQ;							 //CURRENT DISPLAY MODE
+	D_mode m = vS;							 //CURRENT DISPLAY MODE
 	void display();
 	void display_IMG();
 };

@@ -64,9 +64,9 @@ inline float ntEdge::getLength() {
 
 inline ntVec3* ntEdge::getMid() {
 
-	float x = (v0->x + v1->x) * 0.5;//((v0->x - v1->x) * 0.5) + v0->x;
-	float y = (v0->y + v1->y) * 0.5;//((v0->y - v1->y) * 0.5) + v0->y;
-	float z = (v0->z + v1->z) * 0.5;//((v0->z - v1->z) * 0.5) + v0->z;
+	float x = (v0->x + v1->x) * 0.5;
+	float y = (v0->y + v1->y) * 0.5;
+	float z = (v0->z + v1->z) * 0.5;
 
 	ntVec3 * v = new ntVec3(x, y, z);
 	return v;

@@ -13,7 +13,7 @@
 //#include "ntVec3.h"
 //#include <cmath>
 
-enum D_mode { vQ, vF, vP, vS, vW, vA };
+enum D_mode { vQ, vF, vP, vS, vW, vA, vD };
 
 static float mapRange(float minA, float maxA, float minB, float maxB, float valB, bool inc = true){
 	float rangeA = maxA - minA;
