@@ -53,7 +53,7 @@ void ovisApp::init() {
 			panels.at(i)->calc_Perf();
 		}
 		//write_Panel(panels.at(i));
-		
+
 		ntVec3 posXY = ntVec3( 55, 640, 0);
 		///SCALE SCENE TO FIT CAMERA---REFACTOR ZOOM TO FIT OPTION
 		for (int j = 0; j < 3; j++) {
@@ -76,6 +76,7 @@ void ovisApp::init() {
 			panels.at(i)->faces.at(0)->at(0).calcCentroid();	//REQUIRED AFTER SCALING
 			panels.at(i)->faces.at(0)->at(0).calcNorm();		//REQUIRED AFTER SCALING
 		}
+		panels.at(i)->sub_Div(3);
 	}
 }
 
@@ -581,7 +582,7 @@ void ovisApp::display(){
 	}
 	if (m == vS) {
 		for (int i = 0; i < panels.size(); i++) {
-			panels.at(i)->display_Face();
+			panels.at(i)->display_Face(2);
 		}
 	}
 	if (m == vW) {

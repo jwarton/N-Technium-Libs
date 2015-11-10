@@ -30,7 +30,7 @@ public:
 	ntVec3* v1;
 	//vertex pointers
 	ntVertex *vert0,*vert1;
-	ntVertex* verts[2];
+	ntVertex *verts[2];
 	//color variables
 	ntColor4f colS;
 	ntColor4f colE;
@@ -47,6 +47,7 @@ public:
 	ntEdge(ntVec3* v0,ntVec3* v1,ntVertex* vert0, ntVertex* vert1);
 
 	float getLength();
+	ntVec3*  getMid();
 
 	void setCol(ntColor4f col);
 	void setEdge(float w);
@@ -59,6 +60,16 @@ public:
 inline float ntEdge::getLength() {
 	float length = v0->distance(v1);
 	return length;
+}
+
+inline ntVec3* ntEdge::getMid() {
+
+	float x = (v0->x + v1->x) * 0.5;//((v0->x - v1->x) * 0.5) + v0->x;
+	float y = (v0->y + v1->y) * 0.5;//((v0->y - v1->y) * 0.5) + v0->y;
+	float z = (v0->z + v1->z) * 0.5;//((v0->z - v1->z) * 0.5) + v0->z;
+
+	ntVec3 * v = new ntVec3(x, y, z);
+	return v;
 }
 
 #endif

@@ -35,6 +35,8 @@ private:
 
 	void set_vG();
 	bool ntPanel::pt_isInside(ntVec3* point);
+	bool is_SubDiv = false;
+	int  cnt_SubDiv = 0;
 
 public:
 

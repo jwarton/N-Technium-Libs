@@ -34,6 +34,7 @@ void ntPanel::init(){
 	face->push_back(ntFace3(n0, n1, n2));
 	faces.push_back(face);
 
+	///std::cout << panel_ID << " Faces Size:  " << faces.size() << endl;
 	// INITIALIZE CENTROID AND NORMAL
 	calcCentroid();
 	calcNorm();
@@ -66,10 +67,33 @@ void ntPanel::calcNorm(){
 	normal = ntNormal(*cent,norm,.05);
 }
 void ntPanel::sub_Div(int gen) {
+	
+	if (is_SubDiv == false && gen > 0) {
+		int dim = faces.size() - 1;
+		std::vector <ntFace3>* face = new vector<ntFace3>;
+		faces.push_back(face);
+		for (int i = 0; i < faces.at(dim)->size(); i++) {
+			ntVec3 * v0 = faces.at(dim)->at(i).v0;
+			ntVec3 * v1 = faces.at(dim)->at(i).v1;
+			ntVec3 * v2 = faces.at(dim)->at(i).v2;
+			//FIND MIDPOINT OF EACH EDGE IN FACE
+			ntVec3 * n0 = faces.at(dim)->at(i).edges[0].getMid();
+			ntVec3 * n1 = faces.at(dim)->at(i).edges[1].getMid();
+			ntVec3 * n2 = faces.at(dim)->at(i).edges[2].getMid();
+			//NEW FACES FROM VECS POINTERS
+			face->push_back(ntFace3(v0, n0, n2));
+			face->push_back(ntFace3(v1, n1, n0));
+			face->push_back(ntFace3(v2, n2, n1));
+			face->push_back(ntFace3(n0, n1, n2));
+		}
 
-	gen -- ;
-	std::cout << panel_ID << " GEN:  " << gen << endl;
-	sub_Div(gen);
+		gen--;
+		cnt_SubDiv += 1;
+		sub_Div(gen);
+
+	} else {
+		is_SubDiv = true;  ///exception prevents multiple subdivision calls
+	}
 }
 
 void ntPanel::setColor(ntColor4f col){
@@ -199,8 +223,17 @@ void ntPanel::display_Edge() {
 	verts.at(0)->display(2);
 }
 void  ntPanel::display_Face(int gen) {
-	for (int i = 0; i < faces.at(gen)->size(); i++) {
-		faces.at(gen)->at(i).display();
+	if (gen <= faces.size()) {
+		for (int i = 0; i < faces.at(gen)->size(); i++) {
+			//faces.at(gen)->at(i).display();
+			faces.at(gen)->at(i).edges.at(0).display();
+			faces.at(gen)->at(i).edges.at(1).display();
+			faces.at(gen)->at(i).edges.at(2).display();
+		}
+	}
+	else {
+		// EXCEPTION FOR EXCEEDING GERERATIONS WITHIN BOUNDS
+		display_Face(gen - 1);
 	}
 }
 void ntPanel::display(){
