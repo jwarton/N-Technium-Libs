@@ -8,25 +8,6 @@ void ovisApp::init() {
 
 	Vec3* axis_Z = new Vec3( 0, 0, 1 );
 	Vec3* axis_X = new Vec3( 1, 0, 0 );
-
-	for (int i = 0; i < faces.size(); i++) {
-			for (int j = 0; j < 3; j++) {
-				ntMatrix4 SC3 = ntMatrix4(faces.at(i)->vecs[j]);
-				SC3.scale3d(0.0001);
-				faces.at(i)->calcCentroid();	//REQUIRED AFTER SCALING
-				faces.at(i)->calcNorm();		//REQUIRED AFTER SCALING
-			}
-			float r = mapRange(0, 1, 0, faces.size(), i);
-			float b = mapRange(0, 1, 0, faces.size(), i, false);
-			if (i % 2 == 0) {
-				faces.at(i)->setColor(Col4(r, 0, b, 1));
-			}
-			else {
-				faces.at(i)->setColor(Col4(r, 0, b, 1));
-			}
-			faces.at(i)->edges.at(0).setCol(ntColor4f(0, 0, 0, 1));
-	}
-
 	panel_Dim = panels.size();
 
 	///MULTITHREAD THIS OPERATION
@@ -54,9 +35,9 @@ void ovisApp::init() {
 
 				col = img_00(x, y);
 				col = mapRange(0, 1, 0, 255, col);
-				//std::cout << col << endl;
 
-				faces.at(i)->cols.push_back(ntCol4(col,col,col,1));
+				panels.at(i)->faces.at(0)->at(0).cols.push_back(ntCol4(col,col,col,1));
+				panels.at(i)->faces.at(0)->at(0).setColor(ntCol4(col, col, col, 1));
 
 				if (j == 0) {
 					panels.at(i)->set_IMG(col);
@@ -74,7 +55,7 @@ void ovisApp::init() {
 		//write_Panel(panels.at(i));
 		
 		ntVec3 posXY = ntVec3( 55, 640, 0);
-
+		///SCALE SCENE TO FIT CAMERA---REFACTOR ZOOM TO FIT OPTION
 		for (int j = 0; j < 3; j++) {
 			ntMatrix4 SC1 = ntMatrix4(panels.at(i)->vecs[j]);
 			//SC1.scale3d(0.015);
@@ -89,7 +70,12 @@ void ovisApp::init() {
 				SC2.translate(posXY);
 			}
 		}
-
+		for (int j = 0; j < 3; j++) {
+			ntMatrix4 SC3 = ntMatrix4(panels.at(i)->faces.at(0)->at(0).vecs[j]);
+			SC3.scale3d(0.0001);
+			panels.at(i)->faces.at(0)->at(0).calcCentroid();	//REQUIRED AFTER SCALING
+			panels.at(i)->faces.at(0)->at(0).calcNorm();		//REQUIRED AFTER SCALING
+		}
 	}
 }
 
@@ -146,12 +132,6 @@ void ovisApp::read_DATA(){
 
 		//DISTRIBUTE DATA TO PANEL DEFINITION
 		if (isSubNext == true || isEndFile == true) {
-			ntVec3 * n0 = new ntVec3(verts[0].x, verts[0].y, verts[0].z);
-			ntVec3 * n1 = new ntVec3(verts[1].x, verts[1].y, verts[1].z);
-			ntVec3 * n2 = new ntVec3(verts[2].x, verts[2].y, verts[2].z);
-			ntFace3 * face = new ntFace3(n0, n1, n2);
-
-			faces.push_back(face);
 			/////////////////////////////////////////////////////////////////////////////////
 			//if (std::stof(panel_ID) < 1000) {	
 				ntVec3 * v0 = new ntVec3(verts[0].x, verts[0].y, verts[0].z);
@@ -160,7 +140,7 @@ void ovisApp::read_DATA(){
 				ntPanel * panel = new ntPanel(v0, v1, v2);
 				panel->set_ID(panel_ID);
 				panel->set_nG(panel_Norm);
-				panel->set_UVW(panel_UVW, param_UVW);
+				panel->set_UVW(panel_UVW);
 				panel->vecs_UV.swap(params_UV);
 				panel->set_pG(panel_Vert);
 				panels.push_back(panel);
@@ -171,9 +151,6 @@ void ovisApp::read_DATA(){
 			panel_UVW =		"<< ERROR >>";
 			panel_Vert =	"";
 			vector<ntVec3>().swap(params_UV);		//DEALLOCATE MEMORY STORED IN PARAMS_UV
-
-			//std::cout << "number of uvw params:  " << panel->vecs_UV.size() << endl;
-			//std::cout << "x value of pos1     :  " << panel->vecs_UV.at(1).x << endl;
 		}
 	}
 }
@@ -520,72 +497,75 @@ void ovisApp::run(){
 	if (glfwGetKey(window, GLFW_KEY_PAGE_UP) == GLFW_PRESS) {
 		if (panel_Index < panel_Dim-1) {
 			float c = panels.at(panel_Index)->image_Val;
-			faces.at(panel_Index)->setColor(Col4(c, c, c, 1));
+			panels.at(panel_Index)->faces.at(0)->at(0).setColor(Col4(c, c, c, 1));
 			panel_Index = panel_Index + 1;
 			std::cout << panel_Index << endl;
 		}
 		else {
 			float c = panels.at(panel_Dim-1)->image_Val;
-			faces.at(panel_Dim-1)->setColor(Col4(c, c, c, 1));
+			panels.at(panel_Dim - 1)->faces.at(0)->at(0).setColor(Col4(c, c, c, 1));
 			panel_Index = 0;
 			std::cout << panel_Index << endl;
 		}
 		if (m == vW) {
-			faces.at(panel_Index)->setColor(Col4(1, 0, 0, 1));
+			panels.at(panel_Index)->faces.at(0)->at(0).setColor(Col4(1, 0, 0, 1));
 		}
 	}
 	if (glfwGetKey(window, GLFW_KEY_PAGE_DOWN) == GLFW_PRESS) {
 		if (panel_Index > 0 && panel_Index < panel_Dim) {
 			float c = panels.at(panel_Index)->image_Val;
-			faces.at(panel_Index)->setColor(Col4(c, c, c, 1));
+			panels.at(panel_Index)->faces.at(0)->at(0).setColor(Col4(c, c, c, 1));
 			panel_Index = panel_Index - 1;
 			std::cout << panel_Index << endl;
 		}
 		else {
 			float c = panels.at(0)->image_Val;
-			faces.at(0)->setColor(Col4(c, c, c, 1));
+			panels.at(0)->faces.at(0)->at(0).setColor(Col4(c, c, c, 1));
 			panel_Index = panel_Dim-1;
 			std::cout << panel_Index << endl;
 		}
 		if (m == vW) {
-			faces.at(panel_Index)->setColor(Col4(1, 0, 0, 1));
+			panels.at(panel_Index)->faces.at(0)->at(0).setColor(Col4(1, 0, 0, 1));
 		}
-	}
-	if (glfwGetKey(window, GLFW_KEY_A) == GLFW_PRESS) {
-		m = vA;
 	}
 	if (glfwGetKey(window, GLFW_KEY_Q) == GLFW_PRESS) {
 		m = vQ;
-		for (int i = 0; i < faces.size(); i++) {
-			faces.at(i)->setSubD(false);
-			float r = mapRange(0, 1, 0, faces.size(), i);
-			float b = mapRange(0, 1, 0, faces.size(), i, false);
+		for (int i = 0; i < panels.size(); i++) {
+			///faces.at(i)->setSubD(false);
+			float r = mapRange(0, 1, 0, panels.size(), i);
+			float b = mapRange(0, 1, 0, panels.size(), i, false);
 			if (i % 2 == 0) {
-				faces.at(i)->setColor(Col4(r, 0, b, 1));
+				panels.at(i)->faces.at(0)->at(0).setColor(Col4(r, 0, b, 1));
 			}
 			else {
-				faces.at(i)->setColor(Col4(r, 0, b, 1));
+				panels.at(i)->faces.at(0)->at(0).setColor(Col4(r, 0, b, 1));
 			}
-			faces.at(i)->edges.at(0).setCol(ntColor4f(0, 0, 0, .5));
-			faces.at(i)->edges.at(1).setCol(ntColor4f(0, 0, 0, .5));
-			faces.at(i)->edges.at(2).setCol(ntColor4f(0, 0, 0, .5));
+			panels.at(i)->faces.at(0)->at(0).edges.at(0).setCol(ntColor4f(0, 0, 0, .5));
+			panels.at(i)->faces.at(0)->at(0).edges.at(1).setCol(ntColor4f(0, 0, 0, .5));
+			panels.at(i)->faces.at(0)->at(0).edges.at(2).setCol(ntColor4f(0, 0, 0, .5));
 		}
 	}
+	///////////////////////////////////////////////////////////////
+	/////////////////////////////////////////  IMAGE MAPPED DISPLAY
 	if (glfwGetKey(window, GLFW_KEY_S) == GLFW_PRESS) {
 		m = vS;
-		for (int i = 0; i < faces.size(); i++) {
-			faces.at(i)->setSubD(true);
+		for (int i = 0; i < panels.size(); i++) {
+			///faces.at(i)->setSubD(true);
+			ntColor4f col = panels.at(i)->faces.at(0)->at(0).cols[0];
+			panels.at(i)->faces.at(0)->at(0).setColor(col);
 		}
 	}
+	///////////////////////////////////////////////////////////////
+	///////////////////////////////////////////  WIRE FRAME DISPLAY
 	if (glfwGetKey(window, GLFW_KEY_W) == GLFW_PRESS) {
 		m = vW;
-		for (int i = 0; i < faces.size(); i++) {
-			faces.at(i)->setSubD(false);
-			faces.at(i)->edges.at(0).setCol(ntColor4f(1, 1, 1, .5));
-			faces.at(i)->edges.at(1).setCol(ntColor4f(1, 1, 1, .5));
-			faces.at(i)->edges.at(2).setCol(ntColor4f(1, 1, 1, .5));
+		for (int i = 0; i < panels.size(); i++) {
+			///faces.at(i)->setSubD(false);
+			panels.at(i)->faces.at(0)->at(0).edges.at(0).setCol(ntColor4f(1, 1, 1, .5));
+			panels.at(i)->faces.at(0)->at(0).edges.at(1).setCol(ntColor4f(1, 1, 1, .5));
+			panels.at(i)->faces.at(0)->at(0).edges.at(2).setCol(ntColor4f(1, 1, 1, .5));
 			if (i == panel_Index) {
-				faces.at(i)->setColor(Col4(1, 0, 0, 1));
+				panels.at(i)->faces.at(0)->at(0).setColor(Col4(1, 0, 0, 1));
 			}
 		}
 	}
@@ -593,30 +573,28 @@ void ovisApp::run(){
 }
 
 void ovisApp::display(){
-
 	if (m == vQ) {
-		for (int i = 0; i < faces.size(); i++) {
-			faces.at(i)->display();
-			faces.at(i)->edges.at(0).display();
+		for (int i = 0; i < panels.size(); i++) {
+			panels.at(i)->faces.at(0)->at(0).display();
+			panels.at(i)->faces.at(0)->at(0).edges.at(0).display();
 		}
 	}
 	if (m == vS) {
-		for (int i = 0; i < faces.size(); i++) {
-			faces.at(i)->display();
+		for (int i = 0; i < panels.size(); i++) {
+			panels.at(i)->display_Face();
 		}
 	}
 	if (m == vW) {
-		for (int i = 0; i < faces.size(); i++) {
-			faces.at(i)->edges.at(0).display();
-			faces.at(i)->edges.at(1).display();
-			faces.at(i)->edges.at(2).display();
+		for (int i = 0; i < panels.size(); i++) {
+			panels.at(i)->faces.at(0)->at(0).edges.at(0).display();
+			panels.at(i)->faces.at(0)->at(0).edges.at(1).display();
+			panels.at(i)->faces.at(0)->at(0).edges.at(2).display();
 		}
-		faces.at(panel_Index)->display();
+		panels.at(panel_Index)->faces.at(0)->at(0).display();
 	}
 	///////////////////////////////////////////////////////////////
 	////////////////////////////////////////////  2D DISPLAY CONENT
-	//view_Orth();
-
+	//view_Orth();  ///REFACTOR THIS FUNCTION TO BASE CONTENT CLASS
 	glDisable(GL_DEPTH_TEST);
 	glMatrixMode(GL_PROJECTION);
 	glPushMatrix();
@@ -625,11 +603,10 @@ void ovisApp::display(){
 	gluOrtho2D(0, appWidth, 0, appHeight);
 	glMatrixMode(GL_MODELVIEW);
 	glLoadIdentity();
-
 	///////////////////////////////////////////////////////////////
 	if (panel_Index >= 0 && panel_Index < panels.size()) {
 		for (int i = 0; i < panels.size(); i++) {
-			// panels.at(panel_Index)->display();
+			//panels.at(panel_Index)->display();
 			//panels.at(panel_Index)->display_Perf();
 			panels.at(panel_Index)->display_Edge();
 		}

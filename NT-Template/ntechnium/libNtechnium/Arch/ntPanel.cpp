@@ -13,18 +13,28 @@ v0(v0),v1(v1),v2(v2){
 }
 
 void ntPanel::init(){
-	//initialize vertex
+	//INITIALIZE VERTEX
 	vert0 = new ntVertex (v0,col_0);
 	vert1 = new ntVertex (v1,col);
 	vert2 = new ntVertex (v2,col);
 	verts.push_back(vert0);
 	verts.push_back(vert1);
 	verts.push_back(vert2);
-	//initialize edges
+
+	//INITIALIZE EDGES
 	edges.push_back(ntEdge(v0,v1, col_0));
 	edges.push_back(ntEdge(v1,v2,col));
 	edges.push_back(ntEdge(v2,v0,col));
-	//initialize centroid and normal
+
+	//INITIALIZE FACES
+	std::vector <ntFace3>* face = new vector<ntFace3>;
+	ntVec3 * n0 = new ntVec3(v0->x, v0->y, v0->z);
+	ntVec3 * n1 = new ntVec3(v1->x, v1->y, v1->z);
+	ntVec3 * n2 = new ntVec3(v2->x, v2->y, v2->z);
+	face->push_back(ntFace3(n0, n1, n2));
+	faces.push_back(face);
+
+	// INITIALIZE CENTROID AND NORMAL
 	calcCentroid();
 	calcNorm();
 	set_vG();
@@ -55,6 +65,12 @@ void ntPanel::calcNorm(){
 	//norm.invert();
 	normal = ntNormal(*cent,norm,.05);
 }
+void ntPanel::sub_Div(int gen) {
+
+	gen -- ;
+	std::cout << panel_ID << " GEN:  " << gen << endl;
+	sub_Div(gen);
+}
 
 void ntPanel::setColor(ntColor4f col){
 	this->col=col;
@@ -62,7 +78,7 @@ void ntPanel::setColor(ntColor4f col){
 		verts.at(i)->setColor(col);
 	}
 }
-/////////////////////////////////////////////////PANEL FUNCTION NOT IN FACE CLASS
+
 void ntPanel::set_ID(string panel_ID){
 	this->panel_ID = panel_ID;
 }
@@ -80,9 +96,8 @@ void ntPanel::set_vG() {
 void ntPanel::set_pG(string p_G) {
 	this->p_G = p_G;
 };
-void ntPanel::set_UVW(string string_UVW, ntVec3 param_UVW){
+void ntPanel::set_UVW(string string_UVW){
 	this->string_UVW = string_UVW;
-	this->vec_UVW = param_UVW;
 }
 void ntPanel::set_IMG(float val) {
 	image_Val = val;
@@ -182,6 +197,11 @@ void ntPanel::display_Edge() {
 	edges.at(1).display(1);
 	edges.at(2).display(1);
 	verts.at(0)->display(2);
+}
+void  ntPanel::display_Face(int gen) {
+	for (int i = 0; i < faces.at(gen)->size(); i++) {
+		faces.at(gen)->at(i).display();
+	}
 }
 void ntPanel::display(){
 	glBegin(GL_TRIANGLES);
