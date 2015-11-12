@@ -41,6 +41,7 @@
 #include <iostream>
 #include <array>
 #include <arrayfire.h>
+#include <thread>
 
 int main(int argc, char const** argv){
 	////////////////////////////////////////////////////////////////// SELECT DEVICE AND DISPLAY ARRAYFIRE INFO
@@ -50,6 +51,10 @@ int main(int argc, char const** argv){
     af::setDevice(device);
     af::info();
 	printf("///////////////////////////////////////////////////////////////\n\n");
+
+
+	unsigned thread_Cnt = std::thread::hardware_concurrency();
+	std::cout << "Available threads on machine" << thread_Cnt << endl;
 
 	/////////////////////////////////////////////////////////////////////////// INSTANTIATE DERIVED APPLICATION
 	///////////////////////////////////////////////////////////////////////////////////////////////////////////

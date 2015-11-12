@@ -73,12 +73,13 @@ public:
 
 	void add_Perf();
 	void calc_Perf();
+	void calc_IMG();
 
 	std::vector<ntVec3*>	p_Pos;
 	std::vector<float>		p_Rad;
 
 	float	r_Min = .1625;
-	float	r_Max = .625;
+	float	r_Max = 1;//.625;
 	float	edge_Offset = .75;
 	int		n_seg = 36;
 

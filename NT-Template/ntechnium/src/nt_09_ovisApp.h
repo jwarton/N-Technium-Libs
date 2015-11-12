@@ -18,6 +18,10 @@
 #include <iomanip>
 #include <armadillo>
 
+#include <thread>
+#include <future>
+#include <chrono>
+
 #include <cstdio>
 #include <arrayfire.h>
 #include <af/util.h>
@@ -36,8 +40,13 @@
 
 using namespace jpw;
 
+
 class ovisApp : public AppContent {
 private:
+	//static struct tm timeData;
+	//static time_t timeStamp;
+	clock_t t_CPU = 0;
+
 	///////////////////////////////////////////////////////////////
 	//////////////////////////////////////// SOURCE IMAGE VARIABLES
 	string url_IMG;
@@ -47,31 +56,24 @@ private:
 	string fileExt_IMG = ".jpg";
 
 	af::array img_IN;
-	arma::mat img_00;
-
-	int img_X;
-	int img_Y;
 	///////////////////////////////////////////////////////////////
 	///////////////////////////////////////// SOURCE DATA VARIABLES
-	string url;
-	string path = nt_Utility::getPathToOutput();
-	string pathExtension = "ovis\\";
-	string fileName = "ptPos_13_OvisTriPts";
-	//string fileName = "ptPos_04_OvisTriPts";
-	string fileExt = ".txt";
+	//static string url;
+	static string path;
+	static string pathExtension;
+	static string fileName_DAT;
+	static string fileExt;
 
 	bool isStartFile =	false;
 	bool isEndSubs =	false;
 	bool isSubNext =	false;
 	bool isEndFile =	false;
 	bool isImgLoaded =	false;
-
-	struct tm timeData;
-	time_t timeStamp;
+	bool isMultiThread = false;
 
 	int panel_NUM = 0;
 	int panel_Dim = 0;
-	int gen = 2;
+	//int gen = 2;
 	///////////////////////////////////////////////////////////////
 	/////////////////////////////////////// TEMPORARY PANEL DETAILS
 	string panel_ID =	"<< ERROR >>";
@@ -92,16 +94,28 @@ private:
 	void read_DATA();
 	void read_IMG();
 
+	///////////////////////////////////////////////////////////////
+	///////////////////////////////////////// MULTITHREAD FUNCTIONS
+	static void funct(ntPanel* panel_ptr);
+	static void fun02(int ind_S, int ind_E, std::vector<ntPanel*>* panels, int x);
+	static void write_Panels(int ind_S, int ind_E, std::vector<ntPanel*>* panels);
+	///
+	static int gen;
+	static bool isImgLoaded_ST;
+	static arma::mat img_00;
+	static int img_X;
+	static int img_Y;
+
 	Vec3 add_VEC(string line);
 
-	string format_STR(string line);
-	string format_VEC(ntVec3* vec);
+	static string format_STR(string line);
+	static string format_VEC(ntVec3* vec);
 
-	void align_Panel(ntPanel* panel_ptr, ntVec3* axis);
-	void align_Panel(ntPanel* panel_ptr, ntVec3* axis_A, ntVec3* axis_B, ntVec3* pos);
-	void round_Pos(ntPanel* panel_ptr,float tolerance);
-	void write_Panel(ntPanel* panel_ptr);
-	double calc_Area(ntPanel* panel_ptr);
+	static void align_Panel(ntPanel* panel_ptr, ntVec3* axis);
+	static void align_Panel(ntPanel* panel_ptr, ntVec3* axis_A, ntVec3* axis_B, ntVec3* pos);
+	static void round_Pos(ntPanel* panel_ptr,float tolerance);
+	static void write_Panel(ntPanel* panel_ptr);
+	static double calc_Area(ntPanel* panel_ptr);
 
 	int panel_Index = 0;	// DISPLAY INDEX FOR CURRENT PANEL
 
@@ -109,14 +123,13 @@ public:
 	//////////////////////////////VARIABLES UNIQUE TO DERIVED CLASS
 	///////////////////////////////////////////////////////////////
 	ntTextIO ptData00;
-
 	//////////////////////////////////////// REQUIRED CLASS METHODS
 	///////////////////////////////////////////////////////////////
 	void init();
 	void run();
 	/////////////////////////////////////////////////// CONVIENENCE
 	///////////////////////////////////////////////////////////////
-	D_mode m = vS;							 //CURRENT DISPLAY MODE
+	D_mode m = vQ;							 //CURRENT DISPLAY MODE
 	void display();
 	void display_IMG();
 };

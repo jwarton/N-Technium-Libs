@@ -1,102 +1,187 @@
 #include "nt_09_ovisApp.h"
 #include <GL/glu.h>
 
+using namespace arma;
+
+int ovisApp::gen = 2;
+bool ovisApp::isImgLoaded_ST = false;
+int ovisApp::img_X = 0;
+int ovisApp::img_Y = 0;
+arma::mat ovisApp::img_00 = arma::zeros<mat>(img_X, img_Y);
+///////////////////////////////////////////////////////////////
+///////////////////////////////////////// SOURCE DATA VARIABLES
+//string ovisApp::url = "";
+string ovisApp::path = nt_Utility::getPathToOutput();;
+string ovisApp::pathExtension = "ovis\\";
+string ovisApp::fileName_DAT = "ptPos_13_OvisTriPts";
+string ovisApp::fileExt = ".txt";
+
+//time_t ovisApp::timeStamp = 0;
+//tm ovisApp::timeData = {0};
+
 void ovisApp::init() {
 
 	read_DATA();
 	read_IMG();
 
-	Vec3* axis_Z = new Vec3( 0, 0, 1 );
-	Vec3* axis_X = new Vec3( 1, 0, 0 );
 	panel_Dim = panels.size();
+	std::cout << "\nTOTAL PANELS LOADED:  "<< panel_Dim << "\n" << endl;
+	t_CPU = clock();
 
-	///MULTITHREAD THIS OPERATION
-	for (int i = 0; i < panel_Dim; i++) {		
-		/////////////////////////////////////////////////////////////////////////////  ALIGN CENTROID/NORMAL TO Z-AXIS
-		panels.at(i)->calcCentroid();
-		panels.at(i)->calcNorm();
-		align_Panel(panels.at(i), axis_Z, &panels.at(i)->norm, panels.at(i)->cent);	
+	isMultiThread = true;
 
-		/////////////////////////////////////////////////////////////////////////////  ALIGN V0/EDGE TO X-AXIS
-		Vec3 edge_X = Vec3(panels.at(i)->v1->x, panels.at(i)->v1->y, panels.at(i)->v1->z);
-		edge_X.sub(panels.at(i)->v0);
-		align_Panel(panels.at(i), axis_X, &edge_X, panels.at(i)->v0); 
+	unsigned thread_Cnt = std::thread::hardware_concurrency();
 
+	int index_S = 0;
+	int index_E = 0;
+	float items = (panel_Dim / thread_Cnt) + 1;
+	items = ceil(items);
+	//std::cout << "\nITEMS / THREAD:  " << items << "\n" << endl;
 
-		for (int j = 0; j < 3; j++) {
-			ntMatrix4 SC3 = ntMatrix4(panels.at(i)->faces.at(0)->at(0).vecs[j]);
-			SC3.scale3d(0.0001);
-			panels.at(i)->faces.at(0)->at(0).calcCentroid();	//REQUIRED AFTER SCALING
-			panels.at(i)->faces.at(0)->at(0).calcNorm();		//REQUIRED AFTER SCALING
+	if (isMultiThread == true) {
+		
+		for (int i = 0; i < thread_Cnt; i++) {
+
+			index_S =  items * i;
+			index_E = (items * i) + items - 1;
+
+			if (index_E > panel_Dim - 1) {
+				index_E = panel_Dim - 1;
+			}
+			//std::cout << "items: " << index_S << " - " << index_E << endl;
+			async(launch::async, ovisApp::fun02, index_S, index_E, &panels, i);
+			//async(launch::async, ovisApp::fun03, index_S, index_E, &panels);
+			//a.get();
+
+			//vector<thread> ths;
+			//ths.push_back(thread(ovisApp::fun02, index_S, index_E, &panels, i));
+			//for (auto& th : ths) {
+			//	th.join();
+			//}
 		}
-		panels.at(i)->sub_Div(gen);
+		//vector<thread> ths;
+		//for (int i = 0; i < panel_Dim; i++) {
+		//	ths.push_back(thread(ovisApp::funct, panels.at(i), i));
+		//}
+		//for (auto& th : ths) {
+		//	th.join();
+		//}
+	} else {
+		/// MULTITHREAD THIS OPERATION
+		Vec3* axis_Z = new Vec3(0, 0, 1);
+		Vec3* axis_X = new Vec3(1, 0, 0);
 
-		float col;
-		if (isImgLoaded == true) {
+		for (int i = 0; i < panel_Dim; i++) {
+			/////////////////////////////////////////////////////////////////////////////  ALIGN CENTROID/NORMAL TO Z-AXIS
+			panels.at(i)->calcCentroid();
+			panels.at(i)->calcNorm();
+			align_Panel(panels.at(i), axis_Z, &panels.at(i)->norm, panels.at(i)->cent);
 
-			int dim = panels.at(i)->vecs_UV.size();
-			int gen_ID = 0;
-			int face_ID = 0;
+			/////////////////////////////////////////////////////////////////////////////  ALIGN V0/EDGE TO X-AXIS
+			Vec3 edge_X = Vec3(panels.at(i)->v1->x, panels.at(i)->v1->y, panels.at(i)->v1->z);
+			edge_X.sub(panels.at(i)->v0);
+			align_Panel(panels.at(i), axis_X, &edge_X, panels.at(i)->v0);
 
-			for (int j = 0; j < dim; j++) {
 
-				float x = panels.at(i)->vecs_UV.at(j).x;
-				float y = panels.at(i)->vecs_UV.at(j).y;
+			for (int j = 0; j < 3; j++) {
+				ntMatrix4 SC3 = ntMatrix4(panels.at(i)->faces.at(0)->at(0).vecs[j]);
+				SC3.scale3d(0.0001);
+				panels.at(i)->faces.at(0)->at(0).calcCentroid();	//REQUIRED AFTER SCALING
+				panels.at(i)->faces.at(0)->at(0).calcNorm();		//REQUIRED AFTER SCALING
+			}
+			panels.at(i)->sub_Div(gen);
 
-				x = floor(mapRange(0, img_X, 0, 1, x));
-				y = floor(mapRange(0, img_Y, 0, 1, y));
+			float col;
+			if (isImgLoaded == true) {
 
-				col = img_00(x, y);
-				col = mapRange(0, 1, 0, 255, col);
+				int dim = panels.at(i)->vecs_UV.size();
+				int gen_ID = 0;
+				int face_ID = 0;
 
-				if (gen_ID < panels.at(i)->faces.size()) {
+				for (int j = 0; j < dim; j++) {
 
-					panels.at(i)->faces.at(gen_ID)->at(face_ID).setColor(ntCol4(col, col, col, 1));
+					float x = panels.at(i)->vecs_UV.at(j).x;
+					float y = panels.at(i)->vecs_UV.at(j).y;
 
-					if (face_ID < (panels.at(i)->faces.at(gen_ID)->size()-1)) {
-						face_ID++;
-					} else {
-						face_ID = 0;
-						gen_ID++;
+					x = floor(mapRange(0, img_X, 0, 1, x));
+					y = floor(mapRange(0, img_Y, 0, 1, y));
+
+					col = img_00(x, y);
+					col = mapRange(0, 1, 0, 255, col);
+
+					if (gen_ID < panels.at(i)->faces.size()) {
+
+						panels.at(i)->faces.at(gen_ID)->at(face_ID).setColor(ntCol4(col, col, col, 1));
+
+						if (face_ID < (panels.at(i)->faces.at(gen_ID)->size() - 1)) {
+							face_ID++;
+						}
+						else {
+							face_ID = 0;
+							gen_ID++;
+						}
+					}
+
+					if (j == 0) {
+						panels.at(i)->set_IMG(col);
 					}
 				}
+			}
+			else {
+				col = (rand() % 255 + 1);// RANDOM VALUES FOR PANEL PERFORATION DRIVER
+				panels.at(i)->set_IMG(col);
+			}
 
-				if (j == 0) {
-					panels.at(i)->set_IMG(col);
+			///PERFORATION REQUIRES UPDATE TO PERFORATE FOR EACH SUBDIVISION VALUE
+			if (i < 10) {
+				panels.at(i)->calc_Perf();
+			}
+			/// ///////////////////////////////////////////////////////////////////
+			//write_Panel(panels.at(i));
+
+			ntVec3 posXY = ntVec3(55, 640, 0);  //PANEL POSITION FOR 2D HUD
+												///SCALE SCENE TO FIT CAMERA---REFACTOR ZOOM TO FIT OPTION
+			for (int j = 0; j < 3; j++) {
+				ntMatrix4 SC1 = ntMatrix4(panels.at(i)->vecs[j]);
+				//SC1.scale3d(0.015);
+				SC1.scale3d(5);
+				SC1.translate(posXY);
+			}
+			for (int j = 0; j < panels.at(i)->perfs.size(); j++) {
+				for (int k = 0; k < panels.at(i)->perfs.at(j).seg; k++) {
+					ntMatrix4 SC2 = ntMatrix4(panels.at(i)->perfs.at(j).vecs.at(k));
+					//SC2.scale3d(0.015);
+					SC2.scale3d(5);
+					SC2.translate(posXY);
 				}
 			}
 		}
-		else {
-			col = (rand() % 255 + 1);// RANDOM VALUES FOR PANEL PERFORATION DRIVER
-			panels.at(i)->set_IMG(col);
-		}
-		///PERFORATION REQUIRES UPDATE TO PERFORATE FOR EACH SUBDIVISION VALUE
-		if (i < 10) {
-			panels.at(i)->calc_Perf();
-		}
-		//write_Panel(panels.at(i));
+		///
+	}
+	t_CPU = clock() - t_CPU;
+	std::cout << "EVAL_CPU TIME  [SECONDS]:  " << ((float)t_CPU) / CLOCKS_PER_SEC << "\n" << endl;
 
-		ntVec3 posXY = ntVec3( 55, 640, 0);
-		///SCALE SCENE TO FIT CAMERA---REFACTOR ZOOM TO FIT OPTION
-		for (int j = 0; j < 3; j++) {
-			ntMatrix4 SC1 = ntMatrix4(panels.at(i)->vecs[j]);
-			//SC1.scale3d(0.015);
-			SC1.scale3d(5);
-			SC1.translate(posXY);
-		}
-		for (int j = 0; j < panels.at(i)->perfs.size(); j++) {
-			for (int k = 0; k < panels.at(i)->perfs.at(j).seg; k++) {
-				ntMatrix4 SC2 = ntMatrix4(panels.at(i)->perfs.at(j).vecs.at(k));
-				//SC2.scale3d(0.015);
-				SC2.scale3d(5);
-				SC2.translate(posXY);
+	index_S = 0;
+	index_E = 0;
+
+	if (isMultiThread == true) {
+
+		for (int i = 0; i < thread_Cnt; i++) {
+
+			index_S = items * i;
+			index_E = (items * i) + items - 1;
+
+			if (index_E > panel_Dim - 1) {
+				index_E = panel_Dim - 1;
 			}
+			//async(launch::async, ovisApp::write_Panels, index_S, index_E, &panels);
 		}
 	}
+
 }
 
 void ovisApp::read_DATA(){
-	string pathI = nt_Utility::getPathToResources() + "data\\" + fileName + ".txt";
+	string pathI = nt_Utility::getPathToResources() + "data\\" + fileName_DAT + ".txt";
 
 	ifstream file(pathI);
 	string line;
@@ -154,6 +239,7 @@ void ovisApp::read_DATA(){
 				ntVec3 * v1 = new ntVec3(verts[1].x, verts[1].y, verts[1].z);
 				ntVec3 * v2 = new ntVec3(verts[2].x, verts[2].y, verts[2].z);
 				ntPanel * panel = new ntPanel(v0, v1, v2);
+				//panel_Dim++;
 				panel->set_ID(panel_ID);
 				panel->set_nG(panel_Norm);
 				panel->set_UVW(panel_UVW);
@@ -171,8 +257,7 @@ void ovisApp::read_DATA(){
 	}
 }
 void ovisApp::read_IMG() {
-	using namespace arma;
-
+	//using namespace arma;
 	url_IMG = path_IMG + pathExtension_IMG + fileName_IMG + fileExt_IMG;
 	std::cout << url_IMG << endl;
 	const char * file = url_IMG.c_str();
@@ -193,9 +278,110 @@ void ovisApp::read_IMG() {
 	img_00 = flipud(img_00);
 
 	isImgLoaded = true;
+	isImgLoaded_ST = true;
 	//af::array varAvg = af::mean(img_IN);
 	//float valAvg = af::mean<float>(varAvg);
 	//af_print(img_IN);
+}
+
+void ovisApp::funct(ntPanel* panel_ptr) {
+	
+	Vec3* axis_Z = new Vec3(0, 0, 1);
+	Vec3* axis_X = new Vec3(1, 0, 0);
+
+	/////////////////////////////////////////////////////////////////////////////  ALIGN CENTROID/NORMAL TO Z-AXIS
+	panel_ptr->calcCentroid();
+	panel_ptr->calcNorm();
+	align_Panel(panel_ptr, axis_Z, &panel_ptr->norm, panel_ptr->cent);
+
+	/////////////////////////////////////////////////////////////////////////////  ALIGN V0/EDGE TO X-AXIS
+	Vec3 edge_X = Vec3(panel_ptr->v1->x, panel_ptr->v1->y, panel_ptr->v1->z);
+	edge_X.sub(panel_ptr->v0);
+	align_Panel(panel_ptr, axis_X, &edge_X, panel_ptr->v0);
+
+	for (int j = 0; j < 3; j++) {
+		ntMatrix4 SC3 = ntMatrix4(panel_ptr->faces.at(0)->at(0).vecs[j]);
+		SC3.scale3d(0.0001);
+		panel_ptr->faces.at(0)->at(0).calcCentroid();	//REQUIRED AFTER SCALING
+		panel_ptr->faces.at(0)->at(0).calcNorm();		//REQUIRED AFTER SCALING
+	}
+
+	panel_ptr->sub_Div(gen);
+
+	float col;
+	if (isImgLoaded_ST == true) {
+
+		int dim = panel_ptr->vecs_UV.size();
+		int gen_ID = 0;
+		int face_ID = 0;
+
+		for (int j = 0; j < dim; j++) {
+
+			float x = panel_ptr->vecs_UV.at(j).x;
+			float y = panel_ptr->vecs_UV.at(j).y;
+
+			x = floor(mapRange(0, img_X, 0, 1, x));
+			y = floor(mapRange(0, img_Y, 0, 1, y));
+
+			col = img_00(x, y);
+			col = mapRange(0, 1, 0, 255, col);
+
+			if (gen_ID < panel_ptr->faces.size()) {
+
+				panel_ptr->faces.at(gen_ID)->at(face_ID).setColor(ntCol4(col, col, col, 1));
+
+				if (face_ID < (panel_ptr->faces.at(gen_ID)->size() - 1)) {
+					face_ID++;
+				}
+				else {
+					face_ID = 0;
+					gen_ID++;
+				}
+			}
+
+			if (j == 0) {
+				panel_ptr->set_IMG(col);
+			}
+		}
+	}
+	else {
+		col = (rand() % 255 + 1);// RANDOM VALUES FOR PANEL PERFORATION DRIVER
+		panel_ptr->set_IMG(col);
+	}
+
+	/// PERFORATION REQUIRES UPDATE TO PERFORATE FOR EACH SUBDIVISION VALUE
+	panel_ptr->calc_Perf();
+
+	/// ///////////////////////////////////////////////////////////////////
+	/// write_Panel(panels_ST.at(i));
+
+	ntVec3 posXY = ntVec3(55, 640, 0);  //PANEL POSITION FOR 2D HUD
+										///SCALE SCENE TO FIT CAMERA---REFACTOR ZOOM TO FIT OPTION
+	for (int j = 0; j < 3; j++) {
+		ntMatrix4 SC1 = ntMatrix4(panel_ptr->vecs[j]);
+		//SC1.scale3d(0.015);
+		SC1.scale3d(5);
+		SC1.translate(posXY);
+	}
+	for (int j = 0; j < panel_ptr->perfs.size(); j++) {
+		for (int k = 0; k < panel_ptr->perfs.at(j).seg; k++) {
+			ntMatrix4 SC2 = ntMatrix4(panel_ptr->perfs.at(j).vecs.at(k));
+			//SC2.scale3d(0.015);
+			SC2.scale3d(5);
+			SC2.translate(posXY);
+		}
+	}
+}
+void ovisApp::fun02(int ind_S, int ind_E, std::vector<ntPanel*>* panels, int x){
+	std::cout << "INSIDE THREAD:  " << x << endl;
+	for (int i = ind_S; i <= ind_E; i++) {
+		funct(panels->at(i));
+	}
+}
+void ovisApp::write_Panels(int ind_S, int ind_E, std::vector<ntPanel*>* panels) {
+	for (int i = ind_S; i <= ind_E; i++) {
+		write_Panel(panels->at(i));
+	}
 }
 
 string ovisApp::format_STR(string line){
@@ -451,14 +637,18 @@ double ovisApp::calc_Area(ntPanel* panel_ptr){
 	return area;
 }
 void ovisApp::write_Panel(ntPanel* panel_ptr) {
+
 	stringstream ss;
 	ss << std::setw(5) << std::setfill('0');
 	ss << panel_ptr->get_ID();
 
-	fileName = "OP_" + ss.str();
-	url = path + pathExtension + fileName + fileExt;
+	string fileName = "OP_" + ss.str();
+	string url = path + pathExtension + fileName + fileExt;
 
 	///////////////////////////////////////////////////// SET TIME STAP
+	struct tm timeData;
+	time_t timeStamp;
+
 	timeStamp = time(0);
 	localtime_s(&timeData, &timeStamp);
 	string Y = to_string(timeData.tm_year + 1900);
@@ -634,6 +824,8 @@ void ovisApp::display(){
 		}
 	}
 	display_IMG();
+			//panels.at(panel_Index)->display_Perf();
+			//panels.at(panel_Index)->display_Edge();
 }
 void ovisApp::display_IMG() {
 
