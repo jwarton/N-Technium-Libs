@@ -28,7 +28,7 @@ public:
 	std::vector<ntVertex*> verts;
 	std::vector<ntEdge> edges;
 	ntColor4f col;
-	float seg = 8;
+	float seg = 16;
 
 	ntVec3 norm;
 	ntVec3* cent;
@@ -42,6 +42,8 @@ public:
 	void setColor(ntColor4f col);
 	void calcNorm();
 	void calcCentroid();
+	bool pt_isInside(ntVec3* point);
+
 	void display();
 	void display_dots();
 };

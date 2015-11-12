@@ -58,11 +58,8 @@ private:
 	af::array img_IN;
 	///////////////////////////////////////////////////////////////
 	///////////////////////////////////////// SOURCE DATA VARIABLES
-	//static string url;
 	static string path;
-	static string pathExtension;
 	static string fileName_DAT;
-	static string fileExt;
 
 	bool isStartFile =	false;
 	bool isEndSubs =	false;
@@ -98,7 +95,8 @@ private:
 	///////////////////////////////////////// MULTITHREAD FUNCTIONS
 	static void funct(ntPanel* panel_ptr);
 	static void fun02(int ind_S, int ind_E, std::vector<ntPanel*>* panels, int x);
-	static void write_Panels(int ind_S, int ind_E, std::vector<ntPanel*>* panels);
+	static void write_Panels_TXT(int ind_S, int ind_E, std::vector<ntPanel*>* panels);
+	static void write_Panels_IMG(int ind_S, int ind_E, std::vector<ntPanel*>* panels);
 	///
 	static int gen;
 	static bool isImgLoaded_ST;
@@ -114,7 +112,8 @@ private:
 	static void align_Panel(ntPanel* panel_ptr, ntVec3* axis);
 	static void align_Panel(ntPanel* panel_ptr, ntVec3* axis_A, ntVec3* axis_B, ntVec3* pos);
 	static void round_Pos(ntPanel* panel_ptr,float tolerance);
-	static void write_Panel(ntPanel* panel_ptr);
+	static void write_Panel_TXT(ntPanel* panel_ptr);
+	static void write_Panel_IMG(ntPanel* panel_ptr);
 	static double calc_Area(ntPanel* panel_ptr);
 
 	int panel_Index = 0;	// DISPLAY INDEX FOR CURRENT PANEL

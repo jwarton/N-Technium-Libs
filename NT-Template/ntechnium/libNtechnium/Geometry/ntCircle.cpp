@@ -37,6 +37,18 @@ void ntCircle::calcCentroid(){
 	//centroid.setColor(ntColor4f(1,1,1,0));
 }
 
+bool ntCircle::pt_isInside(ntVec3* point) {
+	int i, j, nvert = vecs.size();
+	bool c = false;
+
+	for (i = 0, j = nvert - 1; i < nvert; j = i++) {
+		if (((vecs[i]->y >= point->y) != (vecs[j]->y >= point->y)) &&
+			(point->x <= (vecs[j]->x - vecs[i]->x) * (point->y - vecs[i]->y) / (vecs[j]->y - vecs[i]->y) + vecs[i]->x)
+			)
+			c = !c;
+	}
+	return c;
+}
 void ntCircle::calcNorm(){
 	//ntVec3* t1 = new ntVec3();
  //   t1->set(v2);

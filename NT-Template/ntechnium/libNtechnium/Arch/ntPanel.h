@@ -34,7 +34,6 @@ private:
 	std::vector<ntVec3*> v_L;		// LOCAL PANEL VERTEX POSTION
 
 	void set_vG();
-	bool ntPanel::pt_isInside(ntVec3* point);
 	bool is_SubDiv = false;
 	int  cnt_SubDiv = 0;
 
@@ -46,7 +45,7 @@ public:
 	std::vector<ntVertex*>				verts;
 	std::vector<ntEdge>					edges;
 	std::vector< vector <ntFace3>* >	faces;
-	std::vector<ntCircle>				perfs;
+	std::vector<ntCircle*>				perfs;
 	std::vector<ntVec3>					vecs_UV;
 	ntColor4f col;
 	ntColor4f col_0;
@@ -75,11 +74,13 @@ public:
 	void calc_Perf();
 	void calc_IMG();
 
+	bool ntPanel::pt_isInside(ntVec3* point);
+
 	std::vector<ntVec3*>	p_Pos;
 	std::vector<float>		p_Rad;
 
 	float	r_Min = .1625;
-	float	r_Max = 1;//.625;
+	float	r_Max = .75;//.625;
 	float	edge_Offset = .75;
 	int		n_seg = 36;
 

@@ -148,10 +148,11 @@ std::vector<float> ntPanel::get_Perf_R() {
 }
 void ntPanel::calc_Perf() {
 	//POSITION VARIABLE
-	int x_Div = ceil((v1->x - v0->x) / (r_Max * 2));
-	int y_Div = ceil((v2->y - v0->y) / (r_Max * 2));
 	float w = (v1->x - v0->x) - (edge_Offset * 2);
-	float sp = (r_Max * 2) + .5;
+	float spX = (r_Max * 2) + .125;
+	float spY = (r_Max * 2) - .25;
+	int x_Div = ceil((v1->x - v0->x) / spX);
+	int y_Div = ceil((v2->y - v0->y) / spY);
 	float y;
 	float x;
 	ntVec3* vec;
@@ -159,12 +160,12 @@ void ntPanel::calc_Perf() {
 	for (int i = 0; i <= x_Div; i++) {
 		for (int j = 0; j <= y_Div; j++) {
 			if (j % 2 == 0) {
-				x = v2->x - (sp * x_Div * 0.5) + (sp * i) + (sp * 0.5);//(sp * i) + edge_Offset + r_Max;//cent->x - (sp * p_Div*0.5) + (sp * i); 
+				x = v2->x - (spX * x_Div * 0.5) + (spX * i) + (spX * 0.5);//(sp * i) + edge_Offset + r_Max;//cent->x - (sp * p_Div*0.5) + (sp * i); 
 			}
 			else {
-				x = v2->x - (sp * x_Div * 0.5) + (sp * i);//(sp * i) + edge_Offset + r_Max;//cent->x - (sp * p_Div*0.5) + (sp * i); 
+				x = v2->x - (spX * x_Div * 0.5) + (spX * i);//(sp * i) + edge_Offset + r_Max;//cent->x - (sp * p_Div*0.5) + (sp * i); 
 			}
-			y = (sp * j) + edge_Offset;//cent->y - (sp * p_Div*0.5) + (sp * j); 
+			y = (spY * j) + edge_Offset;//cent->y - (sp * p_Div*0.5) + (sp * j); 
 
 			//PERFORATION SIZE 
 			float r = image_Val * ((rand() % 10)*.1);
@@ -200,7 +201,7 @@ void ntPanel::add_Perf() {
 		for (int i = 0; i < p_Pos.size(); i++) {
 
 			float r = p_Rad.at(i); 
-			ntCircle perf = ntCircle(p_Pos.at(i), r, Col4(.25, .25, .25, 1));
+			ntCircle * perf = new ntCircle(p_Pos.at(i), r, Col4(.25, .25, .25, 1));
 			perfs.push_back(perf);
 		}
 	} else {
@@ -224,7 +225,7 @@ void ntPanel::display_Perf() {
 	//	for (int i = 0; i < 50; i++) {
 	for (int i = 0; i < perfs.size(); i++) {
 		if (i < perfs.size()) {
-			perfs.at(i).display();
+			perfs.at(i)->display();
 		}
 	}
 }

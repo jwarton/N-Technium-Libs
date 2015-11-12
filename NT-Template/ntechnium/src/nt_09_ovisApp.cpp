@@ -10,14 +10,9 @@ int ovisApp::img_Y = 0;
 arma::mat ovisApp::img_00 = arma::zeros<mat>(img_X, img_Y);
 ///////////////////////////////////////////////////////////////
 ///////////////////////////////////////// SOURCE DATA VARIABLES
-//string ovisApp::url = "";
-string ovisApp::path = nt_Utility::getPathToOutput();;
-string ovisApp::pathExtension = "ovis\\";
-string ovisApp::fileName_DAT = "ptPos_13_OvisTriPts";
-string ovisApp::fileExt = ".txt";
 
-//time_t ovisApp::timeStamp = 0;
-//tm ovisApp::timeData = {0};
+string ovisApp::path = nt_Utility::getPathToOutput();;
+string ovisApp::fileName_DAT = "ptPos_13_OvisTriPts";
 
 void ovisApp::init() {
 
@@ -28,7 +23,7 @@ void ovisApp::init() {
 	std::cout << "\nTOTAL PANELS LOADED:  "<< panel_Dim << "\n" << endl;
 	t_CPU = clock();
 
-	isMultiThread = true;
+	//isMultiThread = true;
 
 	unsigned thread_Cnt = std::thread::hardware_concurrency();
 
@@ -36,10 +31,8 @@ void ovisApp::init() {
 	int index_E = 0;
 	float items = (panel_Dim / thread_Cnt) + 1;
 	items = ceil(items);
-	//std::cout << "\nITEMS / THREAD:  " << items << "\n" << endl;
 
 	if (isMultiThread == true) {
-		
 		for (int i = 0; i < thread_Cnt; i++) {
 
 			index_S =  items * i;
@@ -48,7 +41,7 @@ void ovisApp::init() {
 			if (index_E > panel_Dim - 1) {
 				index_E = panel_Dim - 1;
 			}
-			//std::cout << "items: " << index_S << " - " << index_E << endl;
+
 			async(launch::async, ovisApp::fun02, index_S, index_E, &panels, i);
 			//async(launch::async, ovisApp::fun03, index_S, index_E, &panels);
 			//a.get();
@@ -81,8 +74,7 @@ void ovisApp::init() {
 			Vec3 edge_X = Vec3(panels.at(i)->v1->x, panels.at(i)->v1->y, panels.at(i)->v1->z);
 			edge_X.sub(panels.at(i)->v0);
 			align_Panel(panels.at(i), axis_X, &edge_X, panels.at(i)->v0);
-
-
+			
 			for (int j = 0; j < 3; j++) {
 				ntMatrix4 SC3 = ntMatrix4(panels.at(i)->faces.at(0)->at(0).vecs[j]);
 				SC3.scale3d(0.0001);
@@ -133,11 +125,14 @@ void ovisApp::init() {
 			}
 
 			///PERFORATION REQUIRES UPDATE TO PERFORATE FOR EACH SUBDIVISION VALUE
-			if (i < 10) {
+			///TEST FUNTIION FOR ONE PANEL
+			if (i < 25) {
 				panels.at(i)->calc_Perf();
+				//write_Panel_IMG(panels.at(i));
+				async(launch::async, ovisApp::write_Panel_IMG, panels.at(i));
 			}
 			/// ///////////////////////////////////////////////////////////////////
-			//write_Panel(panels.at(i));
+			//ntPanel* panel_ptr_TXT(panels.at(i));
 
 			ntVec3 posXY = ntVec3(55, 640, 0);  //PANEL POSITION FOR 2D HUD
 												///SCALE SCENE TO FIT CAMERA---REFACTOR ZOOM TO FIT OPTION
@@ -148,8 +143,8 @@ void ovisApp::init() {
 				SC1.translate(posXY);
 			}
 			for (int j = 0; j < panels.at(i)->perfs.size(); j++) {
-				for (int k = 0; k < panels.at(i)->perfs.at(j).seg; k++) {
-					ntMatrix4 SC2 = ntMatrix4(panels.at(i)->perfs.at(j).vecs.at(k));
+				for (int k = 0; k < panels.at(i)->perfs.at(j)->seg; k++) {
+					ntMatrix4 SC2 = ntMatrix4(panels.at(i)->perfs.at(j)->vecs.at(k));
 					//SC2.scale3d(0.015);
 					SC2.scale3d(5);
 					SC2.translate(posXY);
@@ -174,10 +169,9 @@ void ovisApp::init() {
 			if (index_E > panel_Dim - 1) {
 				index_E = panel_Dim - 1;
 			}
-			//async(launch::async, ovisApp::write_Panels, index_S, index_E, &panels);
+			//async(launch::async, ovisApp::write_Panels_TXT, index_S, index_E, &panels);
 		}
 	}
-
 }
 
 void ovisApp::read_DATA(){
@@ -353,7 +347,7 @@ void ovisApp::funct(ntPanel* panel_ptr) {
 	panel_ptr->calc_Perf();
 
 	/// ///////////////////////////////////////////////////////////////////
-	/// write_Panel(panels_ST.at(i));
+	/// ntPanel* panel_ptr_TXT(panels_ST.at(i));
 
 	ntVec3 posXY = ntVec3(55, 640, 0);  //PANEL POSITION FOR 2D HUD
 										///SCALE SCENE TO FIT CAMERA---REFACTOR ZOOM TO FIT OPTION
@@ -364,8 +358,8 @@ void ovisApp::funct(ntPanel* panel_ptr) {
 		SC1.translate(posXY);
 	}
 	for (int j = 0; j < panel_ptr->perfs.size(); j++) {
-		for (int k = 0; k < panel_ptr->perfs.at(j).seg; k++) {
-			ntMatrix4 SC2 = ntMatrix4(panel_ptr->perfs.at(j).vecs.at(k));
+		for (int k = 0; k < panel_ptr->perfs.at(j)->seg; k++) {
+			ntMatrix4 SC2 = ntMatrix4(panel_ptr->perfs.at(j)->vecs.at(k));
 			//SC2.scale3d(0.015);
 			SC2.scale3d(5);
 			SC2.translate(posXY);
@@ -378,12 +372,16 @@ void ovisApp::fun02(int ind_S, int ind_E, std::vector<ntPanel*>* panels, int x){
 		funct(panels->at(i));
 	}
 }
-void ovisApp::write_Panels(int ind_S, int ind_E, std::vector<ntPanel*>* panels) {
+void ovisApp::write_Panels_TXT(int ind_S, int ind_E, std::vector<ntPanel*>* panels) {
 	for (int i = ind_S; i <= ind_E; i++) {
-		write_Panel(panels->at(i));
+		ntPanel* panel_ptr_TXT(panels->at(i));
 	}
 }
-
+void ovisApp::write_Panels_IMG(int ind_S, int ind_E, std::vector<ntPanel*>* panels) {
+	for (int i = ind_S; i <= ind_E; i++) {
+		ntPanel* panel_ptr_TXT(panels->at(i));
+	}
+}
 string ovisApp::format_STR(string line){
 	string token = "PANEL";
 	string norm = ": (";
@@ -636,13 +634,15 @@ double ovisApp::calc_Area(ntPanel* panel_ptr){
 	area = abs(sum / 2);//144; //CONVERT FROM UNITS TO FEET
 	return area;
 }
-void ovisApp::write_Panel(ntPanel* panel_ptr) {
+void ovisApp::write_Panel_TXT(ntPanel* panel_ptr) {
 
 	stringstream ss;
 	ss << std::setw(5) << std::setfill('0');
 	ss << panel_ptr->get_ID();
 
+	string pathExtension = "ovis\\txt\\";
 	string fileName = "OP_" + ss.str();
+	string fileExt = ".txt";
 	string url = path + pathExtension + fileName + fileExt;
 
 	///////////////////////////////////////////////////// SET TIME STAP
@@ -698,6 +698,106 @@ void ovisApp::write_Panel(ntPanel* panel_ptr) {
 		file << "     POS:  " << format_VEC(panel_ptr->get_Perf().at(i)) << "       RAD:  "<< panel_ptr->get_Perf_R().at(i) << "\n";
 	}
 	file.close();
+}
+void ovisApp::write_Panel_IMG(ntPanel* panel_ptr) {
+
+	stringstream ss;
+	ss << std::setw(5) << std::setfill('0');
+	ss << panel_ptr->get_ID();
+
+	string pathOut = nt_Utility::getPathToOutput();
+	string pathExtension = "ovis\\imgs\\";
+	string fileName = "OP_" + ss.str();
+	string fileExt = ".jpg";
+	string url = pathOut + pathExtension + fileName + fileExt;
+	// IMAGE SIZE
+	int img_X = 1024;
+	int img_Y = 1024;
+	// MAXIMUM PANEL SIZE;
+	int pX_max = 72;
+	int pY_max = 72;
+	// PIXEL RANGE LOOP
+	int dim_X = img_X;// OR = pX_max * dpi
+	int dim_Y = img_Y;// OR = pY_max * dpi
+
+	bool isDPI = false;
+	//isDPI = true;
+	int dpi		  = 72;
+	bool isPtAlpha = true;
+	bool isPtPanel = false;
+	bool isPtPerf = false;
+	float val	 = 0;
+
+	const char * file = url.c_str();
+	af::array  img_00 = af::array(img_X, img_Y, 1);
+	af::saveImage(file, img_00);
+	af::array img_OUT = af::loadImage(file, false);
+
+	// MINIMIZE SEARCH AREA
+	if (panel_ptr->v1->x > pX_max) {
+		std::cout << "PANEL" << ss.str() << " X DIM IS LARGER THAN IMAGE SIZE" << endl;
+	}
+	if (panel_ptr->v2->y > pY_max) {
+		std::cout << "PANEL" << ss.str() << " Y DIM IS LARGER THAN IMAGE SIZE" << endl;
+	}
+
+	// OPTION TO SET IMAGE SIZE BY DPI OR EXPLICIT SIZE
+	if (isDPI == true) {
+		img_X = pX_max * dpi;
+		img_Y = pY_max * dpi;
+	}
+
+	for (int i = 0; i < img_X; i++) {
+		for (int j = 0; j < img_Y; j++) {
+
+			//MAP (i, j) TO PANEL LOCAL COORDINATES
+			float pos_X = mapRange(0, pX_max, 0, img_X, i);
+			float pos_Y = mapRange(0, pY_max, 0, img_Y, j);
+
+			ntVec3 * pt = new ntVec3(pos_X, pos_Y, 0);
+
+			isPtPanel = panel_ptr->pt_isInside(pt);
+
+			if (isPtPanel == true) {
+				isPtAlpha = false;
+				for (int k = 0; k < panel_ptr->perfs.size(); k++) {
+					isPtPerf = panel_ptr->perfs.at(k)->pt_isInside(pt);
+					if (isPtPerf == true) {
+						isPtAlpha = true;
+						k = panel_ptr->perfs.size();
+					}
+				}
+			}
+			else {
+				isPtAlpha = true;
+			}
+
+			//MAP PT TO IMAGE COORDINATES
+			int x = i;
+			int y = j;
+
+			// IF POINT INSIDE, PIXEL = WHITE
+			if (isPtAlpha == false) {
+				val = 255;
+				img_OUT(x, y) = val;
+			}
+
+			//if (isPtAlpha == true) {
+			//	val = 255;
+			//	img_OUT(x, y) = val;
+			//}
+
+			//if (isPtPerf == true) {
+			//	//val = 255;
+			//	//img_OUT(x, y) = val;
+			//}
+
+			val = 0;
+		}
+	}
+	img_OUT = af::transpose(img_OUT);
+	img_OUT = af::flip(img_OUT,0);
+	af::saveImage(file, img_OUT);
 }
 
 void ovisApp::run(){
