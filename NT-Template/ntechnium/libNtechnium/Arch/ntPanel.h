@@ -38,15 +38,14 @@ private:
 	int  cnt_SubDiv = 0;
 
 public:
-
 	ntVec3		*v0,*v1,*v2;
 	ntVec3		*vecs[3];
 	ntVertex	*vert0,*vert1,*vert2;
 	std::vector<ntVertex*>				verts;
 	std::vector<ntEdge>					edges;
 
-	std::vector< vector <ntFace3>* >	face_G; //WORLD COORDINATE
-	std::vector <vector <ntFace3>*  >	face_L; //LOCAL COORDINATE
+	std::vector< vector <ntFace3>* >	faces_G; //WORLD COORDINATE
+	std::vector <vector <ntFace3>*  >	faces_L; //LOCAL COORDINATE
 
 	std::vector<ntCircle*>				perfs;
 	std::vector<ntVec3>					vecs_UV;
@@ -68,6 +67,7 @@ public:
 	void calcCentroid();
 	//void calc_Area();
 	void sub_Div(int gen);
+	void sub_Div(std::vector< vector <ntFace3>* >*	faces, int gen);
 
 	////////////////////////////////// PERFORATION PARAMETERS
 	float image_Val;				// PIXEL VALUE AT CENTROID
