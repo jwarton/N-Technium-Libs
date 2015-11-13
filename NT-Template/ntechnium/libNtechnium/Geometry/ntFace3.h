@@ -17,8 +17,7 @@ using namespace jpw;
 class ntFace3{
 private:
 	void init();
-	bool isSubD = false;
-	void display_SubD();
+	enum D_MODE {WIRE, SHADE, RENDER};
 
 public:
 	ntVec3 *v0,*v1,*v2;
@@ -41,7 +40,6 @@ public:
 	ntFace3(ntVec3* v0,ntVec3* v1,ntVec3* v2,ntVertex* vert0,ntVertex* vert1,ntVertex* vert2);
 
 	void setColor(ntColor4f col);
-	void setSubD(bool state);
 
 	void calcNorm();
 	void calcCentroid();

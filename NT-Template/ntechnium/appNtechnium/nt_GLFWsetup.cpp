@@ -790,8 +790,8 @@ void ntGLFWsetup::display_HUD() {
 	glVertex2f(appWidth - 5, 155);
 	glEnd();
 
+	///////////////////////////////////////////LOWER DIVISIONS
 	glColor4f(0.78, 0.95, .98, 0.2);
-	
 	for (int i = 0; i < appWidth * 0.1; i++) {
 		glLineWidth(1);
 		glBegin(GL_LINES);
@@ -806,15 +806,15 @@ void ntGLFWsetup::display_HUD() {
 			glVertex2f((i * 10) + 5, 132); //appHeight * 0.5
 			glEnd();
 
-			if (i % 5 == 0 && i == 45) {
-				// SIDE BAR
-				glBegin(GL_LINES);
-				glVertex2f((i * 10) + 5, 160); //appHeight * 0.5
-				glVertex2f((i * 10) + 5, appHeight - 30); //appHeight * 0.5
-				glEnd();
-			}
+			//if (i % 5 == 0 && i == 45) {
+			//	// VERTICAL SIDE BAR
+			//	glBegin(GL_LINES);
+			//	glVertex2f((i * 10) + 5, 160); //appHeight * 0.5
+			//	glVertex2f((i * 10) + 5, appHeight - 30); //appHeight * 0.5
+			//	glEnd();
+			//}
 		}
-
+		////SLIDER KEYS
 		glLineWidth(15);
 		if (i % 5 == 0 && i < 45) {
 			glBegin(GL_LINES);
@@ -823,9 +823,9 @@ void ntGLFWsetup::display_HUD() {
 			glEnd();
 		}
 	}
-	
-	glColor4f(0.78, 0.95, .98, .1);
 
+	///////////////////////////////////////////LOWER DIVISIONS
+	glColor4f(0.78, 0.95, .98, .1);
 	glLineWidth(15);
 	glBegin(GL_LINES);
 	glVertex2f(5, 40); //appHeight * 0.5
@@ -839,7 +839,6 @@ void ntGLFWsetup::display_HUD() {
 	glEnd();
 
 	glColor4f(0.78, 0.95, .98, .2);
-
 	glPointSize(1);
 	glBegin(GL_POINTS);
 	for (int i = 0; i < appWidth * 0.1; i++) {

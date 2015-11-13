@@ -52,20 +52,19 @@ private:
 	string url_IMG;
 	string path_IMG = nt_Utility::getPathToResources();
 	string pathExtension_IMG = "imgs\\ovis\\";
-	string fileName_IMG = "ovis_002";
+	string fileName_IMG = "ovis_004";
 	string fileExt_IMG = ".jpg";
 
 	af::array img_IN;
 	///////////////////////////////////////////////////////////////
 	///////////////////////////////////////// SOURCE DATA VARIABLES
+	string fileName_TXT = "ptPos_13_OvisTriPts";
 	static string path;
-	static string fileName_DAT;
 
 	bool isStartFile =	false;
 	bool isEndSubs =	false;
 	bool isSubNext =	false;
 	bool isEndFile =	false;
-	bool isImgLoaded =	false;
 	bool isMultiThread = false;
 
 	int panel_NUM = 0;
@@ -99,7 +98,8 @@ private:
 	static void write_Panels_IMG(int ind_S, int ind_E, std::vector<ntPanel*>* panels);
 	///
 	static int gen;
-	static bool isImgLoaded_ST;
+	static bool isImgLoaded;
+	static bool isTxtLoaded;
 	static arma::mat img_00;
 	static int img_X;
 	static int img_Y;
@@ -115,6 +115,7 @@ private:
 	static void write_Panel_TXT(ntPanel* panel_ptr);
 	static void write_Panel_IMG(ntPanel* panel_ptr);
 	static double calc_Area(ntPanel* panel_ptr);
+	static void map_ImgCol(ntPanel* panel_ptr);
 
 	int panel_Index = 0;	// DISPLAY INDEX FOR CURRENT PANEL
 
@@ -128,7 +129,7 @@ public:
 	void run();
 	/////////////////////////////////////////////////// CONVIENENCE
 	///////////////////////////////////////////////////////////////
-	D_mode m = vQ;							 //CURRENT DISPLAY MODE
+	D_mode m = vS;							 //CURRENT DISPLAY MODE
 	void display();
 	void display_IMG();
 };

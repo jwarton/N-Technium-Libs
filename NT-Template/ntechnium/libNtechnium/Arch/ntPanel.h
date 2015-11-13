@@ -44,7 +44,10 @@ public:
 	ntVertex	*vert0,*vert1,*vert2;
 	std::vector<ntVertex*>				verts;
 	std::vector<ntEdge>					edges;
-	std::vector< vector <ntFace3>* >	faces;
+
+	std::vector< vector <ntFace3>* >	face_G; //WORLD COORDINATE
+	std::vector <vector <ntFace3>*  >	face_L; //LOCAL COORDINATE
+
 	std::vector<ntCircle*>				perfs;
 	std::vector<ntVec3>					vecs_UV;
 	ntColor4f col;
