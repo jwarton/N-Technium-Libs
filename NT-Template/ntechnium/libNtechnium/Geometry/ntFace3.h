@@ -39,6 +39,7 @@ public:
 	ntFace3(ntVec3* v0,ntVec3* v1,ntVec3* v2, ntColor4f col);
 	ntFace3(ntVec3* v0,ntVec3* v1,ntVec3* v2,ntVertex* vert0,ntVertex* vert1,ntVertex* vert2);
 
+	bool pt_isInside(ntVec3* vec);
 	void setColor(ntColor4f col);
 
 	void calcNorm();

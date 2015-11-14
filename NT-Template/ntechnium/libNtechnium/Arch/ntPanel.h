@@ -108,7 +108,9 @@ public:
 
 	void display();
 	void display_Edge();
-	void display_Face(int gen = 0);
+	void display_EdgeSd(int gen = 0);
+	void display_FaceL(int gen = 0);
+	void display_FaceG(int gen = 0);
 	void display_Perf();
 };
 #endif

@@ -376,10 +376,11 @@ void ovisApp::funct(ntPanel* panel_ptr) {
 	}
 	///////////////////////////////////////////////////////////////
 	//////////////////////////////////// CALCULATE PANEL PEFORATION
+	panel_ptr->calc_Perf();
 	int val = stoi(panel_ptr->get_ID());
-	if (val  < 3) {
-		/// panel_ptr->calc_Perf();
-		/// write_Panel_IMG(panel_ptr);
+	if (val  < 127 && val > 119) {
+		//write_Panel_TXT(panel_ptr);
+		write_Panel_IMG(panel_ptr);
 	}
 	/// SCALE PANELS TO VIEW--- REPLACE WITH CAMERA FIT FUNCTION //
 	/// TRANSLATE TO HUD LOCATION
@@ -395,9 +396,9 @@ void ovisApp::funct(ntPanel* panel_ptr) {
 
 	for (int j = 0; j < panel_ptr->perfs.size(); j++) {
 		for (int k = 0; k < panel_ptr->perfs.at(j)->seg; k++) {
-			//ntMatrix4 SC3 = ntMatrix4(panel_ptr->perfs.at(j)->vecs.at(k));
-			//SC3.scale3d(sc_Factor);
-			///SC3.translate(posXY);
+			ntMatrix4 SC3 = ntMatrix4(panel_ptr->perfs.at(j)->vecs.at(k));
+			SC3.scale3d(sc_Factor);
+			SC3.translate(posXY);
 		}
 	}
 	///
@@ -694,6 +695,7 @@ void ovisApp::map_ImgCol(ntPanel* panel_ptr) {
 			if (gen_ID < panel_ptr->faces_G.size()) {
 
 				panel_ptr->faces_G.at(gen_ID)->at(face_ID).setColor(ntCol4(col, col, col, 1));
+				panel_ptr->faces_L.at(gen_ID)->at(face_ID).setColor(ntCol4(col, col, col, 1));
 
 				if (face_ID < (panel_ptr->faces_G.at(gen_ID)->size() - 1)) {
 					face_ID++;
@@ -764,6 +766,10 @@ void ovisApp::run(){
 	/////////////////////////////////////////  IMAGE MAPPED DISPLAY
 	if (glfwGetKey(window, GLFW_KEY_S) == GLFW_PRESS) {
 		m = vS;
+		for (int i = 0; i < panels.size(); i++) {
+			float col = panels.at(i)->image_Val;
+			panels.at(i)->faces_G.at(0)->at(0).setColor(ntColor4f(col, col, col, 1));
+		}
 	}
 	if (glfwGetKey(window, GLFW_KEY_D) == GLFW_PRESS) {
 		m = vD;
@@ -795,14 +801,14 @@ void ovisApp::display(){
 			panels.at(i)->faces_G.at(0)->at(0).edges.at(0).display();
 		}
 	}
-	if (m == vD) {
-		for (int i = 0; i < panels.size(); i++) {
-			panels.at(i)->faces_G.at(0)->at(0).display();
-		}
-	}
 	if (m == vS) {
 		for (int i = 0; i < panels.size(); i++) {
-			panels.at(i)->display_Face(2);
+			panels.at(i)->display_FaceG(2);
+		}
+	}
+	if (m == vD) {
+		for (int i = 0; i < panels.size(); i++) {
+			panels.at(i)->display_FaceG(2);
 		}
 	}
 	if (m == vW) {
@@ -826,15 +832,20 @@ void ovisApp::display(){
 	glLoadIdentity();
 	///////////////////////////////////////////////////////////////
 	if (panel_Index >= 0 && panel_Index < panels.size()) {
-		for (int i = 0; i < panels.size(); i++) {
-			//panels.at(panel_Index)->display();
-			//panels.at(panel_Index)->display_Perf();
-			panels.at(panel_Index)->display_Edge();
+		//panels.at(panel_Index)->display();
+		if (m == vW || m == vQ) {
+			panels.at(panel_Index)->display_Perf();
 		}
+		if (m == vD) {
+			panels.at(panel_Index)->display_FaceL(2);
+		}
+		if (m == vS) {
+			panels.at(panel_Index)->display_EdgeSd(2);
+			panels.at(panel_Index)->display_Perf();
+		}
+		panels.at(panel_Index)->display_Edge();
 	}
-	//display_IMG();
-	//panels.at(panel_Index)->display_Perf();
-	//panels.at(panel_Index)->display_Edge();
+	display_IMG();
 }
 void ovisApp::display_IMG() {
 

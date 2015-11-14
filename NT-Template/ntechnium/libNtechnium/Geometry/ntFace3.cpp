@@ -83,6 +83,19 @@ void ntFace3::calcNorm(){
 	normal = ntNormal(*cent,norm,.05);
 }
 
+bool ntFace3::pt_isInside(ntVec3* vec) {
+	int i, j, nvert = verts.size();
+	bool c = false;
+
+	for (i = 0, j = nvert - 1; i < nvert; j = i++) {
+		if (((vecs[i]->y >= vec->y) != (vecs[j]->y >= vec->y)) &&
+			(vec->x <= (vecs[j]->x - vecs[i]->x) * (vec->y - vecs[i]->y) / (vecs[j]->y - vecs[i]->y) + vecs[i]->x)
+			)
+			c = !c;
+	}
+	return c;
+}
+
 void ntFace3::setColor(ntColor4f col){
 	this->col=col;
 	for(int i = 0; i<verts.size(); i++){

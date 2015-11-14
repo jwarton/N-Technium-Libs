@@ -180,7 +180,16 @@ void ntPanel::calc_Perf() {
 	int y_Div = ceil((v2->y - v0->y) / spY) + 5;
 	float y;
 	float x;
+	float r;
 	ntVec3* vec;
+
+	bool isPtInSd = false;
+	float valCol = 0;
+
+	if (stoi(panel_ID) < 2) {
+		std::cout << " rows of perforation:  " << y_Div << endl;
+	}
+	
 
 	for (int i = 0; i <= x_Div; i++) {
 		for (int j = 0; j <= y_Div; j++) {
@@ -192,23 +201,31 @@ void ntPanel::calc_Perf() {
 			}
 			y = (spY * j) + edge_Offset;
 
-			//SET SIZE OF PERFORATION RADIUS 
-			/// CHECK ACTIVE GENERATION OF SUBDIVISION
-			int gen = cnt_SubDiv;
-			/// CHECK IF PERFORATION IS WITHIN SUBDIVISION
-			/// LINK RADIUS TO VALUE WITHIN SUBDIVISION
-
-			float r = image_Val * ((rand() % 10)*.1);
-			//std::cout << r << endl;
-			r = round(r * 10) * 0.1;
-			if (r > 1) {
-				r = 1;
-			}
-			r = mapRange(r_Min, r_Max, 0, 1, r);
+			// SET ACTIVE SUBDIVISION GENERATION
+			int gen = 2;// cnt_SubDiv;
 			vec = new ntVec3(x, y, 0);
-			if (pt_isInside(vec) && r > r_Min) {
-				p_Pos.push_back(vec);
-				p_Rad.push_back(r);
+
+			if (pt_isInside(vec)) {
+				int dim = faces_L.at(gen)->size(); // SIZE OF SUB PANELS
+
+				for (int i = 0; i < dim; i++) {
+					isPtInSd = faces_L.at(gen)->at(i).pt_isInside(vec);
+					if (isPtInSd == true) {
+						valCol = faces_L.at(gen)->at(i).col.r;
+
+						r = valCol * ((rand() % 10)*.1);
+						r = round(r * 10) * 0.1;
+						if (r > 1) {
+							r = 1;
+						}
+						r = mapRange(r_Min, r_Max, 0, 1, r);
+						if (r > r_Min) {
+							p_Pos.push_back(vec);
+							p_Rad.push_back(r);
+						}
+						i = dim;
+					}
+				}
 			}
 		}
 	}
@@ -260,28 +277,37 @@ void ntPanel::display_Perf() {
 	}
 }
 void ntPanel::display_Edge() {
+	int gen = 2;
+
 	edges.at(0).display(1);
 	edges.at(1).display(1);
 	edges.at(2).display(1);
 	verts.at(0)->display(2);
 
-	int gen = 2;
-	for (int i = 0; i < faces_L.at(gen)->size(); i++) {
-		//
-		ntColor4f col = ntColor4f(.3, .3, .3, .2);
-		//faces_L.at(gen)->at(i).display();
-		faces_L.at(gen)->at(i).edges.at(0).setCol(col);
-		faces_L.at(gen)->at(i).edges.at(1).setCol(col);
-		faces_L.at(gen)->at(i).edges.at(2).setCol(col);
+}
+void  ntPanel::display_EdgeSd(int gen) {
+	if (gen > 0) {
+		ntColor4f col = ntColor4f(1, 1, 1, .2);
+		if (gen <= faces_L.size()) {
+			for (int i = 0; i < faces_L.at(gen)->size(); i++) {
+				faces_L.at(gen)->at(i).edges.at(0).setCol(col);
+				faces_L.at(gen)->at(i).edges.at(1).setCol(col);
+				faces_L.at(gen)->at(i).edges.at(2).setCol(col);
 
-		faces_L.at(gen)->at(i).edges.at(0).display();
-		faces_L.at(gen)->at(i).edges.at(1).display();
-		faces_L.at(gen)->at(i).edges.at(2).display();
+				faces_L.at(gen)->at(i).edges.at(0).display();
+				faces_L.at(gen)->at(i).edges.at(1).display();
+				faces_L.at(gen)->at(i).edges.at(2).display();
+			}
+		}
+		else {
+			// EXCEPTION FOR EXCEEDING GERERATIONS WITHIN BOUNDS
+			display_FaceL(gen - 1);
+		}
 	}
 }
 ///////////////////////////////////////////////////////////////
 ////////////////////////// DISPLAYS 3D MODELSPACE VIEW OF PANEL
-void  ntPanel::display_Face(int gen) {
+void  ntPanel::display_FaceG(int gen) {
 	if (gen <= faces_G.size()) {
 		for (int i = 0; i < faces_G.at(gen)->size(); i++) {
 			faces_G.at(gen)->at(i).display();
@@ -289,6 +315,26 @@ void  ntPanel::display_Face(int gen) {
 	}
 	else {
 		// EXCEPTION FOR EXCEEDING GERERATIONS WITHIN BOUNDS
-		display_Face(gen - 1);
+		display_FaceG(gen - 1);
+	}
+}
+void  ntPanel::display_FaceL(int gen) {
+	ntColor4f col = ntColor4f(1, 1, 1, .5);
+	if (gen <= faces_L.size()) {
+		for (int i = 0; i < faces_L.at(gen)->size(); i++) {
+
+			faces_L.at(gen)->at(i).display();
+
+			faces_L.at(gen)->at(i).edges.at(0).setCol(col);
+			faces_L.at(gen)->at(i).edges.at(1).setCol(col);
+			faces_L.at(gen)->at(i).edges.at(2).setCol(col);
+
+			faces_L.at(gen)->at(i).edges.at(0).display();
+			faces_L.at(gen)->at(i).edges.at(1).display();
+			faces_L.at(gen)->at(i).edges.at(2).display();
+		}
+	} 	else {
+		// EXCEPTION FOR EXCEEDING GERERATIONS WITHIN BOUNDS
+		display_FaceL(gen - 1);
 	}
 }
