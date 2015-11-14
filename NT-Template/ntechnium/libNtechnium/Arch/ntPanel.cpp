@@ -21,6 +21,11 @@ void ntPanel::init(){
 	verts.push_back(vert1);
 	verts.push_back(vert2);
 
+	//LIST OF ALL PANEL VECTORS
+	vecs_SD.push_back(v0);
+	vecs_SD.push_back(v1);
+	vecs_SD.push_back(v2);
+
 	//INITIALIZE EDGES
 	edges.push_back(ntEdge(v0,v1, col_0));
 	edges.push_back(ntEdge(v1,v2,col));
@@ -28,10 +33,7 @@ void ntPanel::init(){
 
 	//INITIALIZE face_L
 	std::vector <ntFace3>* face_L = new vector<ntFace3>;
-	ntVec3 * nL_0 = new ntVec3(v0->x, v0->y, v0->z);
-	ntVec3 * nL_1 = new ntVec3(v1->x, v1->y, v1->z);
-	ntVec3 * nL_2 = new ntVec3(v2->x, v2->y, v2->z);
-	face_L->push_back(ntFace3(nL_0, nL_1, nL_2));
+	face_L->push_back(ntFace3(v0, v1, v2));
 	faces_L.push_back(face_L);
 
 	//INITIALIZE faces_G
@@ -75,20 +77,22 @@ void ntPanel::calcNorm(){
 	normal = ntNormal(*cent,norm,.05);
 }
 void ntPanel::sub_Div(int gen) {
+
+	//cnt_SubDiv += 1;
+
 	if (is_SubDiv == false && gen > 0) {
 
 		std::vector < vector <ntFace3>* >* faces_ptr = &faces_G;
-		sub_Div(faces_ptr, gen);
+		sub_Div(faces_ptr, gen, false);
 
 		faces_ptr = &faces_L;
-		sub_Div(faces_ptr, gen);
+		sub_Div(faces_ptr, gen, true);
 	}
 	else {
-
 		is_SubDiv = true;  ///exception prevents multiple subdivision calls
 	}
 }
-void ntPanel::sub_Div(std::vector< vector <ntFace3>* >*	faces, int gen) {
+void ntPanel::sub_Div(std::vector< vector <ntFace3>* >*	faces, int gen, bool isPanel) {
 		int dim = faces->size() - 1;
 		std::vector <ntFace3>* face = new vector<ntFace3>;
 		faces->push_back(face);
@@ -105,7 +109,15 @@ void ntPanel::sub_Div(std::vector< vector <ntFace3>* >*	faces, int gen) {
 			face->push_back(ntFace3(v1, n1, n0));
 			face->push_back(ntFace3(v2, n2, n1));
 			face->push_back(ntFace3(n0, n1, n2));
+
+			if (isPanel == true) {
+				//CONTAINER FOR PANEL VECTORS
+				vecs_SD.push_back(n0);
+				vecs_SD.push_back(n1);
+				vecs_SD.push_back(n2);
+			}
 		}
+		sub_Div(gen - 1);
 }
 
 void ntPanel::setColor(ntColor4f col){
@@ -252,6 +264,20 @@ void ntPanel::display_Edge() {
 	edges.at(1).display(1);
 	edges.at(2).display(1);
 	verts.at(0)->display(2);
+
+	int gen = 2;
+	for (int i = 0; i < faces_L.at(gen)->size(); i++) {
+		//
+		ntColor4f col = ntColor4f(.3, .3, .3, .2);
+		//faces_L.at(gen)->at(i).display();
+		faces_L.at(gen)->at(i).edges.at(0).setCol(col);
+		faces_L.at(gen)->at(i).edges.at(1).setCol(col);
+		faces_L.at(gen)->at(i).edges.at(2).setCol(col);
+
+		faces_L.at(gen)->at(i).edges.at(0).display();
+		faces_L.at(gen)->at(i).edges.at(1).display();
+		faces_L.at(gen)->at(i).edges.at(2).display();
+	}
 }
 ///////////////////////////////////////////////////////////////
 ////////////////////////// DISPLAYS 3D MODELSPACE VIEW OF PANEL

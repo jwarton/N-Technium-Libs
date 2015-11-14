@@ -23,7 +23,6 @@ void ovisApp::init() {
 	t_CPU = clock();
 
 	//isMultiThread = true;
-
 	unsigned thread_Cnt = std::thread::hardware_concurrency();
 
 	int index_S = 0;
@@ -58,6 +57,10 @@ void ovisApp::init() {
 			funct(panel_ptr);
 		}
 	}
+
+	std::cout << "GLOBAL FACES: " << panels.at(0)->faces_G.at(2)->size() << endl;
+	std::cout << "LOCAL FACES:  " << panels.at(0)->faces_L.at(2)->size() << endl;
+	std::cout << "SUBDIVISION COUNT: " << panels.at(0)->cnt_SubDiv << endl;
 
 	t_CPU = clock() - t_CPU;
 	std::cout << "EVAL_CPU TIME  [SECONDS]:  " << ((float)t_CPU) / CLOCKS_PER_SEC << "\n" << endl;
@@ -342,13 +345,16 @@ void ovisApp::funct(ntPanel* panel_ptr) {
 	panel_ptr->calcCentroid();
 	panel_ptr->calcNorm();
 	align_Panel(panel_ptr, axis_Z, &panel_ptr->norm, panel_ptr->cent);
-
 	///////////////////////////////////////////////////////////////
 	/////////////////////////////////////// ALIGN V0/EDGE TO X-AXIS
 	Vec3 edge_X = Vec3(panel_ptr->v1->x, panel_ptr->v1->y, panel_ptr->v1->z);
 	edge_X.sub(panel_ptr->v0);
 	align_Panel(panel_ptr, axis_X, &edge_X, panel_ptr->v0);
 
+	panel_ptr->faces_L.at(0)->at(0).calcCentroid();	//REQUIRED AFTER SCALING
+	panel_ptr->faces_L.at(0)->at(0).calcNorm();		//REQUIRED AFTER SCALING
+
+	///////////////////////////////////////////////////////////////
 	/// SCALE STADIUM SURFACE TO VIEW--- REPLACE WITH CAMERA FIT FUNCTION
 	for (int j = 0; j < 3; j++) {
 		ntMatrix4 SC3 = ntMatrix4(panel_ptr->faces_G.at(0)->at(0).vecs[j]);
@@ -378,18 +384,20 @@ void ovisApp::funct(ntPanel* panel_ptr) {
 	/// SCALE PANELS TO VIEW--- REPLACE WITH CAMERA FIT FUNCTION //
 	/// TRANSLATE TO HUD LOCATION
 	ntVec3 posXY = ntVec3(55, 640, 0);  /////// POSITION FOR 2D HUD
-	for (int j = 0; j < 3; j++) {
-		ntMatrix4 SC1 = ntMatrix4(panel_ptr->vecs[j]);
-		//SC1.scale3d(0.015);
-		SC1.scale3d(5);
-		SC1.translate(posXY);
+	//float sc_Factor = 0.015;
+	float sc_Factor = 5;
+	for (int j = 0; j < panel_ptr->vecs_SD.size(); j++) {
+			ntMatrix4 SC1 = ntMatrix4(panel_ptr->vecs_SD[j]);
+			SC1.scale3d(sc_Factor);
+			SC1.translate(posXY);
 	}
+
+
 	for (int j = 0; j < panel_ptr->perfs.size(); j++) {
 		for (int k = 0; k < panel_ptr->perfs.at(j)->seg; k++) {
-			ntMatrix4 SC2 = ntMatrix4(panel_ptr->perfs.at(j)->vecs.at(k));
-			//SC2.scale3d(0.015);
-			SC2.scale3d(5);
-			SC2.translate(posXY);
+			//ntMatrix4 SC3 = ntMatrix4(panel_ptr->perfs.at(j)->vecs.at(k));
+			//SC3.scale3d(sc_Factor);
+			///SC3.translate(posXY);
 		}
 	}
 	///
@@ -794,7 +802,7 @@ void ovisApp::display(){
 	}
 	if (m == vS) {
 		for (int i = 0; i < panels.size(); i++) {
-			panels.at(i)->display_Face(1);
+			panels.at(i)->display_Face(2);
 		}
 	}
 	if (m == vW) {
@@ -821,7 +829,7 @@ void ovisApp::display(){
 		for (int i = 0; i < panels.size(); i++) {
 			//panels.at(panel_Index)->display();
 			//panels.at(panel_Index)->display_Perf();
-			//panels.at(panel_Index)->display_Edge();
+			panels.at(panel_Index)->display_Edge();
 		}
 	}
 	//display_IMG();
