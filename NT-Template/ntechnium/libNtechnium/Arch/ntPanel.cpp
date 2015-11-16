@@ -76,9 +76,45 @@ void ntPanel::calcNorm(){
 	//norm.invert();
 	normal = ntNormal(*cent,norm,.05);
 }
+//void ntPanel::sub_Div(int gen) {
+//	cnt_SubDiv += gen;
+//	std::vector < vector <ntFace3>* >* faces_ptr = &faces_G;
+//	sub_Div(faces_ptr, gen, false);
+//
+//	faces_ptr = &faces_L;
+//	sub_Div(faces_ptr, gen, true);
+//}
+//void ntPanel::sub_Div(std::vector< vector <ntFace3>* >*	faces, int gen, bool isPanel) {
+//	if (gen > 0) {
+//		int dim = faces->size() - 1;
+//		std::vector <ntFace3>* face = new vector<ntFace3>;
+//		faces->push_back(face);
+//		for (int i = 0; i < faces->at(dim)->size(); i++) {
+//			ntVec3 * v0 = faces->at(dim)->at(i).v0;
+//			ntVec3 * v1 = faces->at(dim)->at(i).v1;
+//			ntVec3 * v2 = faces->at(dim)->at(i).v2;
+//			//FIND MIDPOINT OF EACH EDGE IN FACE
+//			ntVec3 * n0 = faces->at(dim)->at(i).edges[0].getMid();
+//			ntVec3 * n1 = faces->at(dim)->at(i).edges[1].getMid();
+//			ntVec3 * n2 = faces->at(dim)->at(i).edges[2].getMid();
+//			//NEW FACES FROM VECS POINTERS
+//			face->push_back(ntFace3(v0, n0, n2));
+//			face->push_back(ntFace3(v1, n1, n0));
+//			face->push_back(ntFace3(v2, n2, n1));
+//			face->push_back(ntFace3(n0, n1, n2));
+//
+//			if (isPanel == true) {
+//				//CONTAINER FOR PANEL VECTORS
+//				vecs_SD.push_back(n0);
+//				vecs_SD.push_back(n1);
+//				vecs_SD.push_back(n2);
+//			}
+//		}
+//		sub_Div(faces, gen - 1, true);
+//	}	
+//}
 void ntPanel::sub_Div(int gen) {
-
-	//cnt_SubDiv += 1;
+	cnt_SubDiv += gen;
 
 	if (is_SubDiv == false && gen > 0) {
 
@@ -89,13 +125,21 @@ void ntPanel::sub_Div(int gen) {
 		sub_Div(faces_ptr, gen, true);
 	}
 	else {
-		is_SubDiv = true;  ///exception prevents multiple subdivision calls
+		is_SubDiv = true;  ///EXCEPTION PREVENTS MULTIPLE SUBDIVISION CALLS
 	}
 }
+
 void ntPanel::sub_Div(std::vector< vector <ntFace3>* >*	faces, int gen, bool isPanel) {
+	
+	//if (stoi(panel_ID) <= 0) {
+	//	std::cout << "RUNNING sub_Div:  " << gen << endl;
+	//}
+
+	if (gen > 0) {
 		int dim = faces->size() - 1;
 		std::vector <ntFace3>* face = new vector<ntFace3>;
 		faces->push_back(face);
+
 		for (int i = 0; i < faces->at(dim)->size(); i++) {
 			ntVec3 * v0 = faces->at(dim)->at(i).v0;
 			ntVec3 * v1 = faces->at(dim)->at(i).v1;
@@ -117,7 +161,8 @@ void ntPanel::sub_Div(std::vector< vector <ntFace3>* >*	faces, int gen, bool isP
 				vecs_SD.push_back(n2);
 			}
 		}
-		sub_Div(gen - 1);
+		sub_Div(faces, gen - 1, isPanel);
+	}
 }
 
 void ntPanel::setColor(ntColor4f col){
@@ -186,10 +231,9 @@ void ntPanel::calc_Perf() {
 	bool isPtInSd = false;
 	float valCol = 0;
 
-	if (stoi(panel_ID) < 2) {
-		std::cout << " rows of perforation:  " << y_Div << endl;
-	}
-	
+	//if (stoi(panel_ID) < 1) {
+	//	std::cout << "ROWS OF PERFORATION:      " << y_Div << "\n" << endl;
+	//}
 
 	for (int i = 0; i <= x_Div; i++) {
 		for (int j = 0; j <= y_Div; j++) {
@@ -202,7 +246,7 @@ void ntPanel::calc_Perf() {
 			y = (spY * j) + edge_Offset;
 
 			// SET ACTIVE SUBDIVISION GENERATION
-			int gen = 2;// cnt_SubDiv;
+			int gen = cnt_SubDiv;
 			vec = new ntVec3(x, y, 0);
 
 			if (pt_isInside(vec)) {
@@ -244,16 +288,18 @@ bool ntPanel::pt_isInside(ntVec3* point) {
 	return c;
 }
 void ntPanel::add_Perf() {
+
+	if (stoi(panel_ID) < 1) {
+		std::cout << "SUBDIVISION GENERATIONS:  " << cnt_SubDiv << endl;
+	}
+
 	if (p_Pos.size() > 0) {
 		for (int i = 0; i < p_Pos.size(); i++) {
-
 			float r = p_Rad.at(i); 
 			ntCircle * perf = new ntCircle(p_Pos.at(i), r, Col4(.25, .25, .25, 1));
 			perfs.push_back(perf);
 		}
-	} else {
-		//std::cout << "ERROR:  ZERO PERFORATIONS FOUND" << endl;
-	}
+	} 
 }
 
 ///////////////////////////////////////////////////////////////
@@ -269,11 +315,8 @@ void ntPanel::display(){
 	glEnd();
 }
 void ntPanel::display_Perf() {
-	//	for (int i = 0; i < 50; i++) {
 	for (int i = 0; i < perfs.size(); i++) {
-		if (i < perfs.size()) {
 			perfs.at(i)->display();
-		}
 	}
 }
 void ntPanel::display_Edge() {

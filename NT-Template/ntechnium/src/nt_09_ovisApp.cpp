@@ -58,9 +58,11 @@ void ovisApp::init() {
 		}
 	}
 
-	std::cout << "GLOBAL FACES: " << panels.at(0)->faces_G.at(2)->size() << endl;
-	std::cout << "LOCAL FACES:  " << panels.at(0)->faces_L.at(2)->size() << endl;
 	std::cout << "SUBDIVISION COUNT: " << panels.at(0)->cnt_SubDiv << endl;
+	std::cout << "FACE VECTOR SIZE [GEN]: " << panels.at(0)->faces_G.size() << endl;
+
+	std::cout << "GLOBAL FACES: " << panels.at(0)->faces_G.at(gen)->size() << endl;
+	std::cout << "LOCAL FACES:  " << panels.at(0)->faces_L.at(gen)->size() << "\n" << endl;
 
 	t_CPU = clock() - t_CPU;
 	std::cout << "EVAL_CPU TIME  [SECONDS]:  " << ((float)t_CPU) / CLOCKS_PER_SEC << "\n" << endl;
@@ -378,8 +380,8 @@ void ovisApp::funct(ntPanel* panel_ptr) {
 	//////////////////////////////////// CALCULATE PANEL PEFORATION
 	panel_ptr->calc_Perf();
 	int val = stoi(panel_ptr->get_ID());
-	if (val  < 127 && val > 119) {
-		//write_Panel_TXT(panel_ptr);
+	if (val  >= 0 && val <= 25) {
+		write_Panel_TXT(panel_ptr);
 		write_Panel_IMG(panel_ptr);
 	}
 	/// SCALE PANELS TO VIEW--- REPLACE WITH CAMERA FIT FUNCTION //
@@ -675,41 +677,40 @@ double ovisApp::calc_Area(ntPanel* panel_ptr){
 	return area;
 }
 void ovisApp::map_ImgCol(ntPanel* panel_ptr) {
+	int dim = panel_ptr->vecs_UV.size();
+	int gen_ID = 0;
+	int face_ID = 0;
 	float col;
 
-		int dim = panel_ptr->vecs_UV.size();
-		int gen_ID = 0;
-		int face_ID = 0;
+	for (int j = 0; j < dim; j++) {
 
-		for (int j = 0; j < dim; j++) {
+		float x = panel_ptr->vecs_UV.at(j).x;
+		float y = panel_ptr->vecs_UV.at(j).y;
 
-			float x = panel_ptr->vecs_UV.at(j).x;
-			float y = panel_ptr->vecs_UV.at(j).y;
+		x = floor(mapRange(0, img_X, 0, 1, x));
+		y = floor(mapRange(0, img_Y, 0, 1, y));
 
-			x = floor(mapRange(0, img_X, 0, 1, x));
-			y = floor(mapRange(0, img_Y, 0, 1, y));
+		col = img_00(x, y);
+		col = mapRange(0, 1, 0, 255, col);
 
-			col = img_00(x, y);
-			col = mapRange(0, 1, 0, 255, col);
+		if (gen_ID < panel_ptr->faces_G.size()) {
 
-			if (gen_ID < panel_ptr->faces_G.size()) {
+			panel_ptr->faces_G.at(gen_ID)->at(face_ID).setColor(ntCol4(col, col, col, 1));
+			panel_ptr->faces_L.at(gen_ID)->at(face_ID).setColor(ntCol4(col, col, col, 1));
 
-				panel_ptr->faces_G.at(gen_ID)->at(face_ID).setColor(ntCol4(col, col, col, 1));
-				panel_ptr->faces_L.at(gen_ID)->at(face_ID).setColor(ntCol4(col, col, col, 1));
-
-				if (face_ID < (panel_ptr->faces_G.at(gen_ID)->size() - 1)) {
-					face_ID++;
-				}
-				else {
-					face_ID = 0;
-					gen_ID++;
-				}
+			if (face_ID < (panel_ptr->faces_G.at(gen_ID)->size() - 1)) {
+				face_ID++;
 			}
-
-			if (j == 0) {
-				panel_ptr->set_IMG(col);
+			else {
+				face_ID = 0;
+				gen_ID++;
 			}
 		}
+
+		if (j == 0) {
+			panel_ptr->set_IMG(col);
+		}
+	}
 }
 void ovisApp::run(){
 	if (glfwGetKey(window, GLFW_KEY_PAGE_UP) == GLFW_PRESS) {
@@ -803,12 +804,12 @@ void ovisApp::display(){
 	}
 	if (m == vS) {
 		for (int i = 0; i < panels.size(); i++) {
-			panels.at(i)->display_FaceG(2);
+			panels.at(i)->display_FaceG(gen);
 		}
 	}
 	if (m == vD) {
 		for (int i = 0; i < panels.size(); i++) {
-			panels.at(i)->display_FaceG(2);
+			panels.at(i)->display_FaceG(gen);
 		}
 	}
 	if (m == vW) {
@@ -837,10 +838,10 @@ void ovisApp::display(){
 			panels.at(panel_Index)->display_Perf();
 		}
 		if (m == vD) {
-			panels.at(panel_Index)->display_FaceL(2);
+			panels.at(panel_Index)->display_FaceL(gen);
 		}
 		if (m == vS) {
-			panels.at(panel_Index)->display_EdgeSd(2);
+			panels.at(panel_Index)->display_EdgeSd(gen);
 			panels.at(panel_Index)->display_Perf();
 		}
 		panels.at(panel_Index)->display_Edge();
