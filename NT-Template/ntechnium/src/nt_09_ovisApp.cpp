@@ -3,7 +3,7 @@
 
 using namespace arma;
 
-int ovisApp::gen = 2;
+int ovisApp::gen = 3;
 bool ovisApp::isImgLoaded = false;
 bool ovisApp::isTxtLoaded = false;
 int ovisApp::img_X = 0;
@@ -253,19 +253,19 @@ void ovisApp::write_Panel_IMG(ntPanel* panel_ptr) {
 	ss << panel_ptr->get_ID();
 
 	string pathOut = nt_Utility::getPathToOutput();
-	string pathExtension = "ovis\\imgs\\";
+	string pathExtension = "ovis\\img\\";
 	string fileName = "OP_" + ss.str();
 	string fileExt = ".jpg";
 	string url = pathOut + pathExtension + fileName + fileExt;
 	// IMAGE SIZE
-	int img_X = 1024; //768;// 
-	int img_Y = 1024; //768;// 
+	int img_x = 1024; //768;// 
+	int img_y = 1024; //768;// 
 	// MAXIMUM PANEL SIZE;
 	int pX_max = 72;
 	int pY_max = 72;
 	// PIXEL RANGE LOOP
-	int dim_X = mapRange(0, img_X, 0, pX_max, panel_ptr->v1->x); //img_X;// OR = pX_max * dpi
-	int dim_Y = mapRange(0, img_Y, 0, pY_max, panel_ptr->v2->y); //img_Y;// OR = pY_max * dpi
+	int dim_X = mapRange(0, img_x, 0, pX_max, panel_ptr->v1->x); //img_X;// OR = pX_max * dpi
+	int dim_Y = mapRange(0, img_y, 0, pY_max, panel_ptr->v2->y); //img_Y;// OR = pY_max * dpi
 
 	bool isDPI = false;
 	//isDPI = true;
@@ -275,8 +275,8 @@ void ovisApp::write_Panel_IMG(ntPanel* panel_ptr) {
 	bool isPtPerf = false;
 
 	const char * file = url.c_str();
-	//arma::mat img_ARM = zeros<mat>(img_X, img_Y);
-	af::array img_OUT = af::array(img_X, img_Y);
+	//arma::mat img_ARM = zeros<mat>(img_x, img_y);
+	af::array img_OUT = af::array(img_x, img_y);
 	img_OUT *= 0;
 
 	// MINIMIZE SEARCH AREA
@@ -289,15 +289,15 @@ void ovisApp::write_Panel_IMG(ntPanel* panel_ptr) {
 
 	// OPTION TO SET IMAGE SIZE BY DPI OR EXPLCIT SIZE
 	if (isDPI == true) {
-		img_X = pX_max * dpi;
-		img_Y = pY_max * dpi;
+		img_x = pX_max * dpi;
+		img_y = pY_max * dpi;
 	}
 
 	for (int i = 0; i < dim_X; i++) {
 		for (int j = 0; j < dim_Y; j++) {
 			//MAP (i, j) TO PANEL LOCAL COORDINATES
-			float pos_X = mapRange(0, pX_max, 0, img_X, i);
-			float pos_Y = mapRange(0, pY_max, 0, img_Y, j);
+			float pos_X = mapRange(0, pX_max, 0, img_x, i);
+			float pos_Y = mapRange(0, pY_max, 0, img_y, j);
 
 			ntVec3 * pt = new ntVec3(pos_X, pos_Y, 0);
 
@@ -326,7 +326,7 @@ void ovisApp::write_Panel_IMG(ntPanel* panel_ptr) {
 		}
 	}
 	/// FAILS TO PASS ARMA MATRIX TO AF BEYOND SIZE LIMIT
-	//af::array img_OUT(img_X, img_Y, img_ARM.memptr());
+	//af::array img_OUT(img_x, img_y, img_ARM.memptr());
 	//img_OUT.host((void*)img_ARM.memptr());
 	//img_ARM.print(	"IMG_ARM:  ");
 	//af::print(		"IMG_OUT:   ", img_OUT);
@@ -380,8 +380,8 @@ void ovisApp::funct(ntPanel* panel_ptr) {
 	//////////////////////////////////// CALCULATE PANEL PEFORATION
 	panel_ptr->calc_Perf();
 	int val = stoi(panel_ptr->get_ID());
-	if (val  >= 0 && val <= 25) {
-		write_Panel_TXT(panel_ptr);
+	if (val  >= 0 && val <= 30) {
+		//write_Panel_TXT(panel_ptr);
 		write_Panel_IMG(panel_ptr);
 	}
 	/// SCALE PANELS TO VIEW--- REPLACE WITH CAMERA FIT FUNCTION //
@@ -498,7 +498,7 @@ Vec3 ovisApp::add_VEC(string line) {
 	/////split stream at comma and insert into position array = posXYZ
 	string str;
 	stringstream stream(line);
-	float val;
+	double val;
 	int cnt = 0;
 
 	while (getline(stream, str, ',')) {
@@ -508,7 +508,7 @@ Vec3 ovisApp::add_VEC(string line) {
 		ss << std::setw(18) << std::setfill(' ');
 		ss >> val;
 		str = ss.str();
-
+		
 		if (cnt <2) {
 			vertPos[cnt] = val;
 		}
@@ -677,40 +677,58 @@ double ovisApp::calc_Area(ntPanel* panel_ptr){
 	return area;
 }
 void ovisApp::map_ImgCol(ntPanel* panel_ptr) {
-	int dim = panel_ptr->vecs_UV.size();
-	int gen_ID = 0;
-	int face_ID = 0;
-	float col;
+	int index = 0;
+	int dim = panel_ptr->vecs_UV.size() - 1;
 
-	for (int j = 0; j < dim; j++) {
+	for (int i = 0; i < panel_ptr->faces_G.size(); i++) {
+		for (int j = 0; j < panel_ptr->faces_G.at(i)->size(); j++) {
+			for (int k = 0; k < 3; k++) {
 
-		float x = panel_ptr->vecs_UV.at(j).x;
-		float y = panel_ptr->vecs_UV.at(j).y;
+				float x = panel_ptr->vecs_UV.at(index).x;
+				float y = panel_ptr->vecs_UV.at(index).y;
 
-		x = floor(mapRange(0, img_X, 0, 1, x));
-		y = floor(mapRange(0, img_Y, 0, 1, y));
+				x = floor(mapRange(0, img_X, 0, 1, x));
+				y = floor(mapRange(0, img_Y, 0, 1, y));
 
-		col = img_00(x, y);
-		col = mapRange(0, 1, 0, 255, col);
+				float col = img_00(x, y);
+				col = mapRange(0, 1, 0, 255, col);
 
-		if (gen_ID < panel_ptr->faces_G.size()) {
+				index++;
 
-			panel_ptr->faces_G.at(gen_ID)->at(face_ID).setColor(ntCol4(col, col, col, 1));
-			panel_ptr->faces_L.at(gen_ID)->at(face_ID).setColor(ntCol4(col, col, col, 1));
-
-			if (face_ID < (panel_ptr->faces_G.at(gen_ID)->size() - 1)) {
-				face_ID++;
+				panel_ptr->faces_G.at(i)->at(j).verts.at(k)->setColor(ntCol4(col, col, col, 1));
+				panel_ptr->faces_L.at(i)->at(j).verts.at(k)->setColor(ntCol4(col, col, col, 1));
 			}
-			else {
-				face_ID = 0;
-				gen_ID++;
-			}
-		}
-
-		if (j == 0) {
-			panel_ptr->set_IMG(col);
 		}
 	}
+	//int dim = panel_ptr->vecs_UV.size();
+	//int gen_ID = 0;
+	//int face_ID = 0;
+	//float col;
+
+	//for (int j = 0; j < dim; j++) {
+
+	//	float x = panel_ptr->vecs_UV.at(j).x;
+	//	float y = panel_ptr->vecs_UV.at(j).y;
+
+	//	x = floor(mapRange(0, img_X, 0, 1, x));
+	//	y = floor(mapRange(0, img_Y, 0, 1, y));
+
+	//	col = img_00(x, y);
+	//	col = mapRange(0, 1, 0, 255, col);
+
+	//	if (gen_ID < panel_ptr->faces_G.size()) {
+
+	//		panel_ptr->faces_G.at(gen_ID)->at(face_ID).setColor(ntCol4(col, col, col, 1));
+	//		panel_ptr->faces_L.at(gen_ID)->at(face_ID).setColor(ntCol4(col, col, col, 1));
+
+	//		if (face_ID < (panel_ptr->faces_G.at(gen_ID)->size() - 1)) {
+	//			face_ID++;
+	//		}
+	//		else {
+	//			face_ID = 0;
+	//			gen_ID++;
+	//		}
+	//	}
 }
 void ovisApp::run(){
 	if (glfwGetKey(window, GLFW_KEY_PAGE_UP) == GLFW_PRESS) {

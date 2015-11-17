@@ -72,6 +72,7 @@ public:
 	//void calc_Area();
 	void sub_Div(int gen);
 	void sub_Div(std::vector< vector <ntFace3>* >*	faces, int gen, bool isPanel);
+	std::vector <ntFace3* >* sub_Div(int div, bool isDiv);
 
 	////////////////////////////////// PERFORATION PARAMETERS
 	float image_Val;				// PIXEL VALUE AT CENTROID

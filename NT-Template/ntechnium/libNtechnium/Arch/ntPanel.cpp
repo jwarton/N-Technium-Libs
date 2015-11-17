@@ -76,43 +76,7 @@ void ntPanel::calcNorm(){
 	//norm.invert();
 	normal = ntNormal(*cent,norm,.05);
 }
-//void ntPanel::sub_Div(int gen) {
-//	cnt_SubDiv += gen;
-//	std::vector < vector <ntFace3>* >* faces_ptr = &faces_G;
-//	sub_Div(faces_ptr, gen, false);
-//
-//	faces_ptr = &faces_L;
-//	sub_Div(faces_ptr, gen, true);
-//}
-//void ntPanel::sub_Div(std::vector< vector <ntFace3>* >*	faces, int gen, bool isPanel) {
-//	if (gen > 0) {
-//		int dim = faces->size() - 1;
-//		std::vector <ntFace3>* face = new vector<ntFace3>;
-//		faces->push_back(face);
-//		for (int i = 0; i < faces->at(dim)->size(); i++) {
-//			ntVec3 * v0 = faces->at(dim)->at(i).v0;
-//			ntVec3 * v1 = faces->at(dim)->at(i).v1;
-//			ntVec3 * v2 = faces->at(dim)->at(i).v2;
-//			//FIND MIDPOINT OF EACH EDGE IN FACE
-//			ntVec3 * n0 = faces->at(dim)->at(i).edges[0].getMid();
-//			ntVec3 * n1 = faces->at(dim)->at(i).edges[1].getMid();
-//			ntVec3 * n2 = faces->at(dim)->at(i).edges[2].getMid();
-//			//NEW FACES FROM VECS POINTERS
-//			face->push_back(ntFace3(v0, n0, n2));
-//			face->push_back(ntFace3(v1, n1, n0));
-//			face->push_back(ntFace3(v2, n2, n1));
-//			face->push_back(ntFace3(n0, n1, n2));
-//
-//			if (isPanel == true) {
-//				//CONTAINER FOR PANEL VECTORS
-//				vecs_SD.push_back(n0);
-//				vecs_SD.push_back(n1);
-//				vecs_SD.push_back(n2);
-//			}
-//		}
-//		sub_Div(faces, gen - 1, true);
-//	}	
-//}
+
 void ntPanel::sub_Div(int gen) {
 	cnt_SubDiv += gen;
 
@@ -128,13 +92,7 @@ void ntPanel::sub_Div(int gen) {
 		is_SubDiv = true;  ///EXCEPTION PREVENTS MULTIPLE SUBDIVISION CALLS
 	}
 }
-
 void ntPanel::sub_Div(std::vector< vector <ntFace3>* >*	faces, int gen, bool isPanel) {
-	
-	//if (stoi(panel_ID) <= 0) {
-	//	std::cout << "RUNNING sub_Div:  " << gen << endl;
-	//}
-
 	if (gen > 0) {
 		int dim = faces->size() - 1;
 		std::vector <ntFace3>* face = new vector<ntFace3>;
@@ -164,7 +122,72 @@ void ntPanel::sub_Div(std::vector< vector <ntFace3>* >*	faces, int gen, bool isP
 		sub_Div(faces, gen - 1, isPanel);
 	}
 }
+std::vector <ntFace3* >* ntPanel::sub_Div(int div, bool isDiv) {
+	std::vector <ntFace3* >* faces;
+	std::vector <vector <ntVec3* >> * rows;
 
+	if (isDiv) {
+		//for (int i = 0; i < 2; i++) {
+		//	float  len = edges.at(i).getLength();
+		//	float  inc = len / div;
+		//	ntVec3 dir = ntVec3(edges.at(i).v0->x, edges.at(i).v0->y, edges.at(i).v0->z);
+		//	dir.sub(v1);
+		//}
+
+		float step_X = ((v1->x - v0->x) / div);
+		float shif_X = ((v2->x - v0->x) / div);
+		float step_Y = ((v2->y - v0->y) / div);
+
+		int col = div;
+		int row = div;
+		/// PLOT FACE CORNERS
+		for (int i = 0; i < col; i++) {
+			std::vector <ntVec3*> vecs;
+			rows->push_back(vecs);
+
+			for (int j = 0; j < row; j++) {
+				/// DEFINE POSTION OFFSET FOR X
+				ntVec3* vec = new ntVec3();
+				if (j % 2 == 0) {
+					vec = new ntVec3(v0->x + (step_X * i), v0->y + (step_Y * j), 0);
+				}
+				else {
+					ntVec3* vec = new ntVec3(v0->x + (step_X * i) + shif_X, v0->y + (step_Y * j), 0);
+				}
+				
+				vecs.push_back(vec);
+				if (j = row - 1) {
+					row--;
+				}
+			}
+			if (i = col - 1) {
+				col--;
+			}
+		}
+		/// PLOT FACES
+		for (int i = 0; i < rows->size(); i++) {
+			for (int j = 0; j < rows->at(i).size(); j++) {
+
+				ntVec3 * vf0 = rows->at(i).at(j);
+				ntVec3 * vf1 = rows->at(i).at(j);
+				ntVec3 * vf2 = rows->at(i+1).at(j);
+
+				ntFace3 * face = new ntFace3(vf0, vf1, vf2);
+				faces->push_back(face);
+
+				if (i > 0) {
+					vf0 = rows->at(i).at(j);
+					vf1 = rows->at(i).at(j);
+					vf2 = rows->at(i - 1).at(j);
+
+					face = new ntFace3(vf0, vf1, vf2);
+					faces->push_back(face);
+				}
+			}
+		}
+	}
+	return faces;
+}
 void ntPanel::setColor(ntColor4f col){
 	this->col=col;
 	for(int i = 0; i<verts.size(); i++){
@@ -234,9 +257,14 @@ void ntPanel::calc_Perf() {
 	//if (stoi(panel_ID) < 1) {
 	//	std::cout << "ROWS OF PERFORATION:      " << y_Div << "\n" << endl;
 	//}
+	
+	/// CALL PANEL SUDIVISION(ROWS)
+	/// RETURN LIST OF FACES
+	/// REPLACE NESTED LOOP WITH LOOP THROUGH FACES
 
 	for (int i = 0; i <= x_Div; i++) {
 		for (int j = 0; j <= y_Div; j++) {
+
 			if (j % 2 == 0) {
 				x = v2->x - (spX * x_Div * 0.5) + (spX * i) + (spX * 0.5);
 			}
@@ -244,6 +272,9 @@ void ntPanel::calc_Perf() {
 				x = v2->x - (spX * x_Div * 0.5) + (spX * i); 
 			}
 			y = (spY * j) + edge_Offset;
+			
+			/// ACCESS CENTROID POSITION OF SUB DIVISION AT INDEX i
+			/// SET PERF POS TO CENTROID POSITION
 
 			// SET ACTIVE SUBDIVISION GENERATION
 			int gen = cnt_SubDiv;
@@ -255,7 +286,23 @@ void ntPanel::calc_Perf() {
 				for (int i = 0; i < dim; i++) {
 					isPtInSd = faces_L.at(gen)->at(i).pt_isInside(vec);
 					if (isPtInSd == true) {
-						valCol = faces_L.at(gen)->at(i).col.r;
+
+						// LOAD VERTEX COLOR
+						float c0 = faces_L.at(gen)->at(i).vert0->col.r;
+						float c1 = faces_L.at(gen)->at(i).vert1->col.r;
+						float c2 = faces_L.at(gen)->at(i).vert2->col.r;
+						//	EVALUATE DISTANCE SQRD TO EACH VERTEX
+						float d0 = faces_L.at(gen)->at(i).v0->distSqrd(vec);
+						float d1 = faces_L.at(gen)->at(i).v1->distSqrd(vec);
+						float d2 = faces_L.at(gen)->at(i).v2->distSqrd(vec);
+						float dT = d0 + d1 + d2;
+						// MAP DISTANCE TO VERTEX WEIHTS
+						float w0 = mapRange(0, 1, 0, dT, d0);
+						float w1 = mapRange(0, 1, 0, dT, d1);
+						float w2 = mapRange(0, 1, 0, dT, d2);
+
+						valCol = (c0 * w0) + (c1 * w1) + (c2 * w2);
+						///valCol = faces_L.at(gen)->at(i).col.r;  //CENTROOID COLOR
 
 						r = valCol * ((rand() % 10)*.1);
 						r = round(r * 10) * 0.1;
@@ -368,13 +415,13 @@ void  ntPanel::display_FaceL(int gen) {
 
 			faces_L.at(gen)->at(i).display();
 
-			faces_L.at(gen)->at(i).edges.at(0).setCol(col);
-			faces_L.at(gen)->at(i).edges.at(1).setCol(col);
-			faces_L.at(gen)->at(i).edges.at(2).setCol(col);
+			//faces_L.at(gen)->at(i).edges.at(0).setCol(col);
+			//faces_L.at(gen)->at(i).edges.at(1).setCol(col);
+			//faces_L.at(gen)->at(i).edges.at(2).setCol(col);
 
-			faces_L.at(gen)->at(i).edges.at(0).display();
-			faces_L.at(gen)->at(i).edges.at(1).display();
-			faces_L.at(gen)->at(i).edges.at(2).display();
+			//faces_L.at(gen)->at(i).edges.at(0).display();
+			//faces_L.at(gen)->at(i).edges.at(1).display();
+			//faces_L.at(gen)->at(i).edges.at(2).display();
 		}
 	} 	else {
 		// EXCEPTION FOR EXCEEDING GERERATIONS WITHIN BOUNDS

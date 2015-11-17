@@ -25,7 +25,7 @@ public:
 	ntVertex *vert0,*vert1,*vert2;
 	std::vector<ntVertex*> verts;
 	std::vector<ntEdge> edges;
-
+	
 	ntColor4f col;
 	std::vector<ntCol4> cols;
 

@@ -58,7 +58,7 @@ private:
 	af::array img_IN;
 	///////////////////////////////////////////////////////////////
 	///////////////////////////////////////// SOURCE DATA VARIABLES
-	string fileName_TXT = "ptPos_13_OvisTriPts";
+	string fileName_TXT = "ptPos_14_OvisTriPts";
 	static string path;
 
 	bool isStartFile =	false;
@@ -69,7 +69,6 @@ private:
 
 	int panel_NUM = 0;
 	int panel_Dim = 0;
-	//int gen = 2;
 	///////////////////////////////////////////////////////////////
 	/////////////////////////////////////// TEMPORARY PANEL DETAILS
 	string panel_ID =	"<< ERROR >>";
