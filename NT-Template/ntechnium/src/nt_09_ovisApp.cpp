@@ -378,11 +378,11 @@ void ovisApp::funct(ntPanel* panel_ptr) {
 	}
 	///////////////////////////////////////////////////////////////
 	//////////////////////////////////// CALCULATE PANEL PEFORATION
-	panel_ptr->calc_Perf();
+	panel_ptr->calc_Perf02();
 	int val = stoi(panel_ptr->get_ID());
 	if (val  >= 0 && val <= 30) {
 		//write_Panel_TXT(panel_ptr);
-		write_Panel_IMG(panel_ptr);
+		//write_Panel_IMG(panel_ptr);
 	}
 	/// SCALE PANELS TO VIEW--- REPLACE WITH CAMERA FIT FUNCTION //
 	/// TRANSLATE TO HUD LOCATION
@@ -394,7 +394,6 @@ void ovisApp::funct(ntPanel* panel_ptr) {
 			SC1.scale3d(sc_Factor);
 			SC1.translate(posXY);
 	}
-
 
 	for (int j = 0; j < panel_ptr->perfs.size(); j++) {
 		for (int k = 0; k < panel_ptr->perfs.at(j)->seg; k++) {

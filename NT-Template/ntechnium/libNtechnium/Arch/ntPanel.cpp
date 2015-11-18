@@ -122,71 +122,54 @@ void ntPanel::sub_Div(std::vector< vector <ntFace3>* >*	faces, int gen, bool isP
 		sub_Div(faces, gen - 1, isPanel);
 	}
 }
-std::vector <ntFace3* >* ntPanel::sub_Div(int div, bool isDiv) {
-	std::vector <ntFace3* >* faces;
-	std::vector <vector <ntVec3* >> * rows;
+void ntPanel::sub_Div(int div, bool isDiv) {
+	//std::vector <ntFace3* >* faces;
+	//std::vector <vector <ntVec3* >>* p_rows = p_Rows;  /// DUPLICATE DATA STRUCTURE OF p_Pos
+	int cols = div;
+	int rows = div;
 
 	if (isDiv) {
-		//for (int i = 0; i < 2; i++) {
-		//	float  len = edges.at(i).getLength();
-		//	float  inc = len / div;
-		//	ntVec3 dir = ntVec3(edges.at(i).v0->x, edges.at(i).v0->y, edges.at(i).v0->z);
-		//	dir.sub(v1);
-		//}
-
-		float step_X = ((v1->x - v0->x) / div);
-		float shif_X = ((v2->x - v0->x) / div);
-		float step_Y = ((v2->y - v0->y) / div);
-
-		int col = div;
-		int row = div;
-		/// PLOT FACE CORNERS
-		for (int i = 0; i < col; i++) {
-			std::vector <ntVec3*> vecs;
-			rows->push_back(vecs);
-
-			for (int j = 0; j < row; j++) {
-				/// DEFINE POSTION OFFSET FOR X
-				ntVec3* vec = new ntVec3();
-				if (j % 2 == 0) {
-					vec = new ntVec3(v0->x + (step_X * i), v0->y + (step_Y * j), 0);
-				}
-				else {
-					ntVec3* vec = new ntVec3(v0->x + (step_X * i) + shif_X, v0->y + (step_Y * j), 0);
-				}
-				
-				vecs.push_back(vec);
-				if (j = row - 1) {
-					row--;
-				}
-			}
-			if (i = col - 1) {
-				col--;
-			}
+		// COPY PANEL CORNER POINTS
+		ntVec3 * v00 = new ntVec3(vecs_SD.at(0)->x, vecs_SD.at(0)->y, vecs_SD.at(0)->z);
+		ntVec3 * v01 = new ntVec3(vecs_SD.at(1)->x, vecs_SD.at(1)->y, vecs_SD.at(1)->z);
+		ntVec3 * v02 = new ntVec3(vecs_SD.at(2)->x, vecs_SD.at(2)->y, vecs_SD.at(2)->z);
+		ntFace3 face = ntFace3(v00, v01, v02);
+		// SCALE CORNER POINTS TO SUBDIVISION INCREMENTS
+		float scFactor = 1 / div;
+		for (int i = 0; i < 3; i++) {
+			ntMatrix4 matSc = ntMatrix4(face.vecs[i]);
+			matSc.scale3d(scFactor);
 		}
-		/// PLOT FACES
-		for (int i = 0; i < rows->size(); i++) {
-			for (int j = 0; j < rows->at(i).size(); j++) {
 
-				ntVec3 * vf0 = rows->at(i).at(j);
-				ntVec3 * vf1 = rows->at(i).at(j);
-				ntVec3 * vf2 = rows->at(i+1).at(j);
+		float step_X = v01->x;
+		float shif_X = v02->x;
+		float step_Y = v02->y;
 
-				ntFace3 * face = new ntFace3(vf0, vf1, vf2);
-				faces->push_back(face);
+		// PLOT PERFORATION POSITIONS
+		for (int i = 1; i < rows; i++) {
+			std::vector <ntVec3*>* p_vecs = new vector <ntVec3*>;
 
-				if (i > 0) {
-					vf0 = rows->at(i).at(j);
-					vf1 = rows->at(i).at(j);
-					vf2 = rows->at(i - 1).at(j);
-
-					face = new ntFace3(vf0, vf1, vf2);
-					faces->push_back(face);
+			for (int j = 1; j < cols; j++) {
+				/// DEFINE POSTION OFFSET FOR X
+				ntVec3 vec;
+				if (j % 2 == 0) {
+					//vec = ntVec3(v00->x + (step_X * i), v00->y + (step_Y * j), 0);
+					vec = ntVec3(step_X * i, step_Y * j, 0);
+				} else {
+					//vec = ntVec3(v00->x + (step_X * i) + shif_X, v00->y + (step_Y * j), 0);
+					vec = ntVec3((step_X * i) + shif_X, step_Y * j, 0);
+				}
+				p_vecs->push_back(&vec);
+				if (j = cols - 1) {
+					cols--;
 				}
 			}
+			if (stoi(panel_ID) < 1) {
+				std::cout <<"CALCULATING PERF POSITIONS:  " << endl;
+			}
+			p_Rows.push_back(p_vecs);
 		}
 	}
-	return faces;
 }
 void ntPanel::setColor(ntColor4f col){
 	this->col=col;
@@ -239,7 +222,7 @@ std::vector<ntVec3*> ntPanel::get_Perf() {
 std::vector<float> ntPanel::get_Perf_R() {
 	return p_Rad;
 }
-void ntPanel::calc_Perf() {
+void ntPanel::calc_Perf01() {
 	//POSITION VARIABLE
 	float w = (v1->x - v0->x) - (edge_Offset * 2);
 	float spX = (r_Max * 2) + .125;
@@ -254,14 +237,6 @@ void ntPanel::calc_Perf() {
 	bool isPtInSd = false;
 	float valCol = 0;
 
-	//if (stoi(panel_ID) < 1) {
-	//	std::cout << "ROWS OF PERFORATION:      " << y_Div << "\n" << endl;
-	//}
-	
-	/// CALL PANEL SUDIVISION(ROWS)
-	/// RETURN LIST OF FACES
-	/// REPLACE NESTED LOOP WITH LOOP THROUGH FACES
-
 	for (int i = 0; i <= x_Div; i++) {
 		for (int j = 0; j <= y_Div; j++) {
 
@@ -272,9 +247,6 @@ void ntPanel::calc_Perf() {
 				x = v2->x - (spX * x_Div * 0.5) + (spX * i); 
 			}
 			y = (spY * j) + edge_Offset;
-			
-			/// ACCESS CENTROID POSITION OF SUB DIVISION AT INDEX i
-			/// SET PERF POS TO CENTROID POSITION
 
 			// SET ACTIVE SUBDIVISION GENERATION
 			int gen = cnt_SubDiv;
@@ -283,26 +255,26 @@ void ntPanel::calc_Perf() {
 			if (pt_isInside(vec)) {
 				int dim = faces_L.at(gen)->size(); // SIZE OF SUB PANELS
 
-				for (int i = 0; i < dim; i++) {
-					isPtInSd = faces_L.at(gen)->at(i).pt_isInside(vec);
+				for (int k = 0; k < dim; k++) {
+					isPtInSd = faces_L.at(gen)->at(k).pt_isInside(vec);
 					if (isPtInSd == true) {
 
 						// LOAD VERTEX COLOR
-						float c0 = faces_L.at(gen)->at(i).vert0->col.r;
-						float c1 = faces_L.at(gen)->at(i).vert1->col.r;
-						float c2 = faces_L.at(gen)->at(i).vert2->col.r;
+						float c0 = faces_L.at(gen)->at(k).vert0->col.r;
+						float c1 = faces_L.at(gen)->at(k).vert1->col.r;
+						float c2 = faces_L.at(gen)->at(k).vert2->col.r;
 						//	EVALUATE DISTANCE SQRD TO EACH VERTEX
-						float d0 = faces_L.at(gen)->at(i).v0->distSqrd(vec);
-						float d1 = faces_L.at(gen)->at(i).v1->distSqrd(vec);
-						float d2 = faces_L.at(gen)->at(i).v2->distSqrd(vec);
-						float dT = d0 + d1 + d2;
+						float d0 = faces_L.at(gen)->at(k).v0->distSqrd(vec)/3;
+						float d1 = faces_L.at(gen)->at(k).v1->distSqrd(vec)/3;
+						float d2 = faces_L.at(gen)->at(k).v2->distSqrd(vec)/3;
+						float dT = d0 + d1 + d2/3;
 						// MAP DISTANCE TO VERTEX WEIHTS
 						float w0 = mapRange(0, 1, 0, dT, d0);
 						float w1 = mapRange(0, 1, 0, dT, d1);
 						float w2 = mapRange(0, 1, 0, dT, d2);
 
 						valCol = (c0 * w0) + (c1 * w1) + (c2 * w2);
-						///valCol = faces_L.at(gen)->at(i).col.r;  //CENTROOID COLOR
+						///valCol = faces_L.at(gen)->at(i).col.r;  //CENTROID COLOR
 
 						r = valCol * ((rand() % 10)*.1);
 						r = round(r * 10) * 0.1;
@@ -314,12 +286,115 @@ void ntPanel::calc_Perf() {
 							p_Pos.push_back(vec);
 							p_Rad.push_back(r);
 						}
-						i = dim;
+						k = dim;
 					}
 				}
 			}
 		}
 	}
+	add_Perf();
+}
+void ntPanel::calc_Perf02() {
+	ntVec3* vec;
+	float r;
+	bool isPtInSd = false;
+	float valCol = 0;
+
+	/// CALL PANEL SUDIVISION(ROWS)
+	/// sub_Div(50, true);
+	/// /////////////////////////////////////////////////////////////////////////////////////////////////
+	int div = 40;
+	int cols = div-1;
+	int rows = div-1;
+	bool isDiv = true;
+
+	float step_X;
+	float shif_X;
+	float step_Y;
+
+	if (isDiv) {
+		// COPY PANEL CORNER POINTS
+		ntVec3 v00 = ntVec3(vecs_SD.at(0)->x, vecs_SD.at(0)->y, vecs_SD.at(0)->z);
+		ntVec3 v01 = ntVec3(vecs_SD.at(1)->x, vecs_SD.at(1)->y, vecs_SD.at(1)->z);
+		ntVec3 v02 = ntVec3(vecs_SD.at(2)->x, vecs_SD.at(2)->y, vecs_SD.at(2)->z);
+		ntFace3 face = ntFace3(&v00, &v01, &v02);
+		// SCALE CORNER POINTS TO SUBDIVISION INCREMENTS
+		float scFactor = .025;
+		for (int i = 0; i < 3; i++) {
+			ntMatrix4 matSc = ntMatrix4(face.vecs[i]);
+			matSc.scale3d(scFactor);
+		}
+
+		step_X = v01.x;
+		shif_X = v02.x;
+		step_Y = v02.y;
+
+		// PLOT PERFORATION POSITIONS
+		for (int i = 1; i < rows; i++) {
+			std::vector <ntVec3*>* p_vecs = new vector <ntVec3*>;
+			for (int j = 1; j < cols; j++) {
+				/// DEFINE POSTION OFFSET FOR X
+				vec = new ntVec3((step_X * j) + (shif_X * i), (step_Y * i), 0);
+				p_vecs->push_back(vec);
+				if (j == (cols-1)) {
+					cols = cols -1;
+				}
+			}
+			p_Rows.push_back(p_vecs);
+		}
+	}
+	/// /////////////////////////////////////////////////////////////////////////////////////////////////
+	for (int i = 0; i < p_Rows.size(); i++) {
+		for (int j = 0; j < p_Rows.at(i)->size(); j++) {
+			vec = p_Rows.at(i)->at(j);
+
+			// COORDINATE PERF LOCATION TO SUBDIVIDED AREA
+			int gen = cnt_SubDiv;
+
+			//if (pt_isInside(vec)) {
+				int dim = faces_L.at(gen)->size(); // SIZE OF SUB PANELS
+
+				for (int k = 0; k < dim; k++) {
+					isPtInSd = faces_L.at(gen)->at(k).pt_isInside(vec);
+					if (isPtInSd == true) {
+
+						// LOAD VERTEX COLOR
+						float c0 = faces_L.at(gen)->at(k).vert0->col.r;
+						float c1 = faces_L.at(gen)->at(k).vert1->col.r;
+						float c2 = faces_L.at(gen)->at(k).vert2->col.r;
+						float cT = c0 + c1 + c2;
+						// EVALUATE DISTANCE SQRD TO EACH VERTEX
+						float d0 = faces_L.at(gen)->at(k).v0->distSqrd(vec);
+						float d1 = faces_L.at(gen)->at(k).v1->distSqrd(vec);
+						float d2 = faces_L.at(gen)->at(k).v2->distSqrd(vec);
+						float dT = d0 + d1 + d2;
+						// MAP DISTANCE TO VERTEX WEIGHTS
+						float w0 = mapRange(0, 1, 0, dT, d0, false);
+						float w1 = mapRange(0, 1, 0, dT, d1, false);
+						float w2 = mapRange(0, 1, 0, dT, d2, false);
+
+						valCol = ((c0 * w0) + (c1 * w1) + (c2 * w2))/3;
+						valCol = mapRange(0, 1, 0, (cT/3), valCol);
+
+						float fx = (((rand() % 10)*.01) - 0.05);
+
+						r = valCol * (rand() % 10) * 0.1;// + fx;
+						r = round(r * 10) * 0.1;
+						if (r > 1) {
+							r = 1;
+						}
+						r = mapRange(r_Min, r_Max, 0, 1, r, false);
+						if (r > r_Min) {
+							p_Pos.push_back(vec);
+							p_Rad.push_back(r);
+						}
+						k = dim;
+					}
+				}
+			//}
+		}
+	}
+
 	add_Perf();
 }
 bool ntPanel::pt_isInside(ntVec3* point) {

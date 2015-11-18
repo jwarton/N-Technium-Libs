@@ -19,6 +19,7 @@
 #include "ntCircle.h"
 #include "ntFace3.h"
 #include "ntMath.h"
+#include "ntMatrix4.h"
 
 using namespace jpw;
 
@@ -72,23 +73,25 @@ public:
 	//void calc_Area();
 	void sub_Div(int gen);
 	void sub_Div(std::vector< vector <ntFace3>* >*	faces, int gen, bool isPanel);
-	std::vector <ntFace3* >* sub_Div(int div, bool isDiv);
+	void sub_Div(int div, bool isDiv);
 
 	////////////////////////////////// PERFORATION PARAMETERS
 	float image_Val;				// PIXEL VALUE AT CENTROID
 	std::vector <float> image_Vals; // PIXEL VALUE AT SUBDIVISIONS
 
 	void add_Perf();
-	void calc_Perf();
+	void calc_Perf01();
+	void calc_Perf02();
 	void calc_IMG();
 
 	bool ntPanel::pt_isInside(ntVec3* point);
 
+	std::vector <vector <ntVec3*>*> p_Rows;
 	std::vector<ntVec3*>	p_Pos;
 	std::vector<float>		p_Rad;
 
 	float	r_Min = .1625;
-	float	r_Max = .75;//.625;
+	float	r_Max = .625;
 	float	edge_Offset = .75;
 	int		n_seg = 36;
 
