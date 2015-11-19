@@ -102,7 +102,22 @@ void ntFace3::setColor(ntColor4f col){
 		verts.at(i)->setColor(col);
 	}
 }
-
+void ntFace3::setUVW(ntVec3* uvw0, ntVec3* uvw1, ntVec3* uvw2) {
+	this->uvw0 = uvw0;
+	this->uvw1 = uvw1;
+	this->uvw2 = uvw2;
+	this->uvws[0] = uvw0;
+	this->uvws[1] = uvw1;
+	this->uvws[2] = uvw2;
+}
+void ntFace3::setUVW(std::vector <ntVec3*>	uvws) {
+	this->uvw0 = uvws[0];
+	this->uvw1 = uvws[1];
+	this->uvw2 = uvws[2];
+	this->uvws[0] = uvws[0];
+	this->uvws[1] = uvws[1];
+	this->uvws[2] = uvws[2];
+}
 void ntFace3::display(){
 	//glColor4f(col.r, col.g, col.b,col.a);
 	glBegin(GL_TRIANGLES);

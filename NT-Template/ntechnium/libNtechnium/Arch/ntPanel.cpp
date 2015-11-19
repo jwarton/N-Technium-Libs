@@ -105,24 +105,40 @@ void ntPanel::sub_Div(std::vector< vector <ntFace3>* >*	faces, int gen, bool isP
 			ntVec3 * n0 = faces->at(dim)->at(i).edges[0].getMid();
 			ntVec3 * n1 = faces->at(dim)->at(i).edges[1].getMid();
 			ntVec3 * n2 = faces->at(dim)->at(i).edges[2].getMid();
+			/// // SET UVW INTERPOLATION
+			ntVec3 * uvw0 = faces->at(dim)->at(i).uvw0;
+			ntVec3 * uvw1 = faces->at(dim)->at(i).uvw1;
+			ntVec3 * uvw2 = faces->at(dim)->at(i).uvw2;
+			/// CALCULATE UVW POINT BETWEEN
+			ntVec3 * uvw3 = pt_Mid(uvw0,uvw1);
+			ntVec3 * uvw4 = pt_Mid(uvw1,uvw2);
+			ntVec3 * uvw5 = pt_Mid(uvw2,uvw0);
 			//NEW FACES FROM VECS POINTERS
-			face->push_back(ntFace3(v0, n0, n2));
-			face->push_back(ntFace3(v1, n1, n0));
-			face->push_back(ntFace3(v2, n2, n1));
-			face->push_back(ntFace3(n0, n1, n2));
+			ntFace3 f0 = ntFace3(v0, n0, n2);
+			ntFace3 f1 = ntFace3(v1, n1, n0);
+			ntFace3 f2 = ntFace3(v2, n2, n1);
+			ntFace3 f3 = ntFace3(n0, n1, n2);
+			/// SET UVW FOR EACH VERTEX IN GROUP
+			f0.setUVW(uvw0, uvw3, uvw5);
+			f1.setUVW(uvw1, uvw4, uvw3);
+			f2.setUVW(uvw2, uvw5, uvw4);
+			f3.setUVW(uvw3, uvw4, uvw5);
+
+			face->push_back(f0);
+			face->push_back(f1);
+			face->push_back(f2);
+			face->push_back(f3);
 
 			if (isPanel == true) {
-				//CONTAINER FOR PANEL VECTORS
+				//LIST OF PANEL VECTORS
 				vecs_SD.push_back(n0);
 				vecs_SD.push_back(n1);
 				vecs_SD.push_back(n2);
+				//LIST OF PANEL PARAMETERS
+				//vecs_UV.push_back(uvw3);
+				//vecs_UV.push_back(uvw4);
+				//vecs_UV.push_back(uvw5);
 			}
-			/// //UVW INTERPOLATION
-			ntVec3 * u0 = faces->at(dim)->at(i).v0;
-			ntVec3 * u1 = faces->at(dim)->at(i).v1;
-			ntVec3 * u2 = faces->at(dim)->at(i).v2;
-
-
 		}
 		sub_Div(faces, gen - 1, isPanel);
 	}
@@ -130,7 +146,7 @@ void ntPanel::sub_Div(std::vector< vector <ntFace3>* >*	faces, int gen, bool isP
 void ntPanel::sub_Div(int div, bool isDiv) {
 	/// ADD FUNCTION FROM calc_Perf02()
 }
-void ntPanel::setColor(ntColor4f col){
+void ntPanel::set_Color(ntColor4f col){
 	this->col=col;
 	for(int i = 0; i<verts.size(); i++){
 		verts.at(i)->setColor(col);
@@ -156,6 +172,11 @@ void ntPanel::set_pG(string p_G) {
 };
 void ntPanel::set_UVW(string string_UVW){
 	this->string_UVW = string_UVW;
+}
+void ntPanel::set_UVW(std::vector <ntVec3*>	vecs_UV) {
+	this->vecs_UV = vecs_UV;
+	faces_G.at(0)->at(0).setUVW(vecs_UV);
+	faces_L.at(0)->at(0).setUVW(vecs_UV);
 }
 void ntPanel::set_IMG(float val) {
 	image_Val = val;
@@ -360,6 +381,16 @@ void ntPanel::calc_Perf_SD(int div) {
 
 	add_Perf();
 }
+void ntPanel::add_Perf() {
+	if (p_Pos.size() > 0) {
+		for (int i = 0; i < p_Pos.size(); i++) {
+			float r = p_Rad.at(i); 
+			ntCircle * perf = new ntCircle(p_Pos.at(i), r, n_seg, Col4(.25, .25, .25, 1));
+			perfs.push_back(perf);
+		}
+	} 
+}
+
 bool ntPanel::pt_isInside(ntVec3* point) {
 	int i, j, nvert = verts.size();
 	bool c = false;
@@ -372,14 +403,13 @@ bool ntPanel::pt_isInside(ntVec3* point) {
 	}
 	return c;
 }
-void ntPanel::add_Perf() {
-	if (p_Pos.size() > 0) {
-		for (int i = 0; i < p_Pos.size(); i++) {
-			float r = p_Rad.at(i); 
-			ntCircle * perf = new ntCircle(p_Pos.at(i), r, n_seg, Col4(.25, .25, .25, 1));
-			perfs.push_back(perf);
-		}
-	} 
+ntVec3* ntPanel::pt_Mid(ntVec3* v0, ntVec3* v1) {
+	float x = (v0->x + v1->x) * 0.5;
+	float y = (v0->y + v1->y) * 0.5;
+	float z = (v0->z + v1->z) * 0.5;
+
+	ntVec3 * v = new ntVec3(x, y, z);
+	return v;
 }
 
 ///////////////////////////////////////////////////////////////
@@ -424,11 +454,11 @@ void ntPanel::display_EdgeSd(int gen) {
 		}
 		else {
 			// EXCEPTION FOR EXCEEDING GERERATIONS WITHIN BOUNDS
-			display_FaceL(gen - 1);
+			display_Face_L(gen - 1);
 		}
 	}
 }
-void ntPanel::display_FaceL(int gen) {
+void ntPanel::display_Face_L(int gen) {
 	ntColor4f col = ntColor4f(1, 1, 1, .5);
 	if (gen <= faces_L.size()) {
 		for (int i = 0; i < faces_L.at(gen)->size(); i++) {
@@ -446,12 +476,12 @@ void ntPanel::display_FaceL(int gen) {
 	}
 	else {
 		// EXCEPTION FOR EXCEEDING GERERATIONS WITHIN BOUNDS
-		display_FaceL(gen - 1);
+		display_Face_L(gen - 1);
 	}
 }
 ///////////////////////////////////////////////////////////////
 ////////////////////////// DISPLAYS 3D MODELSPACE VIEW OF PANEL
-void ntPanel::display_FaceG(int gen) {
+void ntPanel::display_Face_G(int gen) {
 	if (gen <= faces_G.size()) {
 		for (int i = 0; i < faces_G.at(gen)->size(); i++) {
 			faces_G.at(gen)->at(i).display();
@@ -459,6 +489,6 @@ void ntPanel::display_FaceG(int gen) {
 	}
 	else {
 		// EXCEPTION FOR EXCEEDING GERERATIONS WITHIN BOUNDS
-		display_FaceG(gen - 1);
+		display_Face_G(gen - 1);
 	}
 }

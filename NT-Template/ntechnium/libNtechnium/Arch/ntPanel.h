@@ -47,7 +47,7 @@ public:
 
 	///////////////////////////////////////////////////////////////
 	///////////////////////////////////// SUBIVISION DATA STRUCTURE
-	std::vector <ntVec3>			vecs_UV;   //     UV PARAMETERS
+	std::vector <ntVec3*>			vecs_UV;   ///     UV PARAMETERS FROM RHINO PASS TO FACES
 	std::vector <ntVec3*>			vecs_SD;   //  LOCAL COORDINATE
 	std::vector <vector <ntFace3>*>	faces_L;   //  LOCAL COORDINATE
 	std::vector <vector <ntFace3>*>	faces_G;   //  WORLD COORDINATE
@@ -99,13 +99,15 @@ public:
 	void calc_Perf_SD(int div);
 	void add_Perf();
 
-	bool ntPanel::pt_isInside(ntVec3* point);
+	bool pt_isInside(ntVec3* point);
+	ntVec3* pt_Mid(ntVec3* v0, ntVec3* v1);
 
 	void set_ID(string panel_ID);
 	void set_vG();
 	void set_nG(string n_G);
 	void set_pG(string p_G);
 	void set_UVW(string string_UVW);
+	void set_UVW(std::vector <ntVec3*>	vecs_UV);
 	void set_IMG(float val);
 
 	string get_ID();	//PANEL ID

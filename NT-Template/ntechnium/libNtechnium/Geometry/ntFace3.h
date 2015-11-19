@@ -21,7 +21,9 @@ private:
 
 public:
 	ntVec3 *v0,*v1,*v2;
-	ntVec3* vecs[3];
+	ntVec3 *vecs[3];
+	ntVec3 *uvw0, *uvw1, *uvw2;
+	ntVec3 *uvws[3];
 	ntVertex *vert0,*vert1,*vert2;
 	std::vector<ntVertex*> verts;
 	std::vector<ntEdge> edges;
@@ -29,7 +31,7 @@ public:
 	ntColor4f col;
 	std::vector<ntCol4> cols;
 
-	ntVec3  *uvw0, *uvw1, *uvw2;
+	
 	ntVec3	 norm;
 	ntVec3  *cent;
 	ntVertex centroid;
@@ -43,6 +45,7 @@ public:
 	bool pt_isInside(ntVec3* vec);
 	void setColor(ntColor4f col);
 	void setUVW(ntVec3* uvw0, ntVec3* uvw1, ntVec3* uvw2);
+	void setUVW(std::vector <ntVec3*>	uvws);
 
 	void calcNorm();
 	void calcCentroid();

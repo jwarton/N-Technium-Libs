@@ -95,7 +95,7 @@ void ovisApp::read_DATA(){
 	string line;
 
 	int cnt = 0;
-	std::vector<ntVec3> params_UV;
+	std::vector<ntVec3*> params_UV;
 
 	while (std::getline(file, line) && isEndSubs == false) {
 		if (line.find(";BEGIN") != string::npos) {
@@ -114,7 +114,8 @@ void ovisApp::read_DATA(){
 			panel_Norm = line + "\n";
 		}
 		if (isStartFile == true && line.find("PANELUV:") != string::npos) {
-			ntVec3 uvw = add_VEC(line);
+			ntVec3 temp = add_VEC(line);  /// CREATE POINTER TO VEC
+			ntVec3 * uvw = new ntVec3(temp.x, temp.y, temp.z);
 			params_UV.push_back(uvw);
 
 			line = format_STR(line);
@@ -142,25 +143,24 @@ void ovisApp::read_DATA(){
 		//DISTRIBUTE DATA TO PANEL DEFINITION
 		if (isSubNext == true || isEndFile == true) {
 			/////////////////////////////////////////////////////////////////////////////////
-			//if (std::stof(panel_ID) < 1000) {	
-				ntVec3 * v0 = new ntVec3(verts[0].x, verts[0].y, verts[0].z);
-				ntVec3 * v1 = new ntVec3(verts[1].x, verts[1].y, verts[1].z);
-				ntVec3 * v2 = new ntVec3(verts[2].x, verts[2].y, verts[2].z);
-				ntPanel * panel = new ntPanel(v0, v1, v2);
-				//panel_Dim++;
-				panel->set_ID(panel_ID);
-				panel->set_nG(panel_Norm);
-				panel->set_UVW(panel_UVW);
-				panel->vecs_UV.swap(params_UV);
-				panel->set_pG(panel_Vert);
-				panels.push_back(panel);
-			//}
+			ntVec3 * v0 = new ntVec3(verts[0].x, verts[0].y, verts[0].z);
+			ntVec3 * v1 = new ntVec3(verts[1].x, verts[1].y, verts[1].z);
+			ntVec3 * v2 = new ntVec3(verts[2].x, verts[2].y, verts[2].z);
+			ntPanel * panel = new ntPanel(v0, v1, v2);
+
+			panel->set_ID(panel_ID);
+			panel->set_nG(panel_Norm);
+			panel->set_UVW(panel_UVW);			// STRNG UVW
+			panel->set_UVW(params_UV);			// VEC3 UVW
+			panel->vecs_UV.swap(params_UV);		// FOR RHINO READ ONLY ---REMOVE AFTER UVW SUBDIVIDE COMPLETED
+			panel->set_pG(panel_Vert);
+			panels.push_back(panel);
 
 			panel_ID =		"<< ERROR >>";
 			panel_Norm =	"<< ERROR >>";
 			panel_UVW =		"<< ERROR >>";
 			panel_Vert =	"";
-			vector<ntVec3>().swap(params_UV);		//DEALLOCATE MEMORY STORED IN PARAMS_UV
+			vector<ntVec3*>().swap(params_UV);		//DEALLOCATE MEMORY STORED IN PARAMS_UV
 		}
 	}
 	isTxtLoaded = true;
@@ -760,8 +760,11 @@ void ovisApp::map_ImgCol(ntPanel* panel_ptr) {
 		for (int j = 0; j < panel_ptr->faces_G.at(i)->size(); j++) {
 			for (int k = 0; k < 3; k++) {
 
-				float x = panel_ptr->vecs_UV.at(index).x;
-				float y = panel_ptr->vecs_UV.at(index).y;
+				//float x = panel_ptr->faces_G.at(i)->at(j)->uvws.at(k)->x;
+				//float y = panel_ptr->faces_G.at(i)->at(j)->uvws.at(k)->y;
+
+				float x = panel_ptr->vecs_UV.at(index)->x;
+				float y = panel_ptr->vecs_UV.at(index)->y;
 
 				x = floor(mapRange(0, img_X, 0, 1, x));
 				y = floor(mapRange(0, img_Y, 0, 1, y));
@@ -776,7 +779,6 @@ void ovisApp::map_ImgCol(ntPanel* panel_ptr) {
 			}
 		}
 	}
-
 	/// ////////////////////// CENTROID MAPPING
 	//int dim = panel_ptr->vecs_UV.size();
 	//int gen_ID = 0;
@@ -954,7 +956,6 @@ void ovisApp::display(){
 	glLoadIdentity();
 	///////////////////////////////////////////////////////////////
 	if (panel_Index >= 0 && panel_Index < panels.size()) {
-		//panels.at(panel_Index)->display();
 		if (m == vW || m == vQ) {
 			panels.at(panel_Index)->display_Perf();
 		}
