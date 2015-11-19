@@ -114,6 +114,7 @@ void ovisApp::read_DATA(){
 			panel_Norm = line + "\n";
 		}
 		if (isStartFile == true && line.find("PANELUV:") != string::npos) {
+			///EXCEPTION FOR > 3 UVW ENTRIES
 			ntVec3 temp = add_VEC(line);  /// CREATE POINTER TO VEC
 			ntVec3 * uvw = new ntVec3(temp.x, temp.y, temp.z);
 			params_UV.push_back(uvw);
@@ -760,11 +761,11 @@ void ovisApp::map_ImgCol(ntPanel* panel_ptr) {
 		for (int j = 0; j < panel_ptr->faces_G.at(i)->size(); j++) {
 			for (int k = 0; k < 3; k++) {
 
-				//float x = panel_ptr->faces_G.at(i)->at(j)->uvws.at(k)->x;
-				//float y = panel_ptr->faces_G.at(i)->at(j)->uvws.at(k)->y;
+				float x = panel_ptr->faces_G.at(i)->at(j).uvws[k]->x;
+				float y = panel_ptr->faces_G.at(i)->at(j).uvws[k]->y;
 
-				float x = panel_ptr->vecs_UV.at(index)->x;
-				float y = panel_ptr->vecs_UV.at(index)->y;
+				//float x = panel_ptr->vecs_UV.at(index)->x;
+				//float y = panel_ptr->vecs_UV.at(index)->y;
 
 				x = floor(mapRange(0, img_X, 0, 1, x));
 				y = floor(mapRange(0, img_Y, 0, 1, y));

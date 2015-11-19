@@ -62,7 +62,7 @@ private:
 
 	///////////////////////////////////////////////////////////////
 	///////////////////////////////////////// SOURCE DATA VARIABLES
-	string fileName_TXT = "ptPos_14_OvisTriPts";
+	string fileName_TXT = "ptPos_15_OvisTriPts";
 	static string path;
 
 	bool isStartFile =	false;
