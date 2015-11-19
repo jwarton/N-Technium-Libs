@@ -28,7 +28,7 @@ public:
 	std::vector<ntVertex*> verts;
 	std::vector<ntEdge> edges;
 	ntColor4f col;
-	float seg = 36;
+	int seg;
 
 	ntVec3 norm;
 	ntVec3* cent;
@@ -38,6 +38,7 @@ public:
 	ntCircle();
 	ntCircle(ntVec3* pos, float rad);
 	ntCircle(ntVec3* pos, float rad, ntCol4 col);
+	ntCircle(ntVec3* pos, float rad, int seg, ntCol4 col);
 
 	void setColor(ntColor4f col);
 	void calcNorm();

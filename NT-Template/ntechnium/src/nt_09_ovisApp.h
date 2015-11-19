@@ -52,10 +52,14 @@ private:
 	string url_IMG;
 	string path_IMG = nt_Utility::getPathToResources();
 	string pathExtension_IMG = "imgs\\ovis\\";
-	string fileName_IMG = "ovis_004";
+	string fileName_IMG = "ovis_005";
 	string fileExt_IMG = ".jpg";
 
 	af::array img_IN;
+
+	af::array img_2D;
+	arma::mat img_2d;
+
 	///////////////////////////////////////////////////////////////
 	///////////////////////////////////////// SOURCE DATA VARIABLES
 	string fileName_TXT = "ptPos_14_OvisTriPts";
@@ -102,6 +106,7 @@ private:
 	static arma::mat img_00;
 	static int img_X;
 	static int img_Y;
+	static int img_T;
 
 	Vec3 add_VEC(string line);
 
@@ -115,6 +120,7 @@ private:
 	static void write_Panel_IMG(ntPanel* panel_ptr);
 	static double calc_Area(ntPanel* panel_ptr);
 	static void map_ImgCol(ntPanel* panel_ptr);
+	static void tile_Img(int U, int V, af::array img);
 
 	int panel_Index = 0;	// DISPLAY INDEX FOR CURRENT PANEL
 

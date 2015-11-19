@@ -8,13 +8,12 @@ v0(v0),v1(v1),v2(v2){
 	this->vecs[1] = v1;
 	this->vecs[2] = v2;
 	this->col = ntColor4f(1,1,1,1);
-	this->col_0 = ntColor4f(1, 0, 0, 1);
 	init();
 }
 
 void ntPanel::init(){
 	//INITIALIZE VERTEX
-	vert0 = new ntVertex (v0,col_0);
+	vert0 = new ntVertex (v0,col);
 	vert1 = new ntVertex (v1,col);
 	vert2 = new ntVertex (v2,col);
 	verts.push_back(vert0);
@@ -27,7 +26,7 @@ void ntPanel::init(){
 	vecs_SD.push_back(v2);
 
 	//INITIALIZE EDGES
-	edges.push_back(ntEdge(v0,v1, col_0));
+	edges.push_back(ntEdge(v0,v1,col));
 	edges.push_back(ntEdge(v1,v2,col));
 	edges.push_back(ntEdge(v2,v0,col));
 
@@ -118,58 +117,18 @@ void ntPanel::sub_Div(std::vector< vector <ntFace3>* >*	faces, int gen, bool isP
 				vecs_SD.push_back(n1);
 				vecs_SD.push_back(n2);
 			}
+			/// //UVW INTERPOLATION
+			ntVec3 * u0 = faces->at(dim)->at(i).v0;
+			ntVec3 * u1 = faces->at(dim)->at(i).v1;
+			ntVec3 * u2 = faces->at(dim)->at(i).v2;
+
+
 		}
 		sub_Div(faces, gen - 1, isPanel);
 	}
 }
 void ntPanel::sub_Div(int div, bool isDiv) {
-	//std::vector <ntFace3* >* faces;
-	//std::vector <vector <ntVec3* >>* p_rows = p_Rows;  /// DUPLICATE DATA STRUCTURE OF p_Pos
-	int cols = div;
-	int rows = div;
-
-	if (isDiv) {
-		// COPY PANEL CORNER POINTS
-		ntVec3 * v00 = new ntVec3(vecs_SD.at(0)->x, vecs_SD.at(0)->y, vecs_SD.at(0)->z);
-		ntVec3 * v01 = new ntVec3(vecs_SD.at(1)->x, vecs_SD.at(1)->y, vecs_SD.at(1)->z);
-		ntVec3 * v02 = new ntVec3(vecs_SD.at(2)->x, vecs_SD.at(2)->y, vecs_SD.at(2)->z);
-		ntFace3 face = ntFace3(v00, v01, v02);
-		// SCALE CORNER POINTS TO SUBDIVISION INCREMENTS
-		float scFactor = 1 / div;
-		for (int i = 0; i < 3; i++) {
-			ntMatrix4 matSc = ntMatrix4(face.vecs[i]);
-			matSc.scale3d(scFactor);
-		}
-
-		float step_X = v01->x;
-		float shif_X = v02->x;
-		float step_Y = v02->y;
-
-		// PLOT PERFORATION POSITIONS
-		for (int i = 1; i < rows; i++) {
-			std::vector <ntVec3*>* p_vecs = new vector <ntVec3*>;
-
-			for (int j = 1; j < cols; j++) {
-				/// DEFINE POSTION OFFSET FOR X
-				ntVec3 vec;
-				if (j % 2 == 0) {
-					//vec = ntVec3(v00->x + (step_X * i), v00->y + (step_Y * j), 0);
-					vec = ntVec3(step_X * i, step_Y * j, 0);
-				} else {
-					//vec = ntVec3(v00->x + (step_X * i) + shif_X, v00->y + (step_Y * j), 0);
-					vec = ntVec3((step_X * i) + shif_X, step_Y * j, 0);
-				}
-				p_vecs->push_back(&vec);
-				if (j = cols - 1) {
-					cols--;
-				}
-			}
-			if (stoi(panel_ID) < 1) {
-				std::cout <<"CALCULATING PERF POSITIONS:  " << endl;
-			}
-			p_Rows.push_back(p_vecs);
-		}
-	}
+	/// ADD FUNCTION FROM calc_Perf02()
 }
 void ntPanel::setColor(ntColor4f col){
 	this->col=col;
@@ -201,6 +160,7 @@ void ntPanel::set_UVW(string string_UVW){
 void ntPanel::set_IMG(float val) {
 	image_Val = val;
 }
+
 string ntPanel::get_ID() {
 	return panel_ID;
 }
@@ -213,6 +173,7 @@ string ntPanel::get_p_G() {
 string ntPanel::get_UVW() {
 	return string_UVW;
 }
+
 std::vector<ntVec3*> ntPanel::get_v_G() {
 	return v_G;
 }
@@ -222,8 +183,10 @@ std::vector<ntVec3*> ntPanel::get_Perf() {
 std::vector<float> ntPanel::get_Perf_R() {
 	return p_Rad;
 }
-void ntPanel::calc_Perf01() {
-	//POSITION VARIABLE
+
+void ntPanel::calc_Perf_00() {
+	///////////////////////////////////////////////////////////////
+	///////////////// CALCULATE GRID POSTION ORTHOGRAPHIC TO EDGE-0
 	float w = (v1->x - v0->x) - (edge_Offset * 2);
 	float spX = (r_Max * 2) + .125;
 	float spY = (r_Max * 2) - .25;
@@ -294,7 +257,9 @@ void ntPanel::calc_Perf01() {
 	}
 	add_Perf();
 }
-void ntPanel::calc_Perf02() {
+void ntPanel::calc_Perf_SD(int div) {
+	///////////////////////////////////////////////////////////////
+	///////////// CALCULATE GRID POSTION BY TRIANGULAR SUBDIVISIION
 	ntVec3* vec;
 	float r;
 	bool isPtInSd = false;
@@ -303,7 +268,7 @@ void ntPanel::calc_Perf02() {
 	/// CALL PANEL SUDIVISION(ROWS)
 	/// sub_Div(50, true);
 	/// /////////////////////////////////////////////////////////////////////////////////////////////////
-	int div = 40;
+	//int div = 40;
 	int cols = div-1;
 	int rows = div-1;
 	bool isDiv = true;
@@ -319,7 +284,7 @@ void ntPanel::calc_Perf02() {
 		ntVec3 v02 = ntVec3(vecs_SD.at(2)->x, vecs_SD.at(2)->y, vecs_SD.at(2)->z);
 		ntFace3 face = ntFace3(&v00, &v01, &v02);
 		// SCALE CORNER POINTS TO SUBDIVISION INCREMENTS
-		float scFactor = .025;
+		float scFactor = 1.0/div;
 		for (int i = 0; i < 3; i++) {
 			ntMatrix4 matSc = ntMatrix4(face.vecs[i]);
 			matSc.scale3d(scFactor);
@@ -333,7 +298,7 @@ void ntPanel::calc_Perf02() {
 		for (int i = 1; i < rows; i++) {
 			std::vector <ntVec3*>* p_vecs = new vector <ntVec3*>;
 			for (int j = 1; j < cols; j++) {
-				/// DEFINE POSTION OFFSET FOR X
+				/// DEFINE POSITION OFFSET FOR X
 				vec = new ntVec3((step_X * j) + (shif_X * i), (step_Y * i), 0);
 				p_vecs->push_back(vec);
 				if (j == (cols-1)) {
@@ -347,51 +312,49 @@ void ntPanel::calc_Perf02() {
 	for (int i = 0; i < p_Rows.size(); i++) {
 		for (int j = 0; j < p_Rows.at(i)->size(); j++) {
 			vec = p_Rows.at(i)->at(j);
-
-			// COORDINATE PERF LOCATION TO SUBDIVIDED AREA
+			///////////////////////////////////////////////////////////////
+			/////////////////// COORDINATE PERF LOCATION TO SUBDIVIDED AREA
 			int gen = cnt_SubDiv;
+			// QUANTITY OF SUB-PANELS
+			int dim = faces_L.at(gen)->size(); 
 
-			//if (pt_isInside(vec)) {
-				int dim = faces_L.at(gen)->size(); // SIZE OF SUB PANELS
+			for (int k = 0; k < dim; k++) {
+				isPtInSd = faces_L.at(gen)->at(k).pt_isInside(vec);
+				if (isPtInSd == true) {
 
-				for (int k = 0; k < dim; k++) {
-					isPtInSd = faces_L.at(gen)->at(k).pt_isInside(vec);
-					if (isPtInSd == true) {
+					// LOAD VERTEX COLOR
+					float c0 = faces_L.at(gen)->at(k).vert0->col.r;
+					float c1 = faces_L.at(gen)->at(k).vert1->col.r;
+					float c2 = faces_L.at(gen)->at(k).vert2->col.r;
+					float cT = c0 + c1 + c2;
+					// EVALUATE DISTANCE SQRD TO EACH VERTEX
+					float d0 = faces_L.at(gen)->at(k).v0->distSqrd(vec);
+					float d1 = faces_L.at(gen)->at(k).v1->distSqrd(vec);
+					float d2 = faces_L.at(gen)->at(k).v2->distSqrd(vec);
+					float dT = d0 + d1 + d2;
+					// MAP DISTANCE TO VERTEX WEIGHTS
+					float w0 = mapRange(0, 1, 0, dT, d0, false);
+					float w1 = mapRange(0, 1, 0, dT, d1, false);
+					float w2 = mapRange(0, 1, 0, dT, d2, false);
 
-						// LOAD VERTEX COLOR
-						float c0 = faces_L.at(gen)->at(k).vert0->col.r;
-						float c1 = faces_L.at(gen)->at(k).vert1->col.r;
-						float c2 = faces_L.at(gen)->at(k).vert2->col.r;
-						float cT = c0 + c1 + c2;
-						// EVALUATE DISTANCE SQRD TO EACH VERTEX
-						float d0 = faces_L.at(gen)->at(k).v0->distSqrd(vec);
-						float d1 = faces_L.at(gen)->at(k).v1->distSqrd(vec);
-						float d2 = faces_L.at(gen)->at(k).v2->distSqrd(vec);
-						float dT = d0 + d1 + d2;
-						// MAP DISTANCE TO VERTEX WEIGHTS
-						float w0 = mapRange(0, 1, 0, dT, d0, false);
-						float w1 = mapRange(0, 1, 0, dT, d1, false);
-						float w2 = mapRange(0, 1, 0, dT, d2, false);
+					valCol = ((c0 * w0) + (c1 * w1) + (c2 * w2)) / 3;
+					valCol = mapRange(0, 1, 0, (cT / 3), valCol);
 
-						valCol = ((c0 * w0) + (c1 * w1) + (c2 * w2))/3;
-						valCol = mapRange(0, 1, 0, (cT/3), valCol);
+					float fx = (((rand() % 10)*.01) - 0.05);
 
-						float fx = (((rand() % 10)*.01) - 0.05);
-
-						r = valCol * (rand() % 10) * 0.1;// + fx;
-						r = round(r * 10) * 0.1;
-						if (r > 1) {
-							r = 1;
-						}
-						r = mapRange(r_Min, r_Max, 0, 1, r, false);
-						if (r > r_Min) {
-							p_Pos.push_back(vec);
-							p_Rad.push_back(r);
-						}
-						k = dim;
+					r = valCol * (rand() % 10) * 0.1 + fx;
+					r = round(r * 10) * 0.1;
+					if (r > 1) {
+						r = 1;
 					}
+					r = mapRange(r_Min, r_Max, 0, 1, r, false);
+					if (r > r_Min) {
+						p_Pos.push_back(vec);
+						p_Rad.push_back(r);
+					}
+					k = dim;
 				}
-			//}
+			}
 		}
 	}
 
@@ -410,15 +373,10 @@ bool ntPanel::pt_isInside(ntVec3* point) {
 	return c;
 }
 void ntPanel::add_Perf() {
-
-	if (stoi(panel_ID) < 1) {
-		std::cout << "SUBDIVISION GENERATIONS:  " << cnt_SubDiv << endl;
-	}
-
 	if (p_Pos.size() > 0) {
 		for (int i = 0; i < p_Pos.size(); i++) {
 			float r = p_Rad.at(i); 
-			ntCircle * perf = new ntCircle(p_Pos.at(i), r, Col4(.25, .25, .25, 1));
+			ntCircle * perf = new ntCircle(p_Pos.at(i), r, n_seg, Col4(.25, .25, .25, 1));
 			perfs.push_back(perf);
 		}
 	} 
@@ -450,7 +408,7 @@ void ntPanel::display_Edge() {
 	verts.at(0)->display(2);
 
 }
-void  ntPanel::display_EdgeSd(int gen) {
+void ntPanel::display_EdgeSd(int gen) {
 	if (gen > 0) {
 		ntColor4f col = ntColor4f(1, 1, 1, .2);
 		if (gen <= faces_L.size()) {
@@ -470,20 +428,7 @@ void  ntPanel::display_EdgeSd(int gen) {
 		}
 	}
 }
-///////////////////////////////////////////////////////////////
-////////////////////////// DISPLAYS 3D MODELSPACE VIEW OF PANEL
-void  ntPanel::display_FaceG(int gen) {
-	if (gen <= faces_G.size()) {
-		for (int i = 0; i < faces_G.at(gen)->size(); i++) {
-			faces_G.at(gen)->at(i).display();
-		}
-	}
-	else {
-		// EXCEPTION FOR EXCEEDING GERERATIONS WITHIN BOUNDS
-		display_FaceG(gen - 1);
-	}
-}
-void  ntPanel::display_FaceL(int gen) {
+void ntPanel::display_FaceL(int gen) {
 	ntColor4f col = ntColor4f(1, 1, 1, .5);
 	if (gen <= faces_L.size()) {
 		for (int i = 0; i < faces_L.at(gen)->size(); i++) {
@@ -498,8 +443,22 @@ void  ntPanel::display_FaceL(int gen) {
 			//faces_L.at(gen)->at(i).edges.at(1).display();
 			//faces_L.at(gen)->at(i).edges.at(2).display();
 		}
-	} 	else {
+	}
+	else {
 		// EXCEPTION FOR EXCEEDING GERERATIONS WITHIN BOUNDS
 		display_FaceL(gen - 1);
+	}
+}
+///////////////////////////////////////////////////////////////
+////////////////////////// DISPLAYS 3D MODELSPACE VIEW OF PANEL
+void ntPanel::display_FaceG(int gen) {
+	if (gen <= faces_G.size()) {
+		for (int i = 0; i < faces_G.at(gen)->size(); i++) {
+			faces_G.at(gen)->at(i).display();
+		}
+	}
+	else {
+		// EXCEPTION FOR EXCEEDING GERERATIONS WITHIN BOUNDS
+		display_FaceG(gen - 1);
 	}
 }

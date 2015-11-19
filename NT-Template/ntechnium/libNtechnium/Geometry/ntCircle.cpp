@@ -11,6 +11,10 @@ ntCircle::ntCircle(ntVec3* pos, float rad, ntCol4 col):
 	pos(pos), rad(rad), col(col) {
 	init();
 }
+ntCircle::ntCircle(ntVec3* pos, float rad, int seg, ntCol4 col) :
+	pos(pos), rad(rad), seg(seg), col(col) {
+	init();
+}
 
 void ntCircle::init(){															//add set function and unique constructor
 	for (int j = 0; j < seg; ++j) {
@@ -85,7 +89,7 @@ void ntCircle::display(){
 	glColor4f(col.r, col.g, col.b, col.a);
 	glLineWidth(1);
 	glBegin(GL_LINE_LOOP);													
-	for (int i = 0; i<seg; i++) {
+	for (int i = 0; i<vecs.size(); i++) {
 		glVertex2f(vecs.at(i)->x, vecs.at(i)->y);
 	}
 	glEnd();

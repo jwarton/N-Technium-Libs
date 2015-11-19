@@ -8,6 +8,8 @@ bool ovisApp::isImgLoaded = false;
 bool ovisApp::isTxtLoaded = false;
 int ovisApp::img_X = 0;
 int ovisApp::img_Y = 0;
+int ovisApp::img_T = 1;
+
 arma::mat ovisApp::img_00 = arma::zeros<mat>(img_X, img_Y);
 ///////////////////////////////////////////////////////////////
 ///////////////////////////////////////// SOURCE DATA VARIABLES
@@ -16,7 +18,11 @@ string ovisApp::path = nt_Utility::getPathToOutput();
 void ovisApp::init() {
 
 	read_DATA();
+
+	std::cout << "\n\n///////////////////////////////////////////////////////////////\n";
+	std::cout << "READ TXT COMPLETE     -----------------------------------------" << endl;
 	read_IMG();
+	std::cout << "READ IMG COMPLETE     -----------------------------------------" << endl;
 
 	panel_Dim = panels.size();
 	std::cout << "\nTOTAL PANELS LOADED:  "<< panel_Dim << "\n" << endl;
@@ -57,16 +63,14 @@ void ovisApp::init() {
 			funct(panel_ptr);
 		}
 	}
-
-	std::cout << "SUBDIVISION COUNT: " << panels.at(0)->cnt_SubDiv << endl;
-	std::cout << "FACE VECTOR SIZE [GEN]: " << panels.at(0)->faces_G.size() << endl;
-
-	std::cout << "GLOBAL FACES: " << panels.at(0)->faces_G.at(gen)->size() << endl;
-	std::cout << "LOCAL FACES:  " << panels.at(0)->faces_L.at(gen)->size() << "\n" << endl;
-
 	t_CPU = clock() - t_CPU;
-	std::cout << "EVAL_CPU TIME  [SECONDS]:  " << ((float)t_CPU) / CLOCKS_PER_SEC << "\n" << endl;
 
+	std::cout << "EVAL_CPU TIME  [SECONDS]: " << ((float)t_CPU) / CLOCKS_PER_SEC << "\n" << endl;
+	std::cout << "SUBDIVISION GENERATION:   " << panels.at(0)->cnt_SubDiv << endl;
+	std::cout << "FACE VECTOR SIZE [GEN]:   " << panels.at(0)->faces_G.size() << endl;
+	std::cout << "GLOBAL FACES:             " << panels.at(0)->faces_G.at(gen)->size() << endl;
+	std::cout << "LOCAL FACES:              " << panels.at(0)->faces_L.at(gen)->size() << "\n" << endl;
+	std::cout << "///////////////////////////////////////////////////////////////\n";
 	index_S = 0;
 	index_E = 0;
 
@@ -163,12 +167,27 @@ void ovisApp::read_DATA(){
 }
 void ovisApp::read_IMG() {
 	url_IMG = path_IMG + pathExtension_IMG + fileName_IMG + fileExt_IMG;
-	std::cout << url_IMG << endl;
+
 	const char * file = url_IMG.c_str();
 	img_IN = af::loadImage(file, false);
-	
+
 	img_X = img_IN.dims(0);
 	img_Y = img_IN.dims(1);
+
+	/// ////////////////////// IMAGE RESIZE FOR 2D VIEW
+	dim_t dim_Y = 448;
+	dim_t dim_X = mapRange(0, 448, 0, img_Y, img_X);
+	double scFx = 1.0 / img_T;
+
+	img_2D = af::resize(af::loadImage(file, false), dim_X, dim_Y);
+	img_2D = af::resize(scFx, img_2D);
+
+	img_2d = zeros<mat>(img_2D.dims(0), img_2D.dims(1));
+	af::array img_LOAD(img_2D.dims(0), img_2D.dims(1), img_2d.memptr());
+	img_LOAD += img_2D;
+	img_LOAD.host((void*)img_2d.memptr());
+	img_2d = arma::flipud(img_2d);
+	/// //////////////////////
 
 	img_00 = zeros<mat>(img_X, img_Y);
 	/// ADD EXCEPTION TO RESIZE IMAGE IF > ARRAY FIRE BOUNDS
@@ -378,7 +397,9 @@ void ovisApp::funct(ntPanel* panel_ptr) {
 	}
 	///////////////////////////////////////////////////////////////
 	//////////////////////////////////// CALCULATE PANEL PEFORATION
-	panel_ptr->calc_Perf02();
+	/// panel_ptr->calc_Perf_Ortho();	/// ORTHOGRAPHIC GRID
+	panel_ptr->calc_Perf_SD(40);		/// SUBDIVISION GRID
+
 	int val = stoi(panel_ptr->get_ID());
 	if (val  >= 0 && val <= 30) {
 		//write_Panel_TXT(panel_ptr);
@@ -679,6 +700,62 @@ void ovisApp::map_ImgCol(ntPanel* panel_ptr) {
 	int index = 0;
 	int dim = panel_ptr->vecs_UV.size() - 1;
 
+	/// ////////////////////// IMAGE TILE MAPPING
+	//af::array img_Tile(img_X, img_Y);
+	//img_Tile += img_IN;
+
+	//if (img_T > 1) {
+	//	for (int i = 0; i < img_T; i++) {
+	//		af::flip(img_IN, 0);
+	//		img_IN = af::join(0, img_Tile, img_IN);
+	//	}
+	//	for (int j = 0; j < img_T; j++) {
+	//		af::flip(img_IN, 1);
+	//		img_IN = af::join(1, img_Tile, img_IN);
+	//	}
+	//}
+
+	//int step_U = 0;
+	//int step_V = 0;
+	//float inc_U = img_X / img_T;
+	//float inc_V = img_Y / img_T;
+
+	//for (int i = 0; i < panel_ptr->faces_G.size(); i++) {
+	//	for (int j = 0; j < panel_ptr->faces_G.at(i)->size(); j++) {
+	//		for (int k = 0; k < 3; k++) {
+
+	//			float x = panel_ptr->vecs_UV.at(index).x;
+	//			float y = panel_ptr->vecs_UV.at(index).y;
+
+	//			if (x > (img_X - (step_U * inc_U))) {
+	//				step_U += 1;
+	//			} else {
+	//				step_U = 0;
+	//			}
+	//			if (y > (img_Y - (step_V * inc_V))) {
+	//				step_V += 1;
+	//			} else {
+	//				step_V = 0;
+	//			}
+
+	//			x = (x * img_T) - (step_U * inc_U);
+	//			y = (y * img_T) - (step_V * inc_V);
+
+	//			x = floor(mapRange(0, img_X, 0, 1, x));
+	//			y = floor(mapRange(0, img_Y, 0, 1, y));
+
+	//			float col = img_00(x, y);
+	//			col = mapRange(0, 1, 0, 255, col);
+
+	//			index++;
+
+	//			panel_ptr->faces_G.at(i)->at(j).verts.at(k)->setColor(ntCol4(col, col, col, 1));
+	//			panel_ptr->faces_L.at(i)->at(j).verts.at(k)->setColor(ntCol4(col, col, col, 1));
+	//		}
+	//	}
+	//}
+
+	/// ////////////////////// VERTEX MAPPING
 	for (int i = 0; i < panel_ptr->faces_G.size(); i++) {
 		for (int j = 0; j < panel_ptr->faces_G.at(i)->size(); j++) {
 			for (int k = 0; k < 3; k++) {
@@ -699,6 +776,8 @@ void ovisApp::map_ImgCol(ntPanel* panel_ptr) {
 			}
 		}
 	}
+
+	/// ////////////////////// CENTROID MAPPING
 	//int dim = panel_ptr->vecs_UV.size();
 	//int gen_ID = 0;
 	//int face_ID = 0;
@@ -729,7 +808,32 @@ void ovisApp::map_ImgCol(ntPanel* panel_ptr) {
 	//		}
 	//	}
 }
+void ovisApp::tile_Img(int U, int V, af::array img) {
+
+	int dim_X = img_X;
+	int dim_Y = img_Y;
+
+	img_X = img_X * U;
+	img_Y = img_Y * V;
+
+	af::array img_Tile(img_X, img_Y);
+	//img_Tile += img;
+
+	//af::tile(img, U, V);
+}
+
 void ovisApp::run(){
+	if (glfwGetKey(window, GLFW_KEY_1) == GLFW_PRESS) {
+		gen = 1;
+	}
+	if (glfwGetKey(window, GLFW_KEY_2) == GLFW_PRESS) {
+		gen = 2;
+	}
+	if (glfwGetKey(window, GLFW_KEY_3) == GLFW_PRESS) {
+		gen = 3;
+	}
+	///////////////////////////////////////////////////////////////
+	/////////////////////////////////////////  WORLD MAPPED DISPLAY
 	if (glfwGetKey(window, GLFW_KEY_PAGE_UP) == GLFW_PRESS) {
 		if (panel_Index < panel_Dim-1) {
 			float c = panels.at(panel_Index)->image_Val;
@@ -821,12 +925,12 @@ void ovisApp::display(){
 	}
 	if (m == vS) {
 		for (int i = 0; i < panels.size(); i++) {
-			panels.at(i)->display_FaceG(gen);
+			panels.at(i)->display_Face_G(gen);
 		}
 	}
 	if (m == vD) {
 		for (int i = 0; i < panels.size(); i++) {
-			panels.at(i)->display_FaceG(gen);
+			panels.at(i)->display_Face_G(gen);
 		}
 	}
 	if (m == vW) {
@@ -855,7 +959,7 @@ void ovisApp::display(){
 			panels.at(panel_Index)->display_Perf();
 		}
 		if (m == vD) {
-			panels.at(panel_Index)->display_FaceL(gen);
+			panels.at(panel_Index)->display_Face_L(gen);
 		}
 		if (m == vS) {
 			panels.at(panel_Index)->display_EdgeSd(gen);
@@ -866,17 +970,30 @@ void ovisApp::display(){
 	display_IMG();
 }
 void ovisApp::display_IMG() {
+	int n_cols = img_2d.n_cols;
+	int n_rows = img_2d.n_rows/2;
+	int u_cols = img_T;
+	int v_rows = img_T;
 
 	float col;
 	glPointSize(1);
 	glBegin(GL_POINTS);
-	for (int i = 0; i < 448; i++){
-		for (int j = 0; j < 375; j++) {
-			col = img_00(j, i);
-			col = mapRange(0, 1, 0, 255, col);
-			glColor4f(col, col, col, 1);
-			glVertex3f(i +5, j + 161, 0);
+	for (int u = 0; u < u_cols; u++) {
+		for (int v = 0; v < v_rows; v++) {
+			for (int i = 0; i < n_cols; i++) {
+				for (int j = 0; j < n_rows; j++) {
+					col = img_2d(j, i);
+					col = mapRange(0, 1, 0, 255, col);
+					
+					if (u != 0 || v != 0) {
+						col *= 0.75;
+					}
+					glColor4f(col, col, col, col);
+					glVertex3f((i + 5)+(u*n_cols), (j + 161)+(v*n_rows), 0);
+				}
+			}
 		}
 	}
+
 	glEnd();
 }

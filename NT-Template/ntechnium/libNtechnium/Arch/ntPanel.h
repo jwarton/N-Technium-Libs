@@ -26,76 +26,83 @@ using namespace jpw;
 class ntPanel{
 private:
 	void init();
-
+	///////////////////////////////////////////////////////////////
+	/////////////////////////////////////////////// PANEL TEXT DATA
 	string panel_ID;
-	string n_G;						//GLOBAL PANEL NORMAL
-	string p_G;
-	string string_UVW;				//GLOBAL PARAMETER
-	std::vector<ntVec3*> v_G;		//GLOBAL PANEL VERTEX POSITON
-	std::vector<ntVec3*> v_L;		// LOCAL PANEL VERTEX POSTION
-
-	void set_vG();
-	bool is_SubDiv = false;
+	string n_G;						  //GLOBAL PANEL NORMAL
+	string p_G;						  //GLOBAL VERTEX POSTIONS
+	string string_UVW;				  //GLOBAL PARAMETER
 	
-
 public:
-	int  cnt_SubDiv = 0;
+	///////////////////////////////////////////////////////////////
+	////////////////////////////////////////// PANEL DATA STRUCTURE
+	ntVec3							*v0,*v1,*v2;
+	ntVec3							*vecs[3];
+	ntVertex						*vert0,*vert1,*vert2;
+	std::vector<ntVertex*>			 verts;
+	std::vector<ntEdge>				 edges;
 
-	ntVec3		*v0,*v1,*v2;
-	ntVec3		*vecs[3];
-	ntVertex	*vert0,*vert1,*vert2;
-	std::vector<ntVertex*>				verts;
-	std::vector<ntEdge>					edges;
+	std::vector<ntVec3*> v_G;		  //GLOBAL PANEL VERTEX POSITONS
+	std::vector<ntVec3*> v_L;		  ///  NOT IN USE // LOCAL PANEL VERTEX POSITION 
 
-	std::vector <ntVec3*>			vecs_SD; //LOCAL COORDINATE
-	std::vector <vector <ntFace3>*>	faces_L; //LOCAL COORDINATE
-	std::vector <vector <ntFace3>*>	faces_G; //WORLD COORDINATE
-	
+	///////////////////////////////////////////////////////////////
+	///////////////////////////////////// SUBIVISION DATA STRUCTURE
+	std::vector <ntVec3>			vecs_UV;   //     UV PARAMETERS
+	std::vector <ntVec3*>			vecs_SD;   //  LOCAL COORDINATE
+	std::vector <vector <ntFace3>*>	faces_L;   //  LOCAL COORDINATE
+	std::vector <vector <ntFace3>*>	faces_G;   //  WORLD COORDINATE
 
-	std::vector<ntCircle*>				perfs;
-	std::vector<ntVec3>					vecs_UV;
-	ntColor4f col;
-	ntColor4f col_0;
+	bool	is_SubDiv	= false;
+	int		cnt_SubDiv	= 0;
+	float	image_Val;				 // PIXEL VALUE AT PNL CENTROID
+	std::vector <float> image_Vals;  // PIXEL VALUE AT SD CENTROIDs
+	///////////////////////////////////////////////////////////////
+	//////////////////////////////////// PERFORATION DATA STRUCTURE
+	std::vector <ntCircle*>			perfs;     //  LIST OF ALL PERF
+	std::vector <vector <ntVec3*>*> p_Rows;    /// PERF POS BY ROWS  USED BY calc_Perf02
+	std::vector<ntVec3*>			p_Pos;	   ///  LIST OF ALL POS  USED BY ORTHO FUNCTION
+	std::vector<float>				p_Rad;	   //   LIST OF ALL RAD
 
-	ntVec3 norm;
-	ntVec3* cent;
+	///////////////////////////////////////////////////////////////
+	//////////////////////////////////////// PERFORATION PARAMETERS
+	float	r_Min =			0.1625;
+	float	r_Max =			0.625;
+	float	edge_Offset =	0.75;
+	int		n_seg =			36;
 
-	ntVertex centroid;
-	ntNormal normal;
-	float area;
+	///////////////////////////////////////////////////////////////
+	////////////////////////////////////////////// PANEL PARAMETERS
+	ntColor4f	col;
+	ntVec3		norm;
+	ntVec3*		cent;
+	ntVertex	centroid;
+	ntNormal	normal;
+	float		area;		/// SHOULD BE PRIVATE MEMBER VARIALBES
+							/// ACCESSIBLE BY FUNCTION CALL ONLY
 
+	///////////////////////////////////////////////////////////////
+	////////////////////////////////////////////////// CONSTRUCTORS
 	ntPanel();
 	ntPanel(ntVec3* v0,ntVec3* v1,ntVec3* v2);
 
-	void setColor(ntColor4f col);
-	void calcNorm();
-	void calcCentroid();
+	///////////////////////////////////////////////////////////////
+	///////////////////////////////////////////////////// FUNCTIONS
+	void set_Color(ntColor4f col);		/// RENAME
+	void calcNorm();					/// RENAME
+	void calcCentroid();				/// RENAME
 	//void calc_Area();
 	void sub_Div(int gen);
 	void sub_Div(std::vector< vector <ntFace3>* >*	faces, int gen, bool isPanel);
 	void sub_Div(int div, bool isDiv);
 
-	////////////////////////////////// PERFORATION PARAMETERS
-	float image_Val;				// PIXEL VALUE AT CENTROID
-	std::vector <float> image_Vals; // PIXEL VALUE AT SUBDIVISIONS
-
+	void calc_Perf_00();
+	void calc_Perf_SD(int div);
 	void add_Perf();
-	void calc_Perf01();
-	void calc_Perf02();
-	void calc_IMG();
 
 	bool ntPanel::pt_isInside(ntVec3* point);
 
-	std::vector <vector <ntVec3*>*> p_Rows;
-	std::vector<ntVec3*>	p_Pos;
-	std::vector<float>		p_Rad;
-
-	float	r_Min = .1625;
-	float	r_Max = .625;
-	float	edge_Offset = .75;
-	int		n_seg = 36;
-
 	void set_ID(string panel_ID);
+	void set_vG();
 	void set_nG(string n_G);
 	void set_pG(string p_G);
 	void set_UVW(string string_UVW);
@@ -113,8 +120,8 @@ public:
 	void display();
 	void display_Edge();
 	void display_EdgeSd(int gen = 0);
-	void display_FaceL(int gen = 0);
-	void display_FaceG(int gen = 0);
+	void display_Face_L(int gen = 0);
+	void display_Face_G(int gen = 0);
 	void display_Perf();
 };
 #endif

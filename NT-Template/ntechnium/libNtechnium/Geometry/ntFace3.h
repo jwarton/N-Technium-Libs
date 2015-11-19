@@ -29,8 +29,9 @@ public:
 	ntColor4f col;
 	std::vector<ntCol4> cols;
 
-	ntVec3 norm;
-	ntVec3* cent;
+	ntVec3  *uvw0, *uvw1, *uvw2;
+	ntVec3	 norm;
+	ntVec3  *cent;
 	ntVertex centroid;
 	ntNormal normal;
 
@@ -41,6 +42,7 @@ public:
 
 	bool pt_isInside(ntVec3* vec);
 	void setColor(ntColor4f col);
+	void setUVW(ntVec3* uvw0, ntVec3* uvw1, ntVec3* uvw2);
 
 	void calcNorm();
 	void calcCentroid();
