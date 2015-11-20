@@ -52,7 +52,7 @@ private:
 	string url_IMG;
 	string path_IMG = nt_Utility::getPathToResources();
 	string pathExtension_IMG = "imgs\\ovis\\";
-	string fileName_IMG = "ovis_005";
+	string fileName_IMG = "ovis_003B";
 	string fileExt_IMG = ".jpg";
 
 	af::array img_IN;

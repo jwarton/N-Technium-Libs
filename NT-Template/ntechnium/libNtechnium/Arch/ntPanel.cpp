@@ -213,27 +213,29 @@ void ntPanel::sub_Div(int div, bool isDiv) {
 			p_UV_Rows.push_back(p_uvws);
 		}
 
+		int uvSize = p_UV_Rows.size();
+
+		if (stoi(panel_ID)<1) {
+			std::cout << "NUMBER OF ROWS:" << uvSize << endl;
+			std::cout << "NUMBER OF COLUMNS:" << p_UV_Rows.at(0)->size() << endl;
+		}
+
 		std::vector <ntFace3>* faces = new vector<ntFace3>;
 		for (int i = 0; i < (p_Rows.size()-1); i++) {				// ROW
 			for (int j = 0; j < (p_Rows.at(i)->size()-1); j++) {	// COLUMN
 
 				ntVec3 * v0 = p_Rows.at(i)->at(j);
-				ntVec3 * v1 = p_Rows.at(i)->at(j+1);
-				ntVec3 * v2 = p_Rows.at(i+1)->at(j);
-				//ntVec3 * v3 = p_Rows.at(i+1)->at(j);
-				//ntVec3 * v4 = p_Rows.at(i+1)->at(j+1);
-				//ntVec3 * v5 = p_Rows.at(i)->at(j+1);
+				ntVec3 * v1 = p_Rows.at(i)->at(j + 1);
+				ntVec3 * v2 = p_Rows.at(i + 1)->at(j);
 				/// // SET UVW INTERPOLATION
 				ntVec3 * uvw0 = p_UV_Rows.at(i)->at(j);			//faces->at(dim)->at(i).uvw0;
 				ntVec3 * uvw1 = p_UV_Rows.at(i)->at(j + 1);		//new ntVec3(.1, 0, 0);	//faces->at(dim)->at(i).uvw1;
 				ntVec3 * uvw2 = p_UV_Rows.at(i + 1)->at(j);		//new ntVec3(.1, 0, 0);	//faces->at(dim)->at(i).uvw2;
 				///  //NEW FACES FROM VECS POINTERS
 				ntFace3 f0 = ntFace3(v0, v1, v2);
-				//ntFace3 f1 = ntFace3(v3, v4, v5);
 				/// SET UVW FOR EACH VERTEX IN GROUP
 				f0.setUVW(uvw0, uvw1, uvw2);
 				faces->push_back(f0);
-				//faces->push_back(f1);
 			}			
 		}
 		faces_L.push_back(faces);
@@ -486,15 +488,16 @@ void ntPanel::calc_Perf_SD() {
 	if(is_PerfSD == true){
 		/// /////////////////////////////////////////////////////////////////////////////////////////////////
 		/// //CREATES DUPLICATE PERFORATION
-		
-		for (int i = 1; i < faces_L.at(gen)->size()-1; i++) {
+		int dim = faces_L.at(gen)->size();
+		int val = 2;
+		/// //REORGANIZE DATA STRUCTURE OF FACES TO ALLOW ROW ACCESS
+		for (int i = 0; i < dim ; i++) {
 			///////////////////////////////////////////////////////////////
 			/////////////////// COORDINATE PERF LOCATION TO SUBDIVIDED AREA
-			vec = faces_L.at(gen)->at(i).vecs[2];
-			valCol = faces_L.at(gen)->at(i).verts[2]->col.r;		// LOAD VERTEX COLOR
+			vec = faces_L.at(gen)->at(i).vecs[val];
+			valCol = faces_L.at(gen)->at(i).verts[val]->col.r;	// LOAD VERTEX COLOR
 
 			float fx = (((rand() % 10)*.01) - 0.05);
-
 			r = valCol;// *(rand() % 10) * 0.1 + fx;
 			r = round(r * 10) * 0.1;
 			if (r > 1) {

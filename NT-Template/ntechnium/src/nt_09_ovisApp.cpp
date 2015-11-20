@@ -284,8 +284,8 @@ void ovisApp::write_Panel_IMG(ntPanel* panel_ptr) {
 	string fileExt = ".jpg";
 	string url = pathOut + pathExtension + fileName + fileExt;
 	// IMAGE SIZE
-	int img_x = 1024; //768;// 
-	int img_y = 1024; //768;// 
+	int img_x = 1280; //768;// 1024;
+	int img_y = 1280; //768;// 1024;
 	// MAXIMUM PANEL SIZE;
 	int pX_max = 72;
 	int pY_max = 72;
@@ -772,8 +772,26 @@ void ovisApp::map_ImgCol(ntPanel* panel_ptr) {
 				float x = panel_ptr->faces_L.at(i)->at(j).uvws[k]->x;
 				float y = panel_ptr->faces_L.at(i)->at(j).uvws[k]->y;
 
+				/// EXCEPTION NEEDS TO BE SOLVED /////
+				if (x >= 1) {
+					x = 0.99999;
+				}
+				if (x <= 0) {
+					x = 0.00001;
+				}
+
+				if (y >= 1) {
+					y = 0.99999;
+				}
+				if (y <= 0) {
+					y = 0.00001;
+				}
+				/// ///////////////////////////////////
+
 				x = floor(mapRange(0, img_X, 0, 1, x));
 				y = floor(mapRange(0, img_Y, 0, 1, y));
+
+
 
 				float col = img_00(x, y);
 				col = mapRange(0, 1, 0, 255, col);
