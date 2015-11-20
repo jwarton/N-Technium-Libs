@@ -20,12 +20,16 @@ void ovisApp::init() {
 	read_DATA();
 
 	std::cout << "\n\n///////////////////////////////////////////////////////////////\n";
-	std::cout << "READ TXT COMPLETE     -----------------------------------------" << endl;
-	read_IMG();
-	std::cout << "READ IMG COMPLETE     -----------------------------------------" << endl;
-
+	std::cout << "READ TXT COMPLETE           -----------------------------------" << endl;
 	panel_Dim = panels.size();
-	std::cout << "\nTOTAL PANELS LOADED:  "<< panel_Dim << "\n" << endl;
+	std::cout << "TOTAL PANELS LOADED:        " << panel_Dim << "\n" << endl;
+
+	read_IMG();
+
+	std::cout << "READ IMG COMPLETE           -----------------------------------" << endl;
+	std::cout << "IMAGE SIZE:                 " << img_X << " x " << img_Y << "\n" << endl;
+	std::cout << "CALCULATING PANEL GEOMETRY  -----------------------------------" << endl;
+
 	t_CPU = clock();
 
 	//isMultiThread = true;
@@ -65,11 +69,13 @@ void ovisApp::init() {
 	}
 	t_CPU = clock() - t_CPU;
 
-	std::cout << "EVAL_CPU TIME  [SECONDS]: " << ((float)t_CPU) / CLOCKS_PER_SEC << "\n" << endl;
-	std::cout << "SUBDIVISION GENERATION:   " << panels.at(0)->cnt_SubDiv << endl;
-	std::cout << "FACE VECTOR SIZE [GEN]:   " << panels.at(0)->faces_G.size() << endl;
-	std::cout << "GLOBAL FACES:             " << panels.at(0)->faces_G.at(gen)->size() << endl;
-	std::cout << "LOCAL FACES:              " << panels.at(0)->faces_L.at(gen)->size() << "\n" << endl;
+	int gen_L = panels.at(0)->faces_L.size()-1;
+
+	std::cout << "EVAL_CPU TIME  [SECONDS]:   " << ((float)t_CPU) / CLOCKS_PER_SEC << "\n" << endl;
+	std::cout << "SUBDIVISION GENERATION:     " << panels.at(0)->cnt_SubDiv << endl;
+	std::cout << "FACE VECTOR SIZE [GEN]:     " << panels.at(0)->faces_G.size() << endl;
+	std::cout << "GLOBAL FACES:               " << panels.at(0)->faces_G.at(gen)->size() << endl;
+	std::cout << "LOCAL FACES:                " << panels.at(0)->faces_L.at(gen_L)->size() << "\n" << endl;
 	std::cout << "///////////////////////////////////////////////////////////////\n";
 	index_S = 0;
 	index_E = 0;
@@ -387,6 +393,7 @@ void ovisApp::funct(ntPanel* panel_ptr) {
 	///
 	///////////////////////////////////////////////////////////////
 	panel_ptr->sub_Div(gen);
+	panel_ptr->sub_Div(40,true);
 	///////////////////////////////////////////////////////////////
 	////////////////////////////////// LOAD TEXTURE MAP TO SURFACES
 	if (isImgLoaded == true) {
@@ -399,7 +406,8 @@ void ovisApp::funct(ntPanel* panel_ptr) {
 	///////////////////////////////////////////////////////////////
 	//////////////////////////////////// CALCULATE PANEL PEFORATION
 	/// panel_ptr->calc_Perf_Ortho();	/// ORTHOGRAPHIC GRID
-	panel_ptr->calc_Perf_SD(40);		/// SUBDIVISION GRID
+	///panel_ptr->calc_Perf_SD(40);		/// SUBDIVISION GRID
+	panel_ptr->calc_Perf_SD();			/// SUBDIVISION GRID
 
 	int val = stoi(panel_ptr->get_ID());
 	if (val  >= 0 && val <= 30) {
@@ -757,15 +765,12 @@ void ovisApp::map_ImgCol(ntPanel* panel_ptr) {
 	//}
 
 	/// ////////////////////// VERTEX MAPPING
-	for (int i = 0; i < panel_ptr->faces_G.size(); i++) {
-		for (int j = 0; j < panel_ptr->faces_G.at(i)->size(); j++) {
+	for (int i = 0; i < panel_ptr->faces_L.size(); i++) {
+		for (int j = 0; j < panel_ptr->faces_L.at(i)->size(); j++) {
 			for (int k = 0; k < 3; k++) {
 
-				float x = panel_ptr->faces_G.at(i)->at(j).uvws[k]->x;
-				float y = panel_ptr->faces_G.at(i)->at(j).uvws[k]->y;
-
-				//float x = panel_ptr->vecs_UV.at(index)->x;
-				//float y = panel_ptr->vecs_UV.at(index)->y;
+				float x = panel_ptr->faces_L.at(i)->at(j).uvws[k]->x;
+				float y = panel_ptr->faces_L.at(i)->at(j).uvws[k]->y;
 
 				x = floor(mapRange(0, img_X, 0, 1, x));
 				y = floor(mapRange(0, img_Y, 0, 1, y));
@@ -775,8 +780,10 @@ void ovisApp::map_ImgCol(ntPanel* panel_ptr) {
 
 				index++;
 
-				panel_ptr->faces_G.at(i)->at(j).verts.at(k)->setColor(ntCol4(col, col, col, 1));
 				panel_ptr->faces_L.at(i)->at(j).verts.at(k)->setColor(ntCol4(col, col, col, 1));
+				if (i < panel_ptr->faces_G.size()) {
+					panel_ptr->faces_G.at(i)->at(j).verts.at(k)->setColor(ntCol4(col, col, col, 1));
+				}
 			}
 		}
 	}
@@ -889,6 +896,9 @@ void ovisApp::run(){
 	}
 	///////////////////////////////////////////////////////////////
 	/////////////////////////////////////////  IMAGE MAPPED DISPLAY
+	if (glfwGetKey(window, GLFW_KEY_A) == GLFW_PRESS) {
+		m = vA;
+	}
 	if (glfwGetKey(window, GLFW_KEY_S) == GLFW_PRESS) {
 		m = vS;
 		for (int i = 0; i < panels.size(); i++) {
@@ -959,6 +969,9 @@ void ovisApp::display(){
 	if (panel_Index >= 0 && panel_Index < panels.size()) {
 		if (m == vW || m == vQ) {
 			panels.at(panel_Index)->display_Perf();
+		}
+		if (m == vA) {
+			panels.at(panel_Index)->display_Face_L(4);
 		}
 		if (m == vD) {
 			panels.at(panel_Index)->display_Face_L(gen);

@@ -53,6 +53,7 @@ public:
 	std::vector <vector <ntFace3>*>	faces_G;   //  WORLD COORDINATE
 
 	bool	is_SubDiv	= false;
+	bool	is_PerfSD   = false;
 	int		cnt_SubDiv	= 0;
 	float	image_Val;				 // PIXEL VALUE AT PNL CENTROID
 	std::vector <float> image_Vals;  // PIXEL VALUE AT SD CENTROIDs
@@ -62,6 +63,8 @@ public:
 	std::vector <vector <ntVec3*>*> p_Rows;    /// PERF POS BY ROWS  USED BY calc_Perf02
 	std::vector<ntVec3*>			p_Pos;	   ///  LIST OF ALL POS  USED BY ORTHO FUNCTION
 	std::vector<float>				p_Rad;	   //   LIST OF ALL RAD
+	std::vector<ntVec3*>			p_UVs;	   //   LIST OF UV AT PERF POS
+	std::vector <vector <ntVec3*>*> p_UV_Rows;
 
 	///////////////////////////////////////////////////////////////
 	//////////////////////////////////////// PERFORATION PARAMETERS
@@ -96,6 +99,7 @@ public:
 	void sub_Div(int div, bool isDiv);
 
 	void calc_Perf_00();
+	void calc_Perf_SD();
 	void calc_Perf_SD(int div);
 	void add_Perf();
 
