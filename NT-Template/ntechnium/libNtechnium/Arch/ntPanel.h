@@ -21,6 +21,8 @@
 #include "ntMath.h"
 #include "ntMatrix4.h"
 
+#include <armadillo>
+
 using namespace jpw;
 
 class ntPanel{
@@ -65,11 +67,12 @@ public:
 	std::vector<float>				p_Rad;	   //   LIST OF ALL RAD
 	std::vector<ntVec3*>			p_UVs;	   //   LIST OF UV AT PERF POS
 	std::vector <vector <ntVec3*>*> p_UV_Rows;
+	std::vector <vector <Col4f* >*> p_Col;
 
 	///////////////////////////////////////////////////////////////
 	//////////////////////////////////////// PERFORATION PARAMETERS
 	float	r_Min =			0.1625;
-	float	r_Max =			0.625;
+	float	r_Max =			0.75; // 0.625;
 	float	edge_Offset =	0.75;
 	int		n_seg =			36;
 
@@ -101,6 +104,7 @@ public:
 	void calc_Perf_00();
 	void calc_Perf_SD();
 	void calc_Perf_SD(int div);
+	void calc_Perf_R(Vec3 *vec, float val);
 	void add_Perf();
 
 	bool pt_isInside(ntVec3* point);

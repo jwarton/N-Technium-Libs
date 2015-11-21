@@ -19,7 +19,7 @@ typedef ntVertex point;
 class ntVertex {
 private:
 	ntVec3 norm;
-	//float U,V;
+	ntVec3* uvw;
 	float size;
 	
 public:

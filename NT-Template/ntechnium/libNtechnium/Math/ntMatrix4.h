@@ -45,6 +45,8 @@ public:
 	void align3d(ntVec3 vec);					//align to input vector [NOT FUNCTIONAL]
 	void translate(ntVec3 delta);
 
+	void affineT(ntVec3* a, ntVec3* b, ntVec3* c, ntVec3* v0, ntVec3* v1, ntVec3* v2);
+
 	//void transpose();
 	//void inverse();
 	//void mult(ntMatrix4 matrix);

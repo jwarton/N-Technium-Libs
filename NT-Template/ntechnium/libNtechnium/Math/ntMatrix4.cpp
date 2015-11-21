@@ -109,6 +109,18 @@ void ntMatrix4::rotateZ(float theta){
 	run();
 }
 
+void ntMatrix4::affineT(ntVec3* a, ntVec3* b, ntVec3* c, ntVec3* pt0, ntVec3* pt1, ntVec3* pt2) {
+	a1 = a->x;
+	a2 = a->y;
+	a3 = a->z;
+	b1 = b->x;
+	b2 = b->y;
+	b3 = b->z;
+	c1 = c->x;
+	c2 = c->y;
+	c3 = c->z;
+}
+
 void ntMatrix4::translate(ntVec3 delta){
 	d1 = delta.x;
 	d2 = delta.y;

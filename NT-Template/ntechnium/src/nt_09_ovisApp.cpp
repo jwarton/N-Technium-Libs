@@ -287,8 +287,8 @@ void ovisApp::write_Panel_IMG(ntPanel* panel_ptr) {
 	int img_x = 1280; //768;// 1024;
 	int img_y = 1280; //768;// 1024;
 	// MAXIMUM PANEL SIZE;
-	int pX_max = 72;
-	int pY_max = 72;
+	int pX_max = 76;
+	int pY_max = 76;
 	// PIXEL RANGE LOOP
 	int dim_X = mapRange(0, img_x, 0, pX_max, panel_ptr->v1->x); //img_X;// OR = pX_max * dpi
 	int dim_Y = mapRange(0, img_y, 0, pY_max, panel_ptr->v2->y); //img_Y;// OR = pY_max * dpi
@@ -307,10 +307,10 @@ void ovisApp::write_Panel_IMG(ntPanel* panel_ptr) {
 
 	// MINIMIZE SEARCH AREA
 	if (panel_ptr->v1->x > pX_max) {
-		std::cout << "PANEL" << ss.str() << " X DIM IS LARGER THAN IMAGE SIZE" << endl;
+		std::cout << "/nPANEL" << ss.str() << " X DIM IS LARGER THAN IMAGE SIZE" << endl;
 	}
 	if (panel_ptr->v2->y > pY_max) {
-		std::cout << "PANEL" << ss.str() << " Y DIM IS LARGER THAN IMAGE SIZE" << endl;
+		std::cout << "/nPANEL" << ss.str() << " Y DIM IS LARGER THAN IMAGE SIZE" << endl;
 	}
 
 	// OPTION TO SET IMAGE SIZE BY DPI OR EXPLCIT SIZE
@@ -405,12 +405,12 @@ void ovisApp::funct(ntPanel* panel_ptr) {
 	}
 	///////////////////////////////////////////////////////////////
 	//////////////////////////////////// CALCULATE PANEL PEFORATION
-	/// panel_ptr->calc_Perf_Ortho();	/// ORTHOGRAPHIC GRID
+	///panel_ptr->calc_Perf_Ortho();	/// ORTHOGRAPHIC GRID
 	///panel_ptr->calc_Perf_SD(40);		/// SUBDIVISION GRID
 	panel_ptr->calc_Perf_SD();			/// SUBDIVISION GRID
 
 	int val = stoi(panel_ptr->get_ID());
-	if (val  >= 0 && val <= 30) {
+	if (val == 0) {
 		//write_Panel_TXT(panel_ptr);
 		//write_Panel_IMG(panel_ptr);
 	}
@@ -791,8 +791,6 @@ void ovisApp::map_ImgCol(ntPanel* panel_ptr) {
 				x = floor(mapRange(0, img_X, 0, 1, x));
 				y = floor(mapRange(0, img_Y, 0, 1, y));
 
-
-
 				float col = img_00(x, y);
 				col = mapRange(0, 1, 0, 255, col);
 
@@ -964,7 +962,7 @@ void ovisApp::display(){
 			panels.at(i)->display_Face_G(gen);
 		}
 	}
-	if (m == vW) {
+	if (m == vW || m == vA) {
 		for (int i = 0; i < panels.size(); i++) {
 			panels.at(i)->faces_G.at(0)->at(0).edges.at(0).display();
 			panels.at(i)->faces_G.at(0)->at(0).edges.at(1).display();
