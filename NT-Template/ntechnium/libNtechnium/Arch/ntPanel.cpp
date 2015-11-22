@@ -75,7 +75,7 @@ void ntPanel::calcNorm(){
 	//norm.invert();
 	normal = ntNormal(*cent,norm,.05);
 }
-
+/// //MANAGES BOTH LOCAL AND GLOBAL SD PROCESS
 void ntPanel::sub_Div(int gen) {
 	cnt_SubDiv += gen;
 
@@ -91,6 +91,7 @@ void ntPanel::sub_Div(int gen) {
 		is_SubDiv = true;  ///EXCEPTION PREVENTS MULTIPLE SUBDIVISION CALLS
 	}
 }
+/// //CALLED FROM sub_Div(gen) AND RECURSIVELY CALLS UNITL GEN==0
 void ntPanel::sub_Div(std::vector< vector <ntFace3>* >*	faces, int gen, bool isPanel) {
 	if (gen > 0) {
 		int dim = faces->size() - 1;
@@ -143,6 +144,7 @@ void ntPanel::sub_Div(std::vector< vector <ntFace3>* >*	faces, int gen, bool isP
 		sub_Div(faces, gen - 1, isPanel);
 	}
 }
+/// //CURRENT IMPLEMENTATION:  ENABLES calc_Perf_SD AFTER CALL
 void ntPanel::sub_Div(int div, bool isPerf) {
 	using namespace arma;
 	/////////////////////////////////////////////////////////////////
@@ -189,6 +191,7 @@ void ntPanel::sub_Div(int div, bool isPerf) {
 		shif_X = v02.x;
 		step_Y = v02.y;
 
+		/// WRAP AFFINE TRANSFORMATION IN FUNCTION FOR CONVIENENCE
 		//AFFINE TRANSFORMATION OF POINT IN XYZ TO UVW
 		arma::mat A;	//XYZ POSITION
 		A	<< vecs_SD.at(0)->x << vecs_SD.at(0)->y << 1.0 << arma::endr
@@ -266,13 +269,13 @@ void ntPanel::sub_Div(int div, bool isPerf) {
 	}
 	is_PerfSD = isPerf;
 }
+///////////////////////////////////////////////////////////////
 void ntPanel::set_Color(ntColor4f col){
 	this->col=col;
 	for(int i = 0; i<verts.size(); i++){
 		verts.at(i)->setColor(col);
 	}
 }
-
 void ntPanel::set_ID(string panel_ID){
 	this->panel_ID = panel_ID;
 }
@@ -301,7 +304,23 @@ void ntPanel::set_UVW(std::vector <ntVec3*>	vecs_UV) {
 void ntPanel::set_IMG(float val) {
 	image_Val = val;
 }
+void ntPanel::set_Graph() {
+	///////////////////////////////////////////////////////////////////////
+	/////////////////////////////////////// GRAPH PERFORATION | PANELS DATA
+	ntVec3 *graphPos = new ntVec3(5, 390, 0);
+	ntVec3 *graphDim = new ntVec3(448, 40, 0);
 
+	int dim =		vecs_SD.size() - 1;  //USED FOR MAX SCALE OF GRAPH DIM Y
+	int set_size =  p_Rad.size() - 1;
+
+	//std::cout << "MAX SIZE FOR PERFORATIONS " << dim << endl;
+	//std::cout << "SET SIZE FOR PERFORATIONS "<< set_size << endl;
+	if (set_size > 0) {
+		graph = ntGraph(graphPos, graphDim, p_Rad);
+		graph.init();
+		is_Graph = true;
+	}
+}
 string ntPanel::get_ID() {
 	return panel_ID;
 }
@@ -324,7 +343,8 @@ std::vector<ntVec3*> ntPanel::get_Perf() {
 std::vector<float> ntPanel::get_Perf_R() {
 	return p_Rad;
 }
-/// PREVIOUS VERSION TO REFACTOR
+/// PREVIOUS VERSION TO REFACTOR AS 3 COMPLETE OPTIONS
+/// ORTHOGRAPHIC | FINAL SD GEN | NEW SD EXPLICIT
 void ntPanel::calc_Perf_00() {
 	///////////////////////////////////////////////////////////////
 	///////////////// CALCULATE GRID POSTION ORTHOGRAPHIC TO EDGE-0
@@ -545,20 +565,30 @@ void ntPanel::calc_Perf_R(Vec3 *vec, float val){
 		r = val;
 	}
 
-	r = round(r * 10) * 0.1;
-	
 	if (r > 1) {
 		r = 1;
 	}
 
-	float min = -0.125;
-	r = mapRange(min, r_Max, 0, 1, r, false);
+	is_Inc = true;
 
-	if (r >= (r_Max - 0.05)) {
+	if (is_Inc == true) {
+		int n_inc = r_Max / 0.0625;
+
+		r = mapRange(0, n_inc, 0, 1, r, false);
+		r = round(r);
+		r = (r * 0.0625);
+	} else {
+		r = round(r * 10) * 0.1;
+		float min = -0.125;
+		r = mapRange(min, r_Max, 0, 1, r, false);
+	}
+
+
+	if (r > (r_Max)) {
 		r = r_Max;
 	}
 
-	if (r > r_Min) {
+	if (r >= r_Min) {
 		p_Pos.push_back(vec);
 		p_Rad.push_back(r);
 	}
@@ -611,6 +641,12 @@ void ntPanel::display(){
 	glVertex3f(v2->x, v2->y, v2->z);
 	glEnd();
 }
+void ntPanel::display_Graph() {
+	if (is_Graph == true) {
+		graph.display();
+	}
+}
+
 void ntPanel::display_Perf() {
 	for (int i = 0; i < perfs.size(); i++) {
 			perfs.at(i)->display();
@@ -649,16 +685,7 @@ void ntPanel::display_Face_L(int gen) {
 	ntColor4f col = ntColor4f(1, 1, 1, .5);
 	if (gen <= faces_L.size()) {
 		for (int i = 0; i < faces_L.at(gen)->size(); i++) {
-
 			faces_L.at(gen)->at(i).display();
-
-			faces_L.at(gen)->at(i).edges.at(0).setCol(col);
-			faces_L.at(gen)->at(i).edges.at(1).setCol(col);
-			faces_L.at(gen)->at(i).edges.at(2).setCol(col);
-
-			faces_L.at(gen)->at(i).edges.at(0).display();
-			faces_L.at(gen)->at(i).edges.at(1).display();
-			faces_L.at(gen)->at(i).edges.at(2).display();
 		}
 	}
 	else {
@@ -679,3 +706,4 @@ void ntPanel::display_Face_G(int gen) {
 		display_Face_G(gen - 1);
 	}
 }
+

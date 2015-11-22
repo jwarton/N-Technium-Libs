@@ -37,6 +37,7 @@
 #include "ntPtsTxt.h"
 #include "ntPanel.h"
 #include "ntFace3.h"
+#include "ntGraph.h"
 
 using namespace jpw;
 
@@ -88,12 +89,16 @@ private:
 	//////////////////////////////////////////// LIST OF ALL PANELS
 	std::vector<ntPanel*> panels;
 	std::vector<ntFace3*> faces;
-
+	
 	///////////////////////////////////////////////////////////////
 	//////////////////////////////////////////// UTILITIY FUNCTIONS
 	void read_DATA();
 	void read_IMG();
-
+	///////////////////////////////////////////////////////////////
+	/////////////////////////////// GRAPH PERFORATION | PANELS DATA
+	ntGraph graph01;	// PANEL PERFORATION HISTOGRAM
+	ntGraph graph02;	// IMAGE HISTOGRAM
+	static std::vector<float> p_Rad;
 	///////////////////////////////////////////////////////////////
 	///////////////////////////////////////// MULTITHREAD FUNCTIONS
 	static void funct(ntPanel* panel_ptr);
@@ -102,6 +107,7 @@ private:
 	static void write_Panels_IMG(int ind_S, int ind_E, std::vector<ntPanel*>* panels);
 	///
 	static int gen;
+	static int gen_L;
 	static bool isImgLoaded;
 	static bool isTxtLoaded;
 	static arma::mat img_00;

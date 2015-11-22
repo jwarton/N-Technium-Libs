@@ -3,12 +3,14 @@
 
 using namespace arma;
 
-int ovisApp::gen = 3;
+int ovisApp::gen = 2;
+int ovisApp::gen_L = gen;
 bool ovisApp::isImgLoaded = false;
 bool ovisApp::isTxtLoaded = false;
 int ovisApp::img_X = 0;
 int ovisApp::img_Y = 0;
 int ovisApp::img_T = 1;
+std::vector<float> ovisApp::p_Rad;
 
 arma::mat ovisApp::img_00 = arma::zeros<mat>(img_X, img_Y);
 ///////////////////////////////////////////////////////////////
@@ -62,6 +64,7 @@ void ovisApp::init() {
 	} else {
 		///////////////////////////////////////////////////////////////
 		///////////////////////////////////////////////// SINGLE THREAD
+		//panel_Dim = 15;
 		for (int i = 0; i < panel_Dim; i++) {
 			ntPanel* panel_ptr(panels.at(i));
 			funct(panel_ptr);
@@ -69,7 +72,7 @@ void ovisApp::init() {
 	}
 	t_CPU = clock() - t_CPU;
 
-	int gen_L = panels.at(0)->faces_L.size()-1;
+	gen_L = panels.at(0)->faces_L.size()-1;
 
 	std::cout << "EVAL_CPU TIME  [SECONDS]:   " << ((float)t_CPU) / CLOCKS_PER_SEC << "\n" << endl;
 	std::cout << "SUBDIVISION GENERATION:     " << panels.at(0)->cnt_SubDiv << endl;
@@ -80,6 +83,18 @@ void ovisApp::init() {
 	index_S = 0;
 	index_E = 0;
 
+	///////////////////////////////////////////////////////////////////////
+	/////////////////////////////////////// GRAPH PERFORATION | PANELS DATA
+	ntVec3 *graphPos = new ntVec3(  5, 450, 0);
+	ntVec3 *graphDim = new ntVec3(448,  40, 0);
+	int set_size = p_Rad.size() - 1;
+
+	if (set_size > 0) {
+		graph00 = ntGraph(graphPos, graphDim, p_Rad);
+		graph00.init();
+	}
+	///////////////////////////////////////////////////////////////////////
+	/////////////////////////////////////// GRAPH PERFORATION | PANELS DATA
 	if (isMultiThread == true) {
 		for (int i = 0; i < thread_Cnt; i++) {
 
@@ -262,13 +277,13 @@ void ovisApp::write_Panel_TXT(ntPanel* panel_ptr) {
 	file << "//  PANEL ORIENTATION VECTOR:\n";
 	file << "//   VEC: " << format_VEC(&panel_ptr->norm) << "\n";
 	file << "\n";
-	file << "//  CORNER POSITIONS:          {POS:           }	\n";
+	file << "//  CORNER POSITIONS:          {POS:            }	\n";
 	file << "\n";
-	file << "//  FASTENER POSITIONS:        {POS:  RADIUS:  }\n";
+	file << "//  FASTENER POSITIONS:        {POS:  DIAMETER: }\n";
 	file << "\n";
-	file << "//  PERFORATION DATA:          {POS:  RADIUS:  }\n";
+	file << "//  PERFORATION DATA:          {POS:  DIAMETER: }\n";
 	for (int i = 0; i < panel_ptr->get_Perf().size(); i++) {
-		file << "     POS:  " << format_VEC(panel_ptr->get_Perf().at(i)) << "       RAD:  " << panel_ptr->get_Perf_R().at(i) << "\n";
+		file << "     POS:  " << format_VEC(panel_ptr->get_Perf().at(i)) << "       DIA:  " << panel_ptr->get_Perf_R().at(i) * 2 << "\n";
 	}
 	file.close();
 }
@@ -408,12 +423,21 @@ void ovisApp::funct(ntPanel* panel_ptr) {
 	///panel_ptr->calc_Perf_Ortho();	/// ORTHOGRAPHIC GRID
 	///panel_ptr->calc_Perf_SD(40);		/// SUBDIVISION GRID
 	panel_ptr->calc_Perf_SD();			/// SUBDIVISION GRID
+	panel_ptr->set_Graph();
+
+	for (int i = 0; i < panel_ptr->p_Rad.size(); i++) {
+		/// pointer to matrices
+		/// flatten matrix
+		/// vector pushback process is too computationally intensive 
+		p_Rad.push_back(panel_ptr->p_Rad.at(i));
+	}
 
 	int val = stoi(panel_ptr->get_ID());
-	if (val == 0) {
+	//if (val < 1200) {
 		//write_Panel_TXT(panel_ptr);
 		//write_Panel_IMG(panel_ptr);
-	}
+	//}
+
 	/// SCALE PANELS TO VIEW--- REPLACE WITH CAMERA FIT FUNCTION //
 	/// TRANSLATE TO HUD LOCATION
 	ntVec3 posXY = ntVec3(55, 640, 0);  /////// POSITION FOR 2D HUD
@@ -890,7 +914,7 @@ void ovisApp::run(){
 			panel_Index = panel_Dim-1;
 			std::cout << panel_Index << endl;
 		}
-		if (m == vW) {
+		if (m == vW || m == vA) {
 			panels.at(panel_Index)->faces_G.at(0)->at(0).setColor(Col4(1, 0, 0, 1));
 		}
 	}
@@ -913,7 +937,19 @@ void ovisApp::run(){
 	///////////////////////////////////////////////////////////////
 	/////////////////////////////////////////  IMAGE MAPPED DISPLAY
 	if (glfwGetKey(window, GLFW_KEY_A) == GLFW_PRESS) {
-		m = vA;
+		if (gen_L > gen) {
+			m = vA;
+			for (int i = 0; i < panels.size(); i++) {
+				panels.at(i)->faces_G.at(0)->at(0).edges.at(0).setCol(ntColor4f(1, 1, 1, .5));
+				panels.at(i)->faces_G.at(0)->at(0).edges.at(1).setCol(ntColor4f(1, 1, 1, .5));
+				panels.at(i)->faces_G.at(0)->at(0).edges.at(2).setCol(ntColor4f(1, 1, 1, .5));
+				if (i == panel_Index) {
+					panels.at(i)->faces_G.at(0)->at(0).setColor(Col4(1, 0, 0, 1));
+				}
+			}
+		} else {
+			std::cout << "NO EXPLICIT SUBDIVISION HAS BEEN SET" << endl;
+		}
 	}
 	if (glfwGetKey(window, GLFW_KEY_S) == GLFW_PRESS) {
 		m = vS;
@@ -987,7 +1023,7 @@ void ovisApp::display(){
 			panels.at(panel_Index)->display_Perf();
 		}
 		if (m == vA) {
-			panels.at(panel_Index)->display_Face_L(4);
+			panels.at(panel_Index)->display_Face_L(gen_L);
 		}
 		if (m == vD) {
 			panels.at(panel_Index)->display_Face_L(gen);
@@ -997,7 +1033,9 @@ void ovisApp::display(){
 			panels.at(panel_Index)->display_Perf();
 		}
 		panels.at(panel_Index)->display_Edge();
+		panels.at(panel_Index)->display_Graph();
 	}
+	/// CREATE SEPARATE CLASS FOR IMAGE OBJECTS
 	display_IMG();
 }
 void ovisApp::display_IMG() {

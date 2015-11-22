@@ -20,6 +20,7 @@
 #include "ntFace3.h"
 #include "ntMath.h"
 #include "ntMatrix4.h"
+#include "ntGraph.h"
 
 #include <armadillo>
 
@@ -34,7 +35,11 @@ private:
 	string n_G;						  //GLOBAL PANEL NORMAL
 	string p_G;						  //GLOBAL VERTEX POSTIONS
 	string string_UVW;				  //GLOBAL PARAMETER
-	
+
+	///////////////////////////////////////////////////////////////
+	/////////////////////////////// GRAPH PERFORATION | PANELS DATA
+	ntGraph graph;	
+
 public:
 	///////////////////////////////////////////////////////////////
 	////////////////////////////////////////// PANEL DATA STRUCTURE
@@ -56,6 +61,7 @@ public:
 
 	bool	is_SubDiv	= false;
 	bool	is_PerfSD   = false;
+	bool	is_Graph = false;
 	int		cnt_SubDiv	= 0;
 	float	image_Val;				 // PIXEL VALUE AT PNL CENTROID
 	std::vector <float> image_Vals;  // PIXEL VALUE AT SD CENTROIDs
@@ -67,15 +73,15 @@ public:
 	std::vector<float>				p_Rad;	   //   LIST OF ALL RAD
 	std::vector<ntVec3*>			p_UVs;	   //   LIST OF UV AT PERF POS
 	std::vector <vector <ntVec3*>*> p_UV_Rows;
-	std::vector <vector <Col4f* >*> p_Col;
+	std::vector <vector <Col4f* >*> p_Col;     /// NOT IN USE
 
 	///////////////////////////////////////////////////////////////
 	//////////////////////////////////////// PERFORATION PARAMETERS
 	float	r_Min =			0.1625;
-	float	r_Max =			0.75; // 0.625;
+	float	r_Max =			0.625;
 	float	edge_Offset =	0.75;
 	int		n_seg =			36;
-
+	bool	is_Inc =		false;
 	///////////////////////////////////////////////////////////////
 	////////////////////////////////////////////// PANEL PARAMETERS
 	ntColor4f	col;
@@ -106,6 +112,7 @@ public:
 	void calc_Perf_SD(int div);
 	void calc_Perf_R(Vec3 *vec, float val);
 	void add_Perf();
+	void set_Graph();
 
 	bool pt_isInside(ntVec3* point);
 	ntVec3* pt_Mid(ntVec3* v0, ntVec3* v1);
@@ -128,6 +135,7 @@ public:
 	std::vector<float>		get_Perf_R();
 
 	void display();
+	void display_Graph();
 	void display_Edge();
 	void display_EdgeSd(int gen = 0);
 	void display_Face_L(int gen = 0);

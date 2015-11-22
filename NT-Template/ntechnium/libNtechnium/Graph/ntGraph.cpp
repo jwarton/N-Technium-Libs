@@ -10,12 +10,30 @@ ntGraph::ntGraph(float x, float y, float z) {
 	this->dimX = x;
 	this->dimY = y;
 	this->dimZ = z;
+	this->dim->x = x;
+	this->dim->y = y;
+	this->dim->y = z;
 	//init();
 }
+ntGraph::ntGraph(ntVec3* pos, ntVec3* dim, std::vector <float> vals):
+pos(pos), dim(dim), vals(vals){
+	this->dimX = dim->x;
+	this->dimY = dim->y;
+	this->dimZ = dim->z;
+	//init();
+}
+
 void ntGraph::init() {
-	test_Data();
-	parse_Data();
-	plot_Data();
+	//test_Data();
+	//std::cout << "PERFORATIONS IN DATA SET" << vals.size() << endl;
+	if(vals.size()>0){
+		//parse_Data();
+		plot_Data();
+	}
+	else {
+		std::cout << "NO DATA PROVIDED GRAPH TO PLOT" << endl;
+	}
+
 }
 
 void ntGraph::parse_Data() {
@@ -23,25 +41,30 @@ void ntGraph::parse_Data() {
 	///MUST BE FORMATED PROPERLY
 }
 void ntGraph::plot_Data() {
-
+	//SORT VECTOR OF FLOATS
+	//vals
+	std::sort(vals.begin(), vals.end());
 	//FIND MAXIUMUM PARAMETER VALUE
-	auto it_1 = max_element(std::begin(vals_1), std::end(vals_1));
-	auto it_2 = max_element(std::begin(vals_2), std::end(vals_2));
-	auto it_3 = max_element(std::begin(vals_3), std::end(vals_3));
-	float max_1 = *it_1;
-	float max_2 = *it_2;
-	float max_3 = *it_3;
-	float max_B = max_1;
+	auto it_0 = max_element(std::begin(vals), std::end(vals));
+	//auto it_1 = max_element(std::begin(vals_1), std::end(vals_1));
+	//auto it_2 = max_element(std::begin(vals_2), std::end(vals_2));
+	//auto it_3 = max_element(std::begin(vals_3), std::end(vals_3));
+
+	float max_0 = *it_0;
+	//float max_1 = *it_1;
+	//float max_2 = *it_2;
+	//float max_3 = *it_3;
+	float max_B = max_0;
 
 	//std::cout << "from ntGraph.plot_Data():  " << vals_1.at(0) << endl;
 	//std::cout << "from ntGraph.plot_Data():  " << vals_1.size() << endl;
 	//std::cout << "max_1        plot_Data():  " << max_B << endl;
 	//std::cout << vals_2.at(0) << endl;
 	//std::cout << vals_3.at(0) << endl;
-
-	if (max_1 >= max_2 && max_1 >= max_3) {
-		max_B = max_1;
-	}
+;
+	//if (max_1 >= max_2 && max_1 >= max_3) {
+	//	max_B = max_1;
+	//}
 	//if (max_2 >= max_1 && max_2 >= max_3) {
 	//	max_B = max_2;
 	//}
@@ -57,38 +80,53 @@ void ntGraph::plot_Data() {
 	float a;
 	float step;
 
-	step = mapRange(0, dimX, 0, vals_1.size(), 1);
+	step = mapRange(0, dimX, 0, vals.size(), 1);
 
-	for (int i = 0; i < vals_1.size(); i++) {
-		y = vals_1.at(i);
-		x = mapRange(0, dimX, 0, vals_1.size(), i);
+	for (int i = 0; i < vals.size(); i++) {
+		y = vals.at(i);
+		x = mapRange(0, dimX, 0, vals.size(), i);
 		y = mapRange(0, dimY, 0, max_B, y);
-		r = 1;
+		r = .5;
 		g = 0;
-		b = mapRange(.2, 1, 0, 200, i);
+		b = mapRange(.2, 1, 0, vals.size(), i,false);
 		a = 1;
 
-		Vec3 * vecS = new Vec3(x, 0, 0);
-		Vec3 * vecE = new Vec3(x, y, 0);
-		ntEdge* bar = new ntEdge(vecE, vecS,Col4(r,g,b,a));
+		Vec3 * vecS = new Vec3(pos->x + x, pos->y + 0, pos->z + 0);
+		Vec3 * vecE = new Vec3(pos->x + x, pos->y + y, pos->z + 0);
+		ntEdge* bar = new ntEdge(vecE, vecS, Col4(r, g, b, a));
 		bars.push_back(bar);
 	}
-	int count = vals_2.size();
-	//if (i % 2 == 0)
-	for (int i = 0; i < count; i++) {
-			y = vals_2.at(i);
-			x = mapRange(0, dimX, 0, vals_2.size(), i) + (.5 * step);
-			y = mapRange(0, dimY, 0, max_B, y);
-			r = .1;
-			g = 0;
-			b = mapRange(0.5, 1, 0, 200, i);
-			a = 1;
 
-			Vec3 * vecS = new Vec3(x, 0, 0);
-			Vec3 * vecE = new Vec3(x, y, 0);
-			ntEdge* bar = new ntEdge(vecE, vecS, Col4(r, g, b, a));
-			bars.push_back(bar);
-	}
+	//for (int i = 0; i < vals_1.size(); i++) {
+	//	y = vals_1.at(i);
+	//	x = mapRange(0, dimX, 0, vals_1.size(), i);
+	//	y = mapRange(0, dimY, 0, max_B, y);
+	//	r = 1;
+	//	g = 0;
+	//	b = mapRange(.2, 1, 0, 200, i);
+	//	a = 1;
+
+	//	Vec3 * vecS = new Vec3(x, 0, 0);
+	//	Vec3 * vecE = new Vec3(x, y, 0);
+	//	ntEdge* bar = new ntEdge(vecE, vecS,Col4(r,g,b,a));
+	//	bars.push_back(bar);
+	//}
+	///int count = vals_2.size();
+	//if (i % 2 == 0)
+	//for (int i = 0; i < count; i++) {
+	//		y = vals_2.at(i);
+	//		x = mapRange(0, dimX, 0, vals_2.size(), i) + (.5 * step);
+	//		y = mapRange(0, dimY, 0, max_B, y);
+	//		r = .1;
+	//		g = 0;
+	//		b = mapRange(0.5, 1, 0, 200, i);
+	//		a = 1;
+
+	//		Vec3 * vecS = new Vec3(x, 0, 0);
+	//		Vec3 * vecE = new Vec3(x, y, 0);
+	//		ntEdge* bar = new ntEdge(vecE, vecS, Col4(r, g, b, a));
+	//		bars.push_back(bar);
+	//}
 
 	//for (int i = 0; i < vals_2.size(); i++) {
 	//	y = vals_2.at(i);

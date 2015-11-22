@@ -277,7 +277,7 @@ void trussApp03::init() {
 	std::cout << "from trussApp:             "  << truss00.get_t_CPU().at(0) << endl;
 	graph00.set_Param(truss00.get_t_CPU(), 1);
 	graph00.set_Param(truss00.get_t_GPU(), 1);
-	graph00.set_Param(truss00.get_t_copy(), 1);
+	graph00.set_Param(truss00.get_t_copy(),1);
 	graph00.init();
 	///////////////////////////////////////////////////////////////////////
 	//////////////////////////////////////////////////// CAMERA OREINTATION

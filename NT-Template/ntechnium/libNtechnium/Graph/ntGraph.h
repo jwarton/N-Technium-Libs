@@ -32,11 +32,17 @@ private:
 	std::string param2;		//elements
 	std::string param3;		//iterations
 
+	//std::vector <vector <float>*> vals;
+	std::vector <float> vals;
+	std::vector <float> vals_0;
 	std::vector <float> vals_1;
 	std::vector <float> vals_2;
 	std::vector <float> vals_3;
+	////GRAPH POSITION
+	ntVec3* pos;
 
 	////GRAPH DIMENSIONS
+	ntVec3* dim;
 	float dimX = .75;
 	float dimY = .1;
 	float dimZ = .1;
@@ -54,6 +60,7 @@ public:
 	ntGraph();
 	ntGraph(std::string data);
 	ntGraph(float x, float y, float z);
+	ntGraph(ntVec3* pos, ntVec3* dim, std::vector <float> vals);
 
 	void set_Data(std::string data);
 	void set_Param(float val, int param);

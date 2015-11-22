@@ -264,21 +264,17 @@ void ntGLFWsetup::EventHandler_KEYBD(){
 		view_Reset();
 		view_Update();
 	}
-	/// TEMPORARY PERSPECTIVE VIEW COORDINATED TO CONTENT SPECIFIC DISPLAY MODES
-	// PANEL VIEW
-	if (glfwGetKey(window, GLFW_KEY_A) == GLFW_PRESS) {
-		view_Save();
-		view_Top();
-	}
-	if (glfwGetKey(window, GLFW_KEY_F) == GLFW_PRESS) {
-		view_Pers();
-	}
-	if (glfwGetKey(window, GLFW_KEY_S) == GLFW_PRESS) {
-		view_Pers();
-	}
-	if (glfwGetKey(window, GLFW_KEY_W) == GLFW_PRESS) {
-		view_Pers();
-	}
+	///// TEMPORARY PERSPECTIVE VIEW COORDINATED TO CONTENT SPECIFIC DISPLAY MODES
+	//// PANEL VIEW
+	//if (glfwGetKey(window, GLFW_KEY_F) == GLFW_PRESS) {
+	//	view_Pers();
+	//}
+	//if (glfwGetKey(window, GLFW_KEY_S) == GLFW_PRESS) {
+	//	view_Pers();
+	//}
+	//if (glfwGetKey(window, GLFW_KEY_W) == GLFW_PRESS) {
+	//	view_Pers();
+	//}
 	///////////////////////////////////////////////////////////////
 	////////////////////////////////////// CAMERA JOG FUNCTIONALITY
 	if (glfwGetKey(window, GLFW_KEY_RIGHT) == GLFW_PRESS & glfwGetKey(window, GLFW_KEY_LEFT_CONTROL) == GLFW_PRESS) {
