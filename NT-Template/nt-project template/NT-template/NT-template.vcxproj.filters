@@ -263,9 +263,6 @@
     <ClInclude Include="..\..\ntechnium\libNtechnium\Geometry\ntBaseShape.h">
       <Filter>lib_geometry</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\ntechnium\src\nt_00_meshApp.h">
-      <Filter>src programs</Filter>
-    </ClInclude>
     <ClInclude Include="..\..\ntechnium\libNtechnium\Geometry\ntMeshPts.h">
       <Filter>lib_geometry</Filter>
     </ClInclude>
@@ -403,6 +400,9 @@
     </ClInclude>
     <ClInclude Include="..\..\ntechnium\libNtechnium\Geometry\ntCube.h">
       <Filter>lib_geometry</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\ntechnium\src\nt_00_meshApp.h">
+      <Filter>app</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

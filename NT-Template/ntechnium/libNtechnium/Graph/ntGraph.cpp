@@ -74,10 +74,6 @@ void ntGraph::plot_Data() {
 	//////////////////////////////////////////MAP PARAMETERS TO VERTEX COORDINATES
 	float x;
 	float y;
-	float r;
-	float g;
-	float b;
-	float a;
 	float step;
 
 	step = mapRange(0, dimX, 0, vals.size(), 1);
@@ -86,15 +82,19 @@ void ntGraph::plot_Data() {
 		y = vals.at(i);
 		x = mapRange(0, dimX, 0, vals.size(), i);
 		y = mapRange(0, dimY, 0, max_B, y);
-		r = .5;
-		g = 0;
-		b = mapRange(.2, 1, 0, vals.size(), i,false);
-		a = 1;
 
+		if (is_ColSet == false) {
+			colT.r = mapRange( 0.4, 1.0, 0.0, vals.size(), i);
+			colT.g = mapRange( 0.2, 0.7, 0.0, vals.size(), i);
+			colT.b = mapRange( 0.3, 0.9, 0.0, vals.size(), i);
+			colT.a = 1;
+		}
+		if (i % 4 == 0) {
 		Vec3 * vecS = new Vec3(pos->x + x, pos->y + 0, pos->z + 0);
 		Vec3 * vecE = new Vec3(pos->x + x, pos->y + y, pos->z + 0);
-		ntEdge* bar = new ntEdge(vecE, vecS, Col4(r, g, b, a));
-		bars.push_back(bar);
+		ntEdge* bar = new ntEdge(vecE, vecS, Col4(colT.r, colT.g, colT.b, colT.a));
+			bars.push_back(bar);
+		}
 	}
 
 	//for (int i = 0; i < vals_1.size(); i++) {
@@ -184,6 +184,11 @@ void ntGraph::set_Param(std::vector <float> vals, int param) {
 	}
 	//std::cout << "from ntGraph.set_Param():  " << vals_1.at(0) << endl;
 }
+void ntGraph::set_Color(ntColor4f colT) {
+	this->colT = colT;
+	is_ColSet = true;
+}
+
 void ntGraph::run() {
 
 }

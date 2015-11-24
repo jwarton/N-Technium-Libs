@@ -50,13 +50,15 @@ private:
 	//GRAPH COLOR
 	ntColor4f colS = Col4(0, 0, 1, 1);
 	ntColor4f colE = Col4(0, 1, 0, 1);
-	ntColor4f colT = Col4(0, 1, 1, 1);
+	ntColor4f colT = Col4(0.5, 0.5, 0.5, 0.0);
 
 	void parse_Data();
 	void plot_Data();
 	void test_Data();
 
 public:
+	bool is_ColSet = false;
+
 	ntGraph();
 	ntGraph(std::string data);
 	ntGraph(float x, float y, float z);
@@ -65,6 +67,7 @@ public:
 	void set_Data(std::string data);
 	void set_Param(float val, int param);
 	void set_Param(std::vector <float> vals, int param);
+	void set_Color(ntColor4f colT);
 
 	void init();
 	void run();

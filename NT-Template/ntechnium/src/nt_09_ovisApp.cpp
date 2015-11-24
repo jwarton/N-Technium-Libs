@@ -3,8 +3,9 @@
 
 using namespace arma;
 
-int ovisApp::gen = 2;
+int ovisApp::gen = 3;
 int ovisApp::gen_L = gen;
+int ovisApp::gen_G = gen;
 bool ovisApp::isImgLoaded = false;
 bool ovisApp::isTxtLoaded = false;
 int ovisApp::img_X = 0;
@@ -85,14 +86,15 @@ void ovisApp::init() {
 
 	///////////////////////////////////////////////////////////////////////
 	/////////////////////////////////////// GRAPH PERFORATION | PANELS DATA
-	ntVec3 *graphPos = new ntVec3(  5, 450, 0);
-	ntVec3 *graphDim = new ntVec3(448,  40, 0);
-	int set_size = p_Rad.size() - 1;
+	//ntVec3 *graphPos = new ntVec3(  5, 450, 0);
+	//ntVec3 *graphDim = new ntVec3(448,  40, 0);
+	//int set_size = p_Rad.size() - 1;
 
-	if (set_size > 0) {
-		graph00 = ntGraph(graphPos, graphDim, p_Rad);
-		graph00.init();
-	}
+	//if (set_size > 0) {
+	//	graph00 = ntGraph(graphPos, graphDim, p_Rad);
+	//	graph00.set_Color(ntColor4f(0.2, 0.2, 0.2, 1));
+	//	graph00.init();
+	//}
 	///////////////////////////////////////////////////////////////////////
 	/////////////////////////////////////// GRAPH PERFORATION | PANELS DATA
 	if (isMultiThread == true) {
@@ -433,10 +435,10 @@ void ovisApp::funct(ntPanel* panel_ptr) {
 	}
 
 	int val = stoi(panel_ptr->get_ID());
-	//if (val < 1200) {
+	if (val < 25) {
 		//write_Panel_TXT(panel_ptr);
-		//write_Panel_IMG(panel_ptr);
-	//}
+		write_Panel_IMG(panel_ptr);
+	}
 
 	/// SCALE PANELS TO VIEW--- REPLACE WITH CAMERA FIT FUNCTION //
 	/// TRANSLATE TO HUD LOCATION
@@ -874,13 +876,29 @@ void ovisApp::tile_Img(int U, int V, af::array img) {
 
 void ovisApp::run(){
 	if (glfwGetKey(window, GLFW_KEY_1) == GLFW_PRESS) {
-		gen = 1;
+		if (gen <= gen_G) {
+			gen = 0;
+		}
 	}
 	if (glfwGetKey(window, GLFW_KEY_2) == GLFW_PRESS) {
-		gen = 2;
+		if (gen <= gen_G) {
+			gen = 1;
+		}
 	}
 	if (glfwGetKey(window, GLFW_KEY_3) == GLFW_PRESS) {
-		gen = 3;
+		if (gen <= gen_G) {
+			gen = 2;
+		}
+	}
+	if (glfwGetKey(window, GLFW_KEY_4) == GLFW_PRESS) {
+		if (gen <= gen_G) {
+			gen = 3;
+		}
+	}
+	if (glfwGetKey(window, GLFW_KEY_5) == GLFW_PRESS) {
+		if (gen <= gen_G) {
+			gen = 4;
+		}
 	}
 	///////////////////////////////////////////////////////////////
 	/////////////////////////////////////////  WORLD MAPPED DISPLAY
@@ -1037,6 +1055,7 @@ void ovisApp::display(){
 	}
 	/// CREATE SEPARATE CLASS FOR IMAGE OBJECTS
 	display_IMG();
+	//graph00.display();
 }
 void ovisApp::display_IMG() {
 	int n_cols = img_2d.n_cols;

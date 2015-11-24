@@ -555,11 +555,14 @@ void ntPanel::calc_Perf_SD() {
 }
 void ntPanel::calc_Perf_R(Vec3 *vec, float val){
 	float r;
-	float fx = ((rand() % 10)*.01); //(((rand() % 10)*.01) - 0.05);
-	bool isRandom = false;
+	float fx = ((rand() % 10)*.01) * 4; /// (((rand() % 10)*.01) - 0.05)
+	
+	bool isRandom = false; /// RANDOMIZE RADIUS
 
 	if (isRandom == true) {
-		r = val - fx;
+		r = val + fx;
+		fx = ((rand() % 10)*.01) * 3;
+		r -= fx;
 	}
 	else {
 		r = val;
@@ -569,7 +572,7 @@ void ntPanel::calc_Perf_R(Vec3 *vec, float val){
 		r = 1;
 	}
 
-	is_Inc = true;
+	is_Inc = true;			/// INCREMENTED RADIUS
 
 	if (is_Inc == true) {
 		int n_inc = r_Max / 0.0625;
