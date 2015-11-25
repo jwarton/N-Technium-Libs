@@ -69,6 +69,11 @@ void ovisApp::init() {
 		for (int i = 0; i < panel_Dim; i++) {
 			ntPanel* panel_ptr(panels.at(i));
 			funct(panel_ptr);
+
+
+			if (i < 1) {
+				std::cout << "PERFORATIONS PER PANEL:     " << panel_ptr->perf_size << endl;
+			}
 		}
 	}
 	t_CPU = clock() - t_CPU;
@@ -220,7 +225,7 @@ void ovisApp::read_IMG() {
 	img_LOADER += img_IN;
 	
 	img_LOADER.host((void*)img_00.memptr());
-	img_00 = flipud(img_00);
+	img_00 = arma::flipud(img_00);
 
 	isImgLoaded = true;
 }
@@ -409,36 +414,41 @@ void ovisApp::funct(ntPanel* panel_ptr) {
 	}
 	///
 	///////////////////////////////////////////////////////////////
-	panel_ptr->sub_Div(gen);
-	panel_ptr->sub_Div(40,true);
+	panel_ptr->sub_Div(gen);	    // SUBDIVIDE FOR GLOBAL DISPLAY
+
+	///////////////////////////////////////////////////////////////
+	///////////////////////////////////// CALCULATE PEFORATION GRID
+	panel_ptr->plot_Perf(38, TRI);
+	//panel_ptr->set_Graph();
+
 	///////////////////////////////////////////////////////////////
 	////////////////////////////////// LOAD TEXTURE MAP TO SURFACES
 	if (isImgLoaded == true) {
 		map_ImgCol(panel_ptr);
 	}
-	else {
-		float col = (rand() % 255 + 1);
-		panel_ptr->set_IMG(col);
-	}
-	///////////////////////////////////////////////////////////////
-	//////////////////////////////////// CALCULATE PANEL PEFORATION
-	///panel_ptr->calc_Perf_Ortho();	/// ORTHOGRAPHIC GRID
-	///panel_ptr->calc_Perf_SD(40);		/// SUBDIVISION GRID
-	panel_ptr->calc_Perf_SD();			/// SUBDIVISION GRID
-	panel_ptr->set_Graph();
 
-	for (int i = 0; i < panel_ptr->p_Rad.size(); i++) {
+	///////////////////////////////////////////////////////////////
+	//////////////////////////////////// CALCULATE PERFORATION SIZE
+	panel_ptr->add_Perf();
+
+	///////////////////////////////////////////////////////////////
+	//////////////////////////////////////// GRAPH PERFORATION DATA
+	for (int i = 0; i < panel_ptr->perf_size; i++) {
 		/// pointer to matrices
 		/// flatten matrix
 		/// vector pushback process is too computationally intensive 
-		p_Rad.push_back(panel_ptr->p_Rad.at(i));
+		// p_Rad.push_back(panel_ptr->p_Rad.at(i));
 	}
 
 	int val = stoi(panel_ptr->get_ID());
-	if (val < 25) {
-		//write_Panel_TXT(panel_ptr);
+	if (val == 963 || val == 136 || val == 1689) {
 		write_Panel_IMG(panel_ptr);
 	}
+	//int val = stoi(panel_ptr->get_ID());
+	//if (val < 25) {
+	//	//write_Panel_TXT(panel_ptr);
+	//	
+	//}
 
 	/// SCALE PANELS TO VIEW--- REPLACE WITH CAMERA FIT FUNCTION //
 	/// TRANSLATE TO HUD LOCATION
@@ -732,65 +742,22 @@ double ovisApp::calc_Area(ntPanel* panel_ptr){
 	return area;
 }
 void ovisApp::map_ImgCol(ntPanel* panel_ptr) {
-	int index = 0;
-	int dim = panel_ptr->vecs_UV.size() - 1;
+	/// ////////////////////// MAP COLOR FROM UV LIST
+	for (int i = 0; i < panel_ptr->p_UVs.size(); i++) {
 
-	/// ////////////////////// IMAGE TILE MAPPING
-	//af::array img_Tile(img_X, img_Y);
-	//img_Tile += img_IN;
+		float x = panel_ptr->p_UVs.at(i)->x;
+		float y = panel_ptr->p_UVs.at(i)->y;
 
-	//if (img_T > 1) {
-	//	for (int i = 0; i < img_T; i++) {
-	//		af::flip(img_IN, 0);
-	//		img_IN = af::join(0, img_Tile, img_IN);
-	//	}
-	//	for (int j = 0; j < img_T; j++) {
-	//		af::flip(img_IN, 1);
-	//		img_IN = af::join(1, img_Tile, img_IN);
-	//	}
-	//}
+		x = floor(mapRange(0, img_X, 0, 1, x));
+		y = floor(mapRange(0, img_Y, 0, 1, y));
 
-	//int step_U = 0;
-	//int step_V = 0;
-	//float inc_U = img_X / img_T;
-	//float inc_V = img_Y / img_T;
+		float col = img_00(x, y);
 
-	//for (int i = 0; i < panel_ptr->faces_G.size(); i++) {
-	//	for (int j = 0; j < panel_ptr->faces_G.at(i)->size(); j++) {
-	//		for (int k = 0; k < 3; k++) {
+		col = mapRange(0, 1, 0, 255, col);
 
-	//			float x = panel_ptr->vecs_UV.at(index).x;
-	//			float y = panel_ptr->vecs_UV.at(index).y;
-
-	//			if (x > (img_X - (step_U * inc_U))) {
-	//				step_U += 1;
-	//			} else {
-	//				step_U = 0;
-	//			}
-	//			if (y > (img_Y - (step_V * inc_V))) {
-	//				step_V += 1;
-	//			} else {
-	//				step_V = 0;
-	//			}
-
-	//			x = (x * img_T) - (step_U * inc_U);
-	//			y = (y * img_T) - (step_V * inc_V);
-
-	//			x = floor(mapRange(0, img_X, 0, 1, x));
-	//			y = floor(mapRange(0, img_Y, 0, 1, y));
-
-	//			float col = img_00(x, y);
-	//			col = mapRange(0, 1, 0, 255, col);
-
-	//			index++;
-
-	//			panel_ptr->faces_G.at(i)->at(j).verts.at(k)->setColor(ntCol4(col, col, col, 1));
-	//			panel_ptr->faces_L.at(i)->at(j).verts.at(k)->setColor(ntCol4(col, col, col, 1));
-	//		}
-	//	}
-	//}
-
-	/// ////////////////////// VERTEX MAPPING
+		panel_ptr->p_Col.push_back(col);
+	}
+	/// ////////////////////// MAP COLOR TO VERTEX
 	for (int i = 0; i < panel_ptr->faces_L.size(); i++) {
 		for (int j = 0; j < panel_ptr->faces_L.at(i)->size(); j++) {
 			for (int k = 0; k < 3; k++) {
@@ -798,29 +765,11 @@ void ovisApp::map_ImgCol(ntPanel* panel_ptr) {
 				float x = panel_ptr->faces_L.at(i)->at(j).uvws[k]->x;
 				float y = panel_ptr->faces_L.at(i)->at(j).uvws[k]->y;
 
-				/// EXCEPTION NEEDS TO BE SOLVED /////
-				if (x >= 1) {
-					x = 0.99999;
-				}
-				if (x <= 0) {
-					x = 0.00001;
-				}
-
-				if (y >= 1) {
-					y = 0.99999;
-				}
-				if (y <= 0) {
-					y = 0.00001;
-				}
-				/// ///////////////////////////////////
-
 				x = floor(mapRange(0, img_X, 0, 1, x));
 				y = floor(mapRange(0, img_Y, 0, 1, y));
 
 				float col = img_00(x, y);
 				col = mapRange(0, 1, 0, 255, col);
-
-				index++;
 
 				panel_ptr->faces_L.at(i)->at(j).verts.at(k)->setColor(ntCol4(col, col, col, 1));
 				if (i < panel_ptr->faces_G.size()) {
@@ -859,6 +808,60 @@ void ovisApp::map_ImgCol(ntPanel* panel_ptr) {
 	//			gen_ID++;
 	//		}
 	//	}
+	/// ////////////////////// IMAGE TILE MAPPING
+	//af::array img_Tile(img_X, img_Y);
+	//img_Tile += img_IN;
+
+	//if (img_T > 1) {
+	//	for (int i = 0; i < img_T; i++) {
+	//		af::flip(img_IN, 0);
+	//		img_IN = af::join(0, img_Tile, img_IN);
+	//	}
+	//	for (int j = 0; j < img_T; j++) {
+	//		af::flip(img_IN, 1);
+	//		img_IN = af::join(1, img_Tile, img_IN);
+	//	}
+	//}
+
+	//int step_U = 0;
+	//int step_V = 0;
+	//float inc_U = img_X / img_T;
+	//float inc_V = img_Y / img_T;
+	//int index = 0;
+	//for (int i = 0; i < panel_ptr->faces_G.size(); i++) {
+	//	for (int j = 0; j < panel_ptr->faces_G.at(i)->size(); j++) {
+	//		for (int k = 0; k < 3; k++) {
+
+	//			float x = panel_ptr->vecs_UV.at(index).x;
+	//			float y = panel_ptr->vecs_UV.at(index).y;
+
+	//			if (x > (img_X - (step_U * inc_U))) {
+	//				step_U += 1;
+	//			} else {
+	//				step_U = 0;
+	//			}
+	//			if (y > (img_Y - (step_V * inc_V))) {
+	//				step_V += 1;
+	//			} else {
+	//				step_V = 0;
+	//			}
+
+	//			x = (x * img_T) - (step_U * inc_U);
+	//			y = (y * img_T) - (step_V * inc_V);
+
+	//			x = floor(mapRange(0, img_X, 0, 1, x));
+	//			y = floor(mapRange(0, img_Y, 0, 1, y));
+
+	//			float col = img_00(x, y);
+	//			col = mapRange(0, 1, 0, 255, col);
+
+	//			index++;
+
+	//			panel_ptr->faces_G.at(i)->at(j).verts.at(k)->setColor(ntCol4(col, col, col, 1));
+	//			panel_ptr->faces_L.at(i)->at(j).verts.at(k)->setColor(ntCol4(col, col, col, 1));
+	//		}
+	//	}
+	//}
 }
 void ovisApp::tile_Img(int U, int V, af::array img) {
 
@@ -876,27 +879,27 @@ void ovisApp::tile_Img(int U, int V, af::array img) {
 
 void ovisApp::run(){
 	if (glfwGetKey(window, GLFW_KEY_1) == GLFW_PRESS) {
-		if (gen <= gen_G) {
+		if (gen_G >= 0) {
 			gen = 0;
 		}
 	}
 	if (glfwGetKey(window, GLFW_KEY_2) == GLFW_PRESS) {
-		if (gen <= gen_G) {
+		if (gen_G >= 1) {
 			gen = 1;
 		}
 	}
 	if (glfwGetKey(window, GLFW_KEY_3) == GLFW_PRESS) {
-		if (gen <= gen_G) {
+		if (gen_G >= 2) {
 			gen = 2;
 		}
 	}
 	if (glfwGetKey(window, GLFW_KEY_4) == GLFW_PRESS) {
-		if (gen <= gen_G) {
+		if (gen_G >= 3) {
 			gen = 3;
 		}
 	}
 	if (glfwGetKey(window, GLFW_KEY_5) == GLFW_PRESS) {
-		if (gen <= gen_G) {
+		if (gen_G >= 4) {
 			gen = 4;
 		}
 	}

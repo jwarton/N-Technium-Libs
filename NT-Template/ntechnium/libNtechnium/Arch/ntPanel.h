@@ -26,8 +26,13 @@
 
 using namespace jpw;
 
+enum grid_T { SQU, TRI, DIA };  // ADD: DIV, EQU
+
 class ntPanel{
 private:
+	enum P_mode { GRID, SUBD };
+	P_mode perf_Mode = SUBD;
+
 	void init();
 	///////////////////////////////////////////////////////////////
 	/////////////////////////////////////////////// PANEL TEXT DATA
@@ -39,6 +44,11 @@ private:
 	///////////////////////////////////////////////////////////////
 	/////////////////////////////// GRAPH PERFORATION | PANELS DATA
 	ntGraph graph;	
+
+	void sub_Div(std::vector< vector <ntFace3>* >*	faces, int gen, bool isPanel);
+	void plot_Perf_GR(int div, enum grid_T grid);
+	void plot_Perf_SD(int div);
+	float calc_Perf_R(Vec3 *vec, float val);
 
 public:
 	///////////////////////////////////////////////////////////////
@@ -54,8 +64,10 @@ public:
 
 	///////////////////////////////////////////////////////////////
 	///////////////////////////////////// SUBIVISION DATA STRUCTURE
-	std::vector <ntVec3*>			vecs_UV;   ///     UV PARAMETERS FROM RHINO PASS TO FACES
+	std::vector <ntVec3*>			vecs_UV;   //  UV AT CORNERS
 	std::vector <ntVec3*>			vecs_SD;   //  LOCAL COORDINATE
+	std::vector <vector <ntVec3*>*> p_XY_Rows; //  VEC POS BY ROW
+	std::vector <vector <ntVec3*>*> p_UV_Rows; //  UVW PRM BY ROW
 	std::vector <vector <ntFace3>*>	faces_L;   //  LOCAL COORDINATE
 	std::vector <vector <ntFace3>*>	faces_G;   //  WORLD COORDINATE
 
@@ -68,20 +80,22 @@ public:
 	///////////////////////////////////////////////////////////////
 	//////////////////////////////////// PERFORATION DATA STRUCTURE
 	std::vector <ntCircle*>			perfs;     //  LIST OF ALL PERF
-	std::vector <vector <ntVec3*>*> p_Rows;    /// PERF POS BY ROWS  USED BY calc_Perf02
-	std::vector<ntVec3*>			p_Pos;	   ///  LIST OF ALL POS  USED BY ORTHO FUNCTION
-	std::vector<float>				p_Rad;	   //   LIST OF ALL RAD
-	std::vector<ntVec3*>			p_UVs;	   //   LIST OF UV AT PERF POS
-	std::vector <vector <ntVec3*>*> p_UV_Rows;
-	std::vector <vector <Col4f* >*> p_Col;     /// NOT IN USE
+	std::vector<ntVec3*>			p_Pos;	   //  LIST OF ALL POS  USED BY ORTHO FUNCTION
+	std::vector<float>				p_Rad;	   //  LIST OF ALL RAD
+	std::vector<ntVec3*>			p_UVs;	   //  LIST OF UV AT PERF POS
+	std::vector<float>				p_Col;	   //  LIST OF VAL AT PERF POS
 
+					
 	///////////////////////////////////////////////////////////////
 	//////////////////////////////////////// PERFORATION PARAMETERS
 	float	r_Min =			0.1625;
 	float	r_Max =			0.625;
-	float	edge_Offset =	0.75;
+	float	edge_Offset =	0.75 + r_Max;
 	int		n_seg =			36;
-	bool	is_Inc =		false;
+	int		perf_size;
+
+	bool is_Increment =		true;
+	bool is_Noise =			false;
 	///////////////////////////////////////////////////////////////
 	////////////////////////////////////////////// PANEL PARAMETERS
 	ntColor4f	col;
@@ -103,15 +117,18 @@ public:
 	void calcNorm();					/// RENAME
 	void calcCentroid();				/// RENAME
 	//void calc_Area();
+
 	void sub_Div(int gen);
-	void sub_Div(std::vector< vector <ntFace3>* >*	faces, int gen, bool isPanel);
 	void sub_Div(int div, bool isDiv);
 
-	void calc_Perf_00();
-	void calc_Perf_SD();
-	void calc_Perf_SD(int div);
-	void calc_Perf_R(Vec3 *vec, float val);
+	ntVec3* map_UVW(std::vector<ntVec3*> vec_XYZ, std::vector<ntVec3*> vec_UVW, ntVec3* xyz);
+	ntVec3* map_UVW(arma::mat T, ntVec3* xyz);
+	arma::mat get_Mat_T(std::vector<ntVec3*> vec_XYZ, std::vector<ntVec3*> vec_UVW);
+
+	void plot_Perf(int div, enum grid_T grid);
 	void add_Perf();
+
+
 	void set_Graph();
 
 	bool pt_isInside(ntVec3* point);

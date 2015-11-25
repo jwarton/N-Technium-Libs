@@ -75,7 +75,8 @@ void ntPanel::calcNorm(){
 	//norm.invert();
 	normal = ntNormal(*cent,norm,.05);
 }
-/// //MANAGES BOTH LOCAL AND GLOBAL SD PROCESS
+///////////////////////////////////////////////////////////////
+////////////////////// MANAGES BOTH LOCAL AND GLOBAL SD PROCESS
 void ntPanel::sub_Div(int gen) {
 	cnt_SubDiv += gen;
 
@@ -91,7 +92,8 @@ void ntPanel::sub_Div(int gen) {
 		is_SubDiv = true;  ///EXCEPTION PREVENTS MULTIPLE SUBDIVISION CALLS
 	}
 }
-/// //CALLED FROM sub_Div(gen) AND RECURSIVELY CALLS UNITL GEN==0
+///////////////////////////////////////////////////////////////
+/////////////// CALLED FROM sub_Div(gen) RECURSIVE UNITL GEN==0
 void ntPanel::sub_Div(std::vector< vector <ntFace3>* >*	faces, int gen, bool isPanel) {
 	if (gen > 0) {
 		int dim = faces->size() - 1;
@@ -106,11 +108,11 @@ void ntPanel::sub_Div(std::vector< vector <ntFace3>* >*	faces, int gen, bool isP
 			ntVec3 * n0 = faces->at(dim)->at(i).edges[0].getMid();
 			ntVec3 * n1 = faces->at(dim)->at(i).edges[1].getMid();
 			ntVec3 * n2 = faces->at(dim)->at(i).edges[2].getMid();
-			/// // SET UVW INTERPOLATION
+			// SET UVW INTERPOLATION
 			ntVec3 * uvw0 = faces->at(dim)->at(i).uvw0;
 			ntVec3 * uvw1 = faces->at(dim)->at(i).uvw1;
 			ntVec3 * uvw2 = faces->at(dim)->at(i).uvw2;
-			/// CALCULATE UVW POINT BETWEEN
+			// CALCULATE UVW POINT BETWEEN
 			ntVec3 * uvw3 = pt_Mid(uvw0,uvw1);
 			ntVec3 * uvw4 = pt_Mid(uvw1,uvw2);
 			ntVec3 * uvw5 = pt_Mid(uvw2,uvw0);
@@ -119,7 +121,7 @@ void ntPanel::sub_Div(std::vector< vector <ntFace3>* >*	faces, int gen, bool isP
 			ntFace3 f1 = ntFace3(v1, n1, n0);
 			ntFace3 f2 = ntFace3(v2, n2, n1);
 			ntFace3 f3 = ntFace3(n0, n1, n2);
-			/// SET UVW FOR EACH VERTEX IN GROUP
+			// SET UVW FOR EACH VERTEX IN GROUP
 			f0.setUVW(uvw0, uvw3, uvw5);
 			f1.setUVW(uvw1, uvw4, uvw3);
 			f2.setUVW(uvw2, uvw5, uvw4);
@@ -144,9 +146,8 @@ void ntPanel::sub_Div(std::vector< vector <ntFace3>* >*	faces, int gen, bool isP
 		sub_Div(faces, gen - 1, isPanel);
 	}
 }
-/// //CURRENT IMPLEMENTATION:  ENABLES calc_Perf_SD AFTER CALL
+///////////////////////////////////////////////////////////////
 void ntPanel::sub_Div(int div, bool isPerf) {
-	using namespace arma;
 	/////////////////////////////////////////////////////////////////
 	////////////////// FUNCTION SUBDIVIDES TO SPECIFIED EDGE DIVISION
 	////////////////// IF BOOL == TRUE PERFORATION POS PASSED TO LIST
@@ -156,10 +157,9 @@ void ntPanel::sub_Div(int div, bool isPerf) {
 	/////////////// CALCULATE GRID POSTION BY TRIANGULAR SUBDIVISIION
 	ntVec3* vec;
 	ntVec3* uvw;
-
 	///////////////////////////////////////////////////////////////
-	int cols = div - 1;
-	int rows = div - 1;
+	int n_cols = div - 1;
+	int n_rows = div - 1;
 	float step_X;
 	float shif_X;
 	float step_Y;
@@ -179,7 +179,6 @@ void ntPanel::sub_Div(int div, bool isPerf) {
 		ntVec3 UV1 = ntVec3(vecs_UV.at(1)->x, vecs_UV.at(1)->y, vecs_UV.at(1)->z);
 		ntVec3 UV2 = ntVec3(vecs_UV.at(2)->x, vecs_UV.at(2)->y, vecs_UV.at(2)->z);
 
-		//face.setUVW(&UV0, &UV1, &UV2);
 		///////////////////////////////////////////////////////////////
 		////////////////// SCALE CORNER POINTS TO SUBDIVISION INCREMENT
 		float scFactor = 1.0 / div;
@@ -191,73 +190,45 @@ void ntPanel::sub_Div(int div, bool isPerf) {
 		shif_X = v02.x;
 		step_Y = v02.y;
 
-		/// WRAP AFFINE TRANSFORMATION IN FUNCTION FOR CONVIENENCE
-		//AFFINE TRANSFORMATION OF POINT IN XYZ TO UVW
-		arma::mat A;	//XYZ POSITION
-		A	<< vecs_SD.at(0)->x << vecs_SD.at(0)->y << 1.0 << arma::endr
-			<< vecs_SD.at(1)->x << vecs_SD.at(1)->y << 1.0 << arma::endr
-			<< vecs_SD.at(2)->x << vecs_SD.at(2)->y << 1.0 << arma::endr;
-		
-		arma::mat B;	//UVW PARAMETER
-		B	<< UV0.x << UV0.y << 1.0 << arma::endr
-			<< UV1.x << UV1.y << 1.0 << arma::endr
-			<< UV2.x << UV2.y << 1.0 << arma::endr;
+		////AFFINE TRANSFORMATION OF POINT IN XYZ TO UVW
+		arma::mat T = arma::eye<arma::mat>(3, 3);
+		T = get_Mat_T(vecs_SD, vecs_UV);
 
-		//TRANSFORMATION MATRIX
-		arma::mat T = eye<mat>(3, 3);
-		T = solve(A, B);
-		T = T.t();
-
-		arma::mat UVW =	zeros(3,1);
 		///////////////////////////////////////////////////////////////
-		//////////////////////////////////// PLOT PERFORATION POSITIONS
-		for (int i = 1; i < rows; i++) {
+		//////////////////////////////////// PLOT SUBDIVISION POSITIONS
+		for (int i = 1; i < n_rows; i++) {
 			std::vector <ntVec3*>* p_vecs = new vector <ntVec3*>;
 			std::vector <ntVec3*>* p_uvws = new vector <ntVec3*>;
-			for (int j = 1; j < cols; j++) {
-
-				/// DEFINE POSITION OFFSET FOR X
+			for (int j = 1; j < n_cols; j++) {
+				// DEFINE POSITION OFFSET FOR X
 				vec = new ntVec3((step_X * j) + (shif_X * i), (step_Y * i), 0);
 				p_vecs->push_back(vec);
 				vecs_SD.push_back(vec);
 
-				UVW(0) = vec->x;
-				UVW(1) = vec->y;
-				UVW(2) = 1.0;
-				UVW = T * UVW;
-
-				uvw = new ntVec3(UVW(0), UVW(1), 0);
-
+				uvw = map_UVW(T, vec);
 				p_uvws->push_back(uvw);
-				p_UVs.push_back(uvw);
 
-				if (j == (cols - 1)) {
-					cols = cols - 1;
+				if (j == (n_cols - 1)) {
+					n_cols = n_cols - 1;
 				}
 			}
-			p_Rows.push_back(p_vecs);
+			p_XY_Rows.push_back(p_vecs);
 			p_UV_Rows.push_back(p_uvws);
-		}
-		//std::cout << endl;
-		int uvSize = p_UV_Rows.size();
-		if (stoi(panel_ID)<1) {
-			std::cout << "NUMBER OF ROWS:             " << uvSize << endl;
-			std::cout << "NUMBER OF COLUMNS:          " << p_UV_Rows.at(0)->size() << endl;
 		}
 
 		///////////////////////////////////////////////////////////////
 		///////////////////////////// ADD FACES TO NEW SUBDIVISION LIST
 		std::vector <ntFace3>* faces = new vector<ntFace3>;
 
-		for (int row = 0; row < (p_Rows.size()-1); row++) {
-			for (int col = 0; col < (p_Rows.at(row)->size()-1); col++) {
+		for (int i = 0; i < (p_XY_Rows.size()-1); i++) {
+			for (int j = 0; j < (p_XY_Rows.at(i)->size()-1); j++) {
 
-				ntVec3 * vec0 = p_Rows.at(row)->at(col);
-				ntVec3 * vec1 = p_Rows.at(row)->at(col + 1);
-				ntVec3 * vec2 = p_Rows.at(row + 1)->at(col);
-				ntVec3 * uvw0 = p_UV_Rows.at(row)->at(col);
-				ntVec3 * uvw1 = p_UV_Rows.at(row)->at(col + 1);
-				ntVec3 * uvw2 = p_UV_Rows.at(row + 1)->at(col);
+				ntVec3 * vec0 = p_XY_Rows.at(i)->at(j);
+				ntVec3 * vec1 = p_XY_Rows.at(i)->at(j + 1);
+				ntVec3 * vec2 = p_XY_Rows.at(i + 1)->at(j);
+				ntVec3 * uvw0 = p_UV_Rows.at(i)->at(j);
+				ntVec3 * uvw1 = p_UV_Rows.at(i)->at(j + 1);
+				ntVec3 * uvw2 = p_UV_Rows.at(i + 1)->at(j);
 
 				ntFace3 f0 = ntFace3(vec0, vec1, vec2);
 
@@ -268,6 +239,166 @@ void ntPanel::sub_Div(int div, bool isPerf) {
 		faces_L.push_back(faces);
 	}
 	is_PerfSD = isPerf;
+}
+///////////////////////////////////////////////////////////////
+void ntPanel::plot_Perf(int div, enum grid_T grid = SQU) {
+	if (grid == TRI) {
+		plot_Perf_SD(div);
+	}
+	else if (grid == DIA || grid == SQU) {
+		plot_Perf_GR(div, grid);
+	}
+}
+void ntPanel::plot_Perf_GR(int div, enum grid_T grid) {
+	ntVec3* vec;
+	ntVec3* uvw;
+	///////////////////////////////////////////////////////////////
+	///////////////// CALCULATE GRID POSTION ORTHOGRAPHIC TO EDGE-0
+	float w = (v1->x - v0->x) - (edge_Offset * 2);
+	int n_cols = div;
+
+	float spX = (v2->y - v0->y) / n_cols;
+	float spY = spX;
+	if (spX < ((r_Max * 2) + r_Max)) {
+		spX = ((r_Max * 2) + r_Max);
+		spY = spX;
+		n_cols = ceil((v1->x - v0->x) / spX) + 10;
+	}
+
+	int n_rows = ceil((v1->x - v0->x) / spX) + 10;
+	float y;
+	float x;
+
+	bool isPtInSd = false;
+	float val = 0.5;
+
+	////AFFINE TRANSFORMATION OF POINT IN XYZ TO UVW
+	arma::mat T = arma::eye<arma::mat>(3, 3);
+	T = get_Mat_T(vecs_SD, vecs_UV);
+
+	///////////////////////////////////////////////////////////////
+	//////////////////////////////////// PLOT PERFORATION POSITIONS
+	for (int i = 0; i <= n_cols; i++) {
+		std::vector <ntVec3*>* p_vecs = new vector <ntVec3*>;
+		std::vector <ntVec3*>* p_uvws = new vector <ntVec3*>;
+		for (int j = 0; j <= n_rows; j++) {
+
+			if (grid == SQU) {
+				x = v2->x - (spX * n_cols * 0.5) + (spX * i) + (spX * 0.5);
+			}
+			if (grid == DIA) {
+				if (j % 2 == 0) {
+					x = v2->x - (spX * n_cols * 0.5) + (spX * i) + (spX * 0.5);
+				}
+				else {
+					x = v2->x - (spX * n_cols * 0.5) + (spX * i);
+				}
+			}
+
+			y = (spY * j) + edge_Offset;
+
+			vec = new ntVec3(x, y, 0);
+			bool c1 = faces_L.at(0)->at(0).pt_isInside(vec);
+
+			if (c1 == true) {
+				uvw = map_UVW(T, vec);
+
+				p_vecs->push_back(vec);
+				p_uvws->push_back(uvw);
+
+				p_Pos.push_back(vec);
+				p_UVs.push_back(uvw);
+			}
+		}
+		p_XY_Rows.push_back(p_vecs);
+		p_UV_Rows.push_back(p_uvws);
+	}
+}
+void ntPanel::plot_Perf_SD(int div) {
+	ntVec3* vec;
+	ntVec3* uvw;
+
+	int gen = cnt_SubDiv;
+
+	if (is_PerfSD == false) {
+		sub_Div(div, true);
+	}
+	if (is_PerfSD == true) {
+		for (int i = 0; i < p_XY_Rows.size(); i++) {
+			for (int j = 0; j < p_XY_Rows.at(i)->size(); j++) {
+
+				vec = p_XY_Rows.at(i)->at(j);
+				uvw = p_UV_Rows.at(i)->at(j);
+
+				p_Pos.push_back(vec);
+				p_UVs.push_back(uvw);
+			}
+		}
+	}
+}
+
+float ntPanel::calc_Perf_R(Vec3 *vec, float val) {
+	///////////////////////////////////////////////////////////////
+	////////////////////////// EXPECTED INPUT RANGE FOR VAL [0 - 1]
+	float r;
+	float fx = ((rand() % 10)*.01) * 4; /// (((rand() % 10)*.01) - 0.05)
+										///////////////////////////////////////////////////////////////
+										//////////////////////////////// RANDOMIZED NOISE FACTOR RADIUS
+	if (is_Noise == true) {
+		r = val + fx;
+		fx = ((rand() % 10)*.01) * 3;
+		r -= fx;
+	}
+	else {
+		r = val;
+	}
+
+	if (r > 1) {
+		r = 1;
+	}
+	///////////////////////////////////////////////////////////////
+	////////////////////////  RADIUS WITH INCREMENTAL STEPPED SIZES
+	if (is_Increment == true) {
+		int n_inc = r_Max / 0.0625;
+
+		r = mapRange(0, n_inc, 0, 1, r, false);
+		r = round(r);
+		r = (r * 0.0625);
+	}
+	else {
+		r = round(r * 10) * 0.1;
+		float min = -0.125;
+		r = mapRange(min, r_Max, 0, 1, r, false);
+	}
+	///////////////////////////////////////////////////////////////
+	///////////////////////////////////  SET RADIUS AND ADD TO LIST
+	if (r > (r_Max)) {
+		r = r_Max;
+	}
+
+	if (r < r_Min) {
+		r = 0;
+	}
+	return r;
+}
+void ntPanel::add_Perf() {
+	///////////////////////////////////////////////////////////////
+	// LOOP THROUGH POS|RAD DATA STRUCTURES AND CREATE PERF OBJECTS
+	if (p_Pos.size() > 0) {
+		for (int i = 0; i < p_Pos.size(); i++) {
+			//float r = p_Rad.at(i);
+			ntVec3* vec = p_Pos.at(i);
+			float val = p_Col.at(i);
+			float r = calc_Perf_R(vec, val);
+			r = r_Max;
+			p_Rad.push_back(r);
+			if (r != 0) {
+				ntCircle * perf = new ntCircle(vec, r, n_seg, Col4(.25, .25, .25, 1));
+				perfs.push_back(perf);
+			}
+		}
+	}
+	perf_size = perfs.size();
 }
 ///////////////////////////////////////////////////////////////
 void ntPanel::set_Color(ntColor4f col){
@@ -321,6 +452,7 @@ void ntPanel::set_Graph() {
 		is_Graph = true;
 	}
 }
+///////////////////////////////////////////////////////////////
 string ntPanel::get_ID() {
 	return panel_ID;
 }
@@ -343,272 +475,80 @@ std::vector<ntVec3*> ntPanel::get_Perf() {
 std::vector<float> ntPanel::get_Perf_R() {
 	return p_Rad;
 }
-/// PREVIOUS VERSION TO REFACTOR AS 3 COMPLETE OPTIONS
-/// ORTHOGRAPHIC | FINAL SD GEN | NEW SD EXPLICIT
-void ntPanel::calc_Perf_00() {
+
+
+///////////////////////////////////////////////////////////////
+///////////////////////////////////////////// MAPPING FUNCTIONS
+arma::mat ntPanel::get_Mat_T(std::vector<ntVec3*> vec_XYZ, std::vector<ntVec3*> vec_UVW) {
 	///////////////////////////////////////////////////////////////
-	///////////////// CALCULATE GRID POSTION ORTHOGRAPHIC TO EDGE-0
-	float w = (v1->x - v0->x) - (edge_Offset * 2);
-	float spX = (r_Max * 2) + .125;
-	float spY = (r_Max * 2) - .25;
-	int x_Div = ceil((v1->x - v0->x) / spX) + 5;
-	int y_Div = ceil((v2->y - v0->y) / spY) + 5;
-	float y;
-	float x;
-	float r;
-	ntVec3* vec;
+	//SOLVE TRANSFORMATION MATRIX OF TRIANGLE XYZ TO UVW
+	arma::mat A;	//XYZ POSITION
+	A << vec_XYZ.at(0)->x << vec_XYZ.at(0)->y << 1.0 << arma::endr
+		<< vec_XYZ.at(1)->x << vec_XYZ.at(1)->y << 1.0 << arma::endr
+		<< vec_XYZ.at(2)->x << vec_XYZ.at(2)->y << 1.0 << arma::endr;
 
-	bool isPtInSd = false;
-	float valCol = 0;
+	arma::mat B;	//UVW PARAMETER
+	B << vec_UVW.at(0)->x << vec_UVW.at(0)->y << 1.0 << arma::endr
+		<< vec_UVW.at(1)->x << vec_UVW.at(1)->y << 1.0 << arma::endr
+		<< vec_UVW.at(2)->x << vec_UVW.at(2)->y << 1.0 << arma::endr;
 
-	for (int i = 0; i <= x_Div; i++) {
-		for (int j = 0; j <= y_Div; j++) {
+	//TRANSFORMATION MATRIX
+	arma::mat T = arma::eye<arma::mat>(3, 3);
+	T = arma::solve(A, B);
+	T = T.t();
 
-			if (j % 2 == 0) {
-				x = v2->x - (spX * x_Div * 0.5) + (spX * i) + (spX * 0.5);
-			}
-			else {
-				x = v2->x - (spX * x_Div * 0.5) + (spX * i); 
-			}
-			y = (spY * j) + edge_Offset;
-
-			// SET ACTIVE SUBDIVISION GENERATION
-			int gen = cnt_SubDiv;
-			vec = new ntVec3(x, y, 0);
-
-			if (pt_isInside(vec)) {
-				int dim = faces_L.at(gen)->size(); // SIZE OF SUB PANELS
-
-				for (int k = 0; k < dim; k++) {
-					isPtInSd = faces_L.at(gen)->at(k).pt_isInside(vec);
-					if (isPtInSd == true) {
-
-						// LOAD VERTEX COLOR
-						float c0 = faces_L.at(gen)->at(k).vert0->col.r;
-						float c1 = faces_L.at(gen)->at(k).vert1->col.r;
-						float c2 = faces_L.at(gen)->at(k).vert2->col.r;
-						//	EVALUATE DISTANCE SQRD TO EACH VERTEX
-						float d0 = faces_L.at(gen)->at(k).v0->distSqrd(vec)/3;
-						float d1 = faces_L.at(gen)->at(k).v1->distSqrd(vec)/3;
-						float d2 = faces_L.at(gen)->at(k).v2->distSqrd(vec)/3;
-						float dT = d0 + d1 + d2/3;
-						// MAP DISTANCE TO VERTEX WEIHTS
-						float w0 = mapRange(0, 1, 0, dT, d0);
-						float w1 = mapRange(0, 1, 0, dT, d1);
-						float w2 = mapRange(0, 1, 0, dT, d2);
-
-						valCol = (c0 * w0) + (c1 * w1) + (c2 * w2);
-						///valCol = faces_L.at(gen)->at(i).col.r;  //CENTROID COLOR
-
-						r = valCol * ((rand() % 10)*.1);
-						r = round(r * 10) * 0.1;
-						if (r > 1) {
-							r = 1;
-						}
-						r = mapRange(r_Min, r_Max, 0, 1, r);
-						if (r > r_Min) {
-							p_Pos.push_back(vec);
-							p_Rad.push_back(r);
-						}
-						k = dim;
-					}
-				}
-			}
-		}
-	}
-	add_Perf();
+	return T;
 }
-void ntPanel::calc_Perf_SD(int div) {
+ntVec3*   ntPanel::map_UVW(arma::mat T, ntVec3* xyz) {
 	///////////////////////////////////////////////////////////////
-	///////////// CALCULATE GRID POSTION BY TRIANGULAR SUBDIVISIION
-	ntVec3* vec;
-	float r;
-	bool isPtInSd = false;
-	float valCol = 0;
+	// AFFINE TRANSFORMATION OF POINT IN XYZ TO UVW
+	// RETURNS POINT IN UVW COORDINATE SPACE
+	// EMPTY PARAMETER FOR TRANSFORMATION
+	arma::mat UVW = arma::zeros(3, 1);
+	UVW(0) = xyz->x;
+	UVW(1) = xyz->y;
+	UVW(2) = 1.0;
 
-	/// CALL PANEL SUDIVISION(ROWS)
-	/// sub_Div(50, true);
-	/// /////////////////////////////////////////////////////////////////////////////////////////////////
-	int cols = div-1;
-	int rows = div-1;
-	bool isDiv = true;
-
-	float step_X;
-	float shif_X;
-	float step_Y;
-
-	if (isDiv) {
-		///////////////////////////////////////////////////////////////
-		// COPY PANEL CORNER POINTS
-		ntVec3 v00 = ntVec3(vecs_SD.at(0)->x, vecs_SD.at(0)->y, vecs_SD.at(0)->z);
-		ntVec3 v01 = ntVec3(vecs_SD.at(1)->x, vecs_SD.at(1)->y, vecs_SD.at(1)->z);
-		ntVec3 v02 = ntVec3(vecs_SD.at(2)->x, vecs_SD.at(2)->y, vecs_SD.at(2)->z);
-
-		ntFace3 face = ntFace3(&v00, &v01, &v02);
-
-		// SCALE CORNER POINTS TO SUBDIVISION INCREMENT
-		float scFactor = 1.0 / div;
-		for (int i = 0; i < 3; i++) {
-			ntMatrix4 matSc = ntMatrix4(face.vecs[i]);
-			matSc.scale3d(scFactor);
-		}
-
-		step_X = v01.x;
-		shif_X = v02.x;
-		step_Y = v02.y;
-
-		// PLOT PERFORATION POSITIONS
-		for (int i = 1; i < rows; i++) {
-			std::vector <ntVec3*>* p_vecs = new vector <ntVec3*>;
-			for (int j = 1; j < cols; j++) {
-				/// DEFINE POSITION OFFSET FOR X
-				vec = new ntVec3((step_X * j) + (shif_X * i), (step_Y * i), 0);
-				p_vecs->push_back(vec);
-				if (j == (cols - 1)) {
-					cols = cols - 1;
-				}
-			}
-			p_Rows.push_back(p_vecs);
-		}
-		/// /////////////////////////////////////////////////////////////////////////////////////////////////
-		for (int i = 0; i < p_Rows.size(); i++) {
-			for (int j = 0; j < p_Rows.at(i)->size(); j++) {
-				vec = p_Rows.at(i)->at(j);
-				///////////////////////////////////////////////////////////////
-				/////////////////// COORDINATE PERF LOCATION TO SUBDIVIDED AREA
-				int gen = cnt_SubDiv;
-				// QUANTITY OF SUB-PANELS
-				int dim = faces_L.at(gen)->size();
-
-				for (int k = 0; k < dim; k++) {
-					isPtInSd = faces_L.at(gen)->at(k).pt_isInside(vec);
-					if (isPtInSd == true) {
-
-						// LOAD VERTEX COLOR
-						float c0 = faces_L.at(gen)->at(k).vert0->col.r;
-						float c1 = faces_L.at(gen)->at(k).vert1->col.r;
-						float c2 = faces_L.at(gen)->at(k).vert2->col.r;
-						float cT = c0 + c1 + c2;
-						// EVALUATE DISTANCE SQRD TO EACH VERTEX
-						float d0 = faces_L.at(gen)->at(k).v0->distSqrd(vec);
-						float d1 = faces_L.at(gen)->at(k).v1->distSqrd(vec);
-						float d2 = faces_L.at(gen)->at(k).v2->distSqrd(vec);
-						float dT = d0 + d1 + d2;
-						// MAP DISTANCE TO VERTEX WEIGHTS
-						float w0 = mapRange(0, 1, 0, dT, d0, false);
-						float w1 = mapRange(0, 1, 0, dT, d1, false);
-						float w2 = mapRange(0, 1, 0, dT, d2, false);
-
-						valCol = ((c0 * w0) + (c1 * w1) + (c2 * w2)) / 3;
-						valCol = mapRange(0, 1, 0, (cT / 3), valCol);
-
-						float fx = (((rand() % 10)*.01) - 0.05);
-
-						r = valCol * (rand() % 10) * 0.1 + fx;
-						r = round(r * 10) * 0.1;
-						if (r > 1) {
-							r = 1;
-						}
-						r = mapRange(r_Min, r_Max, 0, 1, r, false);
-						if (r > r_Min) {
-							p_Pos.push_back(vec);
-							p_Rad.push_back(r);
-						}
-						k = dim;
-					}
-				}
-			}
-		}
-		add_Perf();
-	}
+	//UVW PARAMETER AFTER MAPPING
+	UVW = T * UVW;
+	ntVec3 *uvw = new ntVec3(UVW(0), UVW(1), UVW(2));
+	return uvw;
 }
-/// CURRENT VERSIONS OF CALC PERF
-void ntPanel::calc_Perf_SD() {
-	ntVec3* vec;
-	bool isPtInSd = false;
-	float val = 0;
-	int gen = cnt_SubDiv;
+ntVec3*   ntPanel::map_UVW(std::vector<ntVec3*> vec_XYZ, std::vector<ntVec3*> vec_UVW, ntVec3* xyz) {
+	using namespace arma;
 
-	if (is_PerfSD == true){
-		int dim = faces_L.at(gen)->size();
-		int row_Length = p_Rows.at(0)->size()-1;
-		/// //REORGANIZE DATA STRUCTURE OF FACES TO ALLOW ROW ACCESS
-		///////////////////////////////////////////////////////////////
-		///////////// PLOT PERF LOCATION TO SUBDIVIDED VERTEX POSITIONS
-		for (int i = 0; i < dim; i++) {
-			if (i < row_Length) {
-				vec = faces_L.at(gen)->at(i).vecs[0];
-				val = faces_L.at(gen)->at(i).verts[0]->col.r;
-				calc_Perf_R(vec, val);
-			}
-			if (i == (row_Length-1)) {
-				vec = faces_L.at(gen)->at(i).vecs[1];
-				val = faces_L.at(gen)->at(i).verts[1]->col.r;
-				calc_Perf_R(vec, val);
-			}
-			vec = faces_L.at(gen)->at(i).vecs[2];
-			val = faces_L.at(gen)->at(i).verts[2]->col.r;
-			calc_Perf_R(vec, val);
-		}
-	}
-	add_Perf();
-}
-void ntPanel::calc_Perf_R(Vec3 *vec, float val){
-	float r;
-	float fx = ((rand() % 10)*.01) * 4; /// (((rand() % 10)*.01) - 0.05)
-	
-	bool isRandom = false; /// RANDOMIZE RADIUS
+	///////////////////////////////////////////////////////////////
+	// AFFINE TRANSFORMATION OF POINT IN XYZ TO UVW
+	// RETURNS POINT IN UVW COORDINATE SPACE
 
-	if (isRandom == true) {
-		r = val + fx;
-		fx = ((rand() % 10)*.01) * 3;
-		r -= fx;
-	}
-	else {
-		r = val;
-	}
+	arma::mat A;	//XYZ POSITION
+	A << vec_XYZ.at(0)->x << vec_XYZ.at(0)->y << 1.0 << arma::endr
+		<< vec_XYZ.at(1)->x << vec_XYZ.at(1)->y << 1.0 << arma::endr
+		<< vec_XYZ.at(2)->x << vec_XYZ.at(2)->y << 1.0 << arma::endr;
 
-	if (r > 1) {
-		r = 1;
-	}
+	arma::mat B;	//UVW PARAMETER
+	B << vec_UVW.at(0)->x << vec_UVW.at(0)->y << 1.0 << arma::endr
+		<< vec_UVW.at(1)->x << vec_UVW.at(1)->y << 1.0 << arma::endr
+		<< vec_UVW.at(2)->x << vec_UVW.at(2)->y << 1.0 << arma::endr;
 
-	is_Inc = true;			/// INCREMENTED RADIUS
+	//TRANSFORMATION MATRIX
+	arma::mat T = eye<mat>(3, 3);
+	T = solve(A, B);
+	T = T.t();
 
-	if (is_Inc == true) {
-		int n_inc = r_Max / 0.0625;
+	//EMPTY PARAMETER
+	arma::mat UVW = zeros(3, 1);
 
-		r = mapRange(0, n_inc, 0, 1, r, false);
-		r = round(r);
-		r = (r * 0.0625);
-	} else {
-		r = round(r * 10) * 0.1;
-		float min = -0.125;
-		r = mapRange(min, r_Max, 0, 1, r, false);
-	}
+	UVW(0) = xyz->x;
+	UVW(1) = xyz->y;
+	UVW(2) = 1.0;
 
+	//UVW PARAMETER AFTER MAPPING
+	UVW = T * UVW;
 
-	if (r > (r_Max)) {
-		r = r_Max;
-	}
+	ntVec3 *uvw = new ntVec3(UVW(0), UVW(1), UVW(2));
 
-	if (r >= r_Min) {
-		p_Pos.push_back(vec);
-		p_Rad.push_back(r);
-	}
-}
-
-void ntPanel::add_Perf() {
-	if (p_Pos.size() > 0) {
-		for (int i = 0; i < p_Pos.size(); i++) {
-			float r = p_Rad.at(i); 
-			ntCircle * perf = new ntCircle(p_Pos.at(i), r, n_seg, Col4(.25, .25, .25, 1));
-			perfs.push_back(perf);
-		}
-	} 
-	if (stoi(panel_ID) < 1) {
-		//std::cout << "number of rows:  " << i << endl;
-		std::cout << "PERFORATIONS PER PANEL:     " << perfs.size() << endl;
-	}
+	return uvw;
 }
 
 bool ntPanel::pt_isInside(ntVec3* point) {
@@ -709,4 +649,24 @@ void ntPanel::display_Face_G(int gen) {
 		display_Face_G(gen - 1);
 	}
 }
+
+///p_Col.push_back(val);
+/// WITHOUT SUBDIVISIONS // GRID MUST BE ASSOCIATED TO INDEPENDENT COLOR DATA STRUCTURE
+///////////////////////////////////////////////////////////////
+///// LOAD VERTEX COLOR IF OPTION SET TO VERTEX OR CENTROID COL
+//float c0 = faces_L.at(gen)->at(k).vert0->col.r;
+//float c1 = faces_L.at(gen)->at(k).vert1->col.r;
+//float c2 = faces_L.at(gen)->at(k).vert2->col.r;
+////	EVALUATE DISTANCE SQRD TO EACH VERTEX
+//float d0 = faces_L.at(gen)->at(k).v0->distSqrd(vec)/3;
+//float d1 = faces_L.at(gen)->at(k).v1->distSqrd(vec)/3;
+//float d2 = faces_L.at(gen)->at(k).v2->distSqrd(vec)/3;
+//float dT = d0 + d1 + d2/3;
+//// MAP DISTANCE TO VERTEX WEIGHT
+//float w0 = mapRange(0, 1, 0, dT, d0);
+//float w1 = mapRange(0, 1, 0, dT, d1);
+//float w2 = mapRange(0, 1, 0, dT, d2);
+
+//val = (c0 * w0) + (c1 * w1) + (c2 * w2);
+/////val = faces_L.at(gen)->at(i).col.r;  //CENTROID COLOR
 
