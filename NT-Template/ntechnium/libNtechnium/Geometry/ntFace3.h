@@ -11,13 +11,12 @@
 #include "ntVec3.h"
 #include "ntEdge.h"
 #include "ntNormal.h"
- 
+#include "ntMath.h"
 using namespace jpw;
 
 class ntFace3{
 private:
 	void init();
-	enum D_MODE {WIRE, SHADE, RENDER};
 
 public:
 	ntVec3 *v0,*v1,*v2;
@@ -50,6 +49,6 @@ public:
 	void calcNorm();
 	void calcCentroid();
 	void display();
-	
+	void display(L_mode mode);
 };
 #endif

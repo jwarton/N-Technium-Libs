@@ -341,12 +341,12 @@ float ntPanel::calc_Perf_R(Vec3 *vec, float val) {
 	///////////////////////////////////////////////////////////////
 	////////////////////////// EXPECTED INPUT RANGE FOR VAL [0 - 1]
 	float r;
-	float fx = ((rand() % 10)*.01) * 4; /// (((rand() % 10)*.01) - 0.05)
+	float fx = ((rand() % 10)*.01) * 7; /// (((rand() % 10)*.01) - 0.05)
 										///////////////////////////////////////////////////////////////
 										//////////////////////////////// RANDOMIZED NOISE FACTOR RADIUS
 	if (is_Noise == true) {
 		r = val + fx;
-		fx = ((rand() % 10)*.01) * 3;
+		fx = ((rand() % 10)*.01) * 6;
 		r -= fx;
 	}
 	else {
@@ -358,17 +358,27 @@ float ntPanel::calc_Perf_R(Vec3 *vec, float val) {
 	}
 	///////////////////////////////////////////////////////////////
 	////////////////////////  RADIUS WITH INCREMENTAL STEPPED SIZES
+	float inc = 0.0625;
+	float min = -3 * inc;  // r_Min == 0.1625 == 3 * inc [ if min == r_Min = 255]
+	float max = r_Max + inc;
+	
 	if (is_Increment == true) {
-		int n_inc = r_Max / 0.0625;
+		int U_bound = (max / 0.0625);
+		int L_bound = (min / 0.0625);
 
-		r = mapRange(0, n_inc, 0, 1, r, false);
+		r = mapRange(L_bound, U_bound, 0, 1, r, false);
 		r = round(r);
-		r = (r * 0.0625);
+		r = (r * inc);
 	}
 	else {
 		r = round(r * 10) * 0.1;
-		float min = -0.125;
-		r = mapRange(min, r_Max, 0, 1, r, false);
+		r = mapRange(min, max, 0, 1, r, false);
+	}
+
+	if (stoi(panel_ID) == 0) {
+		float val = mapRange(0,255, min, max, r_Min, false);
+		std::cout << val << endl;
+		//std::cout << r << endl;
 	}
 	///////////////////////////////////////////////////////////////
 	///////////////////////////////////  SET RADIUS AND ADD TO LIST
@@ -390,9 +400,8 @@ void ntPanel::add_Perf() {
 			ntVec3* vec = p_Pos.at(i);
 			float val = p_Col.at(i);
 			float r = calc_Perf_R(vec, val);
-			r = r_Max;
 			p_Rad.push_back(r);
-			if (r != 0) {
+			if (r > 0) {
 				ntCircle * perf = new ntCircle(vec, r, n_seg, Col4(.25, .25, .25, 1));
 				perfs.push_back(perf);
 			}
@@ -620,22 +629,23 @@ void ntPanel::display_EdgeSd(int gen) {
 		}
 		else {
 			// EXCEPTION FOR EXCEEDING GERERATIONS WITHIN BOUNDS
-			display_Face_L(gen - 1);
+			std::cout << gen << " EXCEEDS AVAILABLE GENERATIONS" << endl;
 		}
 	}
 }
-void ntPanel::display_Face_L(int gen) {
-	ntColor4f col = ntColor4f(1, 1, 1, .5);
+void ntPanel::display_Face_L(L_mode mode, int gen) {
 	if (gen <= faces_L.size()) {
 		for (int i = 0; i < faces_L.at(gen)->size(); i++) {
-			faces_L.at(gen)->at(i).display();
+			faces_L.at(gen)->at(i).display(mode);
 		}
 	}
 	else {
 		// EXCEPTION FOR EXCEEDING GERERATIONS WITHIN BOUNDS
-		display_Face_L(gen - 1);
+		std::cout << gen << " EXCEEDS AVAILABLE GENERATIONS" << endl;
+		display_Face_L(mode, gen - 1);
 	}
 }
+
 ///////////////////////////////////////////////////////////////
 ////////////////////////// DISPLAYS 3D MODELSPACE VIEW OF PANEL
 void ntPanel::display_Face_G(int gen) {

@@ -14,6 +14,7 @@
 //#include <cmath>
 
 enum D_mode { vQ, vF, vP, vS, vW, vA, vD };
+enum L_mode { vX, vC, vV };
 
 static float mapRange(float minA, float maxA, float minB, float maxB, float valB, bool inc = true){
 	float rangeA = maxA - minA;

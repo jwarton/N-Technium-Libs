@@ -119,7 +119,6 @@ void ntFace3::setUVW(std::vector <ntVec3*>	uvws) {
 	this->uvws[2] = uvws[2];
 }
 void ntFace3::display(){
-	//glColor4f(col.r, col.g, col.b,col.a);
 	glBegin(GL_TRIANGLES);
 	glColor4f(verts.at(0)->col.r, verts.at(0)->col.g, verts.at(0)->col.b, verts.at(0)->col.a);
 	glVertex3f(v0->x, v0->y, v0->z);
@@ -130,4 +129,32 @@ void ntFace3::display(){
 	glEnd();
 	///TODO centroid functionality needs work
 	//centroid.display();
+}
+void ntFace3::display(L_mode mode) {
+	if (mode == vX) {
+		glBegin(GL_TRIANGLES);
+		glColor4f(verts.at(0)->col.r, verts.at(0)->col.g, verts.at(0)->col.b, verts.at(0)->col.a);
+		glVertex3f(v0->x, v0->y, v0->z);
+		glVertex3f(v1->x, v1->y, v1->z);
+		glVertex3f(v2->x, v2->y, v2->z);
+		glEnd();
+	}
+	if (mode == vC) {
+		glBegin(GL_TRIANGLES);
+		glColor4f(col.r, col.g, col.b, col.a);
+		glVertex3f(v0->x, v0->y, v0->z);
+		glVertex3f(v1->x, v1->y, v1->z);
+		glVertex3f(v2->x, v2->y, v2->z);
+		glEnd();
+	}
+	if (mode == vV) {
+		glBegin(GL_TRIANGLES);
+		glColor4f(verts.at(0)->col.r, verts.at(0)->col.g, verts.at(0)->col.b, verts.at(0)->col.a);
+		glVertex3f(v0->x, v0->y, v0->z);
+		glColor4f(verts.at(1)->col.r, verts.at(1)->col.g, verts.at(1)->col.b, verts.at(1)->col.a);
+		glVertex3f(v1->x, v1->y, v1->z);
+		glColor4f(verts.at(2)->col.r, verts.at(2)->col.g, verts.at(2)->col.b, verts.at(2)->col.a);
+		glVertex3f(v2->x, v2->y, v2->z);
+		glEnd();
+	}
 }

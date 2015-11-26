@@ -88,14 +88,14 @@ public:
 					
 	///////////////////////////////////////////////////////////////
 	//////////////////////////////////////// PERFORATION PARAMETERS
-	float	r_Min =			0.1625;
-	float	r_Max =			0.625;
+	float	r_Min =			0.1875;	//3/16"
+	float	r_Max =			0.625;	//5/8"
 	float	edge_Offset =	0.75 + r_Max;
 	int		n_seg =			36;
 	int		perf_size;
 
 	bool is_Increment =		true;
-	bool is_Noise =			false;
+	bool is_Noise = true;// false;
 	///////////////////////////////////////////////////////////////
 	////////////////////////////////////////////// PANEL PARAMETERS
 	ntColor4f	col;
@@ -155,7 +155,7 @@ public:
 	void display_Graph();
 	void display_Edge();
 	void display_EdgeSd(int gen = 0);
-	void display_Face_L(int gen = 0);
+	void display_Face_L(L_mode mode, int gen = 0);
 	void display_Face_G(int gen = 0);
 	void display_Perf();
 };

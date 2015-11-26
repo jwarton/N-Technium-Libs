@@ -418,8 +418,8 @@ void ovisApp::funct(ntPanel* panel_ptr) {
 
 	///////////////////////////////////////////////////////////////
 	///////////////////////////////////// CALCULATE PEFORATION GRID
-	panel_ptr->plot_Perf(38, TRI);
-	//panel_ptr->set_Graph();
+	panel_ptr->plot_Perf(40, TRI);
+	panel_ptr->set_Graph();
 
 	///////////////////////////////////////////////////////////////
 	////////////////////////////////// LOAD TEXTURE MAP TO SURFACES
@@ -441,14 +441,16 @@ void ovisApp::funct(ntPanel* panel_ptr) {
 	}
 
 	int val = stoi(panel_ptr->get_ID());
-	if (val == 963 || val == 136 || val == 1689) {
+	if (val == 963) {
+	//if (val == 0) {
 		write_Panel_IMG(panel_ptr);
 	}
-	//int val = stoi(panel_ptr->get_ID());
-	//if (val < 25) {
-	//	//write_Panel_TXT(panel_ptr);
-	//	
-	//}
+	val = stoi(panel_ptr->get_ID());
+	if (val >= 1225  && val <= 1250) {
+		//write_Panel_IMG(panel_ptr);
+		//write_Panel_TXT(panel_ptr);
+		
+	}
 
 	/// SCALE PANELS TO VIEW--- REPLACE WITH CAMERA FIT FUNCTION //
 	/// TRANSLATE TO HUD LOCATION
@@ -999,7 +1001,19 @@ void ovisApp::run(){
 			}
 		}
 	}
-	display();
+
+	///////////////////////////////////////////////////////////////
+	/////////////////////////////////////  LOCAL FACE DISPLAY MODES
+	if (glfwGetKey(window, GLFW_KEY_X) == GLFW_PRESS) {
+		mode_L = vX;
+	}
+	if (glfwGetKey(window, GLFW_KEY_C) == GLFW_PRESS) {
+		mode_L = vC;
+	}
+	if (glfwGetKey(window, GLFW_KEY_V) == GLFW_PRESS) {
+		mode_L = vV;
+	}
+		display();
 }
 
 void ovisApp::display(){
@@ -1044,10 +1058,10 @@ void ovisApp::display(){
 			panels.at(panel_Index)->display_Perf();
 		}
 		if (m == vA) {
-			panels.at(panel_Index)->display_Face_L(gen_L);
+			panels.at(panel_Index)->display_Face_L(mode_L, gen_L);
 		}
 		if (m == vD) {
-			panels.at(panel_Index)->display_Face_L(gen);
+			panels.at(panel_Index)->display_Face_L(mode_L, gen);
 		}
 		if (m == vS) {
 			panels.at(panel_Index)->display_EdgeSd(gen);
