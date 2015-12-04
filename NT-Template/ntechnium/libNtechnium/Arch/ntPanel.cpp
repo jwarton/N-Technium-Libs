@@ -375,11 +375,11 @@ float ntPanel::calc_Perf_R(Vec3 *vec, float val) {
 		r = mapRange(min, max, 0, 1, r, false);
 	}
 
-	if (stoi(panel_ID) == 0) {
-		float val = mapRange(0,255, min, max, r_Min, false);
-		std::cout << val << endl;
-		//std::cout << r << endl;
-	}
+	//if (stoi(panel_ID) == 0) {
+	//	float val = mapRange(0,255, min, max, r_Min, false);
+	//	std::cout << val << endl;
+	//	//std::cout << r << endl;
+	//}
 	///////////////////////////////////////////////////////////////
 	///////////////////////////////////  SET RADIUS AND ADD TO LIST
 	if (r > (r_Max)) {

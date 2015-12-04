@@ -418,8 +418,8 @@ void ovisApp::funct(ntPanel* panel_ptr) {
 
 	///////////////////////////////////////////////////////////////
 	///////////////////////////////////// CALCULATE PEFORATION GRID
-	panel_ptr->plot_Perf(40, TRI);
-	panel_ptr->set_Graph();
+	panel_ptr->plot_Perf(36, TRI);
+	//panel_ptr->set_Graph();
 
 	///////////////////////////////////////////////////////////////
 	////////////////////////////////// LOAD TEXTURE MAP TO SURFACES
@@ -440,17 +440,17 @@ void ovisApp::funct(ntPanel* panel_ptr) {
 		// p_Rad.push_back(panel_ptr->p_Rad.at(i));
 	}
 
-	int val = stoi(panel_ptr->get_ID());
-	if (val == 963) {
-	//if (val == 0) {
-		write_Panel_IMG(panel_ptr);
-	}
-	val = stoi(panel_ptr->get_ID());
-	if (val >= 1225  && val <= 1250) {
-		//write_Panel_IMG(panel_ptr);
-		//write_Panel_TXT(panel_ptr);
-		
-	}
+	//int val = stoi(panel_ptr->get_ID());
+	//if (val == 963) {
+	////if (val == 0) {
+	//	//write_Panel_IMG(panel_ptr);
+	//}
+	//val = stoi(panel_ptr->get_ID());
+	//if (val >= 1225  && val <= 1250) {
+	//	//write_Panel_IMG(panel_ptr);
+	//	//write_Panel_TXT(panel_ptr);
+	//	
+	//}
 
 	/// SCALE PANELS TO VIEW--- REPLACE WITH CAMERA FIT FUNCTION //
 	/// TRANSLATE TO HUD LOCATION
