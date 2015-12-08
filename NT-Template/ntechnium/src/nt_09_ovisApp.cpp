@@ -271,8 +271,13 @@ void ovisApp::write_Panel_TXT(ntPanel* panel_ptr) {
 	file << "\n";
 	file << "//  PANEL ORIENTATION VECTOR:\n";
 	file << "//   VEC" << panel_ptr->get_n_G();
-	file << "//   UVW" << panel_ptr->get_UVW();
+	file << "//   UVW" << panel_ptr->get_UVW() << "\n";
+	file << "//  AREA:  " << to_string(calc_Area(panel_ptr)) << "            [ SQ.INCH ]\n";
 	file << "//  AREA:  " << to_string(calc_Area(panel_ptr)) << "            [ SQ.INCH ]\n\n";
+	file << "//  A0:     " << "____            [ DEGREES ]\n";
+	file << "//  A1:     " << "____            [ DEGREES ]\n";
+	file << "//  A2:     " << "____            [ DEGREES ]\n\n";
+
 	file << "//////////////////////////////////////////////////////////////////////\n";
 	file << "//  NODE POSITIONS:\n";
 	file << "//  [ LOCAL COORDINATES ]\n";
@@ -284,11 +289,12 @@ void ovisApp::write_Panel_TXT(ntPanel* panel_ptr) {
 	file << "//  PANEL ORIENTATION VECTOR:\n";
 	file << "//   VEC: " << format_VEC(&panel_ptr->norm) << "\n";
 	file << "\n";
-	file << "//  CORNER POSITIONS:          {POS:            }	\n";
+	file << "//  CORNER POSITIONS:          {POS:            }\n";
 	file << "\n";
 	file << "//  FASTENER POSITIONS:        {POS:  DIAMETER: }\n";
 	file << "\n";
 	file << "//  PERFORATION DATA:          {POS:  DIAMETER: }\n";
+	file << "//  PERFORATION COUNT:  " << to_string(panel_ptr->get_Perf().size()) << "\n\n";
 	for (int i = 0; i < panel_ptr->get_Perf().size(); i++) {
 		file << "     POS:  " << format_VEC(panel_ptr->get_Perf().at(i)) << "       DIA:  " << panel_ptr->get_Perf_R().at(i) * 2 << "\n";
 	}
@@ -440,11 +446,11 @@ void ovisApp::funct(ntPanel* panel_ptr) {
 		// p_Rad.push_back(panel_ptr->p_Rad.at(i));
 	}
 
-	//int val = stoi(panel_ptr->get_ID());
+	int val = stoi(panel_ptr->get_ID());
+	if (val < 1000) {
 	//if (val == 963) {
-	////if (val == 0) {
-	//	//write_Panel_IMG(panel_ptr);
-	//}
+		write_Panel_IMG(panel_ptr);
+	}
 	//val = stoi(panel_ptr->get_ID());
 	//if (val >= 1225  && val <= 1250) {
 	//	//write_Panel_IMG(panel_ptr);

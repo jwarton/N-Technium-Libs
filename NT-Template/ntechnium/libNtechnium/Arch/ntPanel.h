@@ -95,7 +95,7 @@ public:
 	int		perf_size;
 
 	bool is_Increment =		true;
-	bool is_Noise = true;// false;
+	bool is_Noise =			false; //true;// 
 	///////////////////////////////////////////////////////////////
 	////////////////////////////////////////////// PANEL PARAMETERS
 	ntColor4f	col;

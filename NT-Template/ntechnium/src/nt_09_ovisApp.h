@@ -52,7 +52,7 @@ private:
 	string url_IMG;
 	string path_IMG = nt_Utility::getPathToResources();
 	string pathExtension_IMG = "imgs\\ovis\\";
-	string fileName_IMG = "ovis_4x4";
+	string fileName_IMG = "ovis_2x2";
 	string fileExt_IMG = ".jpg";
 
 	af::array img_IN;
@@ -62,8 +62,8 @@ private:
 
 	///////////////////////////////////////////////////////////////
 	///////////////////////////////////////// SOURCE DATA VARIABLES
-	//string fileName_TXT = "ptPos_13_OvisTriPts";
-	string fileName_TXT = "ptPos_00_OvisZeppSys";
+	string fileName_TXT = "ptPos_13_OvisTriPts";
+	//string fileName_TXT = "ptPos_00_OvisZeppSys";
 	static string path;
 
 	bool isStartFile =	false;

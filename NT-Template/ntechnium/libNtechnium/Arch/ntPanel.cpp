@@ -341,12 +341,12 @@ float ntPanel::calc_Perf_R(Vec3 *vec, float val) {
 	///////////////////////////////////////////////////////////////
 	////////////////////////// EXPECTED INPUT RANGE FOR VAL [0 - 1]
 	float r;
-	float fx = ((rand() % 10)*.01) * 7; /// (((rand() % 10)*.01) - 0.05)
+	float fx = ((rand() % 10)*.01) * 8; /// (((rand() % 10)*.01) - 0.05)
 										///////////////////////////////////////////////////////////////
 										//////////////////////////////// RANDOMIZED NOISE FACTOR RADIUS
 	if (is_Noise == true) {
 		r = val + fx;
-		fx = ((rand() % 10)*.01) * 6;
+		fx = ((rand() % 10)*.01) * 7;
 		r -= fx;
 	}
 	else {
@@ -359,7 +359,8 @@ float ntPanel::calc_Perf_R(Vec3 *vec, float val) {
 	///////////////////////////////////////////////////////////////
 	////////////////////////  RADIUS WITH INCREMENTAL STEPPED SIZES
 	float inc = 0.0625;
-	float min = -3 * inc;  // r_Min == 0.1625 == 3 * inc [ if min == r_Min = 255]
+	///IMPROVE INTERFACE TO CONTRAST MULTIPLIER
+	float min = -6 * inc;  // r_Min == 0.1625 == 3 * inc [ if min == r_Min = 255]
 	float max = r_Max + inc;
 	
 	if (is_Increment == true) {
@@ -375,9 +376,13 @@ float ntPanel::calc_Perf_R(Vec3 *vec, float val) {
 		r = mapRange(min, max, 0, 1, r, false);
 	}
 
-	//if (stoi(panel_ID) == 0) {
-	//	float val = mapRange(0,255, min, max, r_Min, false);
-	//	std::cout << val << endl;
+	//float u_bd = max - min;
+
+	//if (stoi(panel_ID) == 963) {
+	//	val = r_Min - min;
+	//	val = mapRange(0,255, min, max, val, false);
+	//	//std::cout << "r_Min:" << r_Min << "  r:" << r << endl;
+	//	std::cout << "WHITE VALUE THRESHOLD:  " << val << endl;
 	//	//std::cout << r << endl;
 	//}
 	///////////////////////////////////////////////////////////////
