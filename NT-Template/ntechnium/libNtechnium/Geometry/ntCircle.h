@@ -20,6 +20,7 @@ using namespace jpw;
 class ntCircle{
 private:
 	void init();
+	double area;
 
 public:
 	ntVec3* pos;
@@ -43,7 +44,11 @@ public:
 	void setColor(ntColor4f col);
 	void calcNorm();
 	void calcCentroid();
+	void calcArea();
+
 	bool pt_isInside(ntVec3* point);
+	
+	double get_Area();
 
 	void display();
 	void display_dots();

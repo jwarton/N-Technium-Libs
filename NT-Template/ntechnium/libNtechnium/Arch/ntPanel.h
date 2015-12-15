@@ -10,6 +10,7 @@
 #define PANEL_JPW_NTECHNIUM
 
 #include <iostream>
+#include <array>
 #include <vector>
 #include "ntVec3.h"
 #include "ntColor4f.h"
@@ -43,7 +44,9 @@ private:
 
 	///////////////////////////////////////////////////////////////
 	/////////////////////////////// GRAPH PERFORATION | PANELS DATA
-	ntGraph graph;	
+	ntGraph graph;
+	ntGraph graph_P;
+	ntGraph graph_A;
 
 	void sub_Div(std::vector< vector <ntFace3>* >*	faces, int gen, bool isPanel);
 	void plot_Perf_GR(int div, enum grid_T grid);
@@ -73,7 +76,7 @@ public:
 
 	bool	is_SubDiv	= false;
 	bool	is_PerfSD   = false;
-	bool	is_Graph = false;
+	bool	is_Graph    = false;
 	int		cnt_SubDiv	= 0;
 	float	image_Val;				 // PIXEL VALUE AT PNL CENTROID
 	std::vector <float> image_Vals;  // PIXEL VALUE AT SD CENTROIDs
@@ -93,18 +96,22 @@ public:
 	float	edge_Offset =	0.75 + r_Max;
 	int		n_seg =			36;
 	int		perf_size;
+	double	perf_area;
+	double  perf_perc;
 
 	bool is_Increment =		true;
 	bool is_Noise =			false; //true;// 
 	///////////////////////////////////////////////////////////////
 	////////////////////////////////////////////// PANEL PARAMETERS
+	/// SHOULD BE PRIVATE MEMBER VARIALBES
+	/// ACCESSIBLE BY FUNCTION CALL ONLY
 	ntColor4f	col;
 	ntVec3		norm;
 	ntVec3*		cent;
 	ntVertex	centroid;
 	ntNormal	normal;
-	float		area;		/// SHOULD BE PRIVATE MEMBER VARIALBES
-							/// ACCESSIBLE BY FUNCTION CALL ONLY
+	double		area;				//units [sq. inch]
+	std::vector<double>	phi;		//units [degrees ]
 
 	///////////////////////////////////////////////////////////////
 	////////////////////////////////////////////////// CONSTRUCTORS
@@ -113,10 +120,11 @@ public:
 
 	///////////////////////////////////////////////////////////////
 	///////////////////////////////////////////////////// FUNCTIONS
-	void set_Color(ntColor4f col);		/// RENAME
-	void calcNorm();					/// RENAME
-	void calcCentroid();				/// RENAME
-	//void calc_Area();
+	void set_Color(ntColor4f col);
+	void calcNorm();					
+	void calcCentroid();				
+	void calcArea();
+	void calcPhi();
 
 	void sub_Div(int gen);
 	void sub_Div(int div, bool isDiv);
@@ -127,7 +135,6 @@ public:
 
 	void plot_Perf(int div, enum grid_T grid);
 	void add_Perf();
-
 
 	void set_Graph();
 
@@ -150,6 +157,9 @@ public:
 	std::vector<ntVec3*>	get_v_G();	//GLOBAL VERTICES
 	std::vector<ntVec3*>	get_Perf();
 	std::vector<float>		get_Perf_R();
+	float get_Area();
+	float get_AngleMin();
+	float get_AngleMax();
 
 	void display();
 	void display_Graph();

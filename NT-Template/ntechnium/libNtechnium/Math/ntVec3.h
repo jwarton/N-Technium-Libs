@@ -31,8 +31,9 @@ namespace jpw{
 		void div(float s);
 		void set(ntVec3* v);
 		
-		//returns dot product as angle between vectors
+		//returns dot product as cosine of angle between vectors
 		float dot(ntVec3* v);
+		float angle(ntVec3* v);
 		//returns cross product as new vector object perpendicular to v and v'
 		ntVec3 cross(ntVec3* v);
 		//set vector to (0,0,0)
@@ -49,6 +50,7 @@ namespace jpw{
 		void scale(ntVec3* pos, float factor);
 
 		void unitize();
+		void normalize();
 		void display();
 	};
 }

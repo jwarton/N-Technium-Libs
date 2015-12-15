@@ -67,6 +67,11 @@ float ntVec3::dot(ntVec3* v){
 	//RETURNS RADIANS
 	return ((x * v->x) + (y * v->y) + (z * v->z));
 }
+float ntVec3::angle(ntVec3* v) {
+	//RETURNS RADIANS
+	double phi = acos(dot(v));
+	return phi;
+}
 
 //returns cross product as vector perpendicular
 ntVec3 ntVec3::cross(ntVec3* v){
@@ -95,6 +100,11 @@ float ntVec3::mag(){
 void ntVec3::unitize(){
 	float m = mag();
 	div(m);
+}
+
+void ntVec3::normalize() {
+	float m = mag();
+	div(abs(m));
 }
 
 void ntVec3::translate(ntVec3* pos, ntVec3* dir, float dist){

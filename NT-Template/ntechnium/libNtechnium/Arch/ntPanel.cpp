@@ -75,6 +75,63 @@ void ntPanel::calcNorm(){
 	//norm.invert();
 	normal = ntNormal(*cent,norm,.05);
 }
+void ntPanel::calcArea() {
+	std::vector <double> xy_pairs;
+	std::vector <double> yx_pairs;
+	std::vector <double> v_;
+	double sum;
+
+	//MULTIPLY VERTEX COMPONENTS
+	for (int i = 0; i < verts.size() - 1; i++) {
+		double xy_ = vecs[i]->x * vecs[i + 1]->y;
+		double yx_ = vecs[i]->y * vecs[i + 1]->x;
+
+		xy_pairs.push_back(xy_);
+		yx_pairs.push_back(yx_);
+	}
+	//SUBTRACT MULTIPLICATION SETS
+	for (int i = 0; i < verts.size() - 1; i++) {
+		double val = xy_pairs.at(i) - yx_pairs.at(i);
+		v_.push_back(val);
+	}
+	//SUMMATION OF ALL SETS
+	std::for_each(v_.begin(), v_.end(), [&](int n) { sum += n; });
+	area = abs(sum / 2);
+}
+void ntPanel::calcPhi() {
+	double theta;
+	int ind1 = 1;
+	int ind2 = 2;
+	ntVec3* v  = new ntVec3(0, 0, 0);
+	ntVec3* d1 = new ntVec3(0, 0, 0);
+	ntVec3* d2 = new ntVec3(0, 0, 0);
+
+	for (int i = 0; i < 3; i++) {
+		v->set(vecs[i]);
+		d1->set(vecs[ind1]);
+		d2->set(vecs[ind2]);
+		
+		d1->sub(v);
+		d2->sub(v);
+
+		d1->unitize();
+		d2->unitize();
+
+		theta = toDegrees(d1->angle(d2));
+		phi.push_back(theta);
+
+		ind1 += 1;
+		ind2 += 1;
+
+		if (ind1 == 3) {
+			ind1 = 0;
+		}
+		if (ind2 == 3) {
+			ind2 = 0;
+		}
+	}
+	delete v, d1, d2;
+}
 ///////////////////////////////////////////////////////////////
 ////////////////////// MANAGES BOTH LOCAL AND GLOBAL SD PROCESS
 void ntPanel::sub_Div(int gen) {
@@ -342,8 +399,9 @@ float ntPanel::calc_Perf_R(Vec3 *vec, float val) {
 	////////////////////////// EXPECTED INPUT RANGE FOR VAL [0 - 1]
 	float r;
 	float fx = ((rand() % 10)*.01) * 8; /// (((rand() % 10)*.01) - 0.05)
-										///////////////////////////////////////////////////////////////
-										//////////////////////////////// RANDOMIZED NOISE FACTOR RADIUS
+
+	///////////////////////////////////////////////////////////////
+	//////////////////////////////// RANDOMIZED NOISE FACTOR RADIUS
 	if (is_Noise == true) {
 		r = val + fx;
 		fx = ((rand() % 10)*.01) * 7;
@@ -375,16 +433,6 @@ float ntPanel::calc_Perf_R(Vec3 *vec, float val) {
 		r = round(r * 10) * 0.1;
 		r = mapRange(min, max, 0, 1, r, false);
 	}
-
-	//float u_bd = max - min;
-
-	//if (stoi(panel_ID) == 963) {
-	//	val = r_Min - min;
-	//	val = mapRange(0,255, min, max, val, false);
-	//	//std::cout << "r_Min:" << r_Min << "  r:" << r << endl;
-	//	std::cout << "WHITE VALUE THRESHOLD:  " << val << endl;
-	//	//std::cout << r << endl;
-	//}
 	///////////////////////////////////////////////////////////////
 	///////////////////////////////////  SET RADIUS AND ADD TO LIST
 	if (r > (r_Max)) {
@@ -401,7 +449,6 @@ void ntPanel::add_Perf() {
 	// LOOP THROUGH POS|RAD DATA STRUCTURES AND CREATE PERF OBJECTS
 	if (p_Pos.size() > 0) {
 		for (int i = 0; i < p_Pos.size(); i++) {
-			//float r = p_Rad.at(i);
 			ntVec3* vec = p_Pos.at(i);
 			float val = p_Col.at(i);
 			float r = calc_Perf_R(vec, val);
@@ -409,9 +456,12 @@ void ntPanel::add_Perf() {
 			if (r > 0) {
 				ntCircle * perf = new ntCircle(vec, r, n_seg, Col4(.25, .25, .25, 1));
 				perfs.push_back(perf);
+				perf_area += perf->get_Area();
 			}
 		}
 	}
+	perf_perc = (perf_area / area) * 100;
+
 	perf_size = perfs.size();
 }
 ///////////////////////////////////////////////////////////////
@@ -452,19 +502,27 @@ void ntPanel::set_IMG(float val) {
 void ntPanel::set_Graph() {
 	///////////////////////////////////////////////////////////////////////
 	/////////////////////////////////////// GRAPH PERFORATION | PANELS DATA
-	ntVec3 *graphPos = new ntVec3(5, 390, 0);
+	ntVec3 *graphPos = new ntVec3(5, 400, 0);
 	ntVec3 *graphDim = new ntVec3(448, 40, 0);
 
-	int dim =		vecs_SD.size() - 1;  //USED FOR MAX SCALE OF GRAPH DIM Y
-	int set_size =  p_Rad.size() - 1;
-
-	//std::cout << "MAX SIZE FOR PERFORATIONS " << dim << endl;
-	//std::cout << "SET SIZE FOR PERFORATIONS "<< set_size << endl;
+	/// int dim =		vecs_SD.size() - 1;  //USED FOR MAX SCALE OF GRAPH DIM Y
+	int set_size =  p_Rad.size()   - 1;
 	if (set_size > 0) {
 		graph = ntGraph(graphPos, graphDim, p_Rad);
+		graph.sort();
 		graph.init();
 		is_Graph = true;
 	}
+	
+	ntVec3 *graph_A_Pos = new ntVec3(5, 392, 0);
+	ntVec3 *graph_A_Dim = new ntVec3(448, 2, 0);
+
+	graph_A = ntGraph(graph_A_Pos, graph_A_Dim, Y_axis);
+	graph_A.set_Param(area, 0);
+	graph_A.set_Param(area - perf_area, 1);
+
+	graph_A.set_Width(4);
+	graph_A.init();
 }
 ///////////////////////////////////////////////////////////////
 string ntPanel::get_ID() {
@@ -479,6 +537,27 @@ string ntPanel::get_p_G() {
 string ntPanel::get_UVW() {
 	return string_UVW;
 }
+float ntPanel::get_Area() {
+	return area;
+}
+float  ntPanel::get_AngleMin() {
+	float val = phi[0];
+	for (int i = 1; i < phi.size(); i++) {
+		if (val > phi[i]) {
+			val = phi[i];
+		}
+	}
+	return val;
+}
+float  ntPanel::get_AngleMax() {
+	float val = phi[0];
+	for (int i = 1; i < phi.size(); i++) {
+		if (val < phi[i]) {
+			val = phi[i];
+		}
+	}
+	return val;
+}
 
 std::vector<ntVec3*> ntPanel::get_v_G() {
 	return v_G;
@@ -489,7 +568,6 @@ std::vector<ntVec3*> ntPanel::get_Perf() {
 std::vector<float> ntPanel::get_Perf_R() {
 	return p_Rad;
 }
-
 
 ///////////////////////////////////////////////////////////////
 ///////////////////////////////////////////// MAPPING FUNCTIONS
@@ -601,6 +679,7 @@ void ntPanel::display(){
 void ntPanel::display_Graph() {
 	if (is_Graph == true) {
 		graph.display();
+		graph_A.display();
 	}
 }
 
@@ -665,23 +744,4 @@ void ntPanel::display_Face_G(int gen) {
 	}
 }
 
-///p_Col.push_back(val);
-/// WITHOUT SUBDIVISIONS // GRID MUST BE ASSOCIATED TO INDEPENDENT COLOR DATA STRUCTURE
-///////////////////////////////////////////////////////////////
-///// LOAD VERTEX COLOR IF OPTION SET TO VERTEX OR CENTROID COL
-//float c0 = faces_L.at(gen)->at(k).vert0->col.r;
-//float c1 = faces_L.at(gen)->at(k).vert1->col.r;
-//float c2 = faces_L.at(gen)->at(k).vert2->col.r;
-////	EVALUATE DISTANCE SQRD TO EACH VERTEX
-//float d0 = faces_L.at(gen)->at(k).v0->distSqrd(vec)/3;
-//float d1 = faces_L.at(gen)->at(k).v1->distSqrd(vec)/3;
-//float d2 = faces_L.at(gen)->at(k).v2->distSqrd(vec)/3;
-//float dT = d0 + d1 + d2/3;
-//// MAP DISTANCE TO VERTEX WEIGHT
-//float w0 = mapRange(0, 1, 0, dT, d0);
-//float w1 = mapRange(0, 1, 0, dT, d1);
-//float w2 = mapRange(0, 1, 0, dT, d2);
-
-//val = (c0 * w0) + (c1 * w1) + (c2 * w2);
-/////val = faces_L.at(gen)->at(i).col.r;  //CENTROID COLOR
 

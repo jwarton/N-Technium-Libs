@@ -30,6 +30,7 @@ void ntCircle::init(){															//add set function and unique constructor
 	//initialize centroid and normal
 	//calcCentroid();
 	//calcNorm();
+	calcArea();
 }
 void ntCircle::calcCentroid(){
 	//cent = new ntVec3();
@@ -69,7 +70,12 @@ void ntCircle::calcNorm(){
 	////norm.invert();
 	//normal = ntNormal(*cent,norm,.05);
 }
- 
+void ntCircle::calcArea() {
+	area = M_PI * pow(rad,2);
+}
+double ntCircle::get_Area(){
+	return area;
+}
 void ntCircle::setColor(ntColor4f col){
 	this->col=col;
 	for(int i = 0; i<verts.size(); i++){

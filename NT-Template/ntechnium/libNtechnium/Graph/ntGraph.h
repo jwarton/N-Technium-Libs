@@ -19,6 +19,9 @@
 #include "ntEdge.h"
 #include "ntMath.h"
 
+enum graph_T { BAR, LINE, PIE, VOLUME, CLOUD};
+enum graph_A { X_axis, Y_axis, P_polar};
+
 class ntGraph {
 private:
 	std::string data;
@@ -46,7 +49,7 @@ private:
 	float dimX = .75;
 	float dimY = .1;
 	float dimZ = .1;
-
+	int w = 1;
 	//GRAPH COLOR
 	ntColor4f colS = Col4(0, 0, 1, 1);
 	ntColor4f colE = Col4(0, 1, 0, 1);
@@ -59,16 +62,23 @@ private:
 public:
 	bool is_ColSet = false;
 
+	graph_T mode = BAR;
+	graph_A axis = X_axis;
+
 	ntGraph();
 	ntGraph(std::string data);
 	ntGraph(float x, float y, float z);
+	ntGraph(ntVec3* pos, ntVec3* dim, graph_A axis);
 	ntGraph(ntVec3* pos, ntVec3* dim, std::vector <float> vals);
+	ntGraph(ntVec3* pos, ntVec3* dim, std::vector <float> vals, graph_A axis);
 
 	void set_Data(std::string data);
 	void set_Param(float val, int param);
 	void set_Param(std::vector <float> vals, int param);
+	void set_Width(int w);
 	void set_Color(ntColor4f colT);
 
+	void sort();
 	void init();
 	void run();
 	void display();

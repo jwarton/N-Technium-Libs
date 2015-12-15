@@ -3,7 +3,7 @@
 
 using namespace arma;
 
-int ovisApp::gen = 3;
+int ovisApp::gen = 1;
 int ovisApp::gen_L = gen;
 int ovisApp::gen_G = gen;
 bool ovisApp::isImgLoaded = false;
@@ -11,7 +11,13 @@ bool ovisApp::isTxtLoaded = false;
 int ovisApp::img_X = 0;
 int ovisApp::img_Y = 0;
 int ovisApp::img_T = 1;
+
 std::vector<float> ovisApp::p_Rad;
+int ovisApp::n_perf = 0;
+float ovisApp::areaS_gross = 0;
+float ovisApp::areaS_net = 0;
+float ovisApp::phi_Min = 180;
+float ovisApp::phi_Max = 0;
 
 arma::mat ovisApp::img_00 = arma::zeros<mat>(img_X, img_Y);
 ///////////////////////////////////////////////////////////////
@@ -65,15 +71,9 @@ void ovisApp::init() {
 	} else {
 		///////////////////////////////////////////////////////////////
 		///////////////////////////////////////////////// SINGLE THREAD
-		//panel_Dim = 15;
 		for (int i = 0; i < panel_Dim; i++) {
 			ntPanel* panel_ptr(panels.at(i));
 			funct(panel_ptr);
-
-
-			if (i < 1) {
-				std::cout << "PERFORATIONS PER PANEL:     " << panel_ptr->perf_size << endl;
-			}
 		}
 	}
 	t_CPU = clock() - t_CPU;
@@ -81,30 +81,57 @@ void ovisApp::init() {
 	gen_L = panels.at(0)->faces_L.size()-1;
 
 	std::cout << "EVAL_CPU TIME  [SECONDS]:   " << ((float)t_CPU) / CLOCKS_PER_SEC << "\n" << endl;
+
+	std::cout << "SYSTEM STATISTICS           -----------------------------------" << endl;
 	std::cout << "SUBDIVISION GENERATION:     " << panels.at(0)->cnt_SubDiv << endl;
 	std::cout << "FACE VECTOR SIZE [GEN]:     " << panels.at(0)->faces_G.size() << endl;
 	std::cout << "GLOBAL FACES:               " << panels.at(0)->faces_G.at(gen)->size() << endl;
 	std::cout << "LOCAL FACES:                " << panels.at(0)->faces_L.at(gen_L)->size() << "\n" << endl;
+	std::cout << "PANELS:                     " << panel_Dim << endl;
+	std::cout << "SURFACE AREA GROSS:         " << areaS_gross / 144 << endl;
+	std::cout << "SURFACE AREA NET:           " << areaS_net / 144 << endl;
+	std::cout << "PERCENT OF OPENING:         " << 100 - (areaS_net / areaS_gross) * 100 << "\n" << endl;
+	std::cout << "PERFORATIONS:               " << p_Rad.size() << "\n" << endl;
+
+	std::cout << "MIN ANGLE:                  " << phi_Min << endl;
+	std::cout << "MAX ANGLE:                  " << phi_Max << endl;
+	std::cout << "DEVIATION:                  " << phi_Max - phi_Min << "\n" << endl;
+
 	std::cout << "///////////////////////////////////////////////////////////////\n";
 	index_S = 0;
 	index_E = 0;
 
 	///////////////////////////////////////////////////////////////////////
 	/////////////////////////////////////// GRAPH PERFORATION | PANELS DATA
-	//ntVec3 *graphPos = new ntVec3(  5, 450, 0);
-	//ntVec3 *graphDim = new ntVec3(448,  40, 0);
-	//int set_size = p_Rad.size() - 1;
+	int w = 448;
+	int h = 40;
 
-	//if (set_size > 0) {
-	//	graph00 = ntGraph(graphPos, graphDim, p_Rad);
-	//	graph00.set_Color(ntColor4f(0.2, 0.2, 0.2, 1));
-	//	graph00.init();
-	//}
+	ntVec3 *graphPos = new ntVec3(  5, 450, 0);
+	ntVec3 *graphDim = new ntVec3(w,  h, 0);
+	int set_size = p_Rad.size() - 1;
+
+	if (set_size > 0) {
+		graph00 = ntGraph(graphPos, graphDim, p_Rad);
+		graph00.set_Color(ntColor4f(0.3, 0.3, 0.3, 1));
+		graph00.sort();
+		graph00.init();
+	}
+
+	ntVec3 *graph01_Pos = new ntVec3(5, 455, 0);
+	ntVec3 *graph01_Dim = new ntVec3(w, 10, 0);
+	set_size = 0;
+
+	if (set_size > 0) {
+		graph01 = ntGraph(graph01_Pos, graph01_Dim, p_Rad);
+		/// RESET DATA FROM RUN FUNCTION
+		graph01.axis = Y_axis;
+		graph01.init();
+	}
+
 	///////////////////////////////////////////////////////////////////////
 	/////////////////////////////////////// GRAPH PERFORATION | PANELS DATA
 	if (isMultiThread == true) {
 		for (int i = 0; i < thread_Cnt; i++) {
-
 			index_S = items * i;
 			index_E = (items * i) + items - 1;
 
@@ -264,19 +291,22 @@ void ovisApp::write_Panel_TXT(ntPanel* panel_ptr) {
 	file << "//  NODE POSITIONS:\n";
 	file << "//  [ WORLD COORDINATES ]\n";
 	file << "//        (                 X,                  Y,                  Z)\n";
-	file << panel_ptr->get_p_G() << "\n";
-	file << "     POS:  " << format_VEC(panel_ptr->get_v_G().at(0)) << "\n";
-	file << "     POS:  " << format_VEC(panel_ptr->get_v_G().at(1)) << "\n";
-	file << "     POS:  " << format_VEC(panel_ptr->get_v_G().at(2)) << "\n";
+	/// file << panel_ptr->get_p_G() << "\n";
+	file << "     POS: " << format_VEC(panel_ptr->get_v_G().at(0)) << "\n";
+	file << "     POS: " << format_VEC(panel_ptr->get_v_G().at(1)) << "\n";
+	file << "     POS: " << format_VEC(panel_ptr->get_v_G().at(2)) << "\n";
 	file << "\n";
 	file << "//  PANEL ORIENTATION VECTOR:\n";
 	file << "//   VEC" << panel_ptr->get_n_G();
 	file << "//   UVW" << panel_ptr->get_UVW() << "\n";
-	file << "//  AREA:  " << to_string(calc_Area(panel_ptr)) << "            [ SQ.INCH ]\n";
-	file << "//  AREA:  " << to_string(calc_Area(panel_ptr)) << "            [ SQ.INCH ]\n\n";
-	file << "//  A0:     " << "____            [ DEGREES ]\n";
-	file << "//  A1:     " << "____            [ DEGREES ]\n";
-	file << "//  A2:     " << "____            [ DEGREES ]\n\n";
+	file << "//  AREA GROSS:  " << to_string(panel_ptr->get_Area()) << "           [ SQ.INCH ]\n";
+	file << "//  AREA NET:    " << to_string(panel_ptr->get_Area() - panel_ptr->perf_area) << "           [ SQ.INCH ]\n";
+	file << "//  AREA NET:    " << to_string(panel_ptr->perf_perc) << "           [ % ]\n\n";
+
+	file << "//  A0:          " << panel_ptr->phi[0] << "               [ DEGREES ]\n";
+	file << "//  A1:          " << panel_ptr->phi[1] << "               [ DEGREES ]\n";
+	file << "//  A2:          " << panel_ptr->phi[2] << "               [ DEGREES ]\n";
+	file << "//  SUM:         " << panel_ptr->phi[0] + panel_ptr->phi[1] + panel_ptr->phi[2] << "\n\n";
 
 	file << "//////////////////////////////////////////////////////////////////////\n";
 	file << "//  NODE POSITIONS:\n";
@@ -409,7 +439,8 @@ void ovisApp::funct(ntPanel* panel_ptr) {
 
 	panel_ptr->faces_L.at(0)->at(0).calcCentroid();	//REQUIRED AFTER SCALING
 	panel_ptr->faces_L.at(0)->at(0).calcNorm();		//REQUIRED AFTER SCALING
-
+	panel_ptr->calcArea();
+	panel_ptr->calcPhi();
 	///////////////////////////////////////////////////////////////
 	/// SCALE STADIUM SURFACE TO VIEW--- REPLACE WITH CAMERA FIT FUNCTION
 	for (int j = 0; j < 3; j++) {
@@ -425,7 +456,6 @@ void ovisApp::funct(ntPanel* panel_ptr) {
 	///////////////////////////////////////////////////////////////
 	///////////////////////////////////// CALCULATE PEFORATION GRID
 	panel_ptr->plot_Perf(36, TRI);
-	//panel_ptr->set_Graph();
 
 	///////////////////////////////////////////////////////////////
 	////////////////////////////////// LOAD TEXTURE MAP TO SURFACES
@@ -436,6 +466,7 @@ void ovisApp::funct(ntPanel* panel_ptr) {
 	///////////////////////////////////////////////////////////////
 	//////////////////////////////////// CALCULATE PERFORATION SIZE
 	panel_ptr->add_Perf();
+	panel_ptr->set_Graph();
 
 	///////////////////////////////////////////////////////////////
 	//////////////////////////////////////// GRAPH PERFORATION DATA
@@ -443,19 +474,23 @@ void ovisApp::funct(ntPanel* panel_ptr) {
 		/// pointer to matrices
 		/// flatten matrix
 		/// vector pushback process is too computationally intensive 
-		// p_Rad.push_back(panel_ptr->p_Rad.at(i));
+		p_Rad.push_back(panel_ptr->p_Rad.at(i));
 	}
 
+	log_Angles(panel_ptr);
+
+	n_perf += panel_ptr->perf_size;
+	areaS_gross += panel_ptr->get_Area();
+	areaS_net += (panel_ptr->get_Area() - panel_ptr->perf_area);
+
 	int val = stoi(panel_ptr->get_ID());
-	if (val < 1000) {
-	//if (val == 963) {
-		write_Panel_IMG(panel_ptr);
-	}
-	//val = stoi(panel_ptr->get_ID());
-	//if (val >= 1225  && val <= 1250) {
-	//	//write_Panel_IMG(panel_ptr);
+
+	//if (val < 100) {
+	//	write_Panel_TXT(panel_ptr);
+	//}
+	//if (val < 1000) {
+	//	write_Panel_IMG(panel_ptr);
 	//	//write_Panel_TXT(panel_ptr);
-	//	
 	//}
 
 	/// SCALE PANELS TO VIEW--- REPLACE WITH CAMERA FIT FUNCTION //
@@ -722,33 +757,6 @@ void ovisApp::round_Pos(ntPanel* panel_ptr, float tolerance) {
 		}
 	}
 }
-double ovisApp::calc_Area(ntPanel* panel_ptr){
-	
-	std::vector <double> xy_pairs;
-	std::vector <double> yx_pairs;
-	std::vector <double> v_;
-	double sum;
-	double area;
-
-	//MULTIPLY VERTEX COMPONENTS
-	for (int i = 0; i < panel_ptr->verts.size() - 1; i++) {
-		double xy_ = panel_ptr->vecs[i]->x * panel_ptr->vecs[i + 1]->y;
-		double yx_ = panel_ptr->vecs[i]->y * panel_ptr->vecs[i + 1]->x;	
-
-		xy_pairs.push_back(xy_);
-		yx_pairs.push_back(yx_);
-	}
-	//SUBTRACT MULTIPLICATION SETS
-	for (int i = 0; i < panel_ptr->verts.size() - 1; i++) {
-		double val = xy_pairs.at(i) - yx_pairs.at(i);
-
-		v_.push_back(val);
-	}
-	//SUMMATION OF ALL SETS
-	std::for_each(v_.begin(), v_.end(), [&](int n) { sum += n;});
-	area = abs(sum / 2);//144; //CONVERT FROM UNITS TO FEET
-	return area;
-}
 void ovisApp::map_ImgCol(ntPanel* panel_ptr) {
 	/// ////////////////////// MAP COLOR FROM UV LIST
 	for (int i = 0; i < panel_ptr->p_UVs.size(); i++) {
@@ -884,7 +892,17 @@ void ovisApp::tile_Img(int U, int V, af::array img) {
 
 	//af::tile(img, U, V);
 }
+void ovisApp::log_Angles(ntPanel* panel_ptr) {
+	float min = panel_ptr->get_AngleMin();
+	float max = panel_ptr->get_AngleMax();
 
+	if (min < phi_Min) {
+		phi_Min = min;
+	}
+	if (max > phi_Max) {
+		phi_Max = max;
+	}
+}
 void ovisApp::run(){
 	if (glfwGetKey(window, GLFW_KEY_1) == GLFW_PRESS) {
 		if (gen_G >= 0) {
@@ -1078,7 +1096,8 @@ void ovisApp::display(){
 	}
 	/// CREATE SEPARATE CLASS FOR IMAGE OBJECTS
 	display_IMG();
-	//graph00.display();
+	graph00.display();
+	graph01.display();
 }
 void ovisApp::display_IMG() {
 	int n_cols = img_2d.n_cols;
@@ -1105,6 +1124,5 @@ void ovisApp::display_IMG() {
 			}
 		}
 	}
-
 	glEnd();
 }

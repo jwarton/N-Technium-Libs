@@ -52,7 +52,7 @@ private:
 	string url_IMG;
 	string path_IMG = nt_Utility::getPathToResources();
 	string pathExtension_IMG = "imgs\\ovis\\";
-	string fileName_IMG = "ovis_2x2";
+	string fileName_IMG = "ovis_10x10";
 	string fileExt_IMG = ".jpg";
 
 	af::array img_IN;
@@ -88,7 +88,7 @@ private:
 	//////////////////////////////////////////// LIST OF ALL PANELS
 	std::vector<ntPanel*> panels;
 	std::vector<ntFace3*> faces;
-	
+
 	///////////////////////////////////////////////////////////////
 	//////////////////////////////////////////// UTILITIY FUNCTIONS
 	void read_DATA();
@@ -96,8 +96,16 @@ private:
 	///////////////////////////////////////////////////////////////
 	/////////////////////////////// GRAPH PERFORATION | PANELS DATA
 	ntGraph graph00;	// PANEL PERFORATION HISTOGRAM
+	ntGraph graph01;	// PERFORATION AREA
 	ntGraph graph02;	// IMAGE HISTOGRAM
 	static std::vector<float> p_Rad;
+
+	static int n_perf;
+	static float areaS_gross;
+	static float areaS_net;
+
+	static float phi_Min;
+	static float phi_Max;
 	///////////////////////////////////////////////////////////////
 	///////////////////////////////////////// MULTITHREAD FUNCTIONS
 	static void funct(ntPanel* panel_ptr);
@@ -125,9 +133,9 @@ private:
 	static void round_Pos(ntPanel* panel_ptr,float tolerance);
 	static void write_Panel_TXT(ntPanel* panel_ptr);
 	static void write_Panel_IMG(ntPanel* panel_ptr);
-	static double calc_Area(ntPanel* panel_ptr);
 	static void map_ImgCol(ntPanel* panel_ptr);
 	static void tile_Img(int U, int V, af::array img);
+	static void log_Angles(ntPanel* panel_ptr);
 
 	int panel_Index = 0;	// DISPLAY INDEX FOR CURRENT PANEL
 
