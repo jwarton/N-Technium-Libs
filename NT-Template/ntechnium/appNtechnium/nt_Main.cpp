@@ -5,6 +5,7 @@
 // created by James Warton on 04/01/2014		///////////////////
 ///////////////////////////////////////////////////////////////////
 
+
 #include "nt_GLFWsetup.h"
 #include "nt_genApp.h"
 #include "nt_simpleApp.h"
@@ -37,6 +38,7 @@
 
 ////professional projects
 #include "nt_09_ovisApp.h"
+#include "nt_10_typeApp.h"
 //
 #include <iostream>
 #include <array>
@@ -79,8 +81,11 @@ int main(int argc, char const** argv){
 	//AppContent* c = new afApp01();		//ARRAY FIRE IMPELEMENTATION PROTOTYPE
 	//AppContent* c = new afApp02();		
 
+	///TYPE
+	AppContent* c = new typeApp();
+
 	///OVIS
-	AppContent* c = new ovisApp();
+	//AppContent* c = new ovisApp();
 
 	///KUKA SOURCE CODE APPLICATIONS
 	//AppContent* c = new krlApp();

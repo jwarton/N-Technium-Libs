@@ -136,8 +136,13 @@ Ensure correct version of CUDA is installed and environment variables are correc
 Copy nvvm64_30_0.dll from:
 CUDA_PATH\nvvm\bin\nvvm64_30_0.dll
 
- to:
- C:\Users\jwarton\00_Workspace\01_NTlibs\NT-Template\nt-project template\x64\Release
+to:
+C:\Users\jwarton\00_Workspace\01_NTlibs\NT-Template\nt-project template\x64\Release
+
+-----------------------------------------------------------------------------------
+AF changes from v3.beta to v3:
+dim_type no longer supported, replaced with dim_t   ////////GGGGRRRRRR
+
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 3dCONNEXION SUPPORT SETUP
 
@@ -160,12 +165,95 @@ CUDA_PATH\nvvm\bin\nvvm64_30_0.dll
 			spwmath.lib
 
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-AF changes from v3.beta to v3
-
-dim_type no longer supported, replaced with dim_t   ////////GGGGRRRRRR
-
-/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 update glfw:
 glfw-3.0.4 to 3.1.1
 ..\..\ntechnium\libsImport\glfw-3.0.4.bin.WIN64\lib-msvc110
 
+/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+FREE TYPE SETUP
+
+1. Download Latest Version
+	Compiler Options:
+		Cygwin with associated packages
+				GNU Make
+				perl
+				m4
+				autoconf
+
+		MinGW - MSYS
+				wget http://sourceforge.net/projects/freetype/files/freetype2/2.4.10/freetype-2.4.10.tar.gz		//or latest version
+				tar zxvf freetype-2.4.10.tar.gz
+				cd freetype-2.4.10
+				./configure --enable-static
+				make install
+				cd ..
+
+
+1. How do I compile the test programs?
+
+  Detailed compilation  steps are given  in the "freetype/HOWTO.txt"
+  file,  as  well as  system  and  compiler  specific hints  in  the
+  "freetype/howto"  directory.   What  follows  is a  _very_  simple
+  guide:
+
+  For Unix:
+
+    Do the  following on the prompt  while in the  base directory of
+    the FreeType package:
+
+      % ./configure
+      % make
+      % make install
+
+    This will build  and install the library (static  and shared, if
+    supported)  together with the  test programs.   Say `./configure
+    --help' to see the available configuring options.
+
+    This should work with any ANSI C compiler.
+
+  For other platforms:
+
+    Go  to the  'test'  directory.   Look at  one  of the  makefiles
+    located   in  the   'arch/<system>'  directory,   and   use  the
+    appropriate makefile from there.
+
+    For example:
+
+      make -f arch/msdos/makefile.gcc    (DJGPP or emx)
+      wmake -f arch\msdos\makefile.wat   (Watcom DOS)
+      nmake -f arch\os2\makefile.icc     (Visual Age OS/2)
+      make -f arch/amigaos/makefile.gcc  (GCC Amiga)
+
+    This will compile both the library and the test programs.
+    
+4. How do I only compile the FreeType library?
+
+  For Unix:
+
+    Do a `configure' run as  described in section 1.  Then change to
+    the lib subdirectory and say `make' and `make install'.
+
+  For other platforms:
+
+    Go to the 'lib' directory.  Look at one of the makefiles located
+    in the 'arch/<system>' directory, and use it from 'lib'.
+
+    For example:
+
+      make -f arch/msdos/makefile.gcc    (DJGPP or emx)
+      wmake -f=arch\msdos\makefile.wat   (Watcom DOS)
+      nmake -f arch\os2\makefile.icc     (Visual Age OS/2)
+      make -f arch/amigaos/makefile.gcc  (GCC Amiga)
+
+    The  library  is   pure  ANSI  C  and  doesn't   depend  on  any
+    system-specific package.  You need not gcc to compile it.
+
+
+Compiling with MinGw, and notes on FreeType Compile Process:
+	https://wiki.openttd.org/Compiling_on_Windows_using_MinGW
+	http://stackoverflow.com/questions/17507649/setting-up-msys-configure-is-not-recognized-by-windows-7-as-a-command
+
+/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+		Environment Variables can be accessed through Advanced System Properties, or command prompt entry:
+			example appends PATH
+			setx PATH "%PATH%;C:\............."

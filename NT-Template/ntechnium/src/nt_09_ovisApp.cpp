@@ -106,7 +106,7 @@ void ovisApp::init() {
 	int w = 448;
 	int h = 40;
 
-	ntVec3 *graphPos = new ntVec3(  5, 450, 0);
+	ntVec3 *graphPos = new ntVec3(  5, 460, 0);
 	ntVec3 *graphDim = new ntVec3(w,  h, 0);
 	int set_size = p_Rad.size() - 1;
 
@@ -117,16 +117,14 @@ void ovisApp::init() {
 		graph00.init();
 	}
 
-	ntVec3 *graph01_Pos = new ntVec3(5, 455, 0);
+	ntVec3 *graph01_Pos = new ntVec3(5, 452, 0);
 	ntVec3 *graph01_Dim = new ntVec3(w, 10, 0);
-	set_size = 0;
 
-	if (set_size > 0) {
-		graph01 = ntGraph(graph01_Pos, graph01_Dim, p_Rad);
-		/// RESET DATA FROM RUN FUNCTION
-		graph01.axis = Y_axis;
-		graph01.init();
-	}
+	graph01 = ntGraph(graph01_Pos, graph01_Dim, Y_axis);
+	graph01.set_Param(areaS_gross, 0);
+	graph01.set_Param(areaS_net, 1);
+	graph01.set_Width(4);
+	graph01.init();
 
 	///////////////////////////////////////////////////////////////////////
 	/////////////////////////////////////// GRAPH PERFORATION | PANELS DATA
@@ -931,6 +929,8 @@ void ovisApp::run(){
 	}
 	///////////////////////////////////////////////////////////////
 	/////////////////////////////////////////  WORLD MAPPED DISPLAY
+	Col4 colSel = Col4(1, 0.7, 0.9, 1);
+
 	if (glfwGetKey(window, GLFW_KEY_PAGE_UP) == GLFW_PRESS) {
 		if (panel_Index < panel_Dim-1) {
 			float c = panels.at(panel_Index)->image_Val;
@@ -945,7 +945,7 @@ void ovisApp::run(){
 			std::cout << panel_Index << endl;
 		}
 		if (m == vW) {
-			panels.at(panel_Index)->faces_G.at(0)->at(0).setColor(Col4(1, 0, 0, 1));
+			panels.at(panel_Index)->faces_G.at(0)->at(0).setColor(colSel);
 		}
 	}
 	if (glfwGetKey(window, GLFW_KEY_PAGE_DOWN) == GLFW_PRESS) {
@@ -962,7 +962,7 @@ void ovisApp::run(){
 			std::cout << panel_Index << endl;
 		}
 		if (m == vW || m == vA) {
-			panels.at(panel_Index)->faces_G.at(0)->at(0).setColor(Col4(1, 0, 0, 1));
+			panels.at(panel_Index)->faces_G.at(0)->at(0).setColor(colSel);
 		}
 	}
 	if (glfwGetKey(window, GLFW_KEY_Q) == GLFW_PRESS) {
@@ -991,7 +991,7 @@ void ovisApp::run(){
 				panels.at(i)->faces_G.at(0)->at(0).edges.at(1).setCol(ntColor4f(1, 1, 1, .5));
 				panels.at(i)->faces_G.at(0)->at(0).edges.at(2).setCol(ntColor4f(1, 1, 1, .5));
 				if (i == panel_Index) {
-					panels.at(i)->faces_G.at(0)->at(0).setColor(Col4(1, 0, 0, 1));
+					panels.at(i)->faces_G.at(0)->at(0).setColor(colSel);
 				}
 			}
 		} else {
@@ -1021,7 +1021,7 @@ void ovisApp::run(){
 			panels.at(i)->faces_G.at(0)->at(0).edges.at(1).setCol(ntColor4f(1, 1, 1, .5));
 			panels.at(i)->faces_G.at(0)->at(0).edges.at(2).setCol(ntColor4f(1, 1, 1, .5));
 			if (i == panel_Index) {
-				panels.at(i)->faces_G.at(0)->at(0).setColor(Col4(1, 0, 0, 1));
+				panels.at(i)->faces_G.at(0)->at(0).setColor(colSel);
 			}
 		}
 	}

@@ -158,13 +158,13 @@ void ntBaseApp::GLSLInfo(ntShader* shader){
 
 	///////////////////////////////////////////////////////////////
 	////////////////////////////////////// GET RENDERER INFORMATION
-	trace("renderer	:	", glGetString(GL_RENDERER));
-	trace("vendor		:	", glGetString(GL_VENDOR));
-	trace("version		:	", glGetString(GL_VERSION));
-	trace("glslVersion	:	", glGetString(GL_SHADING_LANGUAGE_VERSION));
+	trace("RENDERER                    ", glGetString(GL_RENDERER));
+	trace("VENDOR                      ", glGetString(GL_VENDOR));
+	trace("VERSION                     ", glGetString(GL_VERSION));
+	trace("GLSL VERSION                ", glGetString(GL_SHADING_LANGUAGE_VERSION));
 
-	trace("vertexPosition Location	= ", glGetAttribLocation(shader->getID(), "vertexPosition"));
-	trace("vertexNormal Location	= ", glGetAttribLocation(shader->getID(), "vertexNormal"));
-	trace("vertexColor Location	= ", glGetAttribLocation(shader->getID(), "vertexColor"));
-	trace("vertexTexture Location	= ", glGetAttribLocation(shader->getID(), "vertexTexture"));
+	trace("VERTEX POSITION LOCATION  = ", glGetAttribLocation(shader->getID(), "vertexPosition"));
+	trace("VERTEX NORMAL LOCATION    = ", glGetAttribLocation(shader->getID(), "vertexNormal"));
+	trace("VERTEX COLOR LOCATION     = ", glGetAttribLocation(shader->getID(), "vertexColor"));
+	trace("VERTEX TEXTURE LOCATION   = ", glGetAttribLocation(shader->getID(), "vertexTexture"));
 	}

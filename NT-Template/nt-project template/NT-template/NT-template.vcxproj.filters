@@ -213,6 +213,9 @@
     <ClCompile Include="..\..\ntechnium\libNtechnium\Geometry\ntCube.cpp">
       <Filter>lib_geometry</Filter>
     </ClCompile>
+    <ClCompile Include="..\..\ntechnium\src\nt_10_typeApp.cpp">
+      <Filter>src programs</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\ntechnium\appNtechnium\nt_BaseApp.h">
@@ -403,6 +406,9 @@
     </ClInclude>
     <ClInclude Include="..\..\ntechnium\src\nt_00_meshApp.h">
       <Filter>app</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\ntechnium\src\nt_10_typeApp.h">
+      <Filter>src programs</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>
