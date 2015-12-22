@@ -109,7 +109,7 @@ lapack_win64_MT.dll
 Add Environment Paths to Advanced System Settings
 https://github.com/arrayfire/arrayfire/wiki/Using-ArrayFire-on-Microsoft-Windows-with-Visual-Studio
 
-1. Append Existing Path with ;%AF_PATH%
+1. Append Existing Path with ;%AF_PATH
 2.  Add New Path Variable 
 		variable name:  AF_PATH
 		variable value: C:\Users\jwarton\00_Workspace\01_NTlibs\NT-Template\ntechnium\libsImport\ArrayFire\v3
@@ -225,7 +225,7 @@ FREE TYPE SETUP
       make -f arch/amigaos/makefile.gcc  (GCC Amiga)
 
     This will compile both the library and the test programs.
-    
+
 4. How do I only compile the FreeType library?
 
   For Unix:
@@ -252,6 +252,9 @@ FREE TYPE SETUP
 Compiling with MinGw, and notes on FreeType Compile Process:
 	https://wiki.openttd.org/Compiling_on_Windows_using_MinGW
 	http://stackoverflow.com/questions/17507649/setting-up-msys-configure-is-not-recognized-by-windows-7-as-a-command
+
+Install MinGW Packages
+	https://www3.ntu.edu.sg/home/ehchua/programming/howto/Cygwin_HowTo.html
 
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 		Environment Variables can be accessed through Advanced System Properties, or command prompt entry:
