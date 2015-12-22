@@ -1,0 +1,135 @@
+/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+msys terminal packages:
+
+1. download installer:
+		http://sourceforge.net/projects/mingw/files/latest/download
+		run installer for all basic packages:
+			
+2. add environment variable to PATH:
+		C:\MinGW\msys\1.0\bin;
+
+3. run MSYS.BAT as administrator | location:
+		C:\MinGW\msys\1.0
+		note: send shortcut to desktop for easy access
+
+3. ensure the mysis recognises mingw locations:
+    $ mount 'C:\MinGW' /mingw
+
+4. confirm versions and operability of packages:
+		$ make -v
+    $ gcc --version
+    $ g++ --version
+
+5. install required packages from terminal if unavailable or versions need update:
+		$ mingw-get install gcc g++ mingw32-make
+
+6. download and unpack freetype2:
+		$ cd C:/.......
+		$ wget http://sourceforge.net/projects/freetype/files/freetype2/2.5.2/freetype-2.5.2.tar.gz
+		$ tar zxvf freetype-2.5.2.tar.gz
+
+7. BUILD FREETYPE2
+    ./configure --enable-static --without-png  --libdir: libs
+    make
+    make
+
+/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+OPENGL FONT RENDERING LIBRARIES	
+
+https://www.opengl.org/archives/resources/features/fontsurvey/
+------------------------------------------------------------------------------------------
+FreeType2
+
+http://www.freetype.org/
+------------------------------------------------------------------------------------------
+VSFontLib
+
+	bitmap text rendering
+
+	ADVANTAGES:
+	does not require FreeType2
+	simple documentation
+	looks easy to use and promising
+	may require more dependencies than normal
+	uses output from and application called Font Studio
+		this application generates required .xml and .tga
+		font data used for loading content.
+		this application is easy to use and intuitive
+		could be a hassle to prepare these files for 
+		every font within GUI.
+
+	DEPENDENCIES:
+	VSL-
+		VSResourcesLib-	super class
+		VSMathLib-		matrices operations
+
+	other dependencies:
+		FreeGLUT		windows management
+		Assimp 3.0		model loading
+
+	external dependencies-
+		Devil-  		image loading
+		GLEW			OpenGL functions
+		TinyXML			font definition parsing- reads xml version
+
+DOCUMENTATION:
+http://www.lighthouse3d.com/very-simple-libs/vsfl/
+
+SOURCE CODE:
+https://github.com/lighthouse3d/VSL
+------------------------------------------------------------------------------------------
+FTGL
+
+	Rendering types:
+		outline
+		polygonal
+		texture mapped
+		bitmapped
+		antialiased pixmapped
+
+	ADVANTAGES:
+		very easy to use.
+		powerful and versatile.
+		cross platform (Unix and Windows).
+		can use any TrueType font.
+		kerning
+
+	DISADVANTAGES:
+		Font loading time.
+
+	DEPENDENCIES:
+		FreeType2
+
+DOCUMENTATION:
+https://code.google.com/p/freetype-gl/
+http://ftgl.sourceforge.net/docs/html/ftgl-tutorial.html
+
+SOURCE CODE:
+https://code.google.com/p/freetype-gl/source/checkout
+------------------------------------------------------------------------------------------
+libdrawtext 0.2.1
+	
+	simplified interface for FreeType2
+	documentation is sparse
+
+	DEPENDENCIES:
+		FreeType2
+		*others are expected, but not listed
+
+DOCUMENTATION:
+http://nuclear.mutantstargoat.com/sw/libdrawtext/
+------------------------------------------------------------------------------------------
+
+///////////////////////////////////////////////////////////////////////////////////////////////////
+INSTALLATION ATTEMPTS: LIBDRAWTEXT
+
+http://nuclear.mutantstargoat.com/hg/libdrawtext/file/d8c3ce3fa588/examples/simple/simple.c
+
+	FROM MSYS
+	$ cd libsImport
+	$ tar zxvf libsdrawtxt-0.2.1.tar.gz
+	$ ./ configure
+	$ make
+
+	returns errors may be due to previously unsuccessful freetype2 build
+
