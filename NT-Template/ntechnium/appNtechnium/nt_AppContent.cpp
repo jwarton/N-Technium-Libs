@@ -35,12 +35,16 @@ void AppContent::grid_display(){
 		glDisable(GL_LINE_STIPPLE);
 	}
 }
+
+void AppContent::view_Model() {
+	///////////////////////////////////////////////////////////////
+	////////////////////////////////////////////  3D DISPLAY CONENT
+}
 void  AppContent::view_Orth() {
 	glDisable(GL_DEPTH_TEST);
 	glMatrixMode(GL_PROJECTION);
 	glPushMatrix();
 	glLoadIdentity();
-	//glOrtho(0, appWidth, 0, appHeight, .1, 100);
 	///#include <GL/glu.h> causes confict with GLFWsetup????
 	//gluOrtho2D(0, appWidth, 0, appHeight);
 	glMatrixMode(GL_MODELVIEW);

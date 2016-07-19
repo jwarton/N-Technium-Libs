@@ -4,7 +4,7 @@ ntNormal::ntNormal(){
 }
 ntNormal::ntNormal(ntVec3 pos,ntVec3 vec):
 pos(pos),vec(vec){
-	colS = ntColor4f(1,1,1,1);
+	colS = ntColor4f(1, 1, 1, 1);
 	colE = ntColor4f(0, 0, 0, 0);
 	w = 1;
 	vec.unitize();

@@ -1,7 +1,6 @@
 #include "ntPanel.h"
 
 ntPanel::ntPanel(){}
-
 ntPanel::ntPanel(ntVec3* v0,ntVec3* v1,ntVec3* v2):
 v0(v0),v1(v1),v2(v2){
 	this->vecs[0] = v0;
@@ -43,7 +42,8 @@ void ntPanel::init(){
 	face->push_back(ntFace3(n0, n1, n2));
 	faces_G.push_back(face);
 
-	//INITIALIZE VECS- TRANSFORM LIST
+	//INITIALIZE VECS- TRANSFORM LIST !!!!!
+	//THESE VALUES ARE NOT INITIALIZED !!!!
 	//this->vecs[3] = c0;
 	//this->vecs[4] = c1;
 	//this->vecs[5] = c2;
@@ -229,18 +229,34 @@ void ntPanel::sub_Div(int div, bool isPerf) {
 	ntVec3* vec;
 	ntVec3* uvw;
 	///////////////////////////////////////////////////////////////
-	int n_cols = div - 1;
-	int n_rows = div - 1;
+	int n_cols = div + 1;
+	int n_rows = div + 1;
 	float step_X;
 	float shif_X;
 	float step_Y;
+	float orig_X;
+	float orig_Y;
 
 	if (isPerf) {
 		///////////////////////////////////////////////////////////////
 		////////////////////////////////////// COPY PANEL CORNER POINTS
-		ntVec3 v00 = ntVec3(vecs_SD.at(0)->x, vecs_SD.at(0)->y, vecs_SD.at(0)->z);
-		ntVec3 v01 = ntVec3(vecs_SD.at(1)->x, vecs_SD.at(1)->y, vecs_SD.at(1)->z);
-		ntVec3 v02 = ntVec3(vecs_SD.at(2)->x, vecs_SD.at(2)->y, vecs_SD.at(2)->z);
+
+		ntVec3 v00;// = ntVec3(vecs_SD.at(0)->x, vecs_SD.at(0)->y, vecs_SD.at(0)->z);
+		ntVec3 v01;// = ntVec3(vecs_SD.at(1)->x, vecs_SD.at(1)->y, vecs_SD.at(1)->z);
+		ntVec3 v02;// = ntVec3(vecs_SD.at(2)->x, vecs_SD.at(2)->y, vecs_SD.at(2)->z);
+
+		bool isCorn = false;
+
+		if (isCorn == true) {
+			v00 = ntVec3(vecs_SD.at(0)->x, vecs_SD.at(0)->y, vecs_SD.at(0)->z);
+			v01 = ntVec3(vecs_SD.at(1)->x, vecs_SD.at(1)->y, vecs_SD.at(1)->z);
+			v02 = ntVec3(vecs_SD.at(2)->x, vecs_SD.at(2)->y, vecs_SD.at(2)->z);
+		}
+		else {
+			v00 = ntVec3(f_L.at(0)->x, f_L.at(0)->y, f_L.at(0)->z);
+			v01 = ntVec3(f_L.at(1)->x, f_L.at(1)->y, f_L.at(1)->z);
+			v02 = ntVec3(f_L.at(2)->x, f_L.at(2)->y, f_L.at(2)->z);
+		}
 
 		ntFace3 face = ntFace3(&v00, &v01, &v02);
 
@@ -252,27 +268,50 @@ void ntPanel::sub_Div(int div, bool isPerf) {
 
 		///////////////////////////////////////////////////////////////
 		////////////////// SCALE CORNER POINTS TO SUBDIVISION INCREMENT
-		float scFactor = 1.0 / div;
+		orig_X = v00.x;
+		orig_Y = v00.y;
+
+		double scFactor = 1.0 / div;
 		for (int i = 0; i < 3; i++) {
-			ntMatrix4 matSc = ntMatrix4(face.vecs[i]);
-			matSc.scale3d(scFactor);
+				/// TRANSLATE FACE TO ORIGIN
+				face.vecs[i]->x -= orig_X;
+				face.vecs[i]->y -= orig_Y;
+				/// SCALE FACE TO SUBDIVISION INCREMENT
+				ntMatrix4 matSc = ntMatrix4(face.vecs[i]);
+				matSc.scale3d(scFactor);
+				/// TRANSLATE TO ORIGINAL POSITION
+				face.vecs[i]->x += orig_X;
+				face.vecs[i]->y += orig_Y;
 		}
-		step_X = v01.x;
-		shif_X = v02.x;
-		step_Y = v02.y;
+
+		step_X = v01.x - orig_X;
+		shif_X = v02.x - orig_X;
+		step_Y = v02.y - orig_Y;
+
+		std::vector <ntVec3*> vecs_F;
+		vecs_F.push_back(&v00);
+		vecs_F.push_back(&v01);
+		vecs_F.push_back(&v02);
 
 		////AFFINE TRANSFORMATION OF POINT IN XYZ TO UVW
 		arma::mat T = arma::eye<arma::mat>(3, 3);
-		T = get_Mat_T(vecs_SD, vecs_UV);
+		//if (isCorn == true) {
+			T = get_Mat_T(vecs_SD, vecs_UV);
+		//}
+		//else {
+		//	T = get_Mat_T(vecs_F, vecs_UV);
+		//}
 
+		int index_Begin = 1;
+		if (isCorn == false) { index_Begin = 0; }
 		///////////////////////////////////////////////////////////////
 		//////////////////////////////////// PLOT SUBDIVISION POSITIONS
-		for (int i = 1; i < n_rows; i++) {
+		for (int i = index_Begin; i < n_rows; i++) {
 			std::vector <ntVec3*>* p_vecs = new vector <ntVec3*>;
 			std::vector <ntVec3*>* p_uvws = new vector <ntVec3*>;
-			for (int j = 1; j < n_cols; j++) {
+			for (int j = index_Begin; j < n_cols; j++) {
 				// DEFINE POSITION OFFSET FOR X
-				vec = new ntVec3((step_X * j) + (shif_X * i), (step_Y * i), 0);
+				vec = new ntVec3(orig_X + (step_X * j) + (shif_X * i), orig_Y + (step_Y * i), 0);
 				p_vecs->push_back(vec);
 				vecs_SD.push_back(vec);
 
@@ -297,6 +336,7 @@ void ntPanel::sub_Div(int div, bool isPerf) {
 				ntVec3 * vec0 = p_XY_Rows.at(i)->at(j);
 				ntVec3 * vec1 = p_XY_Rows.at(i)->at(j + 1);
 				ntVec3 * vec2 = p_XY_Rows.at(i + 1)->at(j);
+
 				ntVec3 * uvw0 = p_UV_Rows.at(i)->at(j);
 				ntVec3 * uvw1 = p_UV_Rows.at(i)->at(j + 1);
 				ntVec3 * uvw2 = p_UV_Rows.at(i + 1)->at(j);
@@ -305,6 +345,16 @@ void ntPanel::sub_Div(int div, bool isPerf) {
 
 				f0.setUVW(uvw0, uvw1, uvw2);
 				faces->push_back(f0);
+				
+				//if(is_Odds == true  && j < (p_XY_Rows.at(i)->size() - 2)){
+				//	ntVec3 * vec3 = p_XY_Rows.at(i + 1)->at(j + 1);
+				//	ntVec3 * uvw3 = p_UV_Rows.at(i + 1)->at(j + 1);
+				//
+				//	ntFace3 f1 = ntFace3(vec2, vec3, vec1);
+
+				//	f1.setUVW(uvw2, uvw3, uvw1);
+				//	faces->push_back(f1);
+				//}
 			}			
 		}
 		faces_L.push_back(faces);
@@ -312,15 +362,94 @@ void ntPanel::sub_Div(int div, bool isPerf) {
 	is_PerfSD = isPerf;
 }
 ///////////////////////////////////////////////////////////////
-void ntPanel::plot_Perf(int div, enum grid_T grid = SQU) {
+void ntPanel::plot_Fast(int div){
+
+	double len;
+	double inc;
+	double param = 0;
+
+	//////////////////////////////////////////////////
+	/// DEFINE FASTENER EDGE CENTERLINE
+	for (int i = 3; i < 6; i++) {
+
+		std::vector<ntVec3*> pts_P;
+		std::vector<ntVec3*> pts_F;
+		len = edges.at(i).getLength();
+		inc = len / div;
+		inc = mapRange(0, 1, 0, len, inc);
+		ntVec3* vS;
+		ntVec3* vE;
+
+		/// PLOT PERF GRID POINTS ALONG CENTERLINE
+		for (int j = 0; j < div; j++) {
+			param = inc * j;
+			ntVec3* pt = edges.at(i).get_PtP(param);
+			pts_P.push_back(pt);
+
+			ntCircle * fastener = new ntCircle(pt, 0.05, n_seg, Col4(1, 0, 0, 1));
+			fastr.push_back(fastener);
+		}
+		/// REDEFINE CENTERLINE END POINTS
+		int ind = 5;
+		ntVec3* vecS = edges.at(i).v0;
+		ntVec3* vecE = edges.at(i).v1;
+
+		vS = eval_Fastener(pts_P, vecS, ind, false);
+		vE = eval_Fastener(pts_P, vecE, ind, true);
+		ntEdge e = ntEdge(vS, vE);
+
+		/// PLOT IDEAL FASTENER POINTS BASED ON SET SPACING
+		int val = ceil(e.getLength() / fast_spaceMax);
+		inc = len / val;
+		inc = mapRange(0, 1, 0, len, inc);
+		for (int j = 0; j < val +1; j++) {
+			param = inc * j;
+			ntVec3* pt = e.get_PtP(param);
+			pts_F.push_back(pt);
+		}
+
+		/// REPOSITION FASTENERS TO PERF NEAREST PERF GRID
+		for (int j = 0; j < pts_F.size(); j++) {
+			int index;
+			double distMin = pow(len,2) * 2;
+
+			for (int k = 0; k < pts_P.size(); k++) {
+				double dist = pts_F.at(j)->distSqrd(pts_P.at(k));
+				if (dist <= distMin) {
+					distMin = dist;
+					index = k;
+				}
+			}
+			/// REVISED POSITIOIN
+			float x = pts_P.at(index)->x;
+			float y = pts_P.at(index)->y;
+			float z = pts_P.at(index)->z;
+
+			ntVec3* pt = new ntVec3(x,y,z);
+			f_Pos.push_back(pt);
+		}
+	}
+	/// ADD DISPLAY SYMBOLS FOR EACH FASTENER
+	float rad = ((r_Max - r_Min) * 0.5) + r_Min;
+	for (int i = 0; i < f_Pos.size(); i++) {
+		ntVec3* pt = f_Pos.at(i);
+		ntCircle * fastener = new ntCircle(pt, rad, n_seg, Col4(.5, 0, 0, 1));
+		fastr.push_back(fastener);
+	}
+}
+void ntPanel::plot_Perf(int div, grid_Type grid, perf_Type type) {
+	grid_type = grid;
+	perf_type = type;
+
 	if (grid == TRI) {
 		plot_Perf_SD(div);
 	}
 	else if (grid == DIA || grid == SQU) {
 		plot_Perf_GR(div, grid);
 	}
+	plot_Fast(div);
 }
-void ntPanel::plot_Perf_GR(int div, enum grid_T grid) {
+void ntPanel::plot_Perf_GR(int div, enum grid_Type grid) {
 	ntVec3* vec;
 	ntVec3* uvw;
 	///////////////////////////////////////////////////////////////
@@ -408,6 +537,20 @@ void ntPanel::plot_Perf_SD(int div) {
 	}
 }
 
+ntVec3* ntPanel::eval_Fastener(std::vector <ntVec3*> vecs, ntVec3* vec, int index, bool isAsc) {
+	ntVec3 * pt = vecs.at(index);
+	float d1 = pt->distSqrd(vec);
+	float d2 = pow(6, 2);
+
+	if ( d1 > d2 && isAsc == false) {
+		index -= 1;
+		pt = eval_Fastener(vecs, vec, index, isAsc);
+	} else if ( d1 > d2 && isAsc == true ) {
+		index += 1;
+		pt = eval_Fastener(vecs, vec, index, isAsc);
+	}
+	return pt;
+}
 float ntPanel::calc_Perf_R(Vec3 *vec, float val) {
 	///////////////////////////////////////////////////////////////
 	////////////////////////// EXPECTED INPUT RANGE FOR VAL [0 - 1]
@@ -460,22 +603,54 @@ float ntPanel::calc_Perf_R(Vec3 *vec, float val) {
 }
 void ntPanel::add_Perf() {
 	///////////////////////////////////////////////////////////////
-	// LOOP THROUGH POS|RAD DATA STRUCTURES AND CREATE PERF OBJECTS
-	if (p_Pos.size() > 0) {
-		for (int i = 0; i < p_Pos.size(); i++) {
-			ntVec3* vec = p_Pos.at(i);
-			float val = p_Col.at(i);
-			float r = calc_Perf_R(vec, val);
-			p_Rad.push_back(r);
-			if (r > 0) {
-				ntCircle * perf = new ntCircle(vec, r, n_seg, Col4(.25, .25, .25, 1));
-				perfs.push_back(perf);
-				perf_area += perf->get_Area();
+	// //////////////////////// INSTANTIATE POLYLINE DATA STRUCTURE 
+	if (perf_type == TRICELL) {
+		/// SET TRICELLS
+		int index = perf_style; // perf_type INDEX
+		for (int i = 0; i < cells_L.size(); i++) {
+			int cnt = cells_L.at(i).get_Polylines()[index].size();
+			for (int j = 0; j < cnt; j++) {
+				ntPolyline* pl = cells_L.at(i).get_Polylines()[index][j];
+				lines.push_back(pl);
 			}
 		}
 	}
-	perf_perc = (perf_area / area) * 100;
-	perf_size = perfs.size();
+
+	///////////////////////////////////////////////////////////////
+	// LOOP THROUGH POS|RAD DATA STRUCTURES AND CREATE PERF OBJECTS
+	//if (perf_type == DOT) {
+		if (p_Pos.size() > 0) {
+			for (int i = 0; i < p_Pos.size(); i++) {
+				ntVec3* vec = p_Pos.at(i);
+				float	val = p_Col.at(i);
+				float	r	= calc_Perf_R(vec, val);
+
+				p_Rad.push_back(r);	
+
+				bool isUnique = true;
+				double rSq = pow(r,2);
+
+				// OMMIT PERFORATIONS WITHIN FASTENER LOCATIONS
+				for (int j = 0; j < f_Pos.size(); j++) {
+					double distSq = vec->distSqrd(f_Pos.at(j));
+					if (distSq < rSq) {
+						isUnique = false;
+						r = 0;
+						p_Rad.back() = r;
+					}
+				}
+
+				// ADD RADIUS PERFORATIONS TO VECTOR
+				if (r > 0 && isUnique == true) {
+					ntCircle * perf = new ntCircle(vec, r, n_seg, Col4(.25, .25, .25, 1));
+					perfs.push_back(perf);
+					perf_area += perf->get_Area();
+				}
+			}
+		}
+		perf_perc = (perf_area / area) * 100;
+		perf_size = perfs.size();
+	//}
 }
 ///////////////////////////////////////////////////////////////
 void ntPanel::set_Color(ntColor4f col){
@@ -499,23 +674,36 @@ void ntPanel::set_vG() {
 	v_G.push_back(v_G1);
 	v_G.push_back(v_G2);
 };
-void ntPanel::set_cG(ntVec3* pt) {
+void ntPanel::set_cG(ntVec3* pt, int index) {
 	c_G.push_back(pt);
+	/// SET LOCAL TO GLOBAL VALUES
+	/// PRE TRANSFORM 
+	ntVec3* pt_L = new ntVec3(pt->x, pt->y, pt->z);
+	c_L.push_back(pt_L);
+	vecs[index] = pt_L;
 }
-void ntPanel::set_cG() {
-	ntVec3* c_G0 = new ntVec3(c0->x, c0->y, c0->z);
-	ntVec3* c_G1 = new ntVec3(c1->x, c1->y, c1->z);
-	ntVec3* c_G2 = new ntVec3(c2->x, c2->y, c2->z);
-	ntVec3* c_G3 = new ntVec3(c3->x, c3->y, c3->z);
-	ntVec3* c_G4 = new ntVec3(c4->x, c4->y, c4->z);
-	c_G.push_back(c_G0);
-	c_G.push_back(c_G1);
-	c_G.push_back(c_G2);
-	c_G.push_back(c_G3);
-	c_G.push_back(c_G4);
-};
-void ntPanel::set_fG(ntVec3* pt) {
+void ntPanel::set_fG(ntVec3* pt, int index) {
+
 	f_G.push_back(pt);
+	/// SET LOCAL TO GLOBAL VALUES
+	/// PRE TRANSFORM
+	ntVec3* pt_L = new ntVec3(pt->x, pt->y, pt->z);
+	f_L.push_back(pt_L);
+	vecs[index] = pt_L;
+}
+void ntPanel::set_fCLines() {
+	int cnt = f_L.size();
+	cnt = 3;	//TEMPORARY OVER WRITE  | 0,0,0 FOR NON-INIT POINTS FAULTY
+	for (int i = 0; i < cnt; i++) {
+		int ind_0 = i;
+		int ind_1 = i+1;
+		if (i == cnt - 1) {
+			ind_1 = 0;
+		}
+		ntEdge e = ntEdge(f_L.at(ind_0), f_L.at(ind_1));
+		e.setCol( ntCol4(1, 1, 1, 0.75));
+		edges.push_back(e);
+	}
 }
 void ntPanel::set_UVW(string string_UVW){
 	this->string_UVW = string_UVW;
@@ -525,8 +713,44 @@ void ntPanel::set_UVW(std::vector <ntVec3*>	vecs_UV) {
 	faces_G.at(0)->at(0).setUVW(vecs_UV);
 	faces_L.at(0)->at(0).setUVW(vecs_UV);
 }
+void ntPanel::set_TriCells() {
+	int dim = faces_G.size();
+	int cnt = faces_G.at(dim - 1)->size();
+	for (int i = 0; i < cnt; i++) {
+		ntFace3 f = faces_G.at(dim - 1)->at(i);
+		ntTriCell cell = ntTriCell(&f);
+		float scFx = f.getFx();
+		scFx = 1 - scFx;
+		cell.setScale(scFx);
+		cells.push_back(cell);
+	}
+	dim = faces_L.size();
+	cnt = faces_L.at(dim - 1)->size();
+	/// ///  REVISE DATA STRUCTURE FOR LOCAL FACE TRICELLS !!!!!!!!!!!!!
+	/// ///  CREATES UNREFERENCED VECS AND UNNECESSARY COPIES !!!!!!!!!!
+	for (int i = 0; i < cnt; i++) {
+		ntFace3 ft = faces_L.at(dim - 1)->at(i);
+		ntTriCell cell = ntTriCell(&ft);
+		float scFx = ft.getFx();
+		scFx = 1 - scFx;
+		cell.setScale(scFx);
+		cells_L.push_back(cell);
+	}
+}
+void ntPanel::set_PerfStyle(perf_Style style) {
+	perf_style = style;
+}
+void ntPanel::set_PerfType(perf_Type type) {
+	perf_type = type;
+}
 void ntPanel::set_Dir(string dir) {
 	this->dir = dir;
+}
+void ntPanel::set_Weight(string wht) {
+	weight = std::stof(wht);
+}
+void ntPanel::set_Region(string reg){
+	region = std::stoi(reg);
 }
 void ntPanel::set_IMG(float val) {
 	std::cout << val << endl;
@@ -592,11 +816,11 @@ float ntPanel::get_AngleMax() {
 	}
 	return val;
 }
-float ntPanel::getMinEdgeLen() {
+float ntPanel::get_EdgeMin() {
+	set_fCLines();		///TEMPORARY SOLUTION !!!!!!!!!!!!
+	float lenMin = 999999999999;// v1->x;
 
-	float lenMin = v1->x;;
-
-	for (int i = 1; i < 2; i++) {
+	for (int i = 3; i < 6; i++) {
 		float len = edges[i].getLength();
 		if (len < lenMin) {
 			lenMin = len;
@@ -604,7 +828,12 @@ float ntPanel::getMinEdgeLen() {
 	}
 	return lenMin;
 }
-
+float ntPanel::get_Weight() {
+	return weight;
+}
+int ntPanel::get_Region() {
+	return region;
+}
 std::vector<ntVec3*> ntPanel::get_v_G() {
 	return v_G;
 }
@@ -612,30 +841,23 @@ std::vector<ntVec3*> ntPanel::get_c_G() {
 	return c_G;
 }
 std::vector<ntVec3*> ntPanel::get_c_L() {
-	//return c_L;
-	std::vector<ntVec3*> vc;
-	vc.push_back(c_G[0]);
-	vc.push_back(c_G[1]);
-	vc.push_back(c_G[2]);
-	vc.push_back(c_G[3]);
-	vc.push_back(c_G[4]);
-	return vc;
+	return c_L;
 }
 std::vector<ntVec3*> ntPanel::get_f_L() {
-	//return f_L;
-	std::vector<ntVec3*> vc;
-	vc.push_back(f_G[0]);
-	vc.push_back(f_G[1]);
-	vc.push_back(f_G[2]);
-	vc.push_back(f_G[3]);
-	vc.push_back(f_G[4]);
-	return vc;
+	return f_L;
+
+}
+std::vector<ntPolyline*> ntPanel::get_PLin() {
+	return lines;
 }
 std::vector<ntVec3*> ntPanel::get_Perf() {
 	return p_Pos;
 }
 std::vector<float> ntPanel::get_Perf_R() {
 	return p_Rad;
+}
+std::vector<ntVec3*> ntPanel::get_Fast() {
+	return f_Pos;
 }
 
 ///////////////////////////////////////////////////////////////
@@ -753,16 +975,57 @@ void ntPanel::display_Graph() {
 }
 
 void ntPanel::display_Perf() {
-	for (int i = 0; i < perfs.size(); i++) {
+	if (perf_type == DOT) {
+		for (int i = 0; i < perfs.size(); i++) {
 			perfs.at(i)->display();
+		}
+	}
+	if (perf_type == TRICELL) {
+		for (int i = 0; i < cells_L.size(); i++) {
+			cells_L.at(i).displaySubD(perf_style);
+		}
 	}
 }
-void ntPanel::display_Edge() {
-	int gen = 2;
-	edges.at(0).display(1);
-	edges.at(1).display(1);
-	edges.at(2).display(1);
+void ntPanel::display_Nodes() {
 	verts.at(0)->display(2);
+}
+void ntPanel::display_Joint() {
+	for (int i = 0; i < fastr.size(); i++) {
+		fastr.at(i)->display();
+	}
+}
+void ntPanel::display_CL() {
+	glLineWidth(1);
+	glColor4f(1, 1, 1, 0.25);
+
+	glBegin(GL_LINES);
+	glVertex3f(c_L[0]->x, c_L[0]->y, c_L[0]->z);
+	glVertex3f(c_L[1]->x, c_L[1]->y, c_L[1]->z);
+
+	glVertex3f(c_L[1]->x, c_L[1]->y, c_L[1]->z);
+	glVertex3f(c_L[2]->x, c_L[2]->y, c_L[2]->z);
+
+	glVertex3f(c_L[2]->x, c_L[2]->y, c_L[2]->z);
+	glVertex3f(c_L[0]->x, c_L[0]->y, c_L[0]->z);
+	glEnd();
+
+	glColor4f(1, 0, 0, 0.25);
+	glBegin(GL_LINES);
+	glVertex3f(f_L[0]->x, f_L[0]->y, f_L[0]->z);
+	glVertex3f(f_L[1]->x, f_L[1]->y, f_L[1]->z);
+
+	glVertex3f(f_L[1]->x, f_L[1]->y, f_L[1]->z);
+	glVertex3f(f_L[2]->x, f_L[2]->y, f_L[2]->z);
+
+	glVertex3f(f_L[2]->x, f_L[2]->y, f_L[2]->z);
+	glVertex3f(f_L[0]->x, f_L[0]->y, f_L[0]->z);
+	glEnd();
+}
+void ntPanel::display_Edge() {
+	edges.at(0).display(.5);
+	edges.at(1).display(.5);
+	edges.at(2).display(.5);
+
 }
 void ntPanel::display_EdgeSd(int gen) {
 	if (gen > 0) {
@@ -784,10 +1047,35 @@ void ntPanel::display_EdgeSd(int gen) {
 		}
 	}
 }
+void ntPanel::display_EdgeSD_G(int gen) {
+	if (gen > 0) {
+		ntColor4f col = ntColor4f(1, 1, 1, .2);
+		if (gen <= faces_G.size()) {
+			for (int i = 0; i < faces_G.at(gen)->size(); i++) {
+				faces_G.at(gen)->at(i).edges.at(0).setCol(col);
+				faces_G.at(gen)->at(i).edges.at(1).setCol(col);
+				faces_G.at(gen)->at(i).edges.at(2).setCol(col);
+
+				faces_G.at(gen)->at(i).edges.at(0).display();
+				faces_G.at(gen)->at(i).edges.at(1).display();
+				faces_G.at(gen)->at(i).edges.at(2).display();
+			}
+			for (int i = 0; i < cells.size(); i++) {
+				cells.at(i).displaySubD(perf_03);
+			}
+		}
+		else {
+			// EXCEPTION FOR EXCEEDING GERERATIONS WITHIN BOUNDS
+			std::cout << gen << " EXCEEDS AVAILABLE GENERATIONS" << endl;
+		}
+	}
+}
 void ntPanel::display_Face_L(L_mode mode, int gen) {
 	if (gen <= faces_L.size()) {
 		for (int i = 0; i < faces_L.at(gen)->size(); i++) {
-			faces_L.at(gen)->at(i).display(mode);
+			//if (i % 2 == 0) {
+				faces_L.at(gen)->at(i).display(mode);
+			//}
 		}
 	}
 	else {

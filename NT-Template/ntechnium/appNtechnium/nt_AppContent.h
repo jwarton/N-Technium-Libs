@@ -36,6 +36,7 @@ public:
 
 	void grid();
 	void grid_display();
+	void view_Model();
 	void view_Orth();
 };
 #endif

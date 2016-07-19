@@ -97,9 +97,10 @@ private:
 	//string fileName_TXT = "ptPos_14_OvisTriPts";
 	//string fileName_TXT = "ptPos_20_OvisZeppSys";
 	//string fileName_TXT = "OvisZeppSys_160314";
-	string fileName_TXT = "Z7";
-	//string fileName_TXT = "B0100";	//FASTENER LOCATION REVIEW PANELS
-	//string fileName_TXT = "Z6_00000";
+	string fileName_TXT = "Z_00_composite"; // "Z7";
+	//string fileName_TXT = "B0100";		//FASTENER LOCATION REVIEW PANELS
+	//string fileName_TXT = "AC_001";		//ACOUSTIC WIND TUNNEL TEST PANELS
+	//string fileName_TXT = "GP_001";
 
 	static string path;
 

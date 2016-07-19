@@ -67,8 +67,8 @@ namespace jpw{
 
 		//ACTIVE CAMERA SETTINGS
 		GLfloat rotX = 0.0f;
-		GLfloat rotY = 0.0f;
-		GLfloat rotZ = 0.0f;
+		GLfloat rotY = 0.0f;		
+		GLfloat rotZ = 0.0f;		//ROTATES MODEL MATRIX
 
 		GLfloat camX = -1.0f;
 		GLfloat camY = -1.0f;

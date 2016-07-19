@@ -46,11 +46,18 @@ bool ntCircle::pt_isInside(ntVec3* point) {
 	int i, j, nvert = vecs.size();
 	bool c = false;
 
-	for (i = 0, j = nvert - 1; i < nvert; j = i++) {
-		if (((vecs[i]->y >= point->y) != (vecs[j]->y >= point->y)) &&
-			(point->x <= (vecs[j]->x - vecs[i]->x) * (point->y - vecs[i]->y) / (vecs[j]->y - vecs[i]->y) + vecs[i]->x)
-			)
-			c = !c;
+	double x_Mn = pos->x - rad;
+	double x_Mx = pos->x + rad;
+	double y_Mx = pos->y + rad;
+	double y_Mn = pos->y - rad;
+
+	if (point->x > x_Mn && point->x < x_Mx && point->y < y_Mx && point->y > y_Mn) {
+		for (i = 0, j = nvert - 1; i < nvert; j = i++) {
+			if (((vecs[i]->y >= point->y) != (vecs[j]->y >= point->y)) &&
+				(point->x <= (vecs[j]->x - vecs[i]->x) * (point->y - vecs[i]->y) / (vecs[j]->y - vecs[i]->y) + vecs[i]->x)
+				)
+				c = !c;
+		} 
 	}
 	return c;
 }

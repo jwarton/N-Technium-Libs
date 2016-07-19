@@ -13,7 +13,6 @@ namespace jpw{
 			ntBaseApp* ba = (ntBaseApp*)glfwGetWindowUserPointer(window);
 			ba->setMouseButton(action, button, mods);
 	}
-
 	void scroll_callback(GLFWwindow* window, double xoffset, double yoffset){
 			ntBaseApp* ba = (ntBaseApp*)glfwGetWindowUserPointer(window);
 			ba->setMouseScroll(xoffset, yoffset);
@@ -29,7 +28,6 @@ appWidth(1920), appHeight(1080), appTitle("NTECHNIUM"), baseApp(baseApp){
 	init();
 	run();
 }
-
 ntGLFWsetup::ntGLFWsetup(int appWidth, int appHeight, std::string appTitle, ntBaseApp* baseApp) :
 appWidth(appWidth), appHeight(appHeight), appTitle(appTitle), baseApp(baseApp){
 	baseApp->setWidth(appWidth);
@@ -157,10 +155,16 @@ void ntGLFWsetup::run(){
 		EventHandler_MOUSE();
 		EventHandler_KEYBD();
 
-		view_Orth();
-		display_HUD();
-		view_Switch();
-		view_Update();
+		set_2D_DispView();
+		display_HUD();		/// HEADS UP DISPLAY AND GRAPHIC CONTENT
+
+		if (isProjection == false) {
+			set_3D_DispView();
+			view_Update();
+		} else {
+			set_3D_Proj();
+		}
+
 		///////////////////////////////////////////////////////////////////////////////////////////////////////////
 		///////////////////////////////////////////////////////////////////////////////////////////////////////////
 		/////HANDLE GLFW ENVENTS
@@ -222,7 +226,7 @@ void ntGLFWsetup::EventHandler_3DX() {
 	} else if (SiGetEvent(devHdl, SI_AVERAGE_EVENTS, &EData, &Event) == SPW_ERROR) {
 		std::cout << "3DX ERROR" << endl;
 	} else if (SiGetEvent(devHdl, SI_AVERAGE_EVENTS, &EData, &Event) == SI_BAD_HANDLE) {
-		std::cout << "3DX BAD DEVICE HANDLE" << endl;
+		//std::cout << "3DX BAD DEVICE HANDLE" << endl;
 	} else if (SiGetEvent(devHdl, SI_AVERAGE_EVENTS, &EData, &Event) == SI_SKIP_EVENT) {
 		std::cout << "3DX SKIP EVENT RECEIVED" << endl;
 	} 
@@ -278,20 +282,20 @@ void ntGLFWsetup::EventHandler_KEYBD(){
 	///////////////////////////////////////////////////////////////
 	////////////////////////////////////// CAMERA JOG FUNCTIONALITY
 	if (glfwGetKey(window, GLFW_KEY_RIGHT) == GLFW_PRESS & glfwGetKey(window, GLFW_KEY_LEFT_CONTROL) == GLFW_PRESS) {
-		baseApp->camZ += 1;
-		view_Update();
+		//baseApp->camZ += 1;
+		//view_Update();
 	}
 	if (glfwGetKey(window, GLFW_KEY_LEFT) == GLFW_PRESS & glfwGetKey(window, GLFW_KEY_LEFT_CONTROL) == GLFW_PRESS) {
-		baseApp->camZ -= 1;
-		view_Update();
+		//baseApp->camZ -= 1;
+		//view_Update();
 	}
 	if (glfwGetKey(window, GLFW_KEY_UP) == GLFW_PRESS & glfwGetKey(window, GLFW_KEY_LEFT_CONTROL) == GLFW_PRESS) {
-		baseApp->camX += 1;
-		view_Update();
+		//baseApp->camX += 1;
+		//view_Update();
 	}
 	if (glfwGetKey(window, GLFW_KEY_DOWN) == GLFW_PRESS & glfwGetKey(window, GLFW_KEY_LEFT_CONTROL) == GLFW_PRESS) {
-		baseApp->camX -= 1;
-		view_Update();
+		//baseApp->camX -= 1;
+		//view_Update();
 	}
 	if (glfwGetKey(window, GLFW_KEY_PAGE_UP) == GLFW_PRESS & glfwGetKey(window, GLFW_KEY_LEFT_CONTROL) == GLFW_PRESS) {
 		baseApp->camY += 1;
@@ -301,8 +305,121 @@ void ntGLFWsetup::EventHandler_KEYBD(){
 		baseApp->camY -= 1;
 		view_Update();
 	}
+
+	if (glfwGetKey(window, GLFW_KEY_F8) == GLFW_PRESS) {
+		set_3D_Proj();
+	}
+	if (glfwGetKey(window, GLFW_KEY_F8) == GLFW_PRESS) {
+		isProjection = true;
+	}
+	if (glfwGetKey(window, GLFW_KEY_F9) == GLFW_PRESS) {
+		isProjection = false;
+	}
 	///////////////////////////////////////////////////////////////
 	/////////////////////////////////////////// ORBIT FUNCTIONALITY
+
+	horizontalAngle = 3.14f;
+	verticalAngle = 0.0f;
+	glm::vec3 position = glm::vec3(baseApp->camX, baseApp->camY, baseApp->camZ);
+	// Compute new orientation
+	//horizontalAngle += mouseSpeed * deltaTime * float(1024 / 2 - xpos);
+	//verticalAngle += mouseSpeed * deltaTime * float(768 / 2 - ypos);
+	horizontalAngle += speed * D_xpos;
+	verticalAngle += speed * D_ypos;
+	glm::vec3 direction(cos(verticalAngle) * sin(horizontalAngle), sin(verticalAngle), cos(verticalAngle) * cos(horizontalAngle));
+	glm::vec3 right = glm::vec3(sin(horizontalAngle - 3.14f / 2.0f), 0, cos(horizontalAngle - 3.14f / 2.0f));
+	glm::vec3 up = glm::cross(right, direction);
+
+	//std::cout << horizontalAngle << endl;
+	//std::cout << direction.x << ", " << direction.y << ", " << direction.z << " | " << right.x << ", " << right.y << ", " << right.z << endl;
+
+	//// TRUCK FORWARD
+	//if (glfwGetKey(window, GLFW_KEY_UP) == GLFW_PRESS) {
+
+	//	position += direction * speed;
+	//	baseApp->camX = position.x;
+	//	baseApp->camY = position.y;
+	//	baseApp->camZ = position.z;
+	//	baseApp->tarX = position.x + direction.x;
+	//	baseApp->tarY = position.y + direction.y;
+	//	baseApp->tarZ = position.z + direction.z;
+	//	baseApp->rolX = up.x;
+	//	baseApp->rolY = up.y;
+	//	baseApp->rolZ = up.z;
+	//	view_Update();
+	//}
+	//// TRUCK BACKWARD
+	//if (glfwGetKey(window, GLFW_KEY_DOWN) == GLFW_PRESS) {
+
+	//	position -= direction * speed;
+	//	baseApp->camX = position.x;
+	//	baseApp->camY = position.y;
+	//	baseApp->camZ = position.z;
+	//	baseApp->tarX = position.x + direction.x;
+	//	baseApp->tarY = position.y + direction.y;
+	//	baseApp->tarZ = position.z + direction.z;
+	//	baseApp->rolX = up.x;
+	//	baseApp->rolY = up.y;
+	//	baseApp->rolZ = up.z;
+	//	view_Update();
+	//}
+
+	// TRUCK RIGHT
+	//if (glfwGetKey(window, GLFW_KEY_RIGHT) == GLFW_PRESS) {
+
+	//	position += right * speed;
+	//	baseApp->camX = position.x;
+	//	baseApp->camY = position.y;
+	//	baseApp->camZ = position.z;
+	//	baseApp->tarX = position.x + direction.x;
+	//	baseApp->tarY = position.y + direction.y;
+	//	baseApp->tarZ = position.z + direction.z;
+	//	baseApp->rolX = up.x;
+	//	baseApp->rolY = up.y;
+	//	baseApp->rolZ = up.z;
+	//	view_Update();
+	//}
+	//// TRUCK LEFT
+	//if (glfwGetKey(window, GLFW_KEY_LEFT) == GLFW_PRESS) {
+
+	//	position -= right * speed;
+	//	baseApp->camX = position.x;
+	//	baseApp->camY = position.y;
+	//	baseApp->camZ = position.z;
+	//	baseApp->tarX = position.x + direction.x;
+	//	baseApp->tarY = position.y + direction.y;
+	//	baseApp->tarZ = position.z + direction.z;
+	//	baseApp->rolX = up.x;
+	//	baseApp->rolY = up.y;
+	//	baseApp->rolZ = up.z;
+	//	view_Update();
+	//}
+
+	///////////////////////////////////////////////////////////////
+	//////////////////////////////////////////////// SET KEY STATES
+	if (glfwGetKey(window, GLFW_KEY_LEFT_SHIFT) == NULL && glfwGetKey(window, GLFW_KEY_LEFT_SHIFT) == NULL) {
+		state_Shift = false;
+	}
+	if (glfwGetKey(window, GLFW_KEY_LEFT_SHIFT) == GLFW_PRESS || glfwGetKey(window, GLFW_KEY_LEFT_SHIFT) == GLFW_PRESS) {
+		state_Shift = true;
+	}
+
+	if (glfwGetKey(window, GLFW_KEY_LEFT_CONTROL) == NULL && glfwGetKey(window, GLFW_KEY_RIGHT_CONTROL) == NULL) {
+		state_Ctrl = false;
+	}
+	if (glfwGetKey(window, GLFW_KEY_LEFT_CONTROL) == GLFW_PRESS || glfwGetKey(window, GLFW_KEY_RIGHT_CONTROL) == GLFW_PRESS) {
+		state_Ctrl = true;
+	}
+
+	if (glfwGetKey(window, GLFW_KEY_LEFT_ALT) == NULL && glfwGetKey(window, GLFW_KEY_RIGHT_ALT) == NULL) {
+		state_Alt = false;
+	}
+	if (glfwGetKey(window, GLFW_KEY_LEFT_ALT) == GLFW_PRESS || glfwGetKey(window, GLFW_KEY_RIGHT_ALT) == GLFW_PRESS) {
+		state_Alt = true;
+	}
+
+	///////////////////////////////////////////////////////////////
+	///////////////////////////////////////////// KEY FUNCTIONALITY
 	if (glfwGetKey(window, GLFW_KEY_RIGHT) == GLFW_PRESS) {
 		baseApp->rotZ += 0.2;
 		view_Update();
@@ -355,6 +472,9 @@ void ntGLFWsetup::EventHandler_KEYBD(){
 		button = b1;
 		view_Front();
 	}
+	if (glfwGetKey(window, GLFW_KEY_C) == GLFW_PRESS && state_Alt == true) {
+		view_Save();
+	}
 }
 void ntGLFWsetup::EventHandler_MOUSE(){
 
@@ -367,6 +487,7 @@ void ntGLFWsetup::EventHandler_MOUSE(){
 	int state_m6 = glfwGetMouseButton(window, GLFW_MOUSE_BUTTON_6);
 	int state_m7 = glfwGetMouseButton(window, GLFW_MOUSE_BUTTON_7);
 	int state_m8 = glfwGetMouseButton(window, GLFW_MOUSE_BUTTON_LAST);
+	int state_m9 = glfwGetMouseButton(window, GLFW_MOUSE_BUTTON_RIGHT);
 
 	// GLFW SCROLL FUNCTIONALITY
 	glfwSetScrollCallback(window, scroll_callback);
@@ -404,6 +525,58 @@ void ntGLFWsetup::EventHandler_MOUSE(){
 	}
 	if (state_m8 == GLFW_PRESS) {
 		//std::cout << "MOUSE BUTTON_8" << endl;
+	}
+	if (state_m9 == GLFW_RELEASE) {
+		P_xpos = 0.0;
+		P_ypos = 0.0;
+	}
+	/// ORBIT  ///NEEDS WORK
+	if (state_m2 == GLFW_PRESS  && state_Shift == false && state_Ctrl == false) {
+		glfwGetCursorPos(window, &M_xpos, &M_ypos);
+		if (P_xpos == 0) {
+			P_xpos = M_xpos;
+			P_ypos = M_ypos;
+		}
+
+		D_xpos = M_xpos - P_xpos;
+		D_ypos = M_ypos - P_ypos;
+
+		baseApp->rotX += (D_xpos * .01);
+		baseApp->rotZ += (D_ypos * .01);
+
+	}
+	/// ZOOM
+	if (state_m2 == GLFW_PRESS && state_Ctrl == true) {
+		glfwGetCursorPos(window, &M_xpos, &M_ypos);
+		D_ypos = M_ypos - P_ypos;
+		if (P_ypos == 0) {
+			P_xpos = M_xpos;
+			P_ypos = M_ypos;
+		}
+		if (M_ypos > P_ypos) {
+			baseApp->zoom -= (D_xpos * .05);
+			baseApp->fovA -= (D_xpos * .05);
+		}
+		if (M_ypos < P_ypos) {
+			baseApp->zoom += (D_xpos * .05);
+			baseApp->fovA += (D_xpos * .05);
+		}
+	}
+	/// PAN
+	if (state_m2 == GLFW_PRESS && state_Shift == true) {
+		glfwGetCursorPos(window, &M_xpos, &M_ypos);
+		if (P_ypos == 0) {
+			P_xpos = M_xpos;
+			P_ypos = M_ypos;
+		}
+
+		D_xpos = M_xpos - P_xpos;
+		D_ypos = M_ypos - P_ypos;
+
+		baseApp->camX -= (D_xpos * .0005);
+		baseApp->camZ += (D_ypos * .0005);
+		baseApp->tarX -= (D_xpos * .0005);
+		baseApp->tarZ += (D_ypos * .0005);
 	}
 }
 
@@ -569,32 +742,41 @@ void ntGLFWsetup::Event_3DX_command(SiSpwEvent *pEvent) {
 }
 /////////////////////////////////////////////////////////////////////////////////
 ///////////////////////////////////////////////////////// STANDARD VIEW FUNCTIONS
+
+void ntGLFWsetup::print_Camera() {
+	std::cout << "\n CAMERA SAVED:  \n "
+		<< " rotX " << baseApp->rotX << " \n "
+		<< " rotY " << baseApp->rotY << " \n "
+		<< " rotZ " << baseApp->rotZ << " \n "
+		<< " camX " << baseApp->camX << " \n "
+		<< " camY " << baseApp->camY << " \n "
+		<< " camZ " << baseApp->camZ << " \n "
+		<< " tarX " << baseApp->tarX << " \n "
+		<< " tarY " << baseApp->tarY << " \n "
+		<< " tarZ " << baseApp->tarZ << " \n "
+		<< " rolX " << baseApp->rolX << " \n "
+		<< " rolY " << baseApp->rolY << " \n "
+		<< " rolZ " << baseApp->rolZ << " \n "
+		<< " fovA " << baseApp->fovA << " \n "
+		<< " zoom " << baseApp->zoom << " \n " << endl;
+}
+
 void ntGLFWsetup::view_Reset() {
+
 	baseApp->rotX = 0.0f;
 	baseApp->rotY = 0.0f;
 	baseApp->rotZ = 0.0f;
 	baseApp->camX = -1.0f;
-	baseApp->camY = -1.0f;
-	baseApp->camZ = 1.0f;
+	baseApp->camY = -5.0f;
+	baseApp->camZ = 2.0f;
 	baseApp->tarX = 0.0f;
 	baseApp->tarY = 0.0f;
 	baseApp->tarZ = 0.0f;
 	baseApp->rolX = 0.0f;
 	baseApp->rolY = 0.0f;
 	baseApp->rolZ = 1.0f;
-	baseApp->fovA = 50.0f;
-	baseApp->zoom = 0.0f;
-}
-void ntGLFWsetup::view_Update() {
-		glMatrixMode(GL_PROJECTION);
-		glLoadIdentity();
-		gluPerspective(baseApp->fovA + baseApp->zoom, baseApp->width / baseApp->height, baseApp->zNear, baseApp->zFar);
-		glMatrixMode(GL_MODELVIEW);
-		glLoadIdentity();
-		gluLookAt(baseApp->camX, baseApp->camY, baseApp->camZ, baseApp->tarX, baseApp->tarY, baseApp->tarZ, baseApp->rolX, baseApp->rolY, baseApp->rolZ);
-		glRotatef(baseApp->rotX, 1.f, 0.f, 0.f);
-		glRotatef(baseApp->rotY, 0.f, 1.f, 0.f);
-		glRotatef(baseApp->rotZ, 0.f, 0.f, 1.f);
+	baseApp->fovA = 40.0f;
+	baseApp->zoom = 20.0f;
 }
 void ntGLFWsetup::view_Fit(){
 
@@ -694,7 +876,7 @@ void ntGLFWsetup::view_Front(){
 
 	view_Reset();
 	baseApp->camX = 0.0f;
-	baseApp->camY = -3.0f;
+	baseApp->camY =-3.0f;
 	baseApp->camZ = 0.0f;
 	baseApp->rolX = 0.0f;
 	baseApp->rolY = 0.0f;
@@ -717,30 +899,14 @@ void ntGLFWsetup::view_Pers(){
 	baseApp->rolX =  baseApp->cam00[9];
 	baseApp->rolY =  baseApp->cam00[10];
 	baseApp->rolZ =  baseApp->cam00[11];
-	baseApp->fovA = baseApp->cam00[12];
+	baseApp->fovA =  baseApp->cam00[12];
 	baseApp->zoom =  baseApp->cam00[13];
 
 	view_Update();
 }
-
-void  ntGLFWsetup::view_Orth() {
-	glDisable(GL_DEPTH_TEST);
-	glMatrixMode(GL_PROJECTION);
-	glPushMatrix();
-	glLoadIdentity();
-	//glOrtho(0, appWidth, 0, appHeight, .1, 100);
-	gluOrtho2D(0, appWidth, 0, appHeight);
-	glMatrixMode(GL_MODELVIEW);
-	glLoadIdentity();
-}
-
-void ntGLFWsetup::view_Switch() {
-	glEnable(GL_DEPTH_TEST);
-	glMatrixMode(GL_PROJECTION);
-	glPopMatrix();
-	glMatrixMode(GL_MODELVIEW);
-}
 void ntGLFWsetup::view_Save() {
+	/// MODIFY TO ACCEPT INDEX FOR SPECIFIC CAMERA
+	/// ADD FUNCTION TO RETRIEVE SAVED CAMERAS
 	baseApp->cam00[0]  = baseApp->rotX;
 	baseApp->cam00[1]  = baseApp->rotY;
 	baseApp->cam00[2]  = baseApp->rotZ;
@@ -755,6 +921,8 @@ void ntGLFWsetup::view_Save() {
 	baseApp->cam00[11] = baseApp->rolZ;
 	baseApp->cam00[12] = baseApp->fovA;
 	baseApp->cam00[13] = baseApp->zoom;
+
+	print_Camera();
 }
 
 void ntGLFWsetup::display_HUD() {
@@ -841,4 +1009,43 @@ void ntGLFWsetup::display_HUD() {
 		glVertex2f((i * 10) + 5, 135); //appHeight * 0.5
 	}
 	glEnd();
+}
+/////////////////////////////////////////////////////////////////////////////////
+////////////////////////////////////////////////////// SET SPACE FOR DISPLAY MODE
+void ntGLFWsetup::set_3D_DispView() {
+	glEnable(GL_DEPTH_TEST);
+	glMatrixMode(GL_PROJECTION);
+	glPopMatrix();
+	glMatrixMode(GL_MODELVIEW);
+	glMatrixMode(GL_PROJECTION);
+	glLoadIdentity();
+}
+void ntGLFWsetup::set_2D_DispView() {
+	glDisable(GL_DEPTH_TEST);
+	glMatrixMode(GL_PROJECTION);
+	glPushMatrix();
+	glLoadIdentity();
+	gluOrtho2D(0, appWidth, 0, appHeight);
+	glMatrixMode(GL_MODELVIEW);
+	glLoadIdentity();
+}
+void ntGLFWsetup::set_3D_Proj() {
+	//glDisable(GL_DEPTH_TEST);
+	//glMatrixMode(GL_MODELVIEW);
+	//glPushMatrix();
+	//glLoadIdentity();
+	//glOrtho(0, appWidth, 0, appHeight, -1.5, 1.5);
+	//glMatrixMode(GL_PROJECTION);
+	//glLoadIdentity();
+	//gluLookAt(baseApp->camX, baseApp->camY, baseApp->camZ, baseApp->tarX, baseApp->tarY, baseApp->tarZ, baseApp->rolX, baseApp->rolY, baseApp->rolZ);
+}
+
+void ntGLFWsetup::view_Update() {
+	gluPerspective(baseApp->fovA + baseApp->zoom, baseApp->width / baseApp->height, baseApp->zNear, baseApp->zFar);
+	glMatrixMode(GL_MODELVIEW);
+	glLoadIdentity();
+	gluLookAt(baseApp->camX, baseApp->camY, baseApp->camZ, baseApp->tarX, baseApp->tarY, baseApp->tarZ, baseApp->rolX, baseApp->rolY, baseApp->rolZ);
+	glRotatef(baseApp->rotX, 1.f, 0.f, 0.f);
+	glRotatef(baseApp->rotY, 0.f, 1.f, 0.f);
+	glRotatef(baseApp->rotZ, 0.f, 0.f, 1.f);
 }

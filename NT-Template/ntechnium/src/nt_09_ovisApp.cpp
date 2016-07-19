@@ -245,7 +245,8 @@ void ovisApp::read_DATA(){
 			isFastener =	true;
 			cnt = 0;
 		}
-
+		///////////////////////////////////////////////////////////////
+		// SET PANEL NAME
 		if (isStartFile == true && line.find("PAN:") != string::npos) {
 			char chars[] = " ";
 			for (unsigned int j = 0; j < strlen(chars); ++j)
@@ -255,10 +256,14 @@ void ovisApp::read_DATA(){
 			size_t token = line.find_last_of(":");
 			panel_ID = line.substr(token + 1);
 		}
+		///////////////////////////////////////////////////////////////
+		// SET PANEL NORMAL
 		if (isStartFile == true && line.find("NRM:") != string::npos) {
 			line = format_STR(line);
 			panel_Norm = line + "\n";
 		}
+		///////////////////////////////////////////////////////////////
+		// SET UV PARAMETERS
 		if (isStartFile == true && line.find("UV:") != string::npos) {
 			///EXCEPTION FOR > 3 UVW ENTRIES
 			ntVec3 temp = add_VEC(line);  /// CREATE POINTER TO VEC
@@ -268,10 +273,14 @@ void ovisApp::read_DATA(){
 			line = format_STR(line);
 			panel_UVW = line + "\n";
 		}
+		///////////////////////////////////////////////////////////////
+		// SET DIRECTION
 		if (isStartFile == true && line.find("DIR:") != string::npos) {
 			size_t token = line.find_last_of(":");
 			panel_Dir = line.substr(token + 1);
 		}
+		///////////////////////////////////////////////////////////////
+		// SET NODE POSITIONS
 		if (isStartFile == true && line.find("POS:") != string::npos && isNode == true) {
 			ntVec3 vec = add_VEC(line);
 			verts[cnt] = vec;
@@ -282,6 +291,8 @@ void ovisApp::read_DATA(){
 				cnt = 0;
 			}
 		}
+		///////////////////////////////////////////////////////////////
+		// SET CORNER POSITONS
 		if (isStartFile == true && line.find("POS:") != string::npos && isCorner == true) {
 			ntVec3 vec = add_VEC(line);
 			cpts[cnt] = vec;
@@ -289,6 +300,8 @@ void ovisApp::read_DATA(){
 				cnt = cnt + 1;
 			}
 		}
+		///////////////////////////////////////////////////////////////
+		// SET FASTENER CENTERLINE POSITIONS
 		if (isStartFile == true && line.find("POS:") != string::npos && isFastener == true) {
 			ntVec3 vec = add_VEC(line);
 			fpts[cnt] = vec;
@@ -296,20 +309,24 @@ void ovisApp::read_DATA(){
 				cnt = cnt + 1;
 			}
 		}
+		///////////////////////////////////////////////////////////////
+		// END PANEL MOVE TO NEXT
 		if (line.find("NEXT") != string::npos) {
 			isSubNext = true;
 		}
 		else { isSubNext = false; }
-
+		///////////////////////////////////////////////////////////////
+		// END FILE
 		if (line.find("END") != string::npos) {
 			isEndSubs = true;
 			isEndFile = true;
-		}
-		else { isEndFile = false; }
+		} else { isEndFile = false; }
 
+		///////////////////////////////////////////////////////////////
 		//DISTRIBUTE DATA TO PANEL DEFINITION
 		if (isSubNext == true || isEndFile == true) {
-			/////////////////////////////////////////////////////////////////////////////////
+			
+			// INITIALIZE GLOBAL NODE POSITIONS
 			ntVec3 * v0 = new ntVec3(verts[0].x, verts[0].y, verts[0].z);
 			ntVec3 * v1 = new ntVec3(verts[1].x, verts[1].y, verts[1].z);
 			ntVec3 * v2 = new ntVec3(verts[2].x, verts[2].y, verts[2].z);
@@ -322,12 +339,11 @@ void ovisApp::read_DATA(){
 			ntVec3 * c3 = new ntVec3(cpts[3].x, cpts[3].y, cpts[3].z);
 			ntVec3 * c4 = new ntVec3(cpts[4].x, cpts[4].y, cpts[4].z);
 
-			panel->set_cG(c0);
-			panel->set_cG(c1);
-			panel->set_cG(c2);
-			panel->set_cG(c3);
-			panel->set_cG(c4);
-			//panel->set_cG();
+			panel->set_cG(c0, 3);
+			panel->set_cG(c1, 4);
+			panel->set_cG(c2, 5);
+			panel->set_cG(c3, 6);
+			panel->set_cG(c4, 7);
 
 			// INITIALIZE GLOBAL FASTENER CL POINTS
 			ntVec3 * f0 = new ntVec3(fpts[0].x, fpts[0].y, fpts[0].z);
@@ -336,11 +352,11 @@ void ovisApp::read_DATA(){
 			ntVec3 * f3 = new ntVec3(fpts[3].x, fpts[3].y, fpts[3].z);
 			ntVec3 * f4 = new ntVec3(fpts[4].x, fpts[4].y, fpts[4].z);
 
-			panel->set_fG(f0);
-			panel->set_fG(f1);
-			panel->set_fG(f2);
-			panel->set_fG(f3);
-			panel->set_fG(f4);
+			panel->set_fG(f0, 8);
+			panel->set_fG(f1, 9);
+			panel->set_fG(f2, 10);
+			panel->set_fG(f3, 11);
+			panel->set_fG(f4, 12);
 
 			// INITIALIZE PANEL PARAMS
 			panel->set_ID(panel_ID);
@@ -429,6 +445,8 @@ void ovisApp::write_Panel_TXT(ntPanel* panel_ptr) {
 	file << "//  PANEL PARAMETERS  | UNITS [ INCHES ]\n";
 	file << "//  RELEASE " << date << "\n";
 	file << "//  PANEL INDEX NO:  " << fileName << "\n";
+	file << "//////////////////////////////////////////////////////////////////////\n";
+	file << "//////////////////////////////////////////////////////////////////////\n";
 	file << "//  NODE POSITIONS:\n";
 	file << "//  [ WORLD COORDINATES ]\n";
 	file << "//        (                 X,                  Y,                  Z)\n";
@@ -436,7 +454,7 @@ void ovisApp::write_Panel_TXT(ntPanel* panel_ptr) {
 	file << "     POS: " << format_VEC(panel_ptr->get_v_G().at(1)) << "\n";
 	file << "     POS: " << format_VEC(panel_ptr->get_v_G().at(2)) << "\n";
 	file << "\n";
-	file << "//  CORNER POSITIONS:          {POS:            }\n";
+	file << "//  CORNER POSITIONS:\n";
 	file << "     POS: " << format_VEC(panel_ptr->get_c_G().at(0)) << "\n";
 	file << "     POS: " << format_VEC(panel_ptr->get_c_G().at(1)) << "\n";
 	file << "     POS: " << format_VEC(panel_ptr->get_c_G().at(2)) << "\n";
@@ -447,9 +465,9 @@ void ovisApp::write_Panel_TXT(ntPanel* panel_ptr) {
 	file << "//   VEC" << panel_ptr->get_n_G();
 	file << "//   UVW" << panel_ptr->get_UVW();
 	file << "//   DIR:" << panel_ptr->get_Dir() << "\n\n";
-	file << "//  AREA GROSS:  " << to_string(panel_ptr->get_Area()) << "      [ SQ.INCH ]\n";
-	file << "//  AREA NET:    " << to_string(panel_ptr->get_Area() - panel_ptr->perf_area) << "      [ SQ.INCH ]\n";
-	file << "//  OPACITY:     " << to_string(panel_ptr->perf_perc) << "               [ % ]\n\n";
+	file << "//  AREA GROSS:  " << to_string(panel_ptr->get_Area()) << "           [ SQ.INCH ]\n";
+	file << "//  AREA NET:    " << to_string(panel_ptr->get_Area() - panel_ptr->perf_area) << "           [ SQ.INCH ]\n";
+	file << "//  OPACITY:     " << to_string(panel_ptr->perf_perc) << "              [ % ]\n\n";
 	
 	stringstream a0, a1, a2;
 	a0 << std::setw(8) << std::setfill('_');
@@ -460,11 +478,12 @@ void ovisApp::write_Panel_TXT(ntPanel* panel_ptr) {
 	a1 << panel_ptr->phi[1];
 	a2 << panel_ptr->phi[2];
 
-	file << "//  A0:          " << a0.str() << "               [ DEGREES ]\n";
-	file << "//  A1:          " << a1.str() << "               [ DEGREES ]\n";
-	file << "//  A2:          " << a2.str() << "               [ DEGREES ]\n";
+	file << "//  A0:          " << a0.str() << "              [ DEGREES ]\n";
+	file << "//  A1:          " << a1.str() << "              [ DEGREES ]\n";
+	file << "//  A2:          " << a2.str() << "              [ DEGREES ]\n";
 	file << "//  SUM:         " << panel_ptr->phi[0] + panel_ptr->phi[1] + panel_ptr->phi[2] << "\n\n";
 
+	file << "//////////////////////////////////////////////////////////////////////\n";
 	file << "//////////////////////////////////////////////////////////////////////\n";
 	file << "//  NODE POSITIONS:\n";
 	file << "//  [ LOCAL COORDINATES ]\n";
@@ -476,25 +495,33 @@ void ovisApp::write_Panel_TXT(ntPanel* panel_ptr) {
 	file << "//  PANEL ORIENTATION VECTOR:\n";
 	file << "//   VEC: " << format_VEC(&panel_ptr->norm) << "\n";
 	file << "\n";
-	file << "//  CORNER POSITIONS:							{POS:            }\n";
+	file << "//  CORNER POSITIONS:\n";
 	file << "     POS: " << format_VEC(panel_ptr->get_c_L().at(0)) << "\n";
 	file << "     POS: " << format_VEC(panel_ptr->get_c_L().at(1)) << "\n";
 	file << "     POS: " << format_VEC(panel_ptr->get_c_L().at(2)) << "\n";
 	file << "     POS: " << format_VEC(panel_ptr->get_c_L().at(3)) << "\n";
 	file << "     POS: " << format_VEC(panel_ptr->get_c_L().at(4)) << "\n";
 	file << "\n";
-	file << "//  FASTENER CENTERLINE OFFSET POINTS:        {POS:  DIAMETER: }\n";
+	file << "//  FASTENER CENTERLINE OFFSET POINTS:\n";
 	file << "     POS: " << format_VEC(panel_ptr->get_f_L().at(0)) << "\n";
 	file << "     POS: " << format_VEC(panel_ptr->get_f_L().at(1)) << "\n";
 	file << "     POS: " << format_VEC(panel_ptr->get_f_L().at(2)) << "\n";
 	file << "     POS: " << format_VEC(panel_ptr->get_f_L().at(3)) << "\n";
 	file << "     POS: " << format_VEC(panel_ptr->get_f_L().at(4)) << "\n";
 	file << "\n";
-	file << "//  PERFORATION DATA:							{POS:  DIAMETER: }\n";
+	file << "//  FASTENER DATA:\n";
+	file << "//  FASTENER COUNT:  " << to_string(panel_ptr->get_Fast().size()) << "\n\n";
+	for (int i = 0; i < panel_ptr->get_Fast().size(); i++) {
+		file << "     POS: " << format_VEC(panel_ptr->get_Fast().at(i)) << "\n";
+	}
+	file << "\n";
+	file << "//  PERFORATION DATA:                          {POSITION:  DIAMETER: }\n";
 	file << "//  PERFORATION COUNT:  " << to_string(panel_ptr->get_Perf().size()) << "\n\n";
 	for (int i = 0; i < panel_ptr->get_Perf().size(); i++) {
-		file << "     POS:  " << format_VEC(panel_ptr->get_Perf().at(i)) << "       DIA:  " << panel_ptr->get_Perf_R().at(i) * 2 << "\n";
+		file << "     POS: " << format_VEC(panel_ptr->get_Perf().at(i)) << "       DIA:  " << panel_ptr->get_Perf_R().at(i) * 2 << "\n";
 	}
+	file << "//////////////////////////////////////////////////////////////////////\n";
+	file << "//////////////////////////////////////////////////////////////////////\n";
 	file << "//  END FILE\n";
 	file.close();
 
@@ -502,21 +529,25 @@ void ovisApp::write_Panel_TXT(ntPanel* panel_ptr) {
 }
 void ovisApp::write_Panel_IMG(ntPanel* panel_ptr) {
 
+	// IMAGE WRITE PATH
 	stringstream ss;
 	ss << std::setw(5) << std::setfill('0');
 	ss << panel_ptr->get_ID();
-
 	string pathOut = nt_Utility::getPathToOutput();
 	string pathExtension = "ovis\\img\\";
 	string fileName = ss.str();
 	string fileExt = ".jpg";
 	string url = pathOut + pathExtension + fileName + fileExt;
+	const char * file = url.c_str();
+
 	// IMAGE SIZE
-	int img_x = 1024; //768;
-	int img_y = 1024; //768;
+	int img_x = 1600; //768;
+	int img_y = 1600; //768;
+
 	// MAXIMUM PANEL SIZE;
 	int pX_max = 72;//68;
 	int pY_max = 72;//68;
+
 	// PIXEL RANGE LOOP
 	int dim_X = mapRange(0, img_x, 0, pX_max, panel_ptr->v1->x); //img_X;// OR = pX_max * dpi
 	int dim_Y = mapRange(0, img_y, 0, pY_max, panel_ptr->v2->y); //img_Y;// OR = pY_max * dpi
@@ -528,10 +559,7 @@ void ovisApp::write_Panel_IMG(ntPanel* panel_ptr) {
 	bool isPtPanel = false;
 	bool isPtPerf = false;
 	
-	const char * file = url.c_str();
-	//arma::mat img_ARM = zeros<mat>(img_x, img_y);
-	af::array img_OUT = af::array(img_x, img_y);
-	img_OUT *= 0;
+	arma::fmat img_OUT = zeros<fmat>(img_x, img_y);
 
 	// MINIMIZE SEARCH AREA
 	if (panel_ptr->v1->x > pX_max) {
@@ -547,7 +575,6 @@ void ovisApp::write_Panel_IMG(ntPanel* panel_ptr) {
 	}
 
 	if (isExceed == false) {
-
 		// OPTION TO SET IMAGE SIZE BY DPI OR EXPLCIT SIZE
 		if (isDPI == true) {
 			img_x = pX_max * dpi;
@@ -561,7 +588,6 @@ void ovisApp::write_Panel_IMG(ntPanel* panel_ptr) {
 				float pos_Y = mapRange(0, pY_max, 0, img_y, j);
 
 				ntVec3 * pt = new ntVec3(pos_X, pos_Y, 0);
-
 				isPtPanel = panel_ptr->pt_isInside(pt);
 
 				if (isPtPanel == true) {
@@ -579,22 +605,14 @@ void ovisApp::write_Panel_IMG(ntPanel* panel_ptr) {
 				}
 
 				if (isPtAlpha == false) {
-					img_OUT(i, j) = 255;
-				}
-				else {
-					img_OUT(i, j) = 0;
+					img_OUT(i, j) = 255.000;
 				}
 			}
 		}
-		/// FAILS TO PASS ARMA MATRIX TO AF BEYOND SIZE LIMIT
-		//af::array img_OUT(img_x, img_y, img_ARM.memptr());
-		//img_OUT.host((void*)img_ARM.memptr());
-		//img_ARM.print(	"IMG_ARM:  ");
-		//af::print(		"IMG_OUT:   ", img_OUT);
-		img_OUT = af::transpose(img_OUT);
-		img_OUT = af::flip(img_OUT, 0);
-		af::saveImage(file, img_OUT);
-
+		af::array img_AF(img_x, img_y, img_OUT.memptr());
+		img_AF = af::transpose(img_AF);
+		img_AF = af::flip(img_AF, 0);
+		af::saveImage(file, img_AF);
 		std::cout << "PANEL:: " + ss.str() << " IMG SAVED" << endl;
 	}
 }
@@ -623,7 +641,8 @@ void ovisApp::funct(ntPanel* panel_ptr) {
 	panel_ptr->calcPhi();
 	float areaP = panel_ptr->get_Area();
 	///////////////////////////////////////////////////////////////
-	/// SCALE STADIUM SURFACE TO VIEW--- REPLACE WITH CAMERA FIT FUNCTION
+	/// SCALE STADIUM TO VIEW--- REPLACE WITH CAMERA FIT FUNCTION !
+	/// !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 	for (int j = 0; j < 3; j++) {
 		ntMatrix4 SC3 = ntMatrix4(panel_ptr->faces_G.at(0)->at(0).vecs[j]);
 		SC3.scale3d(0.0001);
@@ -633,11 +652,12 @@ void ovisApp::funct(ntPanel* panel_ptr) {
 	///
 	///////////////////////////////////////////////////////////////
 	panel_ptr->sub_Div(gen);	    // SUBDIVIDE FOR GLOBAL DISPLAY
-
+									// REVISE PER FASTENER GRID !!!
+									// !!!!!!!!!!!!!!!!!!!!!!!!!!!!
 	///////////////////////////////////////////////////////////////
 	///////////////////////////////////// CALCULATE PEFORATION GRID
-	int div = floor(panel_ptr->getMinEdgeLen() / 1.5);
-	panel_ptr->plot_Perf(div, TRI);
+	int div = floor(panel_ptr->get_EdgeMin() / 1.5);
+	panel_ptr->plot_Perf(div, TRI, DOT);
 
 	///////////////////////////////////////////////////////////////
 	////////////////////////////////// LOAD TEXTURE MAP TO SURFACES
@@ -678,28 +698,41 @@ void ovisApp::funct(ntPanel* panel_ptr) {
 	string z_num = p_ID.substr(3, 2);
 	string t_num = p_ID.substr(1, 2);
 
-	int ID = stoi(p_num);
-	int ZP = stoi(z_num);
-	int TB = stoi(t_num);
+	//int ID = stoi(p_num);
+	//int ZP = stoi(z_num);
+	//int TB = stoi(t_num);
 
+	clock_t t = clock();
+	//if (TB > 58 && TB < 60 && ZP > 12) {
+	//if (TB > 59) {
 	//write_Panel_TXT(panel_ptr);
-	//write_Panel_IMG(panel_ptr);
+	write_Panel_IMG(panel_ptr);
+	//}
 
+	t = clock() - t;
+	string time = format_SEC(t);
+	std::cout << "WRITE::  " << time << "\n" << endl;
 
-	/// SCALE PANELS TO VIEW--- REPLACE WITH CAMERA FIT FUNCTION //
+	/// SCALE PANELS TO VIEW--- REPLACE WITH CAMERA FIT FUNCTION		//!!!!!!!!!!!!!!!
 	/// TRANSLATE TO HUD LOCATION
-	ntVec3 posXY = ntVec3(55, 640, 0);  /////// POSITION FOR 2D HUD
+	ntVec3 posXY = ntVec3(55, 640, 0);  /////// POSITION FOR 2D HUD		//!!!!!!!!!!!!!!!
 	//float sc_Factor = 0.015;
-	float sc_Factor = 5;
+	float sc_Factor = 20;
 	for (int j = 0; j < panel_ptr->vecs_SD.size(); j++) {
 			ntMatrix4 SC1 = ntMatrix4(panel_ptr->vecs_SD[j]);
 			SC1.scale3d(sc_Factor);
 			SC1.translate(posXY);
 	}
-
 	for (int j = 0; j < panel_ptr->perfs.size(); j++) {
 		for (int k = 0; k < panel_ptr->perfs.at(j)->seg; k++) {
-			ntMatrix4 SC3 = ntMatrix4(panel_ptr->perfs.at(j)->vecs.at(k));
+			ntMatrix4 SC2 = ntMatrix4(panel_ptr->perfs.at(j)->vecs.at(k));
+			SC2.scale3d(sc_Factor);
+			SC2.translate(posXY);
+		}
+	}
+	for (int j = 0; j < panel_ptr->fastr.size(); j++) {
+		for (int k = 0; k < panel_ptr->fastr.at(j)->seg; k++) {
+			ntMatrix4 SC3 = ntMatrix4(panel_ptr->fastr.at(j)->vecs.at(k));
 			SC3.scale3d(sc_Factor);
 			SC3.translate(posXY);
 		}
@@ -725,6 +758,8 @@ void ovisApp::write_Panels_IMG(int ind_S, int ind_E, std::vector<ntPanel*>* pane
 	}
 }
 
+///////////////////////////////////////////////////////////////
+//////////////////////////////// FORMAT FUNCTION FOR INPUT DATA
 string ovisApp::format_STR(string line){
 
 //	string token = "PANEL";
@@ -824,6 +859,8 @@ Vec3 ovisApp::add_VEC(string line) {
 	return vertex;
 }
 
+///////////////////////////////////////////////////////////////
+//////////////////// PANEL TRANSFORMATION AND MAPPING FUNCTIONS
 void ovisApp::align_Panel(ntPanel* panel_ptr, Vec3* axis) {
 	////////////////////////////////////////////////////////////////
 	//////////////// FUNCTION ALIGNS PANEL FACE NORMAL TO TO WORLD Z
@@ -881,10 +918,10 @@ void ovisApp::align_Panel(ntPanel* panel_ptr, Vec3* axis) {
 	panel_ptr->calcNorm();
 
 	//http://math.stackexchange.com/questions/180418/calculate-rotation-matrix-to-align-vector-a-to-vector-b-in-3d
-}
+}	 
 void ovisApp::align_Panel(ntPanel* panel_ptr, Vec3* axis_A, Vec3* axis_B, ntVec3* pos) {
-	////////////////////////////////////////////////////////////////
-	//////////////// FUNCTION ALIGNS PANEL FACE NORMAL TO TO VEC
+	////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+	//////////////////////////////////////////////////////////////////// FUNCTION ALIGNS PANEL FACE NORMAL TO TO VEC
 	using namespace arma;
 	axis_A->unitize();
 	axis_B->unitize();
@@ -893,44 +930,52 @@ void ovisApp::align_Panel(ntPanel* panel_ptr, Vec3* axis_A, Vec3* axis_B, ntVec3
 	int cols = 3;
 	arma::mat R = zeros<mat>(rows, cols);
 
-	//////////////////////////////////////////////////////////////// TRANSLATE PANEL CENTROID TO ORIGIN
-	Vec3 trans_V = Vec3(pos->x, pos->y, pos->z);			//TRANSLATION VECTOR
+	int cnt = 13;	//length of vecs[]
 
-	for (int i = 0; i < rows; i++) {
-		panel_ptr->vecs[i]->sub(&trans_V);
+	////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+	///////////////////////////////////////////////////////////////////////////// TRANSLATE PANEL CENTROID TO ORIGIN
+	Vec3 trans_V = Vec3(pos->x, pos->y, pos->z);	///TRANSLATION VECTOR
+
+	for (int i = 0; i < cnt; i++) {
+		if (panel_ptr->vecs[i]->x != 0 && panel_ptr->vecs[i]->y != 0) {
+			panel_ptr->vecs[i]->sub(&trans_V);
+		}
 	}
 
-	//////////////////////////////////////////////////////////////// FIND PANEL NORMAL AND ALIGN TO WORLD Z-AXIS
-	ntVec3 v = axis_A->cross(axis_B);				//axis of rotation							//v = cross(A, B);	
-	float  c = axis_A->dot(axis_B);					//angle cos [rad]							//dot(A,B)
-	float  s = v.mag();								//norm / vector length or rotation axis		//||v||
-	arma::mat ssc = zeros<mat>(rows, cols);			//ssc = [0, -v(3), v(2); v(3), 0, -v(1); -v(2), v(1), 0];
+	////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+	//////////////////////////////////////////////////////////////////// FIND PANEL NORMAL AND ALIGN TO WORLD Z-AXIS
+	ntVec3 v = axis_A->cross(axis_B);				///axis of rotation							//v = cross(A, B);	
+	float  c = axis_A->dot(axis_B);					///angle cos [rad]							//dot(A,B)
+	float  s = v.mag();								///norm / vector length or rotation axis		//||v||
+	arma::mat ssc = zeros<mat>(rows, cols);			///ssc = [0, -v(3), v(2); v(3), 0, -v(1); -v(2), v(1), 0];
 
 	ssc <<    0 << -v.z <<  v.y << endr
 		<<  v.z <<    0 << -v.x << endr
 		<< -v.y <<  v.x <<    0 << endr;
 
-	////////////////////////////////////////////////////////////////  BUILD ROTATION MATRIX
+	////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+	/////////////////////////////////////////////////////////////////////////////////////////  BUILD ROTATION MATRIX
 	R.eye();
-	R = R + ssc + (ssc * ssc) * (1 - c) / (s*s);	//R = eye(3) + ssc + ssc^2*(1-dot(A,B))/(norm(v))^2;
-													//R = I + [v] + [v]^2((1-c)/s^2)																				
+	R = R + ssc + (ssc * ssc) * (1 - c) / (s*s);	///R = eye(3) + ssc + ssc^2*(1-dot(A,B))/(norm(v))^2;
+													///R = I + [v] + [v]^2((1-c)/s^2)																				
 
-	//////////////////////////////////////////////////////////////// MULTIPLY VERTEX POSITONS BY ROTATION MATRIX
-	rows = panel_ptr->verts.size();
-	//rows = 13;
-
+	////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+	//////////////////////////////////////////////////////////////////// MULTIPLY VERTEX POSITONS BY ROTATION MATRIX
 	arma::mat vertex = zeros<mat>(rows, 1);
 
-	for (int i = 0; i < rows; i++) {
-		vertex(0, 0) = panel_ptr->vecs[i]->x;
-		vertex(1, 0) = panel_ptr->vecs[i]->y;
-		vertex(2, 0) = panel_ptr->vecs[i]->z;
+	for (int i = 0; i < cnt; i++) {
+		
+		if (panel_ptr->vecs[i]->x != 0 && panel_ptr->vecs[i]->y != 0) {
+			vertex(0, 0) = panel_ptr->vecs[i]->x;
+			vertex(1, 0) = panel_ptr->vecs[i]->y;
+			vertex(2, 0) = panel_ptr->vecs[i]->z;
 
-		vertex = solve(R, vertex);					//arma::solve(A, B); | matlab- A\B or inv(A)*B
+			vertex = arma::solve(R, vertex);					//arma::solve(A, B); | matlab- A\B or inv(A)*B
 
-		panel_ptr->vecs[i]->x = vertex(0, 0);
-		panel_ptr->vecs[i]->y = vertex(1, 0);
-		panel_ptr->vecs[i]->z = vertex(2, 0);
+			panel_ptr->vecs[i]->x = vertex(0, 0);
+			panel_ptr->vecs[i]->y = vertex(1, 0);
+			panel_ptr->vecs[i]->z = vertex(2, 0);
+		}
 	}
 
 	round_Pos(panel_ptr, .001);
@@ -941,7 +986,9 @@ void ovisApp::align_Panel(ntPanel* panel_ptr, Vec3* axis_A, Vec3* axis_B, ntVec3
 }
 void ovisApp::round_Pos(ntPanel* panel_ptr, float tolerance) {
 	float t = tolerance;
-	for (int i = 0; i < 3; i++) {
+	int cnt = 13;   /// SHOULD NOT BE HARD CODED VALUE
+
+	for (int i = 0; i < cnt; i++) {
 		if (panel_ptr->vecs[i]->x < t && panel_ptr->vecs[i]->x > -t) {
 			panel_ptr->vecs[i]->x = round(panel_ptr->vecs[i]->x);
 		}
@@ -1115,6 +1162,9 @@ void ovisApp::map_ImgCol(ntPanel* panel_ptr) {
 }
 void ovisApp::tile_Img(int U, int V, af::array img) {
 
+	/// REVIEW IMPLEMENTATION OF ARRAY FIRE FUNCTIONS
+	/// AF::TILE | AF::JOIN | AF::FLIP | AF:TRANSPOSE
+
 	int dim_X = img_X;
 	int dim_Y = img_Y;
 
@@ -1123,7 +1173,6 @@ void ovisApp::tile_Img(int U, int V, af::array img) {
 
 	af::array img_Tile(img_X, img_Y);
 	//img_Tile += img;
-
 	//af::tile(img, U, V);
 }
 void ovisApp::log_Angles(ntPanel* panel_ptr) {

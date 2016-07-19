@@ -19,6 +19,7 @@
 #include "nt_04_emitterApp.h"
 #include "nt_05_shapeApp.h"
 #include "nt_05_cubeApp.h"
+#include "nt_05_triApp.h"
 #include "nt_07_trussApp-v01.h"
 #include "nt_07_trussApp-v02.h"
 #include "nt_07_trussApp-v03.h"
@@ -38,8 +39,15 @@
 
 ////professional projects
 #include "nt_09_ovisApp.h"
+#include "nt_09_ovisApp-v02.h"
 #include "nt_10_typeApp.h"
 //
+
+////visualizing tokyo projects
+#include "nt_11_c3-App-v00.h"
+#include "nt_11_c3-App-v01.h"
+#include "nt_11_c3-App-v02.h"
+
 #include <iostream>
 #include <array>
 #include <arrayfire.h>
@@ -59,8 +67,10 @@ int main(int argc, char const** argv){
 	/////////////////////////////////////////////////////////////////////////// INSTANTIATE DERIVED APPLICATION
 	///////////////////////////////////////////////////////////////////////////////////////////////////////////
 	
-	int x = 1920;
-	int y = 1080;
+	int x = 3200;
+	int y = 1800;	
+	//int x = 1920;
+	//int y = 1080;
 	///GRAPHICS
 	//AppContent* c = new meshImportApp();
 	//AppContent* c = new meshApp();
@@ -70,21 +80,27 @@ int main(int argc, char const** argv){
 	//AppContent* c = new swarmApp();
 	//AppContent* c = new emitterApp(10000,.1);
 	//AppContent* c = new shapeApp();
-	AppContent* c = new cubeApp();
+	//AppContent* c = new cubeApp();
+	//AppContent* c = new triApp();
 
 	///FEM
 	//AppContent* c = new trussApp01();		//VALIDATION 3D TRUSS ELEMENTS
 	//AppContent* c = new trussApp02();		//SPACE FRAME CELL
 	//AppContent* c = new trussApp03();		//SPACE FRAME FROM COMPOUND CURVED SURFACE
 	//AppContent* c = new beamApp01();		//VALIDATION FOR 3D BEAM ELEMENTS
+
 	///IMAGE PROCESSING
-	//AppContent* c = new afApp01();		//ARRAY FIRE IMPELEMENTATION PROTOTYPE
+	//AppContent* c = new afApp01();		//ARRAY FIRE IMPELEMENTATION PROTOTYPE TEST
 	//AppContent* c = new afApp02();		
+	//AppContent* c = new tokyoApp00();		//C3 VISUALIZING TOKYO VIGNETTES
+	//AppContent* c = new tokyoApp01();		//C3 PROFILE SUBDIVISION
+	//AppContent* c = new tokyoApp02();		//C3 ORIGAMI STRUCTURE | IMAGE MAPPING
 
 	///TYPE
 	//AppContent* c = new typeApp();
 	///OVIS
 	//AppContent* c = new ovisApp();
+	AppContent* c = new ovisApp02();
 
 	///KUKA SOURCE CODE APPLICATIONS
 	//AppContent* c = new krlApp();
@@ -120,5 +136,17 @@ int main(int argc, char const** argv){
 
 ///RESEARCH TOPICS
 //COMPUTE SHADER CLASS
-//EXAMINE DISTANCE CHECKING METHODS
 //SUBDIVISION CATMULL CLARK AND MODIFIED CC
+
+///TRISKIN DEVELOPMENT
+// TRICELL IMG WRITER FUNCTIONALITY
+// ADD FASTENER POSITIONS TO TXT WRITER
+// EXCEPTION HANDLER FOR FASTENER FUNCTION
+// READ WEIGHTING VARIABLE FROM PANEL INPUT FILE
+// READ REGION VARIABLE FROM PANEL INPUT FILE
+// MOSAIC | TRISKIN INTEGRATION
+// TREE | TRISKIN INTEGRATION
+// REFACTOR PANEL CLASS:  PARITY BETWEEN 2D - 3D INSTANCES
+// ADD POLYGON DERIVED FROM POLYLINE SHAPE CLASS
+// ADD POLYLINE OFFSET FUNCTION
+// ADD POLYLINE JOIN FUNCTION

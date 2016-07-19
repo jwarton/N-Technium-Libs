@@ -84,3 +84,14 @@ void ntEdge::display_X(){
 	glVertex3f(v1->x, v1->y, v1->z);
 	glEnd();
 }
+void ntEdge::display_mode(line_Type line_type) {
+	type = line_type;
+	if (type == DASHED) {
+		glLineStipple(1, 0x0101);
+		display();
+		glDisable(GL_LINE_STIPPLE);
+	}
+	else {
+		display();
+	}
+}

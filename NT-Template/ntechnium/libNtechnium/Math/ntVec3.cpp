@@ -110,10 +110,14 @@ void ntVec3::normalize() {
 void ntVec3::translate(ntVec3* pos, ntVec3* dir, float dist){
 	set(dir);	//set end pt orientation from world coord
 	mult(dist);	//scale by distance
-	add(pos);	//translate to from world coord to local
+	add(pos);	//translate from world coord to local
 }
 void ntVec3::scale(ntVec3* pos, float factor){
-	///TODO
+	sub(pos);
+	x *= factor;
+	y *= factor;
+	z *= factor;
+	add(pos);
 }
 
 void ntVec3::display(){

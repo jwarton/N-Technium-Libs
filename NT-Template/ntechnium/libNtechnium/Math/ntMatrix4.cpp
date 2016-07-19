@@ -42,6 +42,20 @@ void ntMatrix4::scale3d(float factor){
 	c3 = factor;
 	run();
 }
+void ntMatrix4::scale3d(float factor, ntVec3 pt) {
+ 
+	vector->sub(&pt);
+	x = vector->x;
+	y = vector->y;
+	z = vector->z;
+
+	a1 = factor;
+	b2 = factor;
+	c3 = factor;
+	run();
+
+	vector->add(&pt);
+}
 void ntMatrix4::scale2d(float factor, ntVec3 axis){
 	///TODO
 	run();

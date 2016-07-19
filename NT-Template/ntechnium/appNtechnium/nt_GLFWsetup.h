@@ -84,6 +84,36 @@ namespace jpw{
 		enum B_mode {b0, b1, b2, b3};	// BUTTON MODES
 		B_mode button = b0;
 
+
+		bool isProjection = false;
+
+		///////////////////////////////////////////////////////////////
+		/////////////////////////////////////////////////// MOUSE EVENT
+		double M_xpos = 0;
+		double M_ypos = 0;
+		double P_xpos = 0;
+		double P_ypos = 0;
+		double D_xpos = 0;
+		double D_ypos = 0;
+
+		bool state_Ctrl = false;
+		bool state_Shift = false;
+		bool state_Alt = false;
+
+		double xoffset = 0;
+		double yoffset = 0;
+		double lastTime = 0;
+
+		double K_xpos = .01;						// position
+		double K_ypos = .01;
+		float initialFoV = 45.0f;					// Initial Field of View
+		float speed = .01f;							// 3 units / second
+		float mouseSpeed = 0.00000001f;
+		float horizontalAngle = 3.14f;				// horizontal angle : toward -Z
+		float verticalAngle = 0.0f;					// vertical angle : 0, look at the horizon
+
+		void print_Camera();
+
 	public:
 
 		int frameCount;
@@ -110,9 +140,11 @@ namespace jpw{
 		void view_Front();
 		//void view_Back();
 
-		void view_Pers();
-		void view_Orth();
-		void view_Switch();
+		void view_Pers();	
+
+		void set_3D_DispView();	//3D MODEL SPACE
+		void set_2D_DispView();	//2D SCREEN SPACE
+		void set_3D_Proj();		//2D PROJECTION VIEW OF MODEL SPACE
 
 		void view_Save();
 

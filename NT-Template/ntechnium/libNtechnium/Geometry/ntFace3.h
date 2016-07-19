@@ -1,7 +1,9 @@
-// ntFace3.h
-// openGl scratch libs
-// created by James Warton on 02/20/2014
-
+///////////////////////////////////////////////////////////////////
+///////////////////////////////////////////////////////// ntFace3.h
+// openGl scratch libs							///////////////////
+// 3pt Face Class								///////////////////
+// created by James Warton on 02/20/2014		///////////////////
+///////////////////////////////////////////////////////////////////
 #ifndef FACE3_JPW_NTECHNIUM
 #define FACE3_JPW_NTECHNIUM
 
@@ -18,6 +20,8 @@ class ntFace3{
 private:
 	void init();
 
+	float scFx;
+
 public:
 	ntVec3 *v0,*v1,*v2;
 	ntVec3 *vecs[3];
@@ -29,7 +33,6 @@ public:
 	
 	ntColor4f col;
 	std::vector<ntCol4> cols;
-
 	
 	ntVec3	 norm;
 	ntVec3  *cent;
@@ -45,10 +48,25 @@ public:
 	void setColor(ntColor4f col);
 	void setUVW(ntVec3* uvw0, ntVec3* uvw1, ntVec3* uvw2);
 	void setUVW(std::vector <ntVec3*>	uvws);
+	void setFx(float factor);
+	
+	float getFx();
+	std::vector<ntVec3*> getUVW();
 
 	void calcNorm();
 	void calcCentroid();
 	void display();
+	void display_Edges();
+	void display_Centroid();
+	void display_Normal();
 	void display(L_mode mode);
 };
+inline float ntFace3::getFx() {
+	return scFx;
+}
+inline std::vector<ntVec3*> ntFace3::getUVW() {
+	std::vector <ntVec3*> uvs = { uvw0, uvw1, uvw2 };
+	return uvs;
+}
+
 #endif

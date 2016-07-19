@@ -39,15 +39,13 @@ void ntTextIO::setUrl(){
 	std::string cp = cCurrentPath;
 
 	std::cout << "\nPATH TO TEXT DATA I/O: " << std::endl;
-	std::cout << path + pathExtension + fileName << "\n" << std::endl;
-
-	url = "..\\..\\" + pathExtension + fileName;
+	url = path + pathExtension + fileName;
 }
 
 void ntTextIO::read(){
 	ifstream file(url);
 	std::string lineStr;
-
+	std::cout << url << endl;
 	if (file.is_open()){
 		while (getline(file, lineStr)){
 			lines.push_back(lineStr);

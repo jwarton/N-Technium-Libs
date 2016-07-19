@@ -25,6 +25,7 @@
     <ClCompile Include="..\..\ntechnium\appNtechnium\nt_AppContent.cpp" />
     <ClCompile Include="..\..\ntechnium\appNtechnium\nt_Utility.cpp" />
     <ClCompile Include="..\..\ntechnium\libNtechnium\Arch\ntPanel.cpp" />
+    <ClCompile Include="..\..\ntechnium\libNtechnium\Arch\ntTriSkin.cpp" />
     <ClCompile Include="..\..\ntechnium\libNtechnium\FEM\ntElement.cpp" />
     <ClCompile Include="..\..\ntechnium\libNtechnium\FEM\ntTruss3d.cpp" />
     <ClCompile Include="..\..\ntechnium\libNtechnium\Geometry\ntBaseGeom.cpp" />
@@ -36,11 +37,15 @@
     <ClCompile Include="..\..\ntechnium\libNtechnium\Geometry\ntMeshPts.cpp" />
     <ClCompile Include="..\..\ntechnium\libNtechnium\Geometry\ntNormal.cpp" />
     <ClCompile Include="..\..\ntechnium\libNtechnium\Geometry\ntPlane.cpp" />
+    <ClCompile Include="..\..\ntechnium\libNtechnium\Geometry\ntPolyline.cpp" />
     <ClCompile Include="..\..\ntechnium\libNtechnium\Geometry\ntSphere.cpp" />
     <ClCompile Include="..\..\ntechnium\libNtechnium\Geometry\ntTetra.cpp" />
     <ClCompile Include="..\..\ntechnium\libNtechnium\Geometry\ntTree.cpp" />
+    <ClCompile Include="..\..\ntechnium\libNtechnium\Geometry\ntTriCell.cpp" />
     <ClCompile Include="..\..\ntechnium\libNtechnium\Geometry\ntVertex.cpp" />
     <ClCompile Include="..\..\ntechnium\libNtechnium\Graph\ntGraph.cpp" />
+    <ClCompile Include="..\..\ntechnium\libNtechnium\Image\ntImage.cpp" />
+    <ClCompile Include="..\..\ntechnium\libNtechnium\Image\ntMosaic.cpp" />
     <ClCompile Include="..\..\ntechnium\libNtechnium\IOdata\ntPtsTxt.cpp" />
     <ClCompile Include="..\..\ntechnium\libNtechnium\Math\ntMatrix4.cpp" />
     <ClCompile Include="..\..\ntechnium\libNtechnium\Math\ntVec3.cpp" />
@@ -66,14 +71,19 @@
     <ClCompile Include="..\..\ntechnium\src\nt_04_emitterApp.cpp" />
     <ClCompile Include="..\..\ntechnium\src\nt_05_cubeApp.cpp" />
     <ClCompile Include="..\..\ntechnium\src\nt_05_shapeApp.cpp" />
+    <ClCompile Include="..\..\ntechnium\src\nt_05_triApp.cpp" />
     <ClCompile Include="..\..\ntechnium\src\nt_06_krlApp.cpp" />
     <ClCompile Include="..\..\ntechnium\src\nt_07_trussApp-v01.cpp" />
     <ClCompile Include="..\..\ntechnium\src\nt_07_trussApp-v02.cpp" />
     <ClCompile Include="..\..\ntechnium\src\nt_07_trussApp-v03.cpp" />
     <ClCompile Include="..\..\ntechnium\src\nt_08_afireApp-v01.cpp" />
     <ClCompile Include="..\..\ntechnium\src\nt_08_afireApp-v02.cpp" />
+    <ClCompile Include="..\..\ntechnium\src\nt_09_ovisApp-v02.cpp" />
     <ClCompile Include="..\..\ntechnium\src\nt_09_ovisApp.cpp" />
     <ClCompile Include="..\..\ntechnium\src\nt_10_typeApp.cpp" />
+    <ClCompile Include="..\..\ntechnium\src\nt_11_c3-App-v00.cpp" />
+    <ClCompile Include="..\..\ntechnium\src\nt_11_c3-App-v01.cpp" />
+    <ClCompile Include="..\..\ntechnium\src\nt_11_c3-App-v02.cpp" />
     <ClCompile Include="..\..\ntechnium\src\nt_App.cpp" />
     <ClCompile Include="..\..\ntechnium\src\nt_genApp.cpp" />
     <ClCompile Include="..\..\ntechnium\src\nt_simpleApp.cpp" />
@@ -85,6 +95,7 @@
     <ClInclude Include="..\..\ntechnium\appNtechnium\nt_AppContent.h" />
     <ClInclude Include="..\..\ntechnium\appNtechnium\nt_Utility.h" />
     <ClInclude Include="..\..\ntechnium\libNtechnium\Arch\ntPanel.h" />
+    <ClInclude Include="..\..\ntechnium\libNtechnium\Arch\ntTriSkin.h" />
     <ClInclude Include="..\..\ntechnium\libNtechnium\FEM\ntElement.h" />
     <ClInclude Include="..\..\ntechnium\libNtechnium\FEM\ntNode.h" />
     <ClInclude Include="..\..\ntechnium\libNtechnium\FEM\ntTruss3d.h" />
@@ -98,11 +109,15 @@
     <ClInclude Include="..\..\ntechnium\libNtechnium\Geometry\ntMeshPts.h" />
     <ClInclude Include="..\..\ntechnium\libNtechnium\Geometry\ntNormal.h" />
     <ClInclude Include="..\..\ntechnium\libNtechnium\Geometry\ntPlane.h" />
+    <ClInclude Include="..\..\ntechnium\libNtechnium\Geometry\ntPolyline.h" />
     <ClInclude Include="..\..\ntechnium\libNtechnium\Geometry\ntSphere.h" />
     <ClInclude Include="..\..\ntechnium\libNtechnium\Geometry\ntTetra.h" />
     <ClInclude Include="..\..\ntechnium\libNtechnium\Geometry\ntTree.h" />
+    <ClInclude Include="..\..\ntechnium\libNtechnium\Geometry\ntTriCell.h" />
     <ClInclude Include="..\..\ntechnium\libNtechnium\Geometry\ntVertex.h" />
     <ClInclude Include="..\..\ntechnium\libNtechnium\Graph\ntGraph.h" />
+    <ClInclude Include="..\..\ntechnium\libNtechnium\Image\ntImage.h" />
+    <ClInclude Include="..\..\ntechnium\libNtechnium\Image\ntMosaic.h" />
     <ClInclude Include="..\..\ntechnium\libNtechnium\IOdata\ntPtsTxt.h" />
     <ClInclude Include="..\..\ntechnium\libNtechnium\Math\ntMath.h" />
     <ClInclude Include="..\..\ntechnium\libNtechnium\Math\ntMatrix4.h" />
@@ -133,14 +148,19 @@
     <ClInclude Include="..\..\ntechnium\src\nt_04_emitterApp.h" />
     <ClInclude Include="..\..\ntechnium\src\nt_05_cubeApp.h" />
     <ClInclude Include="..\..\ntechnium\src\nt_05_shapeApp.h" />
+    <ClInclude Include="..\..\ntechnium\src\nt_05_triApp.h" />
     <ClInclude Include="..\..\ntechnium\src\nt_06_krlApp.h" />
     <ClInclude Include="..\..\ntechnium\src\nt_07_trussApp-v01.h" />
     <ClInclude Include="..\..\ntechnium\src\nt_07_trussApp-v02.h" />
     <ClInclude Include="..\..\ntechnium\src\nt_07_trussApp-v03.h" />
     <ClInclude Include="..\..\ntechnium\src\nt_08_afireApp-v01.h" />
     <ClInclude Include="..\..\ntechnium\src\nt_08_afireApp-v02.h" />
+    <ClInclude Include="..\..\ntechnium\src\nt_09_ovisApp-v02.h" />
     <ClInclude Include="..\..\ntechnium\src\nt_09_ovisApp.h" />
     <ClInclude Include="..\..\ntechnium\src\nt_10_typeApp.h" />
+    <ClInclude Include="..\..\ntechnium\src\nt_11_c3-App-v00.h" />
+    <ClInclude Include="..\..\ntechnium\src\nt_11_c3-App-v01.h" />
+    <ClInclude Include="..\..\ntechnium\src\nt_11_c3-App-v02.h" />
     <ClInclude Include="..\..\ntechnium\src\nt_App.h" />
     <ClInclude Include="..\..\ntechnium\src\nt_genApp.h" />
     <ClInclude Include="..\..\ntechnium\src\nt_simpleApp.h" />
@@ -253,7 +273,7 @@
       <FunctionLevelLinking>true</FunctionLevelLinking>
       <IntrinsicFunctions>true</IntrinsicFunctions>
       <SDLCheck>true</SDLCheck>
-      <AdditionalIncludeDirectories>$(TDX_PATH)\inc;$(AF_PATH)\include;..\..\ntechnium;..\..\ntechnium\src;..\..\ntechnium\src\kuka;..\..\ntechnium\libNtechnium\arch;..\..\ntechnium\libNtechnium\agents;..\..\ntechnium\libNtechnium\fem;..\..\ntechnium\libNtechnium\geometry;..\..\ntechnium\libNtechnium\graph;..\..\ntechnium\libNtechnium\integration;..\..\ntechnium\libNtechnium\iodata;..\..\ntechnium\libNtechnium\math;..\..\ntechnium\libNtechnium\robotics;..\..\ntechnium\libNtechnium\physics;..\..\ntechnium\libNtechnium\scene;..\..\ntechnium\libNtechnium\type;..\..\ntechnium\appNtechnium;..\..\ntechnium\libsImport\glm;..\..\ntechnium\libsImport\glut-3.7\include;..\..\ntechnium\libsImport\glfw-3.1.2.bin.WIN64\include;..\..\ntechnium\libsImport\glfw-3.1.2.bin.WIN64\include\GLFW;..\..\ntechnium\libsImport\glew-1.10.0-win32\glew-1.10.0\include;..\..\ntechnium\libsImport\FreeImage.WIN32\Dist;..\..\ntechnium\libsImport\freetype-2.6.2\include;..\..\ntechnium\libsImport\ftgl-2.1\src;..\..\ntechnium\libsImport\armadillo-5.600.2\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(TDX_PATH)\inc;$(AF_PATH)\include;..\..\ntechnium;..\..\ntechnium\src;..\..\ntechnium\src\kuka;..\..\ntechnium\libNtechnium\arch;..\..\ntechnium\libNtechnium\agents;..\..\ntechnium\libNtechnium\image;..\..\ntechnium\libNtechnium\fem;..\..\ntechnium\libNtechnium\geometry;..\..\ntechnium\libNtechnium\graph;..\..\ntechnium\libNtechnium\integration;..\..\ntechnium\libNtechnium\iodata;..\..\ntechnium\libNtechnium\math;..\..\ntechnium\libNtechnium\robotics;..\..\ntechnium\libNtechnium\physics;..\..\ntechnium\libNtechnium\scene;..\..\ntechnium\libNtechnium\type;..\..\ntechnium\appNtechnium;..\..\ntechnium\libsImport\glm;..\..\ntechnium\libsImport\glut-3.7\include;..\..\ntechnium\libsImport\glfw-3.1.2.bin.WIN64\include;..\..\ntechnium\libsImport\glfw-3.1.2.bin.WIN64\include\GLFW;..\..\ntechnium\libsImport\glew-1.10.0-win32\glew-1.10.0\include;..\..\ntechnium\libsImport\FreeImage.WIN32\Dist;..\..\ntechnium\libsImport\freetype-2.6.2\include;..\..\ntechnium\libsImport\ftgl-2.1\src;..\..\ntechnium\libsImport\armadillo-5.600.2\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <GenerateDebugInformation>true</GenerateDebugInformation>

@@ -32,6 +32,7 @@ public:
 	ntMatrix4(ntVec3 *vector);
 
 	void scale3d(float factor);
+	void scale3d(float factor, ntVec3 pt);
 	void scale2d(float factor, ntVec3 axis);
 	void scale1d(float factor, ntVec3 axis);
 

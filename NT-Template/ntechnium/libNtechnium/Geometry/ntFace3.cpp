@@ -10,7 +10,6 @@ v0(v0),v1(v1),v2(v2){
 	col = ntColor4f(1,1,1,1);
 	init();
 }
-
 ntFace3::ntFace3(ntVec3* v0,ntVec3* v1,ntVec3* v2,ntColor4f col):
 v0(v0),v1(v1),v2(v2),col(col){
 	this->vecs[0] = v0;
@@ -18,7 +17,6 @@ v0(v0),v1(v1),v2(v2),col(col){
 	this->vecs[2] = v2;
 	init();
 }
-
 ntFace3::ntFace3(ntVec3* v0,ntVec3* v1,ntVec3* v2,ntVertex* vert0,ntVertex* vert1,ntVertex* vert2):
 v0(v0),v1(v1),v2(v2),vert0(vert0),vert1(vert1),vert2(vert2){
 
@@ -62,8 +60,8 @@ void ntFace3::calcCentroid(){
     cent->y = (v1->y + v2->y + v0->y)/3;
     cent->z = (v1->z + v2->z + v0->z)/3;
 	centroid = ntVertex(cent);
-	centroid.setSize(2);
-	centroid.setColor(ntColor4f(1,1,1,0));
+	centroid.setSize(3);
+	centroid.setColor(ntColor4f(1,0,0,1));
 }
 
 void ntFace3::calcNorm(){
@@ -81,8 +79,9 @@ void ntFace3::calcNorm(){
 	norm = t1->cross(t2);
 	//norm.invert();
 	normal = ntNormal(*cent,norm,.05);
+	normal.colS = Col4(1, 0, 0,  1);
+	normal.colE = Col4(1, 0, 0, .5);
 }
-
 bool ntFace3::pt_isInside(ntVec3* vec) {
 	int i, j, nvert = verts.size();
 	bool c = false;
@@ -119,6 +118,10 @@ void ntFace3::setUVW(std::vector <ntVec3*>	uvws) {
 	this->uvws[1] = uvws[1];
 	this->uvws[2] = uvws[2];
 }
+void ntFace3::setFx(float factor) {
+	scFx = factor;
+}
+
 void ntFace3::display(){
 	glBegin(GL_TRIANGLES);
 	glColor4f(verts.at(0)->col.r, verts.at(0)->col.g, verts.at(0)->col.b, verts.at(0)->col.a);
@@ -130,6 +133,17 @@ void ntFace3::display(){
 	glEnd();
 	///TODO centroid functionality needs work
 	//centroid.display();
+}
+void ntFace3::display_Edges() {
+	for (int i = 0; i < edges.size(); i++) {
+		edges.at(i).display();
+	}
+}
+void ntFace3::display_Centroid() {
+	centroid.display();
+}
+void ntFace3::display_Normal() {
+	normal.display();
 }
 void ntFace3::display(L_mode mode) {
 	if (mode == vX) {

@@ -46,6 +46,9 @@
     <Filter Include="lib_type">
       <UniqueIdentifier>{2caabcb3-5544-4c3d-81ad-4cc6560f7824}</UniqueIdentifier>
     </Filter>
+    <Filter Include="lib_image">
+      <UniqueIdentifier>{fecc3124-4037-4fc8-b314-60d4a73f00c5}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\..\ntechnium\appNtechnium\nt_Main.cpp">
@@ -221,6 +224,36 @@
     </ClCompile>
     <ClCompile Include="..\..\ntechnium\libNtechnium\Type\ntType.cpp">
       <Filter>lib_type</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\ntechnium\src\nt_11_c3-App-v00.cpp">
+      <Filter>src programs</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\ntechnium\libNtechnium\Image\ntImage.cpp">
+      <Filter>lib_image</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\ntechnium\src\nt_11_c3-App-v01.cpp">
+      <Filter>src programs</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\ntechnium\libNtechnium\Image\ntMosaic.cpp">
+      <Filter>lib_image</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\ntechnium\src\nt_11_c3-App-v02.cpp">
+      <Filter>src programs</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\ntechnium\libNtechnium\Arch\ntTriSkin.cpp">
+      <Filter>lib_arch</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\ntechnium\src\nt_05_triApp.cpp">
+      <Filter>src programs</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\ntechnium\libNtechnium\Geometry\ntTriCell.cpp">
+      <Filter>lib_geometry</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\ntechnium\libNtechnium\Geometry\ntPolyline.cpp">
+      <Filter>lib_geometry</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\ntechnium\src\nt_09_ovisApp-v02.cpp">
+      <Filter>src programs</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -410,14 +443,44 @@
     <ClInclude Include="..\..\ntechnium\libNtechnium\Geometry\ntCube.h">
       <Filter>lib_geometry</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\ntechnium\src\nt_00_meshApp.h">
-      <Filter>app</Filter>
-    </ClInclude>
     <ClInclude Include="..\..\ntechnium\src\nt_10_typeApp.h">
       <Filter>src programs</Filter>
     </ClInclude>
     <ClInclude Include="..\..\ntechnium\libNtechnium\Type\ntType.h">
       <Filter>lib_type</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\ntechnium\src\nt_11_c3-App-v00.h">
+      <Filter>src programs</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\ntechnium\libNtechnium\Image\ntImage.h">
+      <Filter>lib_image</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\ntechnium\src\nt_11_c3-App-v01.h">
+      <Filter>src programs</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\ntechnium\libNtechnium\Image\ntMosaic.h">
+      <Filter>lib_image</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\ntechnium\src\nt_11_c3-App-v02.h">
+      <Filter>src programs</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\ntechnium\libNtechnium\Arch\ntTriSkin.h">
+      <Filter>lib_arch</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\ntechnium\src\nt_05_triApp.h">
+      <Filter>src programs</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\ntechnium\libNtechnium\Geometry\ntTriCell.h">
+      <Filter>lib_geometry</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\ntechnium\src\nt_00_meshApp.h">
+      <Filter>src programs</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\ntechnium\libNtechnium\Geometry\ntPolyline.h">
+      <Filter>lib_geometry</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\ntechnium\src\nt_09_ovisApp-v02.h">
+      <Filter>src programs</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>
