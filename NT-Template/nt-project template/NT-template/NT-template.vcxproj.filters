@@ -43,6 +43,9 @@
     <Filter Include="lib_arch">
       <UniqueIdentifier>{78d8ea85-670d-42ca-aa44-246999caf85d}</UniqueIdentifier>
     </Filter>
+    <Filter Include="lib_type">
+      <UniqueIdentifier>{2caabcb3-5544-4c3d-81ad-4cc6560f7824}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\..\ntechnium\appNtechnium\nt_Main.cpp">
@@ -215,6 +218,9 @@
     </ClCompile>
     <ClCompile Include="..\..\ntechnium\src\nt_10_typeApp.cpp">
       <Filter>src programs</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\ntechnium\libNtechnium\Type\ntType.cpp">
+      <Filter>lib_type</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -409,6 +415,9 @@
     </ClInclude>
     <ClInclude Include="..\..\ntechnium\src\nt_10_typeApp.h">
       <Filter>src programs</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\ntechnium\libNtechnium\Type\ntType.h">
+      <Filter>lib_type</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

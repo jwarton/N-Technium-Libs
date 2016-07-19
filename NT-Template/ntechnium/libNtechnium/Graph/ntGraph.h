@@ -18,6 +18,7 @@
 #include "ntVertex.h"
 #include "ntEdge.h"
 #include "ntMath.h"
+#include "ntType.h"
 
 enum graph_T { BAR, LINE, PIE, VOLUME, CLOUD};
 enum graph_A { X_axis, Y_axis, P_polar};
@@ -43,6 +44,9 @@ private:
 	std::vector <float> vals_3;
 	////GRAPH POSITION
 	ntVec3* pos;
+	////GRAPH TITLE
+	string font = "mplus-1m-REGULAR_FONTTYPE";
+	ntType title;
 
 	////GRAPH DIMENSIONS
 	ntVec3* dim;

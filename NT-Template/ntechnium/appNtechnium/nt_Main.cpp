@@ -82,10 +82,9 @@ int main(int argc, char const** argv){
 	//AppContent* c = new afApp02();		
 
 	///TYPE
-	AppContent* c = new typeApp();
-
+	//AppContent* c = new typeApp();
 	///OVIS
-	//AppContent* c = new ovisApp();
+	AppContent* c = new ovisApp();
 
 	///KUKA SOURCE CODE APPLICATIONS
 	//AppContent* c = new krlApp();

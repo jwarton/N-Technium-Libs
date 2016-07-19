@@ -43,6 +43,19 @@ void ntPanel::init(){
 	face->push_back(ntFace3(n0, n1, n2));
 	faces_G.push_back(face);
 
+	//INITIALIZE VECS- TRANSFORM LIST
+	//this->vecs[3] = c0;
+	//this->vecs[4] = c1;
+	//this->vecs[5] = c2;
+	//this->vecs[6] = c3;
+	//this->vecs[7] = c4;
+
+	//this->vecs[8 ] = f0;
+	//this->vecs[9 ] = f1;
+	//this->vecs[10] = f2;
+	//this->vecs[11] = f3;
+	//this->vecs[12] = f4;
+
 	///std::cout << panel_ID << " Faces Size:  " << faces_G.size() << endl;
 	// INITIALIZE CENTROID AND NORMAL
 	calcCentroid();
@@ -79,13 +92,13 @@ void ntPanel::calcArea() {
 	std::vector <double> xy_pairs;
 	std::vector <double> yx_pairs;
 	std::vector <double> v_;
-	double sum;
+	double sum = 0;
+	area = 0;
 
 	//MULTIPLY VERTEX COMPONENTS
 	for (int i = 0; i < verts.size() - 1; i++) {
 		double xy_ = vecs[i]->x * vecs[i + 1]->y;
 		double yx_ = vecs[i]->y * vecs[i + 1]->x;
-
 		xy_pairs.push_back(xy_);
 		yx_pairs.push_back(yx_);
 	}
@@ -96,7 +109,8 @@ void ntPanel::calcArea() {
 	}
 	//SUMMATION OF ALL SETS
 	std::for_each(v_.begin(), v_.end(), [&](int n) { sum += n; });
-	area = abs(sum / 2);
+	area = abs(sum * 0.5);
+	//std::cout << sum << " _ " << area << endl;
 }
 void ntPanel::calcPhi() {
 	double theta;
@@ -418,7 +432,7 @@ float ntPanel::calc_Perf_R(Vec3 *vec, float val) {
 	////////////////////////  RADIUS WITH INCREMENTAL STEPPED SIZES
 	float inc = 0.0625;
 	///IMPROVE INTERFACE TO CONTRAST MULTIPLIER
-	float min = -6 * inc;  // r_Min == 0.1625 == 3 * inc [ if min == r_Min = 255]
+	float min = inc; //-6 * inc;  // r_Min == 0.1625 == 3 * inc [ if min == r_Min = 255]
 	float max = r_Max + inc;
 	
 	if (is_Increment == true) {
@@ -461,12 +475,12 @@ void ntPanel::add_Perf() {
 		}
 	}
 	perf_perc = (perf_area / area) * 100;
-
 	perf_size = perfs.size();
 }
 ///////////////////////////////////////////////////////////////
 void ntPanel::set_Color(ntColor4f col){
-	this->col=col;
+
+	this->col = col;
 	for(int i = 0; i<verts.size(); i++){
 		verts.at(i)->setColor(col);
 	}
@@ -485,9 +499,24 @@ void ntPanel::set_vG() {
 	v_G.push_back(v_G1);
 	v_G.push_back(v_G2);
 };
-void ntPanel::set_pG(string p_G) {
-	this->p_G = p_G;
+void ntPanel::set_cG(ntVec3* pt) {
+	c_G.push_back(pt);
+}
+void ntPanel::set_cG() {
+	ntVec3* c_G0 = new ntVec3(c0->x, c0->y, c0->z);
+	ntVec3* c_G1 = new ntVec3(c1->x, c1->y, c1->z);
+	ntVec3* c_G2 = new ntVec3(c2->x, c2->y, c2->z);
+	ntVec3* c_G3 = new ntVec3(c3->x, c3->y, c3->z);
+	ntVec3* c_G4 = new ntVec3(c4->x, c4->y, c4->z);
+	c_G.push_back(c_G0);
+	c_G.push_back(c_G1);
+	c_G.push_back(c_G2);
+	c_G.push_back(c_G3);
+	c_G.push_back(c_G4);
 };
+void ntPanel::set_fG(ntVec3* pt) {
+	f_G.push_back(pt);
+}
 void ntPanel::set_UVW(string string_UVW){
 	this->string_UVW = string_UVW;
 }
@@ -496,7 +525,11 @@ void ntPanel::set_UVW(std::vector <ntVec3*>	vecs_UV) {
 	faces_G.at(0)->at(0).setUVW(vecs_UV);
 	faces_L.at(0)->at(0).setUVW(vecs_UV);
 }
+void ntPanel::set_Dir(string dir) {
+	this->dir = dir;
+}
 void ntPanel::set_IMG(float val) {
+	std::cout << val << endl;
 	image_Val = val;
 }
 void ntPanel::set_Graph() {
@@ -531,16 +564,17 @@ string ntPanel::get_ID() {
 string ntPanel::get_n_G() {
 	return n_G;
 }
-string ntPanel::get_p_G() {
-	return p_G;
-}
+
 string ntPanel::get_UVW() {
 	return string_UVW;
+}
+string ntPanel::get_Dir() {
+	return dir;
 }
 float ntPanel::get_Area() {
 	return area;
 }
-float  ntPanel::get_AngleMin() {
+float ntPanel::get_AngleMin() {
 	float val = phi[0];
 	for (int i = 1; i < phi.size(); i++) {
 		if (val > phi[i]) {
@@ -549,7 +583,7 @@ float  ntPanel::get_AngleMin() {
 	}
 	return val;
 }
-float  ntPanel::get_AngleMax() {
+float ntPanel::get_AngleMax() {
 	float val = phi[0];
 	for (int i = 1; i < phi.size(); i++) {
 		if (val < phi[i]) {
@@ -558,9 +592,44 @@ float  ntPanel::get_AngleMax() {
 	}
 	return val;
 }
+float ntPanel::getMinEdgeLen() {
+
+	float lenMin = v1->x;;
+
+	for (int i = 1; i < 2; i++) {
+		float len = edges[i].getLength();
+		if (len < lenMin) {
+			lenMin = len;
+		}
+	}
+	return lenMin;
+}
 
 std::vector<ntVec3*> ntPanel::get_v_G() {
 	return v_G;
+}
+std::vector<ntVec3*> ntPanel::get_c_G() {
+	return c_G;
+}
+std::vector<ntVec3*> ntPanel::get_c_L() {
+	//return c_L;
+	std::vector<ntVec3*> vc;
+	vc.push_back(c_G[0]);
+	vc.push_back(c_G[1]);
+	vc.push_back(c_G[2]);
+	vc.push_back(c_G[3]);
+	vc.push_back(c_G[4]);
+	return vc;
+}
+std::vector<ntVec3*> ntPanel::get_f_L() {
+	//return f_L;
+	std::vector<ntVec3*> vc;
+	vc.push_back(f_G[0]);
+	vc.push_back(f_G[1]);
+	vc.push_back(f_G[2]);
+	vc.push_back(f_G[3]);
+	vc.push_back(f_G[4]);
+	return vc;
 }
 std::vector<ntVec3*> ntPanel::get_Perf() {
 	return p_Pos;
@@ -690,12 +759,10 @@ void ntPanel::display_Perf() {
 }
 void ntPanel::display_Edge() {
 	int gen = 2;
-
 	edges.at(0).display(1);
 	edges.at(1).display(1);
 	edges.at(2).display(1);
 	verts.at(0)->display(2);
-
 }
 void ntPanel::display_EdgeSd(int gen) {
 	if (gen > 0) {

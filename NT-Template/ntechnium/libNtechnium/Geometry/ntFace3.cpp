@@ -111,6 +111,7 @@ void ntFace3::setUVW(ntVec3* uvw0, ntVec3* uvw1, ntVec3* uvw2) {
 	this->uvws[2] = uvw2;
 }
 void ntFace3::setUVW(std::vector <ntVec3*>	uvws) {
+
 	this->uvw0 = uvws[0];
 	this->uvw1 = uvws[1];
 	this->uvw2 = uvws[2];

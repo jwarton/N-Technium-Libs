@@ -54,8 +54,9 @@ void ntTextIO::read(){
 		}
 		file.close();
 	}
-	else cout << "UNABALBE TO OPEN FILE \n";
-
+	else {
+		cout << "UNABLE TO OPEN FILE \n";
+	}
 	string token;
 
 	for (int i = 0; i < lines.size(); i++){

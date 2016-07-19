@@ -9,58 +9,36 @@
 #define APPLICATION_TYPE_TESTAPP_JPW_NTECHNIUM
 
 #include <iostream>
+
+
+///
 #include "nt_AppContent.h"
 #include "nt_Utility.h"
 #include "ntCube.h"
-
-
-//#include <GL/glut.h>
-///// uses GLUT will not compile
-//// DISABLE UNWANTED DEPENDENCIES FOR OGLFT
-//#define OGLFT_NO_SOLID  
-//#define OGLFT_NO_QT
-//#include <OGLFT.h>
-
-/// 
-#include <ft2build.h>
-#include FT_FREETYPE_H                                           
-
-/// uses free type with simplified implementation
-#include <FTGL/ftgl.h>
+#include "ntType.h"
 
 using namespace jpw;
-//using namespace OGLFT;
 
 class typeApp : public AppContent {
 private:
-
+	
 public:
 	//////////////////////////////VARIABLES UNIQUE TO DERIVED CLASS
 	///////////////////////////////////////////////////////////////
-
 	ntCube cubeA;
+	string font = "verdana";
 
-	//FT_Library  library;
-	//FT_Face     face;
-
-	//OGLFT::Monochrome* monochrome;
-	//OGLFT::Grayscale* grayscale;
-
-
-	//string path_TTF = nt_Utility::getPathToResources();
-	//string font = "fonts\\AGENCYB.TTF";
-	//string url = path_TTF + font;
-	
-
+	ntType title;
 	////////////////////////////////////////////////// CONSTRUCTORS
 	//////////////////////////////// DEFAULT NOT NEEDED FOR DERIVED
 	///////////////////////////////////////////////////////////////
 
 	//////////////////////////////////////// REQUIRED CLASS METHODS
 	///////////////////////////////////////////////////////////////
+
 	void init();
 	void run();
-	/////////////////////////////////////////////////// CONVIENENCE
+	/////////////////////////////////////////////////// CONVIENNCE
 	///////////////////////////////////////////////////////////////
 	void display();
 };

@@ -39,8 +39,8 @@ private:
 	/////////////////////////////////////////////// PANEL TEXT DATA
 	string panel_ID;
 	string n_G;						  //GLOBAL PANEL NORMAL
-	string p_G;						  //GLOBAL VERTEX POSTIONS
 	string string_UVW;				  //GLOBAL PARAMETER
+	string dir;
 
 	///////////////////////////////////////////////////////////////
 	/////////////////////////////// GRAPH PERFORATION | PANELS DATA
@@ -56,12 +56,18 @@ private:
 public:
 	///////////////////////////////////////////////////////////////
 	////////////////////////////////////////// PANEL DATA STRUCTURE
+	ntVec3							*c0, *c1, *c2, *c3, *c4;
+	ntVec3							*f0, *f1, *f2, *f3, *f4;
 	ntVec3							*v0,*v1,*v2;
-	ntVec3							*vecs[3];
+	ntVec3							*vecs[13];
 	ntVertex						*vert0,*vert1,*vert2;
 	std::vector<ntVertex*>			 verts;
 	std::vector<ntEdge>				 edges;
 
+	std::vector<ntVec3*> c_G;		  //GLOBAL PANEL CORNER POSITONS
+	std::vector<ntVec3*> c_L;		  //LOCAL  PANEL CORNER POSITONS
+	std::vector<ntVec3*> f_G;		  //GLOBAL PANEL FASTENER CL END POINT POSITONS
+	std::vector<ntVec3*> f_L;		  //LOCAL  PANEL FASTENER CL END POINT POSITONS
 	std::vector<ntVec3*> v_G;		  //GLOBAL PANEL VERTEX POSITONS
 	std::vector<ntVec3*> v_L;		  ///  NOT IN USE // LOCAL PANEL VERTEX POSITION 
 
@@ -88,11 +94,10 @@ public:
 	std::vector<ntVec3*>			p_UVs;	   //  LIST OF UV AT PERF POS
 	std::vector<float>				p_Col;	   //  LIST OF VAL AT PERF POS
 
-					
 	///////////////////////////////////////////////////////////////
 	//////////////////////////////////////// PERFORATION PARAMETERS
 	float	r_Min =			0.1875;	//3/16"
-	float	r_Max =			0.625;	//5/8"
+	float	r_Max =			0.5; // 0.625;	//5/8"
 	float	edge_Offset =	0.75 + r_Max;
 	int		n_seg =			36;
 	int		perf_size;
@@ -103,14 +108,14 @@ public:
 	bool is_Noise =			false; //true;// 
 	///////////////////////////////////////////////////////////////
 	////////////////////////////////////////////// PANEL PARAMETERS
-	/// SHOULD BE PRIVATE MEMBER VARIALBES
+	/// SHOULD BE PRIVATE MEMBER VARIABLES
 	/// ACCESSIBLE BY FUNCTION CALL ONLY
 	ntColor4f	col;
 	ntVec3		norm;
 	ntVec3*		cent;
 	ntVertex	centroid;
 	ntNormal	normal;
-	double		area;				//units [sq. inch]
+	double		area = 0;			//units [sq. inch]
 	std::vector<double>	phi;		//units [degrees ]
 
 	///////////////////////////////////////////////////////////////
@@ -143,23 +148,30 @@ public:
 
 	void set_ID(string panel_ID);
 	void set_vG();
+	void set_cG();
+	void set_cG(ntVec3* pt);
+	void set_fG(ntVec3* pt);
 	void set_nG(string n_G);
-	void set_pG(string p_G);
 	void set_UVW(string string_UVW);
 	void set_UVW(std::vector <ntVec3*>	vecs_UV);
+	void set_Dir(string dir);
 	void set_IMG(float val);
 
 	string get_ID();	//PANEL ID
 	string get_n_G();	//GLOBAL NORMAL
-	string get_p_G();
 	string get_UVW();
+	string get_Dir();
 
 	std::vector<ntVec3*>	get_v_G();	//GLOBAL VERTICES
+	std::vector<ntVec3*>	get_c_G();	//GLOBAL CORNERS | TRIMMED OFFSET
+	std::vector<ntVec3*>	get_c_L();	//LOCAL  CORNERS | TRIMMED OFFSET
+	std::vector<ntVec3*>	get_f_L();	//LOCAL FASTENER CENTERLINE OFFSET VERTICES
 	std::vector<ntVec3*>	get_Perf();
 	std::vector<float>		get_Perf_R();
 	float get_Area();
 	float get_AngleMin();
 	float get_AngleMax();
+	float getMinEdgeLen();
 
 	void display();
 	void display_Graph();

@@ -28,6 +28,7 @@
 #include <af/dim4.hpp>
 #include <af/traits.hpp>
 #include <cstdlib>
+#include <cstddef>         // std::size_t
 
 #include "ntMath.h"
 #include "ntColor4f.h"
@@ -38,6 +39,8 @@
 #include "ntPanel.h"
 #include "ntFace3.h"
 #include "ntGraph.h"
+#include "ntType.h"
+
 
 using namespace jpw;
 
@@ -48,29 +51,66 @@ private:
 	clock_t t_CPU = 0;
 
 	///////////////////////////////////////////////////////////////
+	////////////////////////////////////// SYSTEM DISPLAY VARIABLES
+	string font = "AGENCYR";
+	ntType title;
+	ntType t_00;
+	ntType t_01;
+	ntType t_02;
+	ntType t_03;
+	ntType t_04;
+	ntType t_05;
+	ntType t_06;
+	ntType t_07;
+	ntType t_08;
+	ntType t_09;
+	ntType t_10;
+	ntType t_11;
+	ntType t_12;
+	ntType t_13;
+	ntType t_14;
+	ntType t_15;
+	ntType t_16;
+	ntType t_17;
+	ntType t_18;
+	ntType t_19;
+
+	void init_SysData();
+	void display_SysData();
+	///////////////////////////////////////////////////////////////
 	//////////////////////////////////////// SOURCE IMAGE VARIABLES
 	string url_IMG;
 	string path_IMG = nt_Utility::getPathToResources();
 	string pathExtension_IMG = "imgs\\ovis\\";
-	string fileName_IMG = "ovis_10x10";
+	//string fileName_IMG = "ovis_stripes";
+	//string fileName_IMG = "ovis_4x4_RGJW-15k";// "ovis_4x4_RG-15k";//"ovis_6x6_HY15k"; //"ovis_8x8_RG-15k";//"ovis_3x3_HY15k"; //"ovis_3x3_DD15k";// "ovis_8x8"; //
+	//string fileName_IMG = "ovis_8x8"; //
+	string fileName_IMG = "ovis_4x4_CBJW-10k"; //"ovis_6x6_CBJW-10k"; //  "ovis_4x4_RGJW-10k";//
 	string fileExt_IMG = ".jpg";
 
 	af::array img_IN;
-
 	af::array img_2D;
 	arma::mat img_2d;
 
 	///////////////////////////////////////////////////////////////
 	///////////////////////////////////////// SOURCE DATA VARIABLES
-	string fileName_TXT = "ptPos_13_OvisTriPts";
-	//string fileName_TXT = "ptPos_00_OvisZeppSys";
+	//string fileName_TXT = "ptPos_14_OvisTriPts";
+	//string fileName_TXT = "ptPos_20_OvisZeppSys";
+	//string fileName_TXT = "OvisZeppSys_160314";
+	string fileName_TXT = "Z7";
+	//string fileName_TXT = "B0100";	//FASTENER LOCATION REVIEW PANELS
+	//string fileName_TXT = "Z6_00000";
+
 	static string path;
 
-	bool isStartFile =	false;
-	bool isEndSubs =	false;
-	bool isSubNext =	false;
-	bool isEndFile =	false;
-	bool isMultiThread = false;
+	bool isStartFile =		false;
+	bool isEndSubs =		false;
+	bool isSubNext =		false;
+	bool isEndFile =		false;
+	bool isMultiThread =	false;
+	bool isNode =			false;
+	bool isCorner =			false;
+	bool isFastener =		false;
 
 	int panel_NUM = 0;
 	int panel_Dim = 0;
@@ -79,8 +119,12 @@ private:
 	string panel_ID =	"<< ERROR >>";
 	string panel_Norm = "<< ERROR >>";
 	string panel_Vert = "<< ERROR >>";
+	string panel_CPts = "<< ERROR >>";
 	string panel_UVW =	"<< ERROR >>";
+	string panel_Dir =  "<< ERROR >>";
 	
+	ntVec3 cpts[5];
+	ntVec3 fpts[5];
 	ntVec3 verts[3];
 	ntVec3 norm_G;
 	ntVec3 param_UVW;
@@ -103,6 +147,8 @@ private:
 	static int n_perf;
 	static float areaS_gross;
 	static float areaS_net;
+	static float areaP_Max;
+	static float areaP_Min;
 
 	static float phi_Min;
 	static float phi_Max;
@@ -118,6 +164,7 @@ private:
 	static int gen_L;
 	static bool isImgLoaded;
 	static bool isTxtLoaded;
+	static bool isExceed;
 	static arma::mat img_00;
 	static int img_X;
 	static int img_Y;

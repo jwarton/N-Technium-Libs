@@ -45,6 +45,7 @@ Thumbs.db
 # OS generated files #
 ######################
 *.psd
+*.jpg
 
 NT-Template/ntechnium/libsImport/**
 NT-Template/ntechnium/output/
