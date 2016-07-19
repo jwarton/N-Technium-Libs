@@ -70,7 +70,7 @@ int main(int argc, char const** argv){
 	//AppContent* c = new swarmApp();
 	//AppContent* c = new emitterApp(10000,.1);
 	//AppContent* c = new shapeApp();
-	//AppContent* c = new cubeApp();
+	AppContent* c = new cubeApp();
 
 	///FEM
 	//AppContent* c = new trussApp01();		//VALIDATION 3D TRUSS ELEMENTS
@@ -84,7 +84,7 @@ int main(int argc, char const** argv){
 	///TYPE
 	//AppContent* c = new typeApp();
 	///OVIS
-	AppContent* c = new ovisApp();
+	//AppContent* c = new ovisApp();
 
 	///KUKA SOURCE CODE APPLICATIONS
 	//AppContent* c = new krlApp();
