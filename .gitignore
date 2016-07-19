@@ -8,7 +8,6 @@
 *.so
 *.sdf
 *.suo
-
 *.ipdb
 *.opendb
 *.db
