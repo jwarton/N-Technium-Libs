@@ -81,7 +81,7 @@ int main(int argc, char const** argv){
 	//AppContent* c = new emitterApp(10000,.1);
 	//AppContent* c = new shapeApp();
 	//AppContent* c = new cubeApp();
-	//AppContent* c = new triApp();
+	AppContent* c = new triApp();
 
 	///FEM
 	//AppContent* c = new trussApp01();		//VALIDATION 3D TRUSS ELEMENTS
@@ -94,7 +94,7 @@ int main(int argc, char const** argv){
 	//AppContent* c = new afApp02();		
 	//AppContent* c = new tokyoApp00();		//C3 VISUALIZING TOKYO VIGNETTES
 	//AppContent* c = new tokyoApp01();		//C3 PROFILE SUBDIVISION
-	AppContent* c = new tokyoApp02();		//C3 ORIGAMI STRUCTURE | IMAGE MAPPING
+	//AppContent* c = new tokyoApp02();		//C3 ORIGAMI STRUCTURE | IMAGE MAPPING
 
 	///TYPE
 	//AppContent* c = new typeApp();
