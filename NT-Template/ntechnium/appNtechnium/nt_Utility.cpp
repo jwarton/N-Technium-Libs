@@ -19,8 +19,8 @@ std::string nt_Utility::getBuildPath(){
 	}
 
 	std::string cp = cCurrentPath; //cast char[] to string
-	std::cout << "current path = " << cp << std::endl << std::endl;
 	return cp;
+	//std::cout << "current path = " << cp << std::endl << std::endl;
 }
 std::string nt_Utility::getPathToResources(){
 	char cCurrentPath[FILENAME_MAX];

@@ -66,11 +66,15 @@ int main(int argc, char const** argv){
 
 	/////////////////////////////////////////////////////////////////////////// INSTANTIATE DERIVED APPLICATION
 	///////////////////////////////////////////////////////////////////////////////////////////////////////////
-	
-	int x = 3200;
-	int y = 1800;	
-	//int x = 1920;
-	//int y = 1080;
+	int	x = 1920;
+	int y = 1080;
+
+	if (0 > 1) {
+		x = 3200;
+		y = 1800;
+	}
+
+
 	///GRAPHICS
 	//AppContent* c = new meshImportApp();
 	//AppContent* c = new meshApp();
@@ -81,7 +85,7 @@ int main(int argc, char const** argv){
 	//AppContent* c = new emitterApp(10000,.1);
 	//AppContent* c = new shapeApp();
 	//AppContent* c = new cubeApp();
-	AppContent* c = new triApp();
+	//AppContent* c = new triApp();
 
 	///FEM
 	//AppContent* c = new trussApp01();		//VALIDATION 3D TRUSS ELEMENTS
@@ -94,7 +98,7 @@ int main(int argc, char const** argv){
 	//AppContent* c = new afApp02();		
 	//AppContent* c = new tokyoApp00();		//C3 VISUALIZING TOKYO VIGNETTES
 	//AppContent* c = new tokyoApp01();		//C3 PROFILE SUBDIVISION
-	//AppContent* c = new tokyoApp02();		//C3 ORIGAMI STRUCTURE | IMAGE MAPPING
+	AppContent* c = new tokyoApp02();		//C3 ORIGAMI STRUCTURE | IMAGE MAPPING
 
 	///TYPE
 	//AppContent* c = new typeApp();

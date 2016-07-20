@@ -52,14 +52,30 @@ void ntGLFWsetup::init(){
 	///////////////////////////////////////////////////// ANTI-ALIASING
 	glfwWindowHint(GLFW_SAMPLES, 8);
 
-	window = glfwCreateWindow(appWidth, appHeight, appTitle.c_str(), NULL, NULL);
+	///////////////////////////////////////////////////////////////////
+	//////////////////////////////////// SET WINDOW SIZE OR FULL SCREEN
+	if (isFullScreen == true) {
+		GLFWmonitor* monitor = glfwGetPrimaryMonitor();
+		const GLFWvidmode *mode = glfwGetVideoMode(monitor);
+		int count;
+		GLFWmonitor** monitors = glfwGetMonitors(&count);
+		///////////////////////////////
+		//FULL SCREEN ON SECOND MONITOR
+		if (count > 1) {
+			monitor = monitors[1];
+			mode = glfwGetVideoMode(monitor);
+			std::cout << "MONITORS: " << count << endl;
+		}
+		window = glfwCreateWindow(mode->width, mode->height, appTitle.c_str(), monitor, NULL);
+		//window = glfwCreateWindow(appWidth, appHeight, appTitle.c_str(), glfwGetPrimaryMonitor(), NULL);
+	} else {
+		window = glfwCreateWindow(appWidth, appHeight, appTitle.c_str(), NULL, NULL);
+		glfwSetWindowPos(window, xpos, ypos);
+	}
+
 	hWin32 = glfwGetWin32Window(window);
 
-	///DEFINE FUNCTION FOR POSITON
-	glfwSetWindowPos(window, xpos, ypos);
 
-	//FULL SCREEN:  
-	//window = glfwCreateWindow(appWidth, appHeight, appTitle.c_str(), glfwGetPrimaryMonitor(), NULL);
 	(!window) ? glfwTerminate() : NULL;
 	(!window) ? exit(EXIT_FAILURE) : NULL;
 
