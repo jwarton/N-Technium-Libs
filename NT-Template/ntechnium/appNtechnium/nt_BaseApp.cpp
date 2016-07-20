@@ -162,7 +162,6 @@ void ntBaseApp::GLSLInfo(ntShader* shader){
 	trace("VENDOR                      ", glGetString(GL_VENDOR));
 	trace("VERSION                     ", glGetString(GL_VERSION));
 	trace("GLSL VERSION                ", glGetString(GL_SHADING_LANGUAGE_VERSION));
-
 	trace("VERTEX POSITION LOCATION  = ", glGetAttribLocation(shader->getID(), "vertexPosition"));
 	trace("VERTEX NORMAL LOCATION    = ", glGetAttribLocation(shader->getID(), "vertexNormal"));
 	trace("VERTEX COLOR LOCATION     = ", glGetAttribLocation(shader->getID(), "vertexColor"));

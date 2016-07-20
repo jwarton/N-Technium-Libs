@@ -59,12 +59,13 @@ void ntShader::init(){
 	
 	if (GLEW_OK != err){
 		//PROBLEM: glewInit FAIL!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!////
-		fprintf(stderr, "ERROR: %s\n", glewGetErrorString(err));
+		///fprintf(stderr, "ERROR: %s\n", glewGetErrorString(err));
 	}
-	fprintf(stdout, "STATUS:  USING GLEW %s\n", glewGetString(GLEW_VERSION));
+	///fprintf(stdout, "STATUS:  USING GLEW %s\n", glewGetString(GLEW_VERSION));
 	
-	std::string url = nt_Utility::getBuildPath();
-	std::cout << "PATH TO SHADERS URL:  " << url << std::endl;
+	///std::string url = nt_Utility::getPathToResources() + "\shaders\\";  
+	//nt_Utility::getBuildPath();
+	///std::cout << "PATH TO SHADERS URL:  " << url << std::endl;
 	std::string vShaderURL;
 	std::string fShaderURL;
 }

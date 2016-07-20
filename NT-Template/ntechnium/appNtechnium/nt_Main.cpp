@@ -51,11 +51,8 @@
 #include <iostream>
 #include <array>
 #include <arrayfire.h>
-#include <thread>
 
 int main(int argc, char const** argv){
-	unsigned thread_Cnt = std::thread::hardware_concurrency();
-	std::cout << "AVAILABLE PROCESSING CORES:  " << thread_Cnt << endl;
 	////////////////////////////////////////////////////////////////// SELECT DEVICE AND DISPLAY ARRAYFIRE INFO
 	///////////////////////////////////////////////////////////////////////////////////////////////////////////
 	printf("\n");

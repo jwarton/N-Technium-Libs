@@ -39,8 +39,7 @@ void ntTextIO::setUrl(){
 	std::string cp = cCurrentPath;
 
 	url = path + pathExtension + fileName;
-	//std::cout << "\nPATH TO TEXT DATA I/O: " << std::endl;
-	//std::cout << url << endl; 
+	//std::cout << "\nPATH TO TEXT DATA I/O: " << url << std::endl;
 }
 
 void ntTextIO::read(){

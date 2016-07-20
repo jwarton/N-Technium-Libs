@@ -114,6 +114,20 @@ void ntTriSkin::init() {
 }
 
 void ntTriSkin::init_SysData() {
+	// NAME
+	TCHAR  workStationName[MAX_COMPUTERNAME_LENGTH + 1];
+	DWORD  bufCharCount = sizeof(workStationName) / sizeof(workStationName[0]);
+	GetComputerName(workStationName, &bufCharCount);
+	string pcName(&workStationName[0]);					//convert to wstring
+	string pcNameStr(pcName.begin(), pcName.end());
+	// MEMORY
+	MEMORYSTATUSEX wsMEMORY;
+	wsMEMORY.dwLength = sizeof(wsMEMORY);
+	GlobalMemoryStatusEx(&wsMEMORY);
+	long double RAM = wsMEMORY.ullTotalPhys;
+	RAM *= 0.00000000093132257;							//RAM /= 1073741824;
+	string ram = to_string(RAM);
+
 	///////////////////////////////////////////////////////////////////////
 	///////////////////////////////////// TYPOGRAPHIC CONTENT | PANELS DATA
 
@@ -144,6 +158,8 @@ void ntTriSkin::init_SysData() {
 
 	lines.push_back(del_01);
 	lines.push_back("SYSTEM PERFORMANCE            ---------------");
+	lines.push_back("WORKSTATION NAME:             " + pcNameStr);
+	lines.push_back("MEMORY:                       " + ram + "   GB");
 	lines.push_back("");
 	lines.push_back(t_LoadPanels);
 	lines.push_back(t_LoadImage);

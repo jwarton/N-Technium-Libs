@@ -54,24 +54,22 @@ void ntGLFWsetup::init(){
 
 	///////////////////////////////////////////////////////////////////
 	//////////////////////////////////// SET WINDOW SIZE OR FULL SCREEN
+	GLFWmonitor* monitor = glfwGetPrimaryMonitor();
+	const GLFWvidmode *mode = glfwGetVideoMode(monitor);
+	int count;
+	GLFWmonitor** monitors = glfwGetMonitors(&count);
+	if (count > 1) {
+		monitor = monitors[1];				//FULL SCREEN ON SECOND MONITOR
+		mode = glfwGetVideoMode(monitor);
+	}
 	if (isFullScreen == true) {
-		GLFWmonitor* monitor = glfwGetPrimaryMonitor();
-		const GLFWvidmode *mode = glfwGetVideoMode(monitor);
-		int count;
-		GLFWmonitor** monitors = glfwGetMonitors(&count);
-		///////////////////////////////
-		//FULL SCREEN ON SECOND MONITOR
-		if (count > 1) {
-			monitor = monitors[1];
-			mode = glfwGetVideoMode(monitor);
-			std::cout << "MONITORS: " << count << endl;
-		}
 		window = glfwCreateWindow(mode->width, mode->height, appTitle.c_str(), monitor, NULL);
-		//window = glfwCreateWindow(appWidth, appHeight, appTitle.c_str(), glfwGetPrimaryMonitor(), NULL);
 	} else {
 		window = glfwCreateWindow(appWidth, appHeight, appTitle.c_str(), NULL, NULL);
 		glfwSetWindowPos(window, xpos, ypos);
 	}
+
+	glfwGetFramebufferSize(window, &appWidth, &appHeight);
 
 	hWin32 = glfwGetWin32Window(window);
 
@@ -147,7 +145,50 @@ void ntGLFWsetup::init(){
 	baseApp->init();///////////////////////////////////////////////////////////////////////////////////////////////
 	///////////////////////////////////////////////////////////////////////////////////////////////////////////////
 	///////////////////////////////////////////////////////////////////////////////////////////////////////////////
-	view_Save();
+	//view_Save();
+
+	///////////////////////////////////////////////////////////////////
+	//////////////////////////////////////// COUT SYSTEM SPECIFICATIONS
+	TCHAR  workStationName[MAX_COMPUTERNAME_LENGTH + 1];
+	DWORD  bufCharCount = sizeof(workStationName) / sizeof(workStationName[0]);
+	GetComputerName(workStationName, &bufCharCount);
+
+	// PROCESSOR: MANUFACTURER, MODEL AND CLOCKSPEED
+	int CPUInfo[4] = { -1 };
+	unsigned   nExIds, i = 0;
+	char CPUBrandString[0x40];
+	// GET THE INFORMATION ASSOCIATED WITH EACH EXTENDED ID.
+	__cpuid(CPUInfo, 0x80000000);
+	nExIds = CPUInfo[0];
+	for (i = 0x80000000; i <= nExIds; ++i)
+	{
+		__cpuid(CPUInfo, i);
+		// INTERPRET CPU BRAND STRING
+		if (i == 0x80000002)
+			memcpy(CPUBrandString, CPUInfo, sizeof(CPUInfo));
+		else if (i == 0x80000003)
+			memcpy(CPUBrandString + 16, CPUInfo, sizeof(CPUInfo));
+		else if (i == 0x80000004)
+			memcpy(CPUBrandString + 32, CPUInfo, sizeof(CPUInfo));
+	}
+	// PROCESOR THREADS
+	unsigned thread_Cnt = std::thread::hardware_concurrency();
+	// SYSTEM MEMORY
+	MEMORYSTATUSEX wsMEMORY;
+	wsMEMORY.dwLength = sizeof(wsMEMORY);
+	GlobalMemoryStatusEx(&wsMEMORY);
+	long double RAM = wsMEMORY.ullTotalPhys;
+	RAM *= 0.00000000093132257;	//RAM /= 1073741824;
+	string ram = to_string(RAM);
+	
+	std::cout << "\n\n";
+	std::cout << "///////////////////////////////////////////////////////////////\n";
+	std::cout << "WORKSTATION NAME:           " << workStationName << endl;
+	std::cout << "CPU SPECIFICATION:          " << CPUBrandString << endl;
+	std::cout << "PROCESSOR CORES:            " << thread_Cnt << endl;
+	std::cout << "MEMORY:                     " << ram << " GB\n";
+	std::cout << "MONITOR RESOLUTION:         " << appWidth << " x " << appHeight << "\n" << endl;
+
 	////////////////////////////////////////////////////////////////////// 3D CONNEXION TEST AND INITIALIZATION
 	///////////////////////////////////////////////////////////////////////////////////////////////////////////
 	SiOpenData		oData;

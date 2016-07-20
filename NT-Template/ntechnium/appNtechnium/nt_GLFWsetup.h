@@ -25,8 +25,9 @@
 #include <stdio.h>
 #include "nt_BaseApp.h"
 #include <memory>
+#include <thread>
 
-////3d connecion library includes
+////3D CONNEXION LIBRARY INCLUDES
 #include <math.h>
 #include <algorithm>
 
