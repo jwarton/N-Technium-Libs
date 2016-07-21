@@ -20,6 +20,10 @@
 #include <ctime>
 #include <time.h>
 
+#include <memory>
+#include <thread>
+#include "windows.h"
+
 enum D_mode { vQ, vF, vP, vS, vW, vA, vD };
 enum L_mode { vX, vC, vV };
 
@@ -53,6 +57,60 @@ static std::string format_SEC(clock_t time) {
 	ss << std::to_string(sec);
 	std::string t = ss.str() + "  SEC";
 	return t;
+}
+
+static std::string getPC_Name() {
+	TCHAR  workStationName[MAX_COMPUTERNAME_LENGTH + 1];
+	DWORD  bufCharCount = sizeof(workStationName) / sizeof(workStationName[0]);
+	GetComputerName(workStationName, &bufCharCount);
+	std::string pcName(&workStationName[0]);
+	std::string pcNameStr(pcName.begin(), pcName.end());
+
+	return pcNameStr;
+}
+static std::string getRAM() {
+	// SYSTEM MEMORY
+	MEMORYSTATUSEX wsMEMORY;
+	wsMEMORY.dwLength = sizeof(wsMEMORY);
+	GlobalMemoryStatusEx(&wsMEMORY);
+	long double RAM = wsMEMORY.ullTotalPhys;
+	RAM *= 0.00000000093132257;	//RAM /= 1073741824;
+	std::string memory = std::to_string(RAM);
+
+	return memory;
+}
+static std::string getCPU() {
+	std::string test = "";
+	// PROCESSOR: MANUFACTURER, MODEL AND CLOCKSPEED
+	int CPUInfo[4] = { -1 };
+	unsigned   nExIds, i = 0;
+	char CPUBrandString[0x40];
+	// GET THE INFORMATION ASSOCIATED WITH EACH EXTENDED ID.
+	__cpuid(CPUInfo, 0x80000000);
+	nExIds = CPUInfo[0];
+	for (i = 0x80000000; i <= nExIds; ++i)
+	{
+		__cpuid(CPUInfo, i);
+		// INTERPRET CPU BRAND STRING
+		if (i == 0x80000002)
+			memcpy(CPUBrandString, CPUInfo, sizeof(CPUInfo));
+		else if (i == 0x80000003)
+			memcpy(CPUBrandString + 16, CPUInfo, sizeof(CPUInfo));
+		else if (i == 0x80000004)
+			memcpy(CPUBrandString + 32, CPUInfo, sizeof(CPUInfo));
+	}
+
+	std::string pcName(&CPUBrandString[0]);
+	std::string pcNameStr(pcName.begin(), pcName.end());
+	//return to_string(CPUBrandString);
+	return pcNameStr;
+}
+static std::string getThreadCnt() {
+	std::string threads;
+	// PROCESOR THREADS
+	unsigned thread_Cnt = std::thread::hardware_concurrency();
+	threads = std::to_string(thread_Cnt);
+	return threads;
 }
 //static bool pt_isInside(ntVec3 point, std::vector <ntVec3*> polyVecs){
 //

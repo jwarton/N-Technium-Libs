@@ -24,6 +24,8 @@
 #include <stdlib.h>
 #include <stdio.h>
 #include "nt_BaseApp.h"
+#include "ntMath.h"
+
 #include <memory>
 #include <thread>
 

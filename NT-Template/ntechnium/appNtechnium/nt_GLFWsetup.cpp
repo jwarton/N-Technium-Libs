@@ -68,9 +68,11 @@ void ntGLFWsetup::init(){
 		window = glfwCreateWindow(appWidth, appHeight, appTitle.c_str(), NULL, NULL);
 		glfwSetWindowPos(window, xpos, ypos);
 	}
-
 	glfwGetFramebufferSize(window, &appWidth, &appHeight);
+	///////////////////////////////////////////////////////////////////
 
+	baseApp->setWidth(appWidth);
+	baseApp->setHeight(appHeight);
 	hWin32 = glfwGetWin32Window(window);
 
 
@@ -149,44 +151,17 @@ void ntGLFWsetup::init(){
 
 	///////////////////////////////////////////////////////////////////
 	//////////////////////////////////////// COUT SYSTEM SPECIFICATIONS
-	TCHAR  workStationName[MAX_COMPUTERNAME_LENGTH + 1];
-	DWORD  bufCharCount = sizeof(workStationName) / sizeof(workStationName[0]);
-	GetComputerName(workStationName, &bufCharCount);
-
-	// PROCESSOR: MANUFACTURER, MODEL AND CLOCKSPEED
-	int CPUInfo[4] = { -1 };
-	unsigned   nExIds, i = 0;
-	char CPUBrandString[0x40];
-	// GET THE INFORMATION ASSOCIATED WITH EACH EXTENDED ID.
-	__cpuid(CPUInfo, 0x80000000);
-	nExIds = CPUInfo[0];
-	for (i = 0x80000000; i <= nExIds; ++i)
-	{
-		__cpuid(CPUInfo, i);
-		// INTERPRET CPU BRAND STRING
-		if (i == 0x80000002)
-			memcpy(CPUBrandString, CPUInfo, sizeof(CPUInfo));
-		else if (i == 0x80000003)
-			memcpy(CPUBrandString + 16, CPUInfo, sizeof(CPUInfo));
-		else if (i == 0x80000004)
-			memcpy(CPUBrandString + 32, CPUInfo, sizeof(CPUInfo));
-	}
-	// PROCESOR THREADS
-	unsigned thread_Cnt = std::thread::hardware_concurrency();
-	// SYSTEM MEMORY
-	MEMORYSTATUSEX wsMEMORY;
-	wsMEMORY.dwLength = sizeof(wsMEMORY);
-	GlobalMemoryStatusEx(&wsMEMORY);
-	long double RAM = wsMEMORY.ullTotalPhys;
-	RAM *= 0.00000000093132257;	//RAM /= 1073741824;
-	string ram = to_string(RAM);
+	string pc_Id       = getPC_Name();
+	string cpu_Spec    = getCPU();
+	string thread_Cnt  = getThreadCnt();
+	string memory_Size = getRAM();
 	
 	std::cout << "\n\n";
 	std::cout << "///////////////////////////////////////////////////////////////\n";
-	std::cout << "WORKSTATION NAME:           " << workStationName << endl;
-	std::cout << "CPU SPECIFICATION:          " << CPUBrandString << endl;
-	std::cout << "PROCESSOR CORES:            " << thread_Cnt << endl;
-	std::cout << "MEMORY:                     " << ram << " GB\n";
+	std::cout << "WORKSTATION NAME:           " << pc_Id       << endl;
+	std::cout << "CPU SPECIFICATION:          " << cpu_Spec    << endl;
+	std::cout << "CORES:                      " << thread_Cnt  << endl;
+	std::cout << "MEMORY:                     " << memory_Size << " GB\n";
 	std::cout << "MONITOR RESOLUTION:         " << appWidth << " x " << appHeight << "\n" << endl;
 
 	////////////////////////////////////////////////////////////////////// 3D CONNEXION TEST AND INITIALIZATION
