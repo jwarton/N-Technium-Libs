@@ -5,6 +5,7 @@
 // created by James Warton on 04/01/2014		///////////////////
 ///////////////////////////////////////////////////////////////////
 
+#pragma optimize( "Og", off )
 
 #include "nt_GLFWsetup.h"
 #include "nt_genApp.h"

@@ -30,8 +30,8 @@ private:
 	string path_TXT_IN = path_IN + "txt\\c3\\";
 	string path_IMG_IN = path_IN + "imgs\\c3\\01\\swatch\\";
 
-	string file_TXT = "C3_001";
-	//string file_TXT = "AC_001";
+	//string file_TXT = "C3_001";
+	string file_TXT = "AC_001";
 	//string file_IMG = "0042_b";
 	string file_IMG = "ovis_4x4_CBJW-10k";
 	string ext_TXT = ".txt";

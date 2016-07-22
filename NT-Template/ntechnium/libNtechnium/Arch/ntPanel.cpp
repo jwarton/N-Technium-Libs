@@ -647,10 +647,10 @@ void ntPanel::add_Perf() {
 					perf_area += perf->get_Area();
 				}
 			}
-		}
+		//}
 		perf_perc = (perf_area / area) * 100;
 		perf_size = perfs.size();
-	//}
+	}
 }
 ///////////////////////////////////////////////////////////////
 void ntPanel::set_Color(ntColor4f col){

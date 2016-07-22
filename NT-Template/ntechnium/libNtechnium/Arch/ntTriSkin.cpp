@@ -739,7 +739,7 @@ void ntTriSkin::funct(ntPanel* panel_ptr) {
 	/// SCALE TO VIEW--- REPLACE WITH CAMERA FIT FUNCTION !
 	/// !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 	//set_Scale3D(panel_ptr, 0.01);
-	set_Scale3D(panel_ptr,  0.001);
+	//set_Scale3D(panel_ptr,  0.001);
 	///
 	///////////////////////////////////////////////////////////////
 	panel_ptr->sub_Div(gen);	    // SUBDIVIDE FOR GLOBAL DISPLAY
@@ -798,7 +798,7 @@ void ntTriSkin::funct(ntPanel* panel_ptr) {
 	///////////////////////////////////////////////////////////////
 	/// SCALE PANELS TO VIEW--- REPLACE WITH CAMERA FIT FUNCTION !
 	/// !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-	set_Scale2D(panel_ptr, 15);
+	set_Scale2D(panel_ptr, 8);
 	///
 }
 void ntTriSkin::set_Parameters(grid_Type grid_type, perf_Type perf_type, float perf_spacing) {

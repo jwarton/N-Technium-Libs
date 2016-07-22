@@ -4,16 +4,17 @@ void krlRhino::init() {
 	///////////////////////////////////////////////////////////////////
 	////////////////////////////////////////////// DEFINE PARSING RANGE
 	int fileIndS = 0;  //index of first file to parse
-	int fileIndE = 0;  //index of last  file to parse
+	int fileIndE = 10;  //index of last  file to parse
 
 	for (int i = fileIndS; i <= fileIndE; i++){
 		///////////////////////////////////////////////////////////////
 		//////////////////////////////////////////// DEFINE KRL PROGRAM
-		string fileName = "TC_000";
+		//string fileName = "TC_000";
+		string fileName = "PP_010";
 		string fileRead = fileName + "_Rhino";
 		int subNum = 0;			//KRL SUBPROGRAM INDEX NUMBER
 		int subMax = 20;		//MAXIMUM SUBPROGRAM CAPACITY OF CONTROLLER
-		int maxLines = 15000;	//MAXIMUM LINES PER SUBPROGRAM  //KRC2= 15000
+		int maxLines = 1000;	//MAXIMUM LINES PER SUBPROGRAM  //KRC2= 15000
 
 		program01 = KRLprog(fileName);
 	

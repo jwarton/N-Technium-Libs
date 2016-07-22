@@ -59,7 +59,7 @@ void ntGLFWsetup::init(){
 	int count;
 	GLFWmonitor** monitors = glfwGetMonitors(&count);
 	if (count > 1) {
-		monitor = monitors[1];				//FULL SCREEN ON SECOND MONITOR
+		//monitor = monitors[1];				//FULL SCREEN ON SECOND MONITOR
 		mode = glfwGetVideoMode(monitor);
 	}
 	if (isFullScreen == true) {

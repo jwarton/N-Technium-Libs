@@ -180,7 +180,7 @@ private:
 	//////////////////////////////////////////// UTILITIY FUNCTIONS
 	void funct(ntPanel* panel_ptr);
 
-	int gen = 2;
+	int gen = 5;
 	int gen_G = gen;
 	int gen_L = gen;
 
