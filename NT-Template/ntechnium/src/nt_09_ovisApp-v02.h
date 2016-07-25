@@ -31,7 +31,7 @@ private:
 	string path_TXT_IN = path_IN + "txt\\" + projectName;
 	string path_IMG_IN = path_IN + "imgs\\" + projectName;
 
-	string file_TXT = "WF_0000";
+	string file_TXT = "Z";//"WF_0000";
 	string file_IMG	= "ovis_4x4_CBJW-10k";
 	string ext_TXT	= ".txt";
 	string ext_IMG	= ".jpg";

@@ -3,17 +3,28 @@
 using namespace arma;
 
 ntTriSkin::ntTriSkin() {}
-ntTriSkin::ntTriSkin(std::string url_TXT, std::string url_IMG, std::string obj_Name):
-url_TXT(url_TXT), url_IMG(url_IMG), obj_Name(obj_Name){
+ntTriSkin::ntTriSkin(std::string url_TXT, std::string url_IMG, std::string obj_Name) :
+	url_TXT(url_TXT), url_IMG(url_IMG), obj_Name(obj_Name) {
+
+}
+ntTriSkin::ntTriSkin(std::string url_TXT, int cnt, std::string url_IMG, std::string obj_Name) :
+	url_TXT(url_TXT), url_IMG(url_IMG), obj_Name(obj_Name), files_CNT(cnt) {
 
 }
 void ntTriSkin::init() {
 	if (isPathDefined == true) {
-
-		string time;
+		///
+		double t_eval;
+		t_eval = clock();
 
 		t_CPU = clock();
-		read_DATA();
+		for (int i = 0; i < files_CNT; i++){
+			string url = url_TXT + to_string(i + 1) + ".txt";
+			std::cout << url << endl;
+			read_DATA(url);
+		}
+		isTxtLoaded = true;
+		string time;
 		time = format_SEC(clock() - t_CPU);
 		t_LoadPanels += time;
 
@@ -26,7 +37,7 @@ void ntTriSkin::init() {
 		read_IMG();
 		time = format_SEC(clock() - t_CPU);
 		t_LoadImage += time;
-
+		///
 		std::cout << "READ IMG COMPLETE           -----------------------------------" << endl;
 		std::cout << "IMAGE SIZE:                 " << img_X << " x " << img_Y << "\n" << endl;
 		std::cout << "CALCULATING PANEL GEOMETRY  -----------------------------------" << endl;
@@ -39,7 +50,7 @@ void ntTriSkin::init() {
 		items = ceil(items);
 
 		//std::cout << panel_Dim << endl;
-	
+		///
 		t_CPU = clock();
 		for (int i = 0; i < panel_Dim; i++) {
 
@@ -47,22 +58,26 @@ void ntTriSkin::init() {
 			//std::cout << panel_ptr->get_ID() << endl;
 			funct(panel_ptr);
 		}
-
+		time = format_SEC(clock() - t_CPU);
+		///
 		///////////////////////////////////////////////////////////////////////
 		////////////////////////////////////// UPDATE STRING WITH TIMER VALUES
 		t_Transform += format_SEC(t_transform);
-		t_TranPan	+= format_SEC(t_transform / panel_Dim);
+		t_SubD		+= format_SEC(t_SD);
+		t_Scale3d	+= format_SEC(t_SC3);
+		t_Scale2d	+= format_SEC(t_SC2);
 		t_Perforate += format_SEC(t_perforate);
 		t_CalcArea  += format_SEC(t_calcArea);
-		time		 = format_SEC(clock() - t_CPU);
 		t_Process	+= time;
-		t_EVAL		 = time;
+		t_eval		 = clock() - t_eval;
 		t_saveTxt	+= format_SEC(t_saveTXT);
 		t_saveImage += format_SEC(t_saveIMG);
 
+		t_TranPan += format_SEC(t_transform / panel_Dim);
+
 		gen_L = panels.at(0)->faces_L.size()-1;
 
-		std::cout << "EVAL_CPU TIME  [SECONDS]:   " << t_EVAL << "\n" << endl;
+		std::cout << "\nEVAL_CPU TIME  [SECONDS]:   " << t_eval << "\n" << endl;
 
 		std::cout << "SYSTEM STATISTICS           -----------------------------------" << endl;
 		std::cout << "SUBDIVISION GENERATION:     " << panels.at(0)->cnt_SubDiv << endl;
@@ -157,13 +172,19 @@ void ntTriSkin::init_SysData() {
 	lines.push_back("");
 	lines.push_back(t_LoadPanels);
 	lines.push_back(t_LoadImage);
+	lines.push_back("");
+	lines.push_back(t_SubD);
 	lines.push_back(t_Perforate);
-	lines.push_back(t_CalcArea);
 	lines.push_back(t_Transform);
-	lines.push_back(t_TranPan);
+	lines.push_back(t_CalcArea);
+	lines.push_back(t_Scale3d);
+	lines.push_back(t_Scale2d);
 	lines.push_back(t_saveTxt);
 	lines.push_back(t_saveImage);
+	lines.push_back("");
 	lines.push_back(t_Process);
+	lines.push_back("");
+	//lines.push_back(t_TranPan);
 
 	lines.push_back("");
 	lines.push_back(del_01);
@@ -221,11 +242,15 @@ void ntTriSkin::init_SysData() {
 	t_19 = ntType(new ntVec3(  5,  25           , 0), sz, font, str_19, col);
 	*/
 }
-void ntTriSkin::read_DATA(){
-	string url = url_TXT;
-
+void ntTriSkin::read_DATA(string url){
+	//string url = url_TXT;
 	ifstream file(url);
 	string line;
+
+	isStartFile = false;
+	isEndSubs = false;
+	isSubNext = false;
+	isEndFile = false;
 
 	int cnt = 0;
 	std::vector<ntVec3*> params_UV;
@@ -398,7 +423,7 @@ void ntTriSkin::read_DATA(){
 			vector<ntVec3*>().swap(params_UV);		//DEALLOCATE MEMORY STORED IN PARAMS_UV
 		}
 	}
-	isTxtLoaded = true;
+	//isTxtLoaded = true;
 }
 void ntTriSkin::read_IMG() {
 	
@@ -730,27 +755,29 @@ void ntTriSkin::funct(ntPanel* panel_ptr) {
 	Vec3 edge_X = Vec3(panel_ptr->v1->x, panel_ptr->v1->y, panel_ptr->v1->z);
 	edge_X.sub(panel_ptr->v0);
 	align_Panel(panel_ptr, axis_X, &edge_X, panel_ptr->v0);
-
+	///
+	t_transform += (clock() - t);
+	t = clock();
 	panel_ptr->faces_L.at(0)->at(0).calcCentroid();	//REQUIRED AFTER SCALING
 	panel_ptr->faces_L.at(0)->at(0).calcNorm();		//REQUIRED AFTER SCALING
 	panel_ptr->calcArea();
 	panel_ptr->calcPhi();
 	float areaP = panel_ptr->get_Area();
-	///
-	t_transform += (clock() - t);
-	///
+	t_calcArea = (clock() - t);
+	/// //END PERFORATION TIMER
+	t = clock();
 	///////////////////////////////////////////////////////////////
 	/// SCALE TO VIEW--- REPLACE WITH CAMERA FIT FUNCTION !
 	/// !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-	set_Scale3D(panel_ptr, 0.01);
-	//set_Scale3D(panel_ptr,  0.001);
-
+	//set_Scale3D(panel_ptr, 0.01);
+	set_Scale3D(panel_ptr,  0.001);
+	t_SC3 += (clock() - t);
+	t = clock();
 	///////////////////////////////////////////////////////////////
 	panel_ptr->sub_Div(gen);	    // SUBDIVIDE FOR GLOBAL DISPLAY
 									// REVISE PER FASTENER GRID !!!
 									// !!!!!!!!!!!!!!!!!!!!!!!!!!!!
-
-	/// //BEGIN PERFORATION PROCESS TIMER
+	t_SD += (clock() - t);
 	t = clock();
 	///
 	///////////////////////////////////////////////////////////////
@@ -769,12 +796,8 @@ void ntTriSkin::funct(ntPanel* panel_ptr) {
 	//////////////////////////////////// CALCULATE PERFORATION SIZE
 	panel_ptr->add_Perf();
 	t_perforate += (clock() - t);
-	/// //END PERFORATION PROCESS TIMER
 
-	/// //BEGIN AREA | ANGLE STAT TIMER
-	t = clock();
 	panel_ptr->set_Graph();
-	
 	///////////////////////////////////////////////////////////////
 	//////////////////////////////////////// GRAPH PERFORATION DATA
 	for (int i = 0; i < panel_ptr->perf_size; i++) {
@@ -796,8 +819,6 @@ void ntTriSkin::funct(ntPanel* panel_ptr) {
 	if (areaP > areaP_Max) {
 		areaP_Max = areaP;
 	}
-	t_calcArea = (clock() - t);
-	/// //END PERFORATION TIMER
 	///////////////////////////////////////////////////////////////
 	////////////////////////////////////////// SAVE PANEL DATA DATA
 	if (doSaveTXT == true) {
@@ -806,11 +827,12 @@ void ntTriSkin::funct(ntPanel* panel_ptr) {
 	if (doSaveIMG == true) {
 		write_Panel_IMG(panel_ptr);
 	}
-
 	///////////////////////////////////////////////////////////////
+	t = clock();
 	/// SCALE PANELS TO VIEW--- REPLACE WITH CAMERA FIT FUNCTION !
 	/// !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 	set_Scale2D(panel_ptr, 8);
+	t_SC2 += (clock() - t);
 	///
 }
 void ntTriSkin::set_Parameters(grid_Type grid_type, perf_Type perf_type, float perf_spacing) {
@@ -1234,9 +1256,9 @@ void ntTriSkin::run(){
 }
 
 void ntTriSkin::set_Gen(int gen) {
-	if (gen_G >= gen) {
 		this->gen = gen;
-	}
+		gen_G = gen;
+		gen_L = gen;
 }
 void ntTriSkin::display_Next() {
 	if (panel_Index < panel_Dim - 1) {

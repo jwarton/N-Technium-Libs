@@ -56,22 +56,30 @@ private:
 	//string format_SEC(clock_t time);
 
 	clock_t t_CPU			= 0;
+
+	double t_transform		= 0;
+	double t_SD				= 0;
+	double t_SC3			= 0;
+	double t_SC2			= 0;	
+	double t_perforate		= 0;
+	double t_calcArea		= 0;
+	double t_saveTXT		= 0;
+	double t_saveIMG		= 0;
+	double t_eval			= 0;
+
 	string t_LoadPanels		= "PANEL DATA LOAD TIME:         ";
 	string t_LoadImage		= "IMAGE DATA LOAD TIME:         ";
-	double t_transform		= 0;
-	string t_Transform		= "PANEL TRANSFORMATION TIME:    ";
-	string t_TranPan		= "AVG PANEL TRANSFORM TIME:     ";
-	double t_perforate		= 0;
-	string t_Perforate		= "CALC PANEL PERFORATION:       ";
-	double t_calcArea		= 0;
-	string t_CalcArea		= "CALC PANEL SURFACE AREA:      ";
-	
+	string t_Transform		= "  TRANSFORMATION:             ";
+	string t_SubD			= "  SUBDIVISION:                ";
+	string t_Scale3d		= "  SCALE 3D:                   ";
+	string t_Scale2d		= "  SCALE 2D:                   ";
+	string t_Perforate		= "  PERFORATION:                ";
+	string t_CalcArea		= "  SURFACE AREA:               ";
 	string t_Process		= "TOTAL PROCESSING TIME:        ";
-	string t_EVAL			= "";
-	double t_saveTXT		= 0;
-	string t_saveTxt		= "SAVE PANEL DATA:              ";
-	double t_saveIMG		= 0;
-	string t_saveImage		= "SAVE PANEL IMAGE MAPS:        ";
+	string t_saveTxt		= "  SAVE PANEL DATA:            ";
+	string t_saveImage		= "  SAVE PANEL IMAGE MAPS:      ";
+	string t_TranPan		= "  AVG PANEL TRANSFORM TIME:   ";
+
 	///////////////////////////////////////////////////////////////
 	////////////////////////////////////// SYSTEM DISPLAY VARIABLES
 	/*
@@ -128,8 +136,9 @@ private:
 	bool isCorner =			false;
 	bool isFastener =		false;
 	
-	int panel_Dim =		0;		/// PANELS IN PANEL VECTOR
-	int panel_Index =	0;		/// DISPLAY INDEX FOR CURRENT PANEL
+	int files_CNT	= 1;
+	int panel_Dim	= 0;		/// PANELS IN PANEL VECTOR
+	int panel_Index = 0;		/// DISPLAY INDEX FOR CURRENT PANEL
 	///////////////////////////////////////////////////////////////
 	/////////////////////////////////////// TEMPORARY PANEL DETAILS
 	string panel_ID =	"<< ERROR >>";
@@ -185,11 +194,11 @@ private:
 	//////////////////////////////////////////// UTILITIY FUNCTIONS
 	void funct(ntPanel* panel_ptr);
 
-	int gen = 5;
+	int gen = 0;
 	int gen_G = gen;
 	int gen_L = gen;
 
-	void read_DATA();
+	void read_DATA(string url);
 	void read_IMG();
 
 	ntVec3 add_VEC(string line);
@@ -219,6 +228,8 @@ public:
 	////////////////////////////////////////////////// CONSTRUCTORS
 	ntTriSkin();
 	ntTriSkin(std::string url_TXT, std::string url_IMG, std::string obj_Name);
+	ntTriSkin(std::string url_TXT, int cnt, std::string url_IMG, std::string obj_Name);
+
 
 	ntTextIO ptData00;
 	//////////////////////////////////////// REQUIRED CLASS METHODS

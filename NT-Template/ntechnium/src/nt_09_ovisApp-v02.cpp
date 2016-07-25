@@ -9,10 +9,11 @@ void ovisApp02::init() {
 	std::string url_IMG = path_IMG_IN + file_IMG + ext_IMG;
 	img_00 = ntImage(url_IMG);
 
-	std::string url_TXT = path_TXT_IN + file_TXT + ext_TXT;
-	skin_00 = ntTriSkin(url_TXT, url_IMG, "OVIS" );
+	std::string url_TXT = path_TXT_IN + file_TXT;// +ext_TXT;
+	skin_00 = ntTriSkin(url_TXT, 2, url_IMG, "OVIS");
 	skin_00.setPathOut(path_Out);
 	skin_00.set_Parameters(TRI, DOT, 1.5);
+	skin_00.set_Gen(2);
 
 	//skin_00.save_IMG();
 	skin_00.save_TXT();
