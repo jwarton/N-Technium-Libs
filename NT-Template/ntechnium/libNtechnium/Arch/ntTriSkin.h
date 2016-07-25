@@ -58,9 +58,14 @@ private:
 	clock_t t_CPU			= 0;
 	string t_LoadPanels		= "PANEL DATA LOAD TIME:         ";
 	string t_LoadImage		= "IMAGE DATA LOAD TIME:         ";
+	double t_transform		= 0;
 	string t_Transform		= "PANEL TRANSFORMATION TIME:    ";
 	string t_TranPan		= "AVG PANEL TRANSFORM TIME:     ";
-	double t_transform		= 0;
+	double t_perforate		= 0;
+	string t_Perforate		= "CALC PANEL PERFORATION:       ";
+	double t_calcArea		= 0;
+	string t_CalcArea		= "CALC PANEL SURFACE AREA:      ";
+	
 	string t_Process		= "TOTAL PROCESSING TIME:        ";
 	string t_EVAL			= "";
 	double t_saveTXT		= 0;

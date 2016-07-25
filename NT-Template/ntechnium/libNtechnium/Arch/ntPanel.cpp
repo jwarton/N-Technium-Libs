@@ -605,7 +605,11 @@ void ntPanel::add_Perf() {
 	///////////////////////////////////////////////////////////////
 	// //////////////////////// INSTANTIATE POLYLINE DATA STRUCTURE 
 	if (perf_type == TRICELL) {
+
 		/// SET TRICELLS
+		set_TriCells();
+		
+
 		int index = perf_style; // perf_type INDEX
 		for (int i = 0; i < cells_L.size(); i++) {
 			int cnt = cells_L.at(i).get_Polylines()[index].size();

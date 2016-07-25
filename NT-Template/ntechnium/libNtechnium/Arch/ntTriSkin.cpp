@@ -51,11 +51,13 @@ void ntTriSkin::init() {
 		///////////////////////////////////////////////////////////////////////
 		////////////////////////////////////// UPDATE STRING WITH TIMER VALUES
 		t_Transform += format_SEC(t_transform);
-		t_TranPan += format_SEC(t_transform / panel_Dim);
-		time = format_SEC(clock() - t_CPU);
-		t_Process += time;
-		t_EVAL = time;
-		t_saveTxt += format_SEC(t_saveTXT);
+		t_TranPan	+= format_SEC(t_transform / panel_Dim);
+		t_Perforate += format_SEC(t_perforate);
+		t_CalcArea  += format_SEC(t_calcArea);
+		time		 = format_SEC(clock() - t_CPU);
+		t_Process	+= time;
+		t_EVAL		 = time;
+		t_saveTxt	+= format_SEC(t_saveTXT);
 		t_saveImage += format_SEC(t_saveIMG);
 
 		gen_L = panels.at(0)->faces_L.size()-1;
@@ -155,6 +157,8 @@ void ntTriSkin::init_SysData() {
 	lines.push_back("");
 	lines.push_back(t_LoadPanels);
 	lines.push_back(t_LoadImage);
+	lines.push_back(t_Perforate);
+	lines.push_back(t_CalcArea);
 	lines.push_back(t_Transform);
 	lines.push_back(t_TranPan);
 	lines.push_back(t_saveTxt);
@@ -733,19 +737,22 @@ void ntTriSkin::funct(ntPanel* panel_ptr) {
 	panel_ptr->calcPhi();
 	float areaP = panel_ptr->get_Area();
 	///
-	t_transform += clock() - t;
+	t_transform += (clock() - t);
 	///
 	///////////////////////////////////////////////////////////////
 	/// SCALE TO VIEW--- REPLACE WITH CAMERA FIT FUNCTION !
 	/// !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-	//set_Scale3D(panel_ptr, 0.01);
+	set_Scale3D(panel_ptr, 0.01);
 	//set_Scale3D(panel_ptr,  0.001);
-	///
+
 	///////////////////////////////////////////////////////////////
 	panel_ptr->sub_Div(gen);	    // SUBDIVIDE FOR GLOBAL DISPLAY
 									// REVISE PER FASTENER GRID !!!
 									// !!!!!!!!!!!!!!!!!!!!!!!!!!!!
-	
+
+	/// //BEGIN PERFORATION PROCESS TIMER
+	t = clock();
+	///
 	///////////////////////////////////////////////////////////////
 	///////////////////////////////////// CALCULATE PEFORATION GRID
 	int div = floor(panel_ptr->get_EdgeMin() / perfSpacing);
@@ -760,8 +767,12 @@ void ntTriSkin::funct(ntPanel* panel_ptr) {
 	
 	///////////////////////////////////////////////////////////////
 	//////////////////////////////////// CALCULATE PERFORATION SIZE
-	panel_ptr->set_TriCells();
 	panel_ptr->add_Perf();
+	t_perforate += (clock() - t);
+	/// //END PERFORATION PROCESS TIMER
+
+	/// //BEGIN AREA | ANGLE STAT TIMER
+	t = clock();
 	panel_ptr->set_Graph();
 	
 	///////////////////////////////////////////////////////////////
@@ -785,7 +796,8 @@ void ntTriSkin::funct(ntPanel* panel_ptr) {
 	if (areaP > areaP_Max) {
 		areaP_Max = areaP;
 	}
-	
+	t_calcArea = (clock() - t);
+	/// //END PERFORATION TIMER
 	///////////////////////////////////////////////////////////////
 	////////////////////////////////////////// SAVE PANEL DATA DATA
 	if (doSaveTXT == true) {
@@ -1177,7 +1189,7 @@ void ntTriSkin::set_Scale3D(ntPanel* panel_ptr, double scFx) {
 void ntTriSkin::set_Scale2D(ntPanel* panel_ptr, double scFx) {
 	/// SCALE PANELS TO VIEW--- REPLACE WITH CAMERA FIT FUNCTION		//!!!!!!!!!!!!!!!
 	/// TRANSLATE TO HUD LOCATION
-	ntVec3 posXY = ntVec3(55, 640, 0);  /////// POSITION FOR 2D HUD		//!!!!!!!!!!!!!!!
+	ntVec3 posXY = ntVec3(55, 580, 0);  /////// POSITION FOR 2D HUD		//!!!!!!!!!!!!!!!
 	float sc_Factor = scFx;
 	for (int j = 0; j < panel_ptr->vecs_SD.size(); j++) {
 		ntMatrix4 SC1 = ntMatrix4(panel_ptr->vecs_SD[j]);
