@@ -817,14 +817,18 @@ void ntTriSkin::funct(ntPanel* panel_ptr) {
 		float mean = panel_ptr->get_MeanVal();
 		int index = ceil(mapRange(0, 255, 0, 1, mean));
 		string url = url_IMGs + to_string(index) + ".jpg";
-		std::cout << url << endl;
+		//std::cout << url << endl;
 		//for (int i = 0;i < panel_ptr->p_Col.size(); i++) {
 		//	panel_ptr->p_Col[i] = mean;
 		//}
 		//ntImage image(url);
 		//arma::fmat* matrix = image.getMatrix();
-		panel_ptr->reparam_UV();
-		//map_ImgCol(panel_ptr, matrix);
+		arma::mat matrix = zeros<mat>(10000,10000);
+		//matrix += 255;
+		//matrix -= img_00;
+		read_IMG(url);
+		//panel_ptr->reparam_UV();
+		//map_ImgCol(panel_ptr, &matrix);
 	}
 	///////////////////////////////////////////////////////////////
 	//////////////////////////////////// CALCULATE PERFORATION SIZE

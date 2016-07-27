@@ -121,6 +121,7 @@ private:
 	ntImage  img_SRC;
 	af::array img_IN;
 	arma::mat img_00;
+	//arma::mat img_SD;
 
 	bool isImgLoaded	= false;
 	bool isImgMosaic	= false;

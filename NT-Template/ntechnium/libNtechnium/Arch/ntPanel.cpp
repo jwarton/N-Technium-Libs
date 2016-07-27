@@ -636,15 +636,25 @@ void ntPanel::add_Perf() {
 }
 void ntPanel::reparam_UV() {
 	float uMax, uMin, vMax, vMin;
-	uMin = p_UVs[0]->x;
-	uMax = p_UVs[1]->x;
-	vMin = p_UVs[0]->y;
-	vMax = p_UVs[2]->y;
+	uMin = vecs_UV[0]->x;
+	uMax = vecs_UV[1]->x;
+	vMin = vecs_UV[0]->y;
+	vMax = vecs_UV[2]->y;
 
-	for (int i = 0; i < p_UVs.size(); i++) {
-		p_UVs[i]->x = mapRange(0, 1, uMin, uMax, p_UVs[i]->x);
-		p_UVs[i]->y = mapRange(0, 1, vMin, vMax, p_UVs[i]->y);
-	}
+	//for (int i = 0; i < p_UVs.size(); i++) {
+	//	p_UVs[i]->x = mapRange(0, 1, uMin, uMax, p_UVs[i]->x);
+	//	p_UVs[i]->y = mapRange(0, 1, vMin, vMax, p_UVs[i]->y);
+	//}
+	//uMin = p_UVs[0]->x;
+	//uMax = p_UVs[1]->x;
+	//vMin = p_UVs[0]->y;
+	//vMax = p_UVs[2]->y;
+	uMin = vecs_UV[0]->x;
+	uMax = vecs_UV[1]->x;
+	vMin = vecs_UV[0]->y;
+	vMax = vecs_UV[2]->y;
+
+	std::cout << uMin << " | " << uMax<< " | " << vMin << " | "  << vMax << endl;
 }
 ///////////////////////////////////////////////////////////////
 void ntPanel::set_Color(ntColor4f col){
