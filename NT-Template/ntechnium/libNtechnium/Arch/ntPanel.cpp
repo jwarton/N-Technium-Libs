@@ -484,6 +484,7 @@ void ntPanel::plot_Perf_GR(int div, enum grid_Type grid) {
 
 				p_Pos.push_back(vec);
 				p_UVs.push_back(uvw);
+				p_Col.push_back(1);
 			}
 		}
 		p_XY_Rows.push_back(p_vecs);
@@ -508,6 +509,7 @@ void ntPanel::plot_Perf_SD(int div) {
 
 				p_Pos.push_back(vec);
 				p_UVs.push_back(uvw);
+				p_Col.push_back(1);
 			}
 		}
 	}
@@ -630,6 +632,18 @@ void ntPanel::add_Perf() {
 		//}
 		perf_perc = (perf_area / area) * 100;
 		perf_size = perfs.size();
+	}
+}
+void ntPanel::reparam_UV() {
+	float uMax, uMin, vMax, vMin;
+	uMin = p_UVs[0]->x;
+	uMax = p_UVs[1]->x;
+	vMin = p_UVs[0]->y;
+	vMax = p_UVs[2]->y;
+
+	for (int i = 0; i < p_UVs.size(); i++) {
+		p_UVs[i]->x = mapRange(0, 1, uMin, uMax, p_UVs[i]->x);
+		p_UVs[i]->y = mapRange(0, 1, vMin, vMax, p_UVs[i]->y);
 	}
 }
 ///////////////////////////////////////////////////////////////

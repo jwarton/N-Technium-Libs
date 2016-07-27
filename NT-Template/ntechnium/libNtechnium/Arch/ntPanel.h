@@ -164,10 +164,11 @@ public:
 	void set_PerfStyle(perf_Style style);
 	void set_PerfType(perf_Type type);
 	void add_Perf();
+	void reparam_UV();
 
 	void set_Graph();
 
-	bool pt_isInside(ntVec3* point);
+	bool    pt_isInside(ntVec3* point);
 	ntVec3* pt_Mid(ntVec3* v0, ntVec3* v1);
 
 	void set_ID(string panel_ID);
@@ -187,9 +188,9 @@ public:
 	string get_n_G();	//GLOBAL NORMAL
 	string get_UVW();
 	string get_Dir();
-	float get_MeanVal();
-	float get_Weight();
-	int get_Region();
+	float  get_MeanVal();
+	float  get_Weight();
+	int    get_Region();
 
 	std::vector<ntVec3*>		get_v_G();		//GLOBAL VERTICES
 	std::vector<ntVec3*>		get_c_G();		//GLOBAL CORNERS | TRIMMED OFFSET

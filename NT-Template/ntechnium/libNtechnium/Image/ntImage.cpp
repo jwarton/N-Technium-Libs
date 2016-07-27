@@ -415,11 +415,11 @@ int ntImage::getPixel(double u, double v) {
 		return val;
 	}
 }
-arma::fmat ntImage::getMatrix() {
+arma::fmat* ntImage::getMatrix() {
 	if (isImgLocal == false) {
 		set_Host();
 	}
-	return img_2d;
+	return &img_2d;
 }
 void ntImage::writePixels(std::vector<int> values, std::string url) {
 

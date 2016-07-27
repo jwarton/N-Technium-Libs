@@ -82,7 +82,7 @@ public:
 	void set_Pos(int x, int y);
 	void set_Dim(int width, int hieght = 1, bool isUniform = true);
 
-	arma::fmat getMatrix();
+	arma::fmat* getMatrix();
 
 	void scale_2D(float scFx);
 

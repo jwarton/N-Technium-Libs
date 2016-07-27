@@ -205,7 +205,7 @@ private:
 	int gen_L = gen;
 
 	void read_DATA(string url);
-	void read_IMG();			// IMAGE DATA:  GLOBAL
+	void read_IMG();					// IMAGE DATA:  GLOBAL
 	void read_IMG(string url);			// IMAGE DATA:  LOCAL 
 
 	ntVec3 add_VEC(string line);
@@ -220,7 +220,8 @@ private:
 	void write_Panel_TXT(ntPanel* panel_ptr);
 	void write_Panel_IMG(ntPanel* panel_ptr);
 
-	void map_ImgCol(ntPanel* panel_ptr);
+	void map_ImgCol(ntPanel* panel_ptr);				// BUILD COLOR INDEX FROM UV
+	void map_ImgCol(ntPanel* panel_ptr, arma::mat* img_ptr);	// REMAP COLOR FROM IMAGE FILE
 	void tile_Img(int U, int V, af::array img);
 
 	bool doSaveTXT = false;

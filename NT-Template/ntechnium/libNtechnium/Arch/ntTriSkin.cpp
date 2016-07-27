@@ -444,8 +444,8 @@ void ntTriSkin::read_IMG() {
 	img_X = img_IN.dims(1);
 	img_Y = img_IN.dims(0);
 
-	img_00 = zeros<mat>(img_Y, img_X);
-	af::array img_LOADER(img_Y, img_X, img_00.memptr());
+	img_00 = zeros<mat>(img_IN.dims(0), img_IN.dims(1));
+	af::array img_LOADER(img_IN.dims(0), img_IN.dims(1), img_00.memptr());
 	img_LOADER += img_IN;
 	
 	img_LOADER.host((void*)img_00.memptr());
@@ -664,7 +664,7 @@ void ntTriSkin::write_Panel_IMG(ntPanel* panel_ptr) {
 			img_y = pY_max * dpi;
 		}
 		// IMAGE ARRAY
-		arma::fmat img_OUT = zeros<fmat>(img_y, img_x);
+		arma::mat img_OUT = zeros<mat>(img_y, img_x);
 
 		for (int i = 0; i < dim_Y; i++) {
 			for (int j = 0; j < dim_X; j++) {
@@ -809,7 +809,7 @@ void ntTriSkin::funct(ntPanel* panel_ptr) {
 	///////////////////////////////////////////////////////////////
 	////////////////////////////////// LOAD TEXTURE MAP TO SURFACES
 	if (isImgLoaded == true) {
-		map_ImgCol(panel_ptr);
+		map_ImgCol(panel_ptr, &img_00);
 	}
 	///////////////////////////////////////////////////////////////
 	///////////////////////////////////// EVALUATE MEAN VALUE INDEX
@@ -817,10 +817,14 @@ void ntTriSkin::funct(ntPanel* panel_ptr) {
 		float mean = panel_ptr->get_MeanVal();
 		int index = ceil(mapRange(0, 255, 0, 1, mean));
 		string url = url_IMGs + to_string(index) + ".jpg";
-		for (int i = 0;i < panel_ptr->p_Col.size(); i++) {
-			panel_ptr->p_Col[i] = mean;
-		}
-		//map_ImgCol(panel_ptr);
+		std::cout << url << endl;
+		//for (int i = 0;i < panel_ptr->p_Col.size(); i++) {
+		//	panel_ptr->p_Col[i] = mean;
+		//}
+		//ntImage image(url);
+		//arma::fmat* matrix = image.getMatrix();
+		panel_ptr->reparam_UV();
+		//map_ImgCol(panel_ptr, matrix);
 	}
 	///////////////////////////////////////////////////////////////
 	//////////////////////////////////// CALCULATE PERFORATION SIZE
@@ -1130,7 +1134,11 @@ void ntTriSkin::round_Pos(ntPanel* panel_ptr, float tolerance) {
 		}
 	}
 }
-void ntTriSkin::map_ImgCol(ntPanel* panel_ptr) {
+void ntTriSkin::map_ImgCol(ntPanel* panel_ptr, arma::mat* img_ptr) {
+
+	int dim_X = img_ptr->n_cols;
+	int dim_Y = img_ptr->n_rows;
+
 	/// ////////////////////// MAP COLOR FROM UV LIST
 	for (int i = 0; i < panel_ptr->p_UVs.size(); i++) {
 
@@ -1155,12 +1163,12 @@ void ntTriSkin::map_ImgCol(ntPanel* panel_ptr) {
 			isBounds = false;
 		}
 		
-		x = floor(mapRange(0, img_X, 0, 1, x));
-		y = floor(mapRange(0, img_Y, 0, 1, y));
+		x = floor(mapRange(0, dim_X, 0, 1, x));
+		y = floor(mapRange(0, dim_Y, 0, 1, y));
 
-		float col = img_00(y, x);
+		float col = img_ptr->at(y, x);
 		col = mapRange(0, 1, 0, 255, col);
-		panel_ptr->p_Col.push_back(col);
+		panel_ptr->p_Col.at(i) = col;
 	}
 	/// ////////////////////// MAP COLOR TO VERTEX
 	for (int i = 0; i < panel_ptr->faces_L.size(); i++) {
@@ -1188,10 +1196,10 @@ void ntTriSkin::map_ImgCol(ntPanel* panel_ptr) {
 				isBounds = false;
 				}
 				
-				x = floor(mapRange(0, img_X, 0, 1, x));
-				y = floor(mapRange(0, img_Y, 0, 1, y));
+				x = floor(mapRange(0, dim_X, 0, 1, x));
+				y = floor(mapRange(0, dim_Y, 0, 1, y));
 				
-				float col = img_00(y, x);
+				float col = img_ptr->at(y, x);
 				col = mapRange(0, 1, 0, 255, col);
 				
 				panel_ptr->faces_L.at(i)->at(j).verts.at(k)->setColor(ntCol4(col, col, col, 1));
