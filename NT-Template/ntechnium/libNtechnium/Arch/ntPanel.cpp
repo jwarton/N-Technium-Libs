@@ -659,7 +659,6 @@ void ntPanel::add_Perf() {
 }
 ///////////////////////////////////////////////////////////////
 void ntPanel::set_Color(ntColor4f col){
-
 	this->col = col;
 	for(int i = 0; i<verts.size(); i++){
 		verts.at(i)->setColor(col);

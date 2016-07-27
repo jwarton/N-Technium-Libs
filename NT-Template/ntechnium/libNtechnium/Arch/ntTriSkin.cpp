@@ -818,15 +818,12 @@ void ntTriSkin::funct(ntPanel* panel_ptr) {
 	///////////////////////////////////////////////////////////////
 	///////////////////////////////////// EVALUATE MEAN VALUE INDEX
 	if (isImgMosaic == true) {
-		/// EVALUATE MEAN VALUE
 		float mean = panel_ptr->get_MeanVal();
-		/// SET PANEL INDEX
 		int index = ceil(mapRange(0, 255, 0, 1, mean));
-		/// LOAD IMAGE DATA
 		string url = url_IMGs + to_string(index) + ".jpg";
-		std::cout << index << endl;
-		std::cout << url << endl;
-		//read_IMG(url);
+		for (int i = 0;i < panel_ptr->p_Col.size(); i++) {
+			panel_ptr->p_Col[i] = mean;
+		}
 		//map_ImgCol(panel_ptr);
 	}
 	///////////////////////////////////////////////////////////////
@@ -1202,11 +1199,11 @@ void ntTriSkin::map_ImgCol(ntPanel* panel_ptr) {
 				col = mapRange(0, 1, 0, 255, col);
 				
 				panel_ptr->faces_L.at(i)->at(j).verts.at(k)->setColor(ntCol4(col, col, col, 1));
-				panel_ptr->faces_L.at(i)->at(j).setFx(col);  //color for panel is same a last vertex
+				panel_ptr->faces_L.at(i)->at(j).setFx(col);  /// color for panel is same a last vertex
 
 				if (i < panel_ptr->faces_G.size()) {
 					panel_ptr->faces_G.at(i)->at(j).verts.at(k)->setColor(ntCol4(col, col, col, 1));
-					panel_ptr->faces_G.at(i)->at(j).setFx(col);  //color for panel is same a last vertex
+					panel_ptr->faces_G.at(i)->at(j).setFx(col);  /// color for panel is same a last vertex
 				}
 			}
 		}
