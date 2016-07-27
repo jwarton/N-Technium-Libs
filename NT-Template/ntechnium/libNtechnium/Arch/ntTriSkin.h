@@ -235,8 +235,6 @@ public:
 	////////////////////////////////////////////////// CONSTRUCTORS
 	ntTriSkin();
 	ntTriSkin(std::string url_TXT, std::string url_IMG, std::string obj_Name);
-	ntTriSkin(std::string url_TXT, int cnt, std::string url_IMG, std::string obj_Name);
-
 
 	ntTextIO ptData00;
 	//////////////////////////////////////// REQUIRED CLASS METHODS

@@ -209,10 +209,6 @@ void ntPanel::sub_Div(std::vector< vector <ntFace3>* >*	faces, int gen, bool isP
 				vecs_SD.push_back(n0);
 				vecs_SD.push_back(n1);
 				vecs_SD.push_back(n2);
-				//LIST OF PANEL PARAMETERS
-				//vecs_UV.push_back(uvw3);
-				//vecs_UV.push_back(uvw4);
-				//vecs_UV.push_back(uvw5);
 			}
 		}
 		sub_Div(faces, gen - 1, isPanel);
@@ -241,24 +237,10 @@ void ntPanel::sub_Div(int div, bool isPerf) {
 	if (isPerf) {
 		///////////////////////////////////////////////////////////////
 		////////////////////////////////////// COPY PANEL CORNER POINTS
-
-		ntVec3 v00;// = ntVec3(vecs_SD.at(0)->x, vecs_SD.at(0)->y, vecs_SD.at(0)->z);
-		ntVec3 v01;// = ntVec3(vecs_SD.at(1)->x, vecs_SD.at(1)->y, vecs_SD.at(1)->z);
-		ntVec3 v02;// = ntVec3(vecs_SD.at(2)->x, vecs_SD.at(2)->y, vecs_SD.at(2)->z);
-
-		bool isCorn = false;
-
-		if (isCorn == true) {
-			v00 = ntVec3(vecs_SD.at(0)->x, vecs_SD.at(0)->y, vecs_SD.at(0)->z);
-			v01 = ntVec3(vecs_SD.at(1)->x, vecs_SD.at(1)->y, vecs_SD.at(1)->z);
-			v02 = ntVec3(vecs_SD.at(2)->x, vecs_SD.at(2)->y, vecs_SD.at(2)->z);
-		}
-		else {
-			v00 = ntVec3(f_L.at(0)->x, f_L.at(0)->y, f_L.at(0)->z);
-			v01 = ntVec3(f_L.at(1)->x, f_L.at(1)->y, f_L.at(1)->z);
-			v02 = ntVec3(f_L.at(2)->x, f_L.at(2)->y, f_L.at(2)->z);
-		}
-
+		ntVec3	v00 = ntVec3(f_L.at(0)->x, f_L.at(0)->y, f_L.at(0)->z);
+		ntVec3	v01 = ntVec3(f_L.at(1)->x, f_L.at(1)->y, f_L.at(1)->z);
+		ntVec3	v02 = ntVec3(f_L.at(2)->x, f_L.at(2)->y, f_L.at(2)->z);
+		
 		ntFace3 face = ntFace3(&v00, &v01, &v02);
 
 		///////////////////////////////////////////////////////////////
@@ -296,21 +278,14 @@ void ntPanel::sub_Div(int div, bool isPerf) {
 
 		////AFFINE TRANSFORMATION OF POINT IN XYZ TO UVW
 		arma::mat T = arma::eye<arma::mat>(3, 3);
-		//if (isCorn == true) {
-			T = get_Mat_T(vecs_SD, vecs_UV);
-		//}
-		//else {
-		//	T = get_Mat_T(vecs_F, vecs_UV);
-		//}
+		T = get_Mat_T(vecs_SD, vecs_UV);
 
-		int index_Begin = 1;
-		if (isCorn == false) { index_Begin = 0; }
 		///////////////////////////////////////////////////////////////
 		//////////////////////////////////// PLOT SUBDIVISION POSITIONS
-		for (int i = index_Begin; i < n_rows; i++) {
+		for (int i = 0; i < n_rows; i++) {
 			std::vector <ntVec3*>* p_vecs = new vector <ntVec3*>;
 			std::vector <ntVec3*>* p_uvws = new vector <ntVec3*>;
-			for (int j = index_Begin; j < n_cols; j++) {
+			for (int j = 0; j < n_cols; j++) {
 				// DEFINE POSITION OFFSET FOR X
 				vec = new ntVec3(orig_X + (step_X * j) + (shif_X * i), orig_Y + (step_Y * i), 0);
 				p_vecs->push_back(vec);

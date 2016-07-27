@@ -76,7 +76,7 @@ public:
 	std::vector<ntVec3*> f_G;		  //GLOBAL PANEL FASTENER CL END POINT POSITONS
 	std::vector<ntVec3*> f_L;		  //LOCAL  PANEL FASTENER CL END POINT POSITONS
 	std::vector<ntVec3*> v_G;		  //GLOBAL PANEL VERTEX POSITONS
-	std::vector<ntVec3*> v_L;		  ///  NOT IN USE // LOCAL PANEL VERTEX POSITION 
+	std::vector<ntVec3*> v_L;		  /// NOT IN USE // LOCAL PANEL VERTEX POSITION 
 
 	///////////////////////////////////////////////////////////////
 	///////////////////////////////////// SUBIVISION DATA STRUCTURE

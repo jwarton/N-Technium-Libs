@@ -7,10 +7,6 @@ ntTriSkin::ntTriSkin(std::string url_TXT, std::string url_IMG, std::string obj_N
 	url_TXT(url_TXT), url_IMG(url_IMG), obj_Name(obj_Name) {
 
 }
-ntTriSkin::ntTriSkin(std::string url_TXT, int cnt, std::string url_IMG, std::string obj_Name) :
-	url_TXT(url_TXT), url_IMG(url_IMG), obj_Name(obj_Name), files_CNT(cnt) {
-
-}
 void ntTriSkin::init() {
 	if (isPathDefined == true) {
 		///

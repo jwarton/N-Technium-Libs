@@ -97,13 +97,13 @@ int main(int argc, char const** argv){
 	//AppContent* c = new afApp02();		
 	//AppContent* c = new tokyoApp00();		//C3 VISUALIZING TOKYO VIGNETTES
 	//AppContent* c = new tokyoApp01();		//C3 PROFILE SUBDIVISION
-	AppContent* c = new tokyoApp02();		//C3 ORIGAMI STRUCTURE | IMAGE MAPPING
+	//AppContent* c = new tokyoApp02();		//C3 ORIGAMI STRUCTURE | IMAGE MAPPING
 
 	///TYPE
 	//AppContent* c = new typeApp();
 	///OVIS
 	//AppContent* c = new ovisApp();
-	//AppContent* c = new ovisApp02();
+	AppContent* c = new ovisApp02();
 
 	///KUKA SOURCE CODE APPLICATIONS
 	//AppContent* c = new krlApp();
