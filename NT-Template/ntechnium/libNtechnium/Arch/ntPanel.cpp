@@ -146,6 +146,7 @@ void ntPanel::calcPhi() {
 	}
 	delete v, d1, d2;
 }
+
 ///////////////////////////////////////////////////////////////
 ////////////////////// MANAGES BOTH LOCAL AND GLOBAL SD PROCESS
 void ntPanel::sub_Div(int gen) {
@@ -798,6 +799,10 @@ string ntPanel::get_UVW() {
 }
 string ntPanel::get_Dir() {
 	return dir;
+}
+float ntPanel::get_MeanVal() {
+	float mean = std::accumulate(p_Col.begin(), p_Col.end(), 0.0) / p_Col.size();
+	return mean;
 }
 float ntPanel::get_Area() {
 	return area;

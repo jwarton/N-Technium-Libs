@@ -109,6 +109,7 @@ private:
 	///////////////////////////////////////////////////////////////
 	////////////////////////////////////// SOURCE DATA AND FILE I/O
 	string url_IMG;
+	string url_IMGs;
 	string url_TXT;
 	string path_OUT;
 
@@ -121,22 +122,27 @@ private:
 	af::array img_IN;
 	arma::mat img_00;
 
-	bool isImgLoaded =		false;
-	bool isExceed =			false;
+	bool isImgLoaded	= false;
+	bool isImgMosaic	= false;
+	bool isExceed		= false;
 
 	///////////////////////////////////////////////////////////////
 	///////////////////////////////////////// SOURCE DATA VARIABLES
-	bool isTxtLoaded =		false;
-	bool isPathDefined =	false;
-	bool isStartFile =		false;
-	bool isEndSubs =		false;
-	bool isSubNext =		false;
-	bool isEndFile =		false;
-	bool isNode =			false;
-	bool isCorner =			false;
-	bool isFastener =		false;
-	
+	bool isTxtLoaded	= false;
+	bool isPathDefined	= false;
+	bool isStartFile	= false;
+	bool isEndSubs		= false;
+	bool isSubNext		= false;
+	bool isEndFile		= false;
+	bool isNode			= false;
+	bool isCorner		= false;
+	bool isFastener		= false;
+	bool isTxtSeq		= false;
+	bool isImgSeq		= false;
+
 	int files_CNT	= 1;
+	int file_begin	= 0;
+	int file_end	= 1;
 	int panel_Dim	= 0;		/// PANELS IN PANEL VECTOR
 	int panel_Index = 0;		/// DISPLAY INDEX FOR CURRENT PANEL
 	///////////////////////////////////////////////////////////////
@@ -199,7 +205,8 @@ private:
 	int gen_L = gen;
 
 	void read_DATA(string url);
-	void read_IMG();
+	void read_IMG();			// IMAGE DATA:  GLOBAL
+	void read_IMG(string url);			// IMAGE DATA:  LOCAL 
 
 	ntVec3 add_VEC(string line);
 	string format_STR(string line);
@@ -240,12 +247,14 @@ public:
 
 	/////////////////////////////////////////////////// CONVIENENCE
 	///////////////////////////////////////////////////////////////
+	void set_FileCnt(int begin, int end);
 	void set_Parameters(grid_Type grid_type, perf_Type perf_type, float perf_spacing);
 	void set_PerfStyle(perf_Style perf_style);
 	void set_PerfType( perf_Type perf_type);
 	void set_Gen(int gen);
 	void set_Mode(D_mode mode);
 	void set_Mode_L(L_mode mode);
+	void set_ImgMosaic(string url);
 
 	void save_IMG();
 	void save_TXT();

@@ -8,14 +8,15 @@ void tokyoApp02::init() {
 	std::cout << "/////////////////////////////////////////////// PROGRAM RUNNING\n\n";
 	///////////////////////////////////////////////////////////////
 
-	std::string url_IMG = path_IMG_IN + file_IMG + ext_IMG;
-	img_00 = ntImage(url_IMG);
+	std::string url_IMG = path_IMG_IN + file_IMG;
+	img_00 = ntImage(url_IMG + ".jpg");
 
-	std::string url_TXT = path_TXT_IN + file_TXT + ext_TXT;
+	std::string url_TXT = path_TXT_IN + file_TXT;
 	skin_00 = ntTriSkin(url_TXT, url_IMG, "C3" );
 	skin_00.setPathOut(path_Out);
 	skin_00.set_Parameters(TRI, DOT, 2);
 	skin_00.set_PerfStyle(perf_03);
+	skin_00.set_ImgMosaic(path_IMG_IN + "mean\\");
 
 	//skin_00.save_IMG();
 	skin_00.save_TXT();
@@ -116,7 +117,6 @@ void tokyoApp02::display(){
 	glMatrixMode(GL_PROJECTION);
 	glPushMatrix();
 	glLoadIdentity();
-	//glOrtho(0, appWidth, 0, appHeight, .1, 100);
 	gluOrtho2D(0, appWidth, 0, appHeight);
 
 	glMatrixMode(GL_MODELVIEW);

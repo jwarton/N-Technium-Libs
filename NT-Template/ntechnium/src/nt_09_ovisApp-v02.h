@@ -33,8 +33,6 @@ private:
 
 	string file_TXT = "Z";//"WF_0000";
 	string file_IMG	= "ovis_4x4_CBJW-10k";
-	string ext_TXT	= ".txt";
-	string ext_IMG	= ".jpg";
 
 	string path_Out = nt_Utility::getPathToOutput() + projectName;
 	

@@ -18,11 +18,18 @@ void ntTriSkin::init() {
 		t_eval = clock();
 
 		t_CPU = clock();
-		for (int i = 0; i < files_CNT; i++){
-			string url = url_TXT + to_string(i + 1) + ".txt";
-			std::cout << url << endl;
+		string url;
+		if (isTxtSeq == true) {
+			for (int i = file_begin; i < file_end + 1; i++) {
+				url = url_TXT + to_string(i) + ".txt";
+				read_DATA(url);
+				std::cout << url << endl;
+			}
+		} else {
+			url = url_TXT + ".txt";
 			read_DATA(url);
 		}
+
 		isTxtLoaded = true;
 		string time;
 		time = format_SEC(clock() - t_CPU);
@@ -77,7 +84,7 @@ void ntTriSkin::init() {
 
 		gen_L = panels.at(0)->faces_L.size()-1;
 
-		std::cout << "\nEVAL_CPU TIME  [SECONDS]:   " << t_eval << "\n" << endl;
+		std::cout << "\nEVAL_CPU TIME  [SECONDS]:   " << format_SEC(t_eval) << "\n" << endl;
 
 		std::cout << "SYSTEM STATISTICS           -----------------------------------" << endl;
 		std::cout << "SUBDIVISION GENERATION:     " << panels.at(0)->cnt_SubDiv << endl;
@@ -243,7 +250,6 @@ void ntTriSkin::init_SysData() {
 	*/
 }
 void ntTriSkin::read_DATA(string url){
-	//string url = url_TXT;
 	ifstream file(url);
 	string line;
 
@@ -429,17 +435,14 @@ void ntTriSkin::read_IMG() {
 	
 	///////////////////////////////////////////////////////////////
 	////////////////////////////////////////// IMAGE FOR 2D DISPLAY
-	string pathExtension = "img\\";
-	string url = path_OUT + pathExtension + "test_00.jpg";
-	img_SRC = ntImage(url_IMG);
+	string url = url_IMG + ".jpg";
+	img_SRC = ntImage(url);
 	int width = 448;
 	img_SRC.set_Pos(5, 161);
-	//img_SRC.set_Dim(width);
 	img_SRC.set_Dim(width, 222);
-	//img_SRC.save(url);
 	///////////////////////////////////////////////////////////////
 	/////////////////////////////////// IMAGE FOR PERF CALCULATIONS
-	const char * file = url_IMG.c_str();
+	const char * file = url.c_str();
 	img_IN = af::loadImage(file, false);
 
 	img_X = img_IN.dims(1);
@@ -453,6 +456,22 @@ void ntTriSkin::read_IMG() {
 	img_00 = arma::flipud(img_00);
 
 	isImgLoaded = true;
+}
+void ntTriSkin::read_IMG(string url) {
+	///////////////////////////////////////////////////////////////
+	/////////////////////////////////// IMAGE FOR PERF CALCULATIONS
+	const char * file = url.c_str();
+	af::array img_in = af::loadImage(file, false);
+
+	int dim_x = img_in.dims(1);
+	int dim_y = img_in.dims(0);
+
+	arma::mat img = zeros<mat>(dim_y, dim_x);
+	af::array img_LOADER(dim_y, dim_x, img.memptr());
+	img_LOADER += img_in;
+
+	img_LOADER.host((void*)img.memptr());
+	img = arma::flipud(img);
 }
 
 void ntTriSkin::write_Panel_TXT(ntPanel* panel_ptr) {
@@ -739,6 +758,11 @@ void ntTriSkin::setPathOut(std::string path) {
 	path_OUT = path;
 	isPathDefined = true;
 }
+void ntTriSkin::set_FileCnt(int begin, int end) {
+	isTxtSeq = true;
+	file_begin = begin;
+	file_end = end;
+}
 ///////////////////////////////////////////////////////////////
 void ntTriSkin::funct(ntPanel* panel_ptr) {
 	clock_t t = clock();
@@ -791,7 +815,20 @@ void ntTriSkin::funct(ntPanel* panel_ptr) {
 	if (isImgLoaded == true) {
 		map_ImgCol(panel_ptr);
 	}
-	
+	///////////////////////////////////////////////////////////////
+	///////////////////////////////////// EVALUATE MEAN VALUE INDEX
+	if (isImgMosaic == true) {
+		/// EVALUATE MEAN VALUE
+		float mean = panel_ptr->get_MeanVal();
+		/// SET PANEL INDEX
+		int index = ceil(mapRange(0, 255, 0, 1, mean));
+		/// LOAD IMAGE DATA
+		string url = url_IMGs + to_string(index) + ".jpg";
+		std::cout << index << endl;
+		std::cout << url << endl;
+		//read_IMG(url);
+		//map_ImgCol(panel_ptr);
+	}
 	///////////////////////////////////////////////////////////////
 	//////////////////////////////////// CALCULATE PERFORATION SIZE
 	panel_ptr->add_Perf();
@@ -851,6 +888,10 @@ void ntTriSkin::set_PerfType(perf_Type perf_type) {
 	for (int i = 0; i < panels.size(); i++) {
 		panels.at(i)->set_PerfType(perf_type);;
 	}
+}
+void ntTriSkin::set_ImgMosaic(string url) {
+	url_IMGs = url;
+	isImgMosaic = true;
 }
 ///////////////////////////////////////////////////////////////
 //////////////////////////////// FORMAT FUNCTION FOR INPUT DATA

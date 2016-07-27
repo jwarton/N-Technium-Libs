@@ -12,6 +12,7 @@
 #include <iostream>
 #include <array>
 #include <vector>
+#include <numeric>
 #include "ntVec3.h"
 #include "ntColor4f.h"
 #include "ntVertex.h"
@@ -113,15 +114,15 @@ public:
 
 	///////////////////////////////////////////////////////////////
 	//////////////////////////////////////// PERFORATION PARAMETERS
-	float	r_Min =			0.1875;		//3/16"
-	float	r_Max =			0.5;		// 0.625;	//5/8"
-	float	edge_Offset =	0.75 + r_Max;
-	int		n_seg =			36;
+	float	r_Min			= 0.1875;		//3/16"
+	float	r_Max			= 0.5;		// 0.625;	//5/8"
+	float	edge_Offset		= 0.75 + r_Max;
+	int		n_seg			= 36;
 	int		perf_size;
-	double	perf_spaceMin = 1.5;
+	double	perf_spaceMin	= 1.5;
 	double	perf_area;
 	double  perf_perc;
-	double  fast_spaceMax = 14.5;
+	double  fast_spaceMax	= 14.5;
 
 	bool is_Increment =		true;
 	bool is_Noise =			false;	//true;// 
@@ -186,6 +187,7 @@ public:
 	string get_n_G();	//GLOBAL NORMAL
 	string get_UVW();
 	string get_Dir();
+	float get_MeanVal();
 	float get_Weight();
 	int get_Region();
 
