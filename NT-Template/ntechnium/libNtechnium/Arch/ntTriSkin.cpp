@@ -1050,6 +1050,8 @@ void ntTriSkin::align_Panel(ntPanel* panel_ptr, Vec3* axis) {
 	//http://math.stackexchange.com/questions/180418/calculate-rotation-matrix-to-align-vector-a-to-vector-b-in-3d
 }	 
 void ntTriSkin::align_Panel(ntPanel* panel_ptr, Vec3* axis_A, Vec3* axis_B, ntVec3* pos) {
+	/// ERROR WHEN NORMAL IS ALIGNED TO Z-AXIS
+	/// ERROR WHEN EDGE 0 IS ALIGNED TO x-AXIS
 	////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 	//////////////////////////////////////////////////////////////////// FUNCTION ALIGNS PANEL FACE NORMAL TO TO VEC
 	using namespace arma;
