@@ -4,6 +4,15 @@ using namespace arma;
 using namespace std;
 
 ntImage::ntImage(){}
+ntImage::ntImage(int width, int height, float col):
+	img_X(width), img_Y(height)
+{
+	img_IN = af::constant(col, height, width);
+	img_2D = af::array(img_IN);
+
+	img_W = img_2D.dims(1);
+	img_H = img_2D.dims(0);
+}
 ntImage::ntImage(std::string url, std::string prefix):
 	url_IN(url),  prefix(prefix)
 {
@@ -68,6 +77,10 @@ void ntImage::set_Local() {
 	isImgLocal = true;
 }
 
+void ntImage::set_Col(float col) {
+	img_2D *= 0;
+	img_2D += col;
+}
 void ntImage::set_Dim(int width, int height, bool isUniform) {
 	//img_2D(af::span) = 150;
 	img_W = width;

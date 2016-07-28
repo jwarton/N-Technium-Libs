@@ -69,6 +69,7 @@ private:
 
 public:
 	ntImage();
+	ntImage(int width, int height, float col = 255);
 	ntImage(std::string url);
 	ntImage(std::string url, std::string prefix);
 	ntImage(ntVec3* pos, std::string url);
@@ -81,6 +82,7 @@ public:
 	void set_Pos(ntVec3* pos);
 	void set_Pos(int x, int y);
 	void set_Dim(int width, int hieght = 1, bool isUniform = true);
+	void set_Col(float col);
 
 	arma::fmat* getMatrix();
 

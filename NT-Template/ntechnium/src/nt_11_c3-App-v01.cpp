@@ -3,12 +3,12 @@
 
 void tokyoApp01::init() {
 
-	bool doHostImage =			true;
-	bool doFilter =				false;
-	bool doSubTiles =			false;
-	bool doMosaic =				false;
-	bool doWritePixels =		false;
-	
+	bool doHostImage		= false;
+	bool doFilter			= false;
+	bool doSubTiles			= false;
+	bool doMosaic			= false;
+	bool doWritePixels		= false;
+	bool doWriteAvgTiles	= false;
 	///////////////////////////////////////////////////////////////
 	//////// GRID IMAGE AND COMPUTE MATRIX MANIPULATION PERFORMANCE
 	path_Out = path_Out + pathExtension;
@@ -120,6 +120,19 @@ void tokyoApp01::init() {
 		}
 		/// WRITE VALUES TO TEXT FILE
 		img_H.writePixels(vals, url_01);
+	}
+
+	///////////////////////////////////////////////////////////////
+	//////////////////////////////////////////// WRITE IMAGES 0-255
+	if (doWriteAvgTiles = true) {
+		ntImage image = ntImage(50, 50);
+		string url;
+		for (int i = 0; i < 256; i++) {
+			url = path_Out + "0-255\\"+ to_string(i) + ".jpg";
+			float col = mapRange(0, 1, 0, 255, i);
+			image.set_Col(col);
+			image.save(url);
+		}
 	}
 }
 void tokyoApp01::run(){

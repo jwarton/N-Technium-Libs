@@ -16,8 +16,8 @@ void tokyoApp02::init() {
 	skin_00.setPathOut(path_Out);
 	skin_00.set_Parameters(TRI, TRICELL, 2);
 	skin_00.set_PerfStyle(perf_03);
-	//skin_00.set_Gen(2);
-	skin_00.set_ImgMosaic(path_IMG_IN + "mean\\");
+	skin_00.set_Gen(5);
+	skin_00.set_ImgMosaic(path_IMG_IN + "0-255\\");
 
 	//skin_00.save_IMG();
 	skin_00.save_TXT();
