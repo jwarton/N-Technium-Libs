@@ -14,8 +14,9 @@ void tokyoApp02::init() {
 	std::string url_TXT = path_TXT_IN + file_TXT;
 	skin_00 = ntTriSkin(url_TXT, url_IMG, "C3" );
 	skin_00.setPathOut(path_Out);
-	skin_00.set_Parameters(TRI, TRICELL, 3);
+	skin_00.set_Parameters(TRI, TRICELL, 2);
 	skin_00.set_PerfStyle(perf_03);
+	//skin_00.set_Gen(2);
 	skin_00.set_ImgMosaic(path_IMG_IN + "mean\\");
 
 	//skin_00.save_IMG();

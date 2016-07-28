@@ -635,26 +635,14 @@ void ntPanel::add_Perf() {
 	}
 }
 void ntPanel::reparam_UV() {
-	float uMax, uMin, vMax, vMin;
-	uMin = vecs_UV[0]->x;
-	uMax = vecs_UV[1]->x;
-	vMin = vecs_UV[0]->y;
-	vMax = vecs_UV[2]->y;
+	float uMax, vMax;
+	uMax = vecs_SD[1]->x;
+	vMax = vecs_SD[2]->y;
 
-	//for (int i = 0; i < p_UVs.size(); i++) {
-	//	p_UVs[i]->x = mapRange(0, 1, uMin, uMax, p_UVs[i]->x);
-	//	p_UVs[i]->y = mapRange(0, 1, vMin, vMax, p_UVs[i]->y);
-	//}
-	//uMin = p_UVs[0]->x;
-	//uMax = p_UVs[1]->x;
-	//vMin = p_UVs[0]->y;
-	//vMax = p_UVs[2]->y;
-	uMin = vecs_UV[0]->x;
-	uMax = vecs_UV[1]->x;
-	vMin = vecs_UV[0]->y;
-	vMax = vecs_UV[2]->y;
-
-	std::cout << uMin << " | " << uMax<< " | " << vMin << " | "  << vMax << endl;
+	for (int i = 0; i < p_UVs.size(); i++) {
+		p_UVs[i]->x = mapRange(0, 1, 0, uMax, vecs_SD[i]->x);
+		p_UVs[i]->y = mapRange(0, 1, 0, vMax, vecs_SD[i]->y);
+	}
 }
 ///////////////////////////////////////////////////////////////
 void ntPanel::set_Color(ntColor4f col){
@@ -1080,8 +1068,9 @@ void ntPanel::display_EdgeSD_G(int gen) {
 void ntPanel::display_Face_L(L_mode mode, int gen) {
 	if (gen <= faces_L.size()) {
 		for (int i = 0; i < faces_L.at(gen)->size(); i++) {
+			///// SHOW ODD
 			//if (i % 2 == 0) {
-				faces_L.at(gen)->at(i).display(mode);
+			//	faces_L.at(gen)->at(i).display(mode);
 			//}
 		}
 	}

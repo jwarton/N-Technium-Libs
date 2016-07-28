@@ -201,7 +201,7 @@ private:
 	//////////////////////////////////////////// UTILITIY FUNCTIONS
 	void funct(ntPanel* panel_ptr);
 
-	int gen = 0;
+	int gen = 1;
 	int gen_G = gen;
 	int gen_L = gen;
 
@@ -221,8 +221,9 @@ private:
 	void write_Panel_TXT(ntPanel* panel_ptr);
 	void write_Panel_IMG(ntPanel* panel_ptr);
 
-	void map_ImgCol(ntPanel* panel_ptr);				// BUILD COLOR INDEX FROM UV
+	//void map_ImgCol(ntPanel* panel_ptr);				// BUILD COLOR INDEX FROM UV
 	void map_ImgCol(ntPanel* panel_ptr, arma::mat* img_ptr);	// REMAP COLOR FROM IMAGE FILE
+	void map_ImgCol(ntPanel* panel_ptr, arma::fmat* img_ptr);	// REMAP COLOR FROM IMAGE FILE
 	void tile_Img(int U, int V, af::array img);
 
 	bool doSaveTXT = false;

@@ -817,18 +817,12 @@ void ntTriSkin::funct(ntPanel* panel_ptr) {
 		float mean = panel_ptr->get_MeanVal();
 		int index = ceil(mapRange(0, 255, 0, 1, mean));
 		string url = url_IMGs + to_string(index) + ".jpg";
-		//std::cout << url << endl;
-		//for (int i = 0;i < panel_ptr->p_Col.size(); i++) {
-		//	panel_ptr->p_Col[i] = mean;
-		//}
-		//ntImage image(url);
-		//arma::fmat* matrix = image.getMatrix();
-		arma::mat matrix = zeros<mat>(10000,10000);
-		//matrix += 255;
-		//matrix -= img_00;
+		ntImage image(url);
+		arma::fmat* matrix = image.getMatrix();
+		//*matrix = 255 - *matrix;
 		read_IMG(url);
-		//panel_ptr->reparam_UV();
-		//map_ImgCol(panel_ptr, &matrix);
+		panel_ptr->reparam_UV();
+		map_ImgCol(panel_ptr, matrix);
 	}
 	///////////////////////////////////////////////////////////////
 	//////////////////////////////////// CALCULATE PERFORATION SIZE
@@ -1135,6 +1129,85 @@ void ntTriSkin::round_Pos(ntPanel* panel_ptr, float tolerance) {
 
 		if (panel_ptr->vecs[i]->z < t && panel_ptr->vecs[i]->z > -t) {
 			panel_ptr->vecs[i]->z = round(panel_ptr->vecs[i]->z);
+		}
+	}
+}
+void ntTriSkin::map_ImgCol(ntPanel* panel_ptr, arma::fmat* img_ptr) {
+
+	int dim_X = img_ptr->n_cols;
+	int dim_Y = img_ptr->n_rows;
+
+	/// ////////////////////// MAP COLOR FROM UV LIST
+	for (int i = 0; i < panel_ptr->p_UVs.size(); i++) {
+
+		float x = panel_ptr->p_UVs.at(i)->x;
+		float y = panel_ptr->p_UVs.at(i)->y;
+		bool isBounds = true;
+
+		if (x >= 1) {
+			x = 0.99999;
+			isBounds = false;
+		}
+		if (x <= 0) {
+			x = 0.00001;
+			isBounds = false;
+		}
+		if (y >= 1) {
+			y = 0.99999;
+			isBounds = false;
+		}
+		if (y <= 0) {
+			y = 0.00001;
+			isBounds = false;
+		}
+
+		x = floor(mapRange(0, dim_X, 0, 1, x));
+		y = floor(mapRange(0, dim_Y, 0, 1, y));
+
+		float col = img_ptr->at(y, x);
+		col = mapRange(0, 1, 0, 255, col);
+		panel_ptr->p_Col.at(i) = col;
+	}
+	/// ////////////////////// MAP COLOR TO VERTEX
+	for (int i = 0; i < panel_ptr->faces_L.size(); i++) {
+		for (int j = 0; j < panel_ptr->faces_L.at(i)->size(); j++) {
+			for (int k = 0; k < 3; k++) {
+
+				float x = panel_ptr->faces_L.at(i)->at(j).uvws[k]->x;
+				float y = panel_ptr->faces_L.at(i)->at(j).uvws[k]->y;
+				bool isBounds = true;
+
+				if (x >= 1) {
+					x = 0.99999;
+					isBounds = false;
+				}
+				if (x <= 0) {
+					x = 0.00001;
+					isBounds = false;
+				}
+				if (y >= 1) {
+					y = 0.99999;
+					isBounds = false;
+				}
+				if (y <= 0) {
+					y = 0.00001;
+					isBounds = false;
+				}
+
+				x = floor(mapRange(0, dim_X, 0, 1, x));
+				y = floor(mapRange(0, dim_Y, 0, 1, y));
+
+				float col = img_ptr->at(y, x);
+				col = mapRange(0, 1, 0, 255, col);
+
+				panel_ptr->faces_L.at(i)->at(j).verts.at(k)->setColor(ntCol4(col, col, col, 1));
+				panel_ptr->faces_L.at(i)->at(j).setFx(col);  /// color for panel is same a last vertex
+
+				if (i < panel_ptr->faces_G.size()) {
+					panel_ptr->faces_G.at(i)->at(j).verts.at(k)->setColor(ntCol4(col, col, col, 1));
+					panel_ptr->faces_G.at(i)->at(j).setFx(col);  /// color for panel is same a last vertex
+				}
+			}
 		}
 	}
 }
