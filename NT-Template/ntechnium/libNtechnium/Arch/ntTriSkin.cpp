@@ -769,6 +769,7 @@ void ntTriSkin::funct(ntPanel* panel_ptr) {
 	/////////////////////////////// ALIGN CENTROID/NORMAL TO Z-AXIS
 	panel_ptr->calcCentroid();
 	panel_ptr->calcNorm();
+	
 	align_Panel(panel_ptr, axis_Z, &panel_ptr->norm, panel_ptr->cent);
 	///////////////////////////////////////////////////////////////
 	/////////////////////////////////////// ALIGN V0/EDGE TO X-AXIS
@@ -1076,27 +1077,35 @@ void ntTriSkin::align_Panel(ntPanel* panel_ptr, Vec3* axis_A, Vec3* axis_B, ntVe
 
 	////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 	//////////////////////////////////////////////////////////////////// FIND PANEL NORMAL AND ALIGN TO WORLD Z-AXIS
-	ntVec3 v = axis_A->cross(axis_B);				///axis of rotation							//v = cross(A, B);	
-	float  c = axis_A->dot(axis_B);					///angle cos [rad]							//dot(A,B)
+	ntVec3 v = axis_A->cross(axis_B);				///axis of rotation								//v = cross(A, B);	
+	float  c = axis_A->dot(axis_B);					///angle cos [rad]								//dot(A,B)
 	float  s = v.mag();								///norm / vector length or rotation axis		//||v||
 	arma::mat ssc = zeros<mat>(rows, cols);			///ssc = [0, -v(3), v(2); v(3), 0, -v(1); -v(2), v(1), 0];
 
-	ssc <<    0 << -v.z <<  v.y << endr
-		<<  v.z <<    0 << -v.x << endr
-		<< -v.y <<  v.x <<    0 << endr;
-
+	ssc << 0 << -v.z << v.y << endr
+		<< v.z << 0 << -v.x << endr
+		<< -v.y << v.x << 0 << endr;
 	////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 	/////////////////////////////////////////////////////////////////////////////////////////  BUILD ROTATION MATRIX
-	R.eye();
-	R = R + ssc + (ssc * ssc) * (1 - c) / (s*s);	///R = eye(3) + ssc + ssc^2*(1-dot(A,B))/(norm(v))^2;
-													///R = I + [v] + [v]^2((1-c)/s^2)																				
+	R.eye();																		
+	if (abs(c) != 0) {
+		std::cout << "Non-Zero Rotation" << endl;
+		R = R + ssc + (ssc * ssc) * (1 - c) / (s*s);	///R = eye(3) + ssc + ssc^2*(1-dot(A,B))/(norm(v))^2;
+														///R = I + [v] + [v]^2((1-c)/s^2)
+	}
+	/* else {
+		ssc << 0 <<-1 << 0 << endr
+			<< 1 << 0 << 0 << endr
+			<< 0 << 0 << 0 << endr;
+		R = R + ssc + (ssc * ssc);						///R = eye(3) + ssc + ssc^2*(1-dot(A,B))/(norm(v))^2;
+														///R = I + [v] + [v]^2((1-c)/s^2)
+	}*/
 
 	////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 	//////////////////////////////////////////////////////////////////// MULTIPLY VERTEX POSITONS BY ROTATION MATRIX
 	arma::mat vertex = zeros<mat>(rows, 1);
-
+	
 	for (int i = 0; i < cnt; i++) {
-		
 		if (panel_ptr->vecs[i]->x != 0 && panel_ptr->vecs[i]->y != 0) {
 			vertex(0, 0) = panel_ptr->vecs[i]->x;
 			vertex(1, 0) = panel_ptr->vecs[i]->y;
@@ -1109,7 +1118,6 @@ void ntTriSkin::align_Panel(ntPanel* panel_ptr, Vec3* axis_A, Vec3* axis_B, ntVe
 			panel_ptr->vecs[i]->z = vertex(2, 0);
 		}
 	}
-
 	round_Pos(panel_ptr, .001);
 	panel_ptr->calcCentroid();
 	panel_ptr->calcNorm();
