@@ -8,7 +8,7 @@ void tokyoApp01::init() {
 	bool doSubTiles			= false;
 	bool doMosaic			= false;
 	bool doWritePixels		= false;
-	bool doWriteAvgTiles	= false;
+	bool doWriteAvgTiles	= true;
 	///////////////////////////////////////////////////////////////
 	//////// GRID IMAGE AND COMPUTE MATRIX MANIPULATION PERFORMANCE
 	path_Out = path_Out + pathExtension;

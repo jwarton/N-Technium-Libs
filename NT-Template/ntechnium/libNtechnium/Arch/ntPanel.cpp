@@ -423,7 +423,7 @@ void ntPanel::plot_Perf(int div, grid_Type grid, perf_Type type) {
 	else if (grid == DIA || grid == SQU) {
 		plot_Perf_GR(div, grid);
 	}
-	plot_Fast(div);
+	//plot_Fast(div);
 }
 void ntPanel::plot_Perf_GR(int div, enum grid_Type grid) {
 	ntVec3* vec;
@@ -1017,7 +1017,7 @@ void ntPanel::display_CL() {
 	glEnd();
 }
 void ntPanel::display_Edge() {
-	edges.at(0).display(.5);
+	edges.at(0).display(5);
 	edges.at(1).display(.5);
 	edges.at(2).display(.5);
 

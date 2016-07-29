@@ -159,6 +159,7 @@ namespace jpw{
 		//ntGLFWsetup(int appWidth, int appHeight);
 		//ntGLFWsetup(int appWidth, int appHeight, ntBaseApp* baseApp);
 		ntGLFWsetup(int appWidth, int appHeight, std::string appTitle, ntBaseApp* baseApp);
+		ntGLFWsetup(std::string appTitle, ntBaseApp* baseApp);
 	};
 }
 #endif

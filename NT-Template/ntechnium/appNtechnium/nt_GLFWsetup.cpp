@@ -28,11 +28,18 @@ appWidth(1920), appHeight(1080), appTitle("NTECHNIUM"), baseApp(baseApp){
 	init();
 	run();
 }
+ntGLFWsetup::ntGLFWsetup(std::string appTitle, ntBaseApp* baseApp) :
+	appTitle(appTitle), baseApp(baseApp) {
+	isFullScreen = true;
+	init();
+	run();
+}
 ntGLFWsetup::ntGLFWsetup(int appWidth, int appHeight, std::string appTitle, ntBaseApp* baseApp) :
 appWidth(appWidth), appHeight(appHeight), appTitle(appTitle), baseApp(baseApp){
 	baseApp->setWidth(appWidth);
 	baseApp->setHeight(appHeight);
 	//baseApp->setSize(Dim2i(appWidth, appHeight));
+	isFullScreen = false;
 	init();
 	run();
 }
