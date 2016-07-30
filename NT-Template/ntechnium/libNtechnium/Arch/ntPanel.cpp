@@ -1017,7 +1017,7 @@ void ntPanel::display_CL() {
 	glEnd();
 }
 void ntPanel::display_Edge() {
-	edges.at(0).display(5);
+	edges.at(0).display(.5);
 	edges.at(1).display(.5);
 	edges.at(2).display(.5);
 

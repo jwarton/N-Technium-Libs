@@ -115,8 +115,8 @@ int main(int argc, char const** argv){
 
 	c->set_AppDim(x, y);
 	//jpw::ntGLFWsetup program(100, 100, "NT-INTERFACE", new genApp(c));
-	//jpw::ntGLFWsetup program("NT-INTERFACE", new genApp(c));
-	jpw::ntGLFWsetup program(x,y, "NT-INTERFACE", new genApp(c)); 
+	jpw::ntGLFWsetup program("NT-INTERFACE", new genApp(c));
+	//jpw::ntGLFWsetup program(x,y, "NT-INTERFACE", new genApp(c)); 
 	//simple app minimal ogl setup/ test
 	//jpw::ntSimpleApp simpleApp = ntSimpleApp(900, 900,"SIMPLE APP_TITLE");
 

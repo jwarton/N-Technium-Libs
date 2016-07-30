@@ -979,7 +979,7 @@ Vec3 ntTriSkin::add_VEC(string line) {
 		str = ss.str();
 		
 		if (cnt <2) {
-			vertPos[cnt] = val;
+vertPos[cnt] = val;
 		}
 		else if (cnt == 2) {
 			vertPos[cnt] = val;
@@ -1016,8 +1016,7 @@ void ntTriSkin::align_Panel(ntPanel* panel_ptr, Vec3* axis) {
 	float  s = v.mag();								//norm / vector length or rotation axis		//||v||
 	arma::mat ssc = zeros<mat>(rows, cols);			//ssc = [0, -v(3), v(2); v(3), 0, -v(1); -v(2), v(1), 0];
 	float phi = c *(180 / M_PI);					//CONVERT TO DEGREES
-													//c = c *(180 / M_PI);							//CONVERT TO DEGREES
-
+													//c = c *(180 / M_PI);						//CONVERT TO DEGREES
 	ssc << 0 << -v.z << v.y << endr
 		<< v.z << 0 << -v.x << endr
 		<< -v.y << v.x << 0 << endr;
@@ -1049,7 +1048,7 @@ void ntTriSkin::align_Panel(ntPanel* panel_ptr, Vec3* axis) {
 	panel_ptr->calcNorm();
 
 	//http://math.stackexchange.com/questions/180418/calculate-rotation-matrix-to-align-vector-a-to-vector-b-in-3d
-}	 
+}
 void ntTriSkin::align_Panel(ntPanel* panel_ptr, Vec3* axis_A, Vec3* axis_B, ntVec3* pos) {
 	/// ERROR WHEN NORMAL IS ALIGNED TO Z-AXIS
 	/// ERROR WHEN EDGE 0 IS ALIGNED TO X-AXIS
@@ -1068,52 +1067,57 @@ void ntTriSkin::align_Panel(ntPanel* panel_ptr, Vec3* axis_A, Vec3* axis_B, ntVe
 	////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 	/////////////////////////////////////////////////////////////////////////////////////////////// TRANSLATE TO POS
 	Vec3 trans_V = Vec3(pos->x, pos->y, pos->z);	///TRANSLATION VECTOR
-
 	for (int i = 0; i < cnt; i++) {
-		if (panel_ptr->vecs[i]->x != 0 && panel_ptr->vecs[i]->y != 0) {
-			panel_ptr->vecs[i]->sub(&trans_V);
-		}
+		panel_ptr->vecs[i]->sub(&trans_V);
 	}
 
 	////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 	///////////////////////////////////////////////////////////////////////////////////////// ALIGN B-AXIS TO A-AXIS
-	ntVec3 v = axis_A->cross(axis_B);				///axis of rotation								//v = cross(A, B);	
-	float  c = axis_A->dot(axis_B);					///angle cos [rad]								//dot(A,B)
-	float  s = v.mag();								///norm / vector length or rotation axis		//||v||
+	ntVec3 v = axis_A->cross(axis_B);				///AXIS OF ROTATION								//v = cross(A, B);	
+	//if (v.x == 0 && v.y == 0 && v.z == 0) {
+	//	v.x = 1;
+	//	v.y = 0;
+	//	v.z = 0;
+	//}
+	double  c = (axis_A->dot(axis_B));				///angle cos [rad]								//dot(A,B)
+	double  s = (v.mag());							///norm of vector								//||v||
 	arma::mat ssc = zeros<mat>(rows, cols);			///ssc = [0, -v(3), v(2); v(3), 0, -v(1); -v(2), v(1), 0];
 
 	ssc << 0 << -v.z << v.y << endr
 		<< v.z << 0 << -v.x << endr
 		<< -v.y << v.x << 0 << endr;
 
+	//std::cout << panel_ptr->get_ID() << ": " << axis_A->x << ", " << axis_A->y << ", " << axis_A->z << " | " << axis_B->x << ", " << axis_B->y << ", " << axis_B->z <<endl;
+	std::cout << "\n" << panel_ptr->get_ID() << " ROT AXIS | " << v.x << ", " << v.y << ", " << v.z << " | cos: " << c << " = " << toDegrees(acos(c)) << " sin: " << s << endl;
 	////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 	/////////////////////////////////////////////////////////////////////////////////////////  BUILD ROTATION MATRIX
-	R.eye();									
-	R = R + ssc + (ssc * ssc) * (1 - c) / (s*s);	///R = eye(3) + ssc + ssc^2*(1-dot(A,B))/(norm(v))^2;
-													///R = I + [v] + [v]^2((1-c)/s^2)
+	R.eye();	
 
-	///if ((axis_A->x != axis_B->x) && (axis_A->y != axis_B->y) && (axis_A->z != axis_B->z)) {
-		////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-		//////////////////////////////////////////////////////////////////// MULTIPLY VERTEX POSITONS BY ROTATION MATRIX
-		arma::mat vertex = zeros<mat>(rows, 1);
+	if (c ==-1) {
+		R = -R;
+	} else {
+		R = R + ssc + (ssc * ssc) * (1 - c) / (pow(s, 2));	///R = eye(3) + ssc + ssc^2*(1-dot(A,B))/(norm(v))^2;
+		//R.print();										///R = I + [v] + [v]^2((1-c)/s^2)
+	}
+	////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+	//////////////////////////////////////////////////////////////////// MULTIPLY VERTEX POSITONS BY ROTATION MATRIX
+	arma::mat vertex = zeros<mat>(rows, 1);
 
-		for (int i = 0; i < cnt; i++) {
-			if (panel_ptr->vecs[i]->x != 0 && panel_ptr->vecs[i]->y != 0) {
-				vertex(0, 0) = panel_ptr->vecs[i]->x;
-				vertex(1, 0) = panel_ptr->vecs[i]->y;
-				vertex(2, 0) = panel_ptr->vecs[i]->z;
+	for (int i = 0; i < cnt; i++) {
+		vertex(0, 0) = panel_ptr->vecs[i]->x;
+		vertex(1, 0) = panel_ptr->vecs[i]->y;
+		vertex(2, 0) = panel_ptr->vecs[i]->z;
 
-				vertex = arma::solve(R, vertex);					//arma::solve(A, B); | matlab- A\B or inv(A)*B
+		vertex = arma::solve(R, vertex);					//arma::solve(A, B); | matlab- A\B or inv(A)*B
 
-				panel_ptr->vecs[i]->x = vertex(0, 0);
-				panel_ptr->vecs[i]->y = vertex(1, 0);
-				panel_ptr->vecs[i]->z = vertex(2, 0);
-			}
-		}
-		round_Pos(panel_ptr, .001);
-		panel_ptr->calcCentroid();
-		panel_ptr->calcNorm();
-	///}
+		panel_ptr->vecs[i]->x = vertex(0, 0);
+		panel_ptr->vecs[i]->y = vertex(1, 0);
+		panel_ptr->vecs[i]->z = vertex(2, 0);
+	}
+
+	round_Pos(panel_ptr, .001);
+	panel_ptr->calcCentroid();
+	panel_ptr->calcNorm();
 
 	//http://math.stackexchange.com/questions/180418/calculate-rotation-matrix-to-align-vector-a-to-vector-b-in-3d
 }
