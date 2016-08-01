@@ -1088,14 +1088,18 @@ void ntTriSkin::align_Panel(ntPanel* panel_ptr, Vec3* axis_A, Vec3* axis_B, ntVe
 		<< -v.y << v.x << 0 << endr;
 
 	//std::cout << panel_ptr->get_ID() << ": " << axis_A->x << ", " << axis_A->y << ", " << axis_A->z << " | " << axis_B->x << ", " << axis_B->y << ", " << axis_B->z <<endl;
-	std::cout << "\n" << panel_ptr->get_ID() << " ROT AXIS | " << v.x << ", " << v.y << ", " << v.z << " | cos: " << c << " = " << toDegrees(acos(c)) << " sin: " << s << endl;
+	//std::cout << "\n" << panel_ptr->get_ID() << " ROT AXIS | " << v.x << ", " << v.y << ", " << v.z << " | cos: " << c << " = " << toDegrees(acos(c)) << " sin: " << s << endl;
 	////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 	/////////////////////////////////////////////////////////////////////////////////////////  BUILD ROTATION MATRIX
 	R.eye();	
 
 	if (c ==-1) {
 		R = -R;
-	} else {
+	}
+	else if (c == 1) {
+
+	}
+	else {
 		R = R + ssc + (ssc * ssc) * (1 - c) / (pow(s, 2));	///R = eye(3) + ssc + ssc^2*(1-dot(A,B))/(norm(v))^2;
 		//R.print();										///R = I + [v] + [v]^2((1-c)/s^2)
 	}

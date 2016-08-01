@@ -3,12 +3,23 @@
 using namespace std;
 using namespace jpw;
 
+
+/// USED BY BOUNDING BOX FUNCTIONS
+double ntVec3::min_X = 0.0;
+double ntVec3::min_Y = 0.0;
+double ntVec3::min_Z = 0.0;
+double ntVec3::max_X = 0.0;
+double ntVec3::max_Y = 0.0;
+double ntVec3::max_Z = 0.0;
+
 ntVec3::ntVec3(){}
 
 ntVec3::ntVec3(float x, float y, float z){
 	this->x = x;
 	this->y = y;
 	this->z = z;
+
+	setBounds();
 }
 
 ///TODO -COPY CONSTRUCTOR CAUSES OVERWRITE OR DELETION IN SPHERE
@@ -127,6 +138,9 @@ void ntVec3::display(){
 	glVertex3f(x, y, z);
 	glEnd();
 }
+void ntVec3::print() {
+	std::cout << "VEC: (" << x << ", " << y << ", " << z <<  " )" << endl;
+}
 ///////////////////////////////////////////////////////////////////
 ///////////////////////////////////////////////////////////////////
 float ntVec3::distance(ntVec3* v){
@@ -142,4 +156,33 @@ float ntVec3::distSqrd(ntVec3* v){
 	float dZ = this->z - v->z;
 	float distSqrd = (pow(dX, 2) + pow(dY, 2) + pow(dZ, 2));
 	return distSqrd;
+}
+
+void ntVec3::setBounds() {
+	if (x < min_X) {
+		min_X = x;
+	}
+	if (y < min_Y) {
+		min_Y = y;
+	}
+	if (z < min_Z) {
+		min_Z = z;
+	}
+	if (x > max_X) {
+		max_X = x;
+	}
+	if (y > max_Y) {
+		max_Y = y;
+	}
+	if (z > max_Z) {
+		max_Z = z;
+	}
+}
+
+void ntVec3::getBounds(ntVec3* minVec, ntVec3* maxVec) {
+	ntVec3* min = new ntVec3(min_X, min_Y, min_Z);
+	ntVec3* max = new ntVec3(max_X, max_Y, max_Z);
+
+	minVec->set(min);
+	maxVec->set(max);
 }

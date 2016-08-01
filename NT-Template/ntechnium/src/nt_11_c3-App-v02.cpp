@@ -23,6 +23,14 @@ void tokyoApp02::init() {
 	//skin_00.save_TXT();
 	skin_00.init();
 
+	ntVec3 v;
+	ntVec3* min = new ntVec3();
+	ntVec3* max = new ntVec3();
+
+	v.getBounds(min, max);
+	min->print();
+	max->print();
+
 	///////////////////////////////////////////////////////////////
 	std::cout << "\n\n";
 	std::cout << "////////////////////////////////////////////// PROGRAM COMPLETE\n";
