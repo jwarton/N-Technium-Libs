@@ -19,7 +19,11 @@ class AppContent{
 	ntEdge axisX;
 	ntEdge axisY;
 	ntEdge axisZ;
-	///
+	/// BOUNDING BOX PARAMETERS
+	ntVec3* BB_min = new ntVec3();
+	ntVec3* BB_max = new ntVec3();
+	ntVec3* centroid = new ntVec3();
+
 protected:
 	int appWidth;
 	int appHeight;
@@ -38,5 +42,9 @@ public:
 	void grid_display();
 	void view_Model();
 	void view_Orth();
+
+	void getBounds();
+	void getCentroid();
+	void display_BBox();
 };
 #endif

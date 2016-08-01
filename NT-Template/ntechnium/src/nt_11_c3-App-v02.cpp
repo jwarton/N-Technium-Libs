@@ -23,13 +23,7 @@ void tokyoApp02::init() {
 	//skin_00.save_TXT();
 	skin_00.init();
 
-	ntVec3 v;
-	ntVec3* min = new ntVec3();
-	ntVec3* max = new ntVec3();
-
-	v.getBounds(min, max);
-	min->print();
-	max->print();
+	getBounds();
 
 	///////////////////////////////////////////////////////////////
 	std::cout << "\n\n";
@@ -112,7 +106,7 @@ void tokyoApp02::run(){
 	if (glfwGetKey(window, GLFW_KEY_Z) == GLFW_PRESS) {
 		skin_00.set_PerfType(DOT);
 	}
-	
+
 	display();
 }
 

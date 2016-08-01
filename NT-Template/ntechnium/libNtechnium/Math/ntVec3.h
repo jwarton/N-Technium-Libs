@@ -18,16 +18,6 @@ namespace jpw{
 	class ntVec3 {
 	private:
 
-		/// USED BY BOUNDING BOX FUNCTIONS
-		static double min_X;
-		static double min_Y;
-		static double min_Z;
-		static double max_X;
-		static double max_Y;
-		static double max_Z;
-
-		void setBounds();
-
 	public:
 		float x, y, z;
 
@@ -65,10 +55,6 @@ namespace jpw{
 		void normalize();
 		void display();
 		void print();
-
-		// BOUNDING COORDINATES FOR ALL INSTANCES OF NTVEC3
-		void getBounds(ntVec3* minVec, ntVec3* maxVec);
-
 	};
 }
 #endif

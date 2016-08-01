@@ -101,6 +101,7 @@ void genApp::run(){
 	///
 	//display();
 	content->grid_display();
+	content->display_BBox();
 	content->run();
 	///
 }

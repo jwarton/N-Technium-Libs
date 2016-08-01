@@ -24,6 +24,16 @@ private:
 	ntVec3 norm;
 	ntVec3* uvw;
 	float size;
+
+	// USED BY BOUNDING BOX FUNCTIONS
+	static double min_X;
+	static double min_Y;
+	static double min_Z;
+	static double max_X;
+	static double max_Y;
+	static double max_Z;
+
+	void setBounds();
 	
 public:
 	ntVec3* pos;
@@ -43,5 +53,8 @@ public:
 	ntColor4f getColor();
 	void display(float size);
 	void display();
+
+	// BOUNDING COORDINATES FOR ALL INSTANCES OF NTVERTEX
+	void getBounds(ntVec3* minVec, ntVec3* maxVec);
 };
 #endif
