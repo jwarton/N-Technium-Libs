@@ -85,7 +85,7 @@ namespace jpw{
 		float width = 1.0;
 		float height = 1.0;
 		float zNear = 0.1;
-		float zFar = 1000;
+		float zFar = 100000;
 
 
 		int view_T = GLFW_KEY_T;

@@ -67,7 +67,6 @@ void ntTriSkin::init() {
 		////////////////////////////////////// UPDATE STRING WITH TIMER VALUES
 		t_Transform += format_SEC(t_transform);
 		t_SubD		+= format_SEC(t_SD);
-		t_Scale3d	+= format_SEC(t_SC3);
 		t_Scale2d	+= format_SEC(t_SC2);
 		t_Perforate += format_SEC(t_perforate);
 		t_CalcArea  += format_SEC(t_calcArea);
@@ -180,7 +179,6 @@ void ntTriSkin::init_SysData() {
 	lines.push_back(t_Perforate);
 	lines.push_back(t_Transform);
 	lines.push_back(t_CalcArea);
-	lines.push_back(t_Scale3d);
 	lines.push_back(t_Scale2d);
 	lines.push_back(t_saveTxt);
 	lines.push_back(t_saveImage);
@@ -786,14 +784,6 @@ void ntTriSkin::funct(ntPanel* panel_ptr) {
 	float areaP = panel_ptr->get_Area();
 	t_calcArea = (clock() - t);
 	/// //END PERFORATION TIMER
-	t = clock();
-	///////////////////////////////////////////////////////////////
-	/// SCALE TO VIEW--- REPLACE WITH CAMERA FIT FUNCTION !
-	/// !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-	//set_Scale3D(panel_ptr, 0.01);
-	set_Scale3D(panel_ptr,  0.001);
-	t_SC3 += (clock() - t);
-	t = clock();
 	///////////////////////////////////////////////////////////////
 	panel_ptr->sub_Div(gen);	    // SUBDIVIDE FOR GLOBAL DISPLAY
 									// REVISE PER FASTENER GRID !!!

@@ -2,9 +2,9 @@
 
 
 /// USED BY BOUNDING BOX FUNCTIONS
-double ntVertex::min_X = 0.0;
-double ntVertex::min_Y = 0.0;
-double ntVertex::min_Z = 0.0;
+double ntVertex::min_X = 10000000000.0;
+double ntVertex::min_Y = 10000000000.0;
+double ntVertex::min_Z = 10000000000.0;
 double ntVertex::max_X = 0.0;
 double ntVertex::max_Y = 0.0;
 double ntVertex::max_Z = 0.0;
@@ -18,6 +18,8 @@ ntVertex::ntVertex(ntVec3 posF){
 	this->col.b = 1;
 	this->col.a = 1;
 	setPos(posF);
+
+	setBounds();
 }
 ntVertex::ntVertex(ntVec3* pos):
 pos(pos){
@@ -80,6 +82,9 @@ void ntVertex::setBounds() {
 	if (pos->z > max_Z) {
 		max_Z = pos->z;
 	}
+
+	//std::cout << "\n";
+	//pos->print();
 }
 void ntVertex::getBounds(ntVec3* minVec, ntVec3* maxVec) {
 	ntVec3* min = new ntVec3(min_X, min_Y, min_Z);

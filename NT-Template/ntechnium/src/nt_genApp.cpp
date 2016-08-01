@@ -28,11 +28,46 @@ void genApp::init() {
 
 	///////////////////////////////////////////////////////////////
 	///////////////////////////////////////////////// SCENE CONTENT
-	
+
 	///
 	content->window = window;
 	content->init();
+	
+	content->set_Bounds();
+	content->set_Centroid();
 	content->grid();
+
+	ntVec3* min = new ntVec3();
+	ntVec3* max = new ntVec3();
+	ntVec3* cen = new ntVec3();
+	content->get_Bounds(min, max);
+	content->get_Centroid(cen);
+	
+	fovA = 15;
+	tarX = cen->x;
+	tarY = cen->y;
+	tarZ = cen->z;
+	zoom = 100;
+
+	float BS_X = max->x - min->x;
+	float BS_Y = max->y - min->y;
+	float BS_Z = max->z - min->z;
+
+	float dim_Max = std::max(BS_X, BS_Y);
+	dim_Max = std::max(dim_Max, BS_Z);
+
+	float BS_radius = abs((dim_Max) * 0.5);
+	float V_magnitude = sin(fovA + zoom) * BS_radius;
+
+	camX = cen->x;
+	camY = cen->y -5;
+	camZ = cen->z + abs(V_magnitude);
+
+	std::cout << "BOUNDING SPHERE RADIUS:   "<< BS_radius << endl;
+	std::cout << "CAMERA | TARGET DISTANCE: "<< V_magnitude << endl;
+	std::cout << "CAMERA POSITION:          "<< camX << ", "<< camY << ", "<< camZ << endl;
+	
+	//fovA = BB_width + (BB_width * 0.25); 
 	///
 	shader = ntShader("shader1.vert", "shader1.frag"); //ORIGINAL FUNCTION CALL LOCATION
 
@@ -85,7 +120,6 @@ void genApp::initUniforms(){
 	MVP_U = glGetUniformLocation(shader.getID(), "modelViewProjectionMatrix");
 	N_U = glGetUniformLocation(shader.getID(), "normalMatrix");
 }
-
 void genApp::run(){
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT | GL_STENCIL_BUFFER_BIT);
 	glViewport(0, 0, width, height);
@@ -105,7 +139,6 @@ void genApp::run(){
 	content->run();
 	///
 }
-
 void genApp::display(){
 	///////////////////////////////////////////////////////////////
 	//////////////////////////////////////////////// RESET MATRICES

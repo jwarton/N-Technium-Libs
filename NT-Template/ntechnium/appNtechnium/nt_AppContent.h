@@ -8,6 +8,7 @@
 #ifndef APPLICATION_SCENE_CONTENT_JPW_NTECHNIUM
 #define APPLICATION_SCENE_CONTENT_JPW_NTECHNIUM
 #include <iostream>		
+#include <algorithm>
 #include <GLFW/glfw3.h>
 
 #include "ntVec3.h"
@@ -20,9 +21,9 @@ class AppContent{
 	ntEdge axisY;
 	ntEdge axisZ;
 	/// BOUNDING BOX PARAMETERS
-	ntVec3* BB_min = new ntVec3();
-	ntVec3* BB_max = new ntVec3();
-	ntVec3* centroid = new ntVec3();
+	ntVec3* BB_min = new ntVec3(0,0,0);
+	ntVec3* BB_max = new ntVec3(0,0,0);
+	ntVec3* BB_cen = new ntVec3(0,0,0);
 
 protected:
 	int appWidth;
@@ -43,8 +44,11 @@ public:
 	void view_Model();
 	void view_Orth();
 
-	void getBounds();
-	void getCentroid();
+	void set_Bounds();
+	void set_Centroid();
 	void display_BBox();
+
+	void get_Bounds(ntVec3* min, ntVec3* max);
+	void get_Centroid(ntVec3* cen);
 };
 #endif

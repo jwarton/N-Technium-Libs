@@ -60,7 +60,6 @@ private:
 
 	double t_transform		= 0;
 	double t_SD				= 0;
-	double t_SC3			= 0;
 	double t_SC2			= 0;	
 	double t_perforate		= 0;
 	double t_calcArea		= 0;
@@ -72,7 +71,6 @@ private:
 	string t_LoadImage		= "IMAGE DATA LOAD TIME:         ";
 	string t_Transform		= "  TRANSFORMATION:             ";
 	string t_SubD			= "  SUBDIVISION:                ";
-	string t_Scale3d		= "  SCALE 3D:                   ";
 	string t_Scale2d		= "  SCALE 2D:                   ";
 	string t_Perforate		= "  PERFORATION:                ";
 	string t_CalcArea		= "  SURFACE AREA:               ";

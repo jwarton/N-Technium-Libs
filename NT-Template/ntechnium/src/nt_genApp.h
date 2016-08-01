@@ -9,6 +9,7 @@
 #define GENERIC_APPLICATION_TEMPLATE_JPW_NTECHNIUM
 
 #include <iostream>
+#include <algorithm>
 #include "ntMath.h"
 #include "nt_BaseApp.h"
 #include "nt_AppContent.h"

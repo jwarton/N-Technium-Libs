@@ -125,7 +125,7 @@ void tokyoApp01::init() {
 	///////////////////////////////////////////////////////////////
 	//////////////////////////////////////////// WRITE IMAGES 0-255
 	if (doWriteAvgTiles = true) {
-		ntImage image = ntImage(50, 50);
+		ntImage image = ntImage(333, 333);
 		string url;
 		for (int i = 0; i < 256; i++) {
 			url = path_Out + "0-255\\"+ to_string(i) + ".jpg";
