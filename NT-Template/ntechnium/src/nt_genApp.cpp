@@ -42,11 +42,8 @@ void genApp::init() {
 	ntVec3* cen = new ntVec3();
 	content->get_Bounds(min, max);
 	content->get_Centroid(cen);
-	
+
 	fovA = 15;
-	tarX = cen->x;
-	tarY = cen->y;
-	tarZ = cen->z;
 	zoom = 100;
 
 	float BS_X = max->x - min->x;
@@ -58,16 +55,117 @@ void genApp::init() {
 
 	float BS_radius = abs((dim_Max) * 0.5);
 	float V_magnitude = sin(fovA + zoom) * BS_radius;
+	float d = abs(V_magnitude);
 
-	camX = cen->x;
-	camY = cen->y -5;
-	camZ = cen->z + abs(V_magnitude);
+	rotX = 0.0f;
+	rotY = 0.0f;
+	rotZ = 0.0f;
+	camX = min->x;
+	camY = min->y;
+	camZ = cen->z + d;
+	tarX = cen->x;
+	tarY = cen->y;
+	tarZ = cen->z;
+	rolX = 0.0f;
+	rolY = 0.0f;
+	rolZ = 1.0f;
 
-	std::cout << "BOUNDING SPHERE RADIUS:   "<< BS_radius << endl;
-	std::cout << "CAMERA | TARGET DISTANCE: "<< V_magnitude << endl;
-	std::cout << "CAMERA POSITION:          "<< camX << ", "<< camY << ", "<< camZ << endl;
-	
-	//fovA = BB_width + (BB_width * 0.25); 
+	//PERSPECTIVE VIEW  | FIT TO APPCONTENT
+	cam00[0]  = 0.0;		//rotX;  
+	cam00[1]  = 0.0;		//rotY;  
+	cam00[2]  = 0.0;		//rotZ;  
+	cam00[3]  = min->x;		//camX;  
+	cam00[4]  = min->y;		//camY;  
+	cam00[5]  = cen->z + d;	//camZ;  
+	cam00[6]  = cen->x;		//tarX;  
+	cam00[7]  = cen->y;		//tarY;  
+	cam00[8]  = cen->z;		//tarZ;  
+	cam00[9]  = 0.0;		//rolX;  
+	cam00[10] = 0.0;		//rolY;  
+	cam00[11] = 1.0;		//rolZ;  
+	cam00[12] = fovA;		//fovA;  
+	cam00[13] = zoom;		//zoom; 
+
+	//TOP VIEW
+	cam01[0]  = 0.0;		//rotX;  
+	cam01[1]  = 0.0;		//rotY;  
+	cam01[2]  = 0.0;		//rotZ;  
+	cam01[3]  = cen->x;		//camX;  
+	cam01[4]  = cen->y;		//camY;  
+	cam01[5]  = max->z + d;	//camZ;  
+	cam01[6]  = cen->x;		//tarX;  
+	cam01[7]  = cen->y;		//tarY;  
+	cam01[8]  = cen->z;		//tarZ;  
+	cam01[9]  = 0.0;		//rolX;  
+	cam01[10] = 1.0;		//rolY;  
+	cam01[11] = 0.0;		//rolZ;  
+	cam01[12] = fovA;		//fovA;  
+	cam01[13] = zoom;		//zoom;  
+
+	//FRONT VIEW
+	cam02[0]  = 0.0;		//rotX;  
+	cam02[1]  = 0.0;		//rotY;  
+	cam02[2]  = 0.0;		//rotZ;  
+	cam02[3]  = cen->x;		//camX;  
+	cam02[4]  = min->y - d;	//camY;  
+	cam02[5]  = cen->z;		//camZ;  
+	cam02[6]  = cen->x;		//tarX;  
+	cam02[7]  = cen->y;		//tarY;  
+	cam02[8]  = cen->z;		//tarZ;  
+	cam02[9]  = 0.0;		//rolX;  
+	cam02[10] = 0.0;		//rolY;  
+	cam02[11] = 1.0;		//rolZ;  
+	cam02[12] = fovA;		//fovA;  
+	cam02[13] = zoom;		//zoom;  
+
+	//RIGHT VIEW
+	cam03[0]  = 0.0;		//rotX;  
+	cam03[1]  = 0.0;		//rotY;  
+	cam03[2]  = 0.0;		//rotZ;  
+	cam03[3]  = max->x + d;	//camX;  
+	cam03[4]  = cen->y;		//camY;  
+	cam03[5]  = cen->z;		//camZ;  
+	cam03[6]  = cen->x;		//tarX;  
+	cam03[7]  = cen->y;		//tarY;  
+	cam03[8]  = cen->z;		//tarZ;  
+	cam03[9]  = 0.0;		//rolX;  
+	cam03[10] = 0.0;		//rolY;  
+	cam03[11] = 1.0;		//rolZ;  
+	cam03[12] = fovA;		//fovA;  
+	cam03[13] = zoom;		//zoom;  
+
+	//LEFT VIEW
+	cam04[0]  = 0.0;		//rotX;  
+	cam04[1]  = 0.0;		//rotY;  
+	cam04[2]  = 0.0;		//rotZ;  
+	cam04[3]  = min->x - d;	//camX;  
+	cam04[4]  = cen->y;		//camY;  
+	cam04[5]  = cen->z;		//camZ;  
+	cam04[6]  = cen->x;		//tarX;  
+	cam04[7]  = cen->y;		//tarY;  
+	cam04[8]  = cen->z;		//tarZ;  
+	cam04[9]  = 0.0;		//rolX;  
+	cam04[10] = 0.0;		//rolY;  
+	cam04[11] = 1.0;		//rolZ;  
+	cam04[12] = fovA;		//fovA;  
+	cam04[13] = zoom;		//zoom;  
+
+	//BOTTOM VIEW
+	cam05[0]  = 0.0;		//rotX;  
+	cam05[1]  = 0.0;		//rotY;  
+	cam05[2]  = 0.0;		//rotZ;  
+	cam05[3]  = cen->x;		//camX;  
+	cam05[4]  = cen->y;		//camY;  
+	cam05[5]  =	min->z - d;	//camZ;  
+	cam05[6]  = cen->x;		//tarX;  
+	cam05[7]  = cen->y;		//tarY;  
+	cam05[8]  = cen->z;		//tarZ;  
+	cam05[9]  = 0.0;		//rolX;  
+	cam05[10] =-1.0;		//rolY;  
+	cam05[11] = 0.0;		//rolZ;  
+	cam05[12] = fovA;		//fovA;  
+	cam05[13] = zoom;		//zoom;  
+
 	///
 	shader = ntShader("shader1.vert", "shader1.frag"); //ORIGINAL FUNCTION CALL LOCATION
 

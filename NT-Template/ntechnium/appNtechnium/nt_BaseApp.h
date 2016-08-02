@@ -64,29 +64,30 @@ namespace jpw{
 		GLfloat cam01[14];
 		GLfloat cam02[14];
 		GLfloat cam03[14];
+		GLfloat cam04[14];
+		GLfloat cam05[14];
 
 		//ACTIVE CAMERA SETTINGS
-		GLfloat rotX = 0.0f;
-		GLfloat rotY = 0.0f;		
-		GLfloat rotZ = 0.0f;		//ROTATES MODEL MATRIX
+		GLfloat rotX;
+		GLfloat rotY;		
+		GLfloat rotZ;		//ROTATES MODEL MATRIX
 
-		GLfloat camX = -1.0f;
-		GLfloat camY = -1.0f;
-		GLfloat camZ = 1.0f;
-		GLfloat tarX = 0.0f;
-		GLfloat tarY = 0.0f;
-		GLfloat tarZ = 0.0f;
-		GLfloat rolX = 0.0f;
-		GLfloat rolY = 0.0f;
-		GLfloat rolZ = 1.0f;
-		GLfloat fovA = 60.0f;
-		GLfloat zoom = 0.0f;
+		GLfloat camX;
+		GLfloat camY;
+		GLfloat camZ;
+		GLfloat tarX;
+		GLfloat tarY;
+		GLfloat tarZ;
+		GLfloat rolX;
+		GLfloat rolY;
+		GLfloat rolZ;
+		GLfloat fovA;
+		GLfloat zoom;
 
 		float width = 1.0;
 		float height = 1.0;
 		float zNear = 0.1;
 		float zFar = 100000;
-
 
 		int view_T = GLFW_KEY_T;
 		int view_B = GLFW_KEY_B;

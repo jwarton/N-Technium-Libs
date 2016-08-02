@@ -146,7 +146,8 @@ void ntGLFWsetup::init(){
 	///////////////////////////////////////////////////////////////
 	/////////////////////////////////////////////// SET VIEW MATRIX
 	glLoadIdentity();// clear matrix
-	view_Reset();
+	///view_Reset();
+	view_Pers();
 	view_Update();
 	/////////////////////////////////////////////////////////|ACTIVATE INIT FUNCTION IN DERIVED APPLICATIONS|//////
 	///////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -304,20 +305,9 @@ void ntGLFWsetup::EventHandler_KEYBD(){
 	}
 	// PERSPECTIVE RESET
 	if (glfwGetKey(window, GLFW_KEY_P) == GLFW_PRESS && CTRL_status == true) {
-		view_Reset();
+		view_Pers();
 		view_Update();
 	}
-	///// TEMPORARY PERSPECTIVE VIEW COORDINATED TO CONTENT SPECIFIC DISPLAY MODES
-	//// PANEL VIEW
-	//if (glfwGetKey(window, GLFW_KEY_F) == GLFW_PRESS) {
-	//	view_Pers();
-	//}
-	//if (glfwGetKey(window, GLFW_KEY_S) == GLFW_PRESS) {
-	//	view_Pers();
-	//}
-	//if (glfwGetKey(window, GLFW_KEY_W) == GLFW_PRESS) {
-	//	view_Pers();
-	//}
 	///////////////////////////////////////////////////////////////
 	////////////////////////////////////// CAMERA JOG FUNCTIONALITY
 	if (glfwGetKey(window, GLFW_KEY_RIGHT) == GLFW_PRESS & glfwGetKey(window, GLFW_KEY_LEFT_CONTROL) == GLFW_PRESS) {
@@ -356,7 +346,7 @@ void ntGLFWsetup::EventHandler_KEYBD(){
 	}
 	///////////////////////////////////////////////////////////////
 	/////////////////////////////////////////// ORBIT FUNCTIONALITY
-
+	/*
 	horizontalAngle = 3.14f;
 	verticalAngle = 0.0f;
 	glm::vec3 position = glm::vec3(baseApp->camX, baseApp->camY, baseApp->camZ);
@@ -368,7 +358,7 @@ void ntGLFWsetup::EventHandler_KEYBD(){
 	glm::vec3 direction(cos(verticalAngle) * sin(horizontalAngle), sin(verticalAngle), cos(verticalAngle) * cos(horizontalAngle));
 	glm::vec3 right = glm::vec3(sin(horizontalAngle - 3.14f / 2.0f), 0, cos(horizontalAngle - 3.14f / 2.0f));
 	glm::vec3 up = glm::cross(right, direction);
-
+	*/
 	//std::cout << horizontalAngle << endl;
 	//std::cout << direction.x << ", " << direction.y << ", " << direction.z << " | " << right.x << ", " << right.y << ", " << right.z << endl;
 
@@ -801,46 +791,45 @@ void ntGLFWsetup::print_Camera() {
 }
 
 void ntGLFWsetup::view_Reset() {
-
-	baseApp->rotX = 0.0f;
-	baseApp->rotY = 0.0f;
-	baseApp->rotZ = 0.0f;
-	baseApp->camX = -1.0f;
-	baseApp->camY = -5.0f;
-	baseApp->camZ = 2.0f;
-	baseApp->tarX = 0.0f;
-	baseApp->tarY = 0.0f;
-	baseApp->tarZ = 0.0f;
-	baseApp->rolX = 0.0f;
-	baseApp->rolY = 0.0f;
-	baseApp->rolZ = 1.0f;
-	baseApp->fovA = 40.0f;
-	baseApp->zoom = 20.0f;
+	//baseApp->rotX = 0.0f;
+	//baseApp->rotY = 0.0f;
+	//baseApp->rotZ = 0.0f;
+	//baseApp->camX = -1.0f;
+	//baseApp->camY = -5.0f;
+	//baseApp->camZ = 2.0f;
+	//baseApp->tarX = 0.0f;
+	//baseApp->tarY = 0.0f;
+	//baseApp->tarZ = 0.0f;
+	//baseApp->rolX = 0.0f;
+	//baseApp->rolY = 0.0f;
+	//baseApp->rolZ = 1.0f;
+	//baseApp->fovA = 40.0f;
+	//baseApp->zoom = 20.0f;
 }
 void ntGLFWsetup::view_Fit(){
 
-	Vec3 target = Vec3(baseApp->tarX, baseApp->tarY, baseApp->tarZ);
-	Vec3 eye    = Vec3(baseApp->camX, baseApp->camY, baseApp->camZ);
-	Vec3 dir_V; 
+	//Vec3 target = Vec3(baseApp->tarX, baseApp->tarY, baseApp->tarZ);
+	//Vec3 eye    = Vec3(baseApp->camX, baseApp->camY, baseApp->camZ);
+	//Vec3 dir_V; 
 
-	eye.sub(&target);
-	dir_V.set(&eye);
+	//eye.sub(&target);
+	//dir_V.set(&eye);
 
-	double fov_X = 2;		///REPLACE WITH POINT CLOUD RADIUS FOR OBJECTS WITHIN SCENE
-	double fov_Y = 2;		///REPLACE WITH POINT CLOUD RADIUS FOR OBJECTS WITHIN SCENE
-	double rad = min(fov_X, fov_Y) * 0.5;
-	double theta = sin(rad);
-	double dist = (rad / theta);
+	//double fov_X = 2;		///REPLACE WITH POINT CLOUD RADIUS FOR OBJECTS WITHIN SCENE
+	//double fov_Y = 2;		///REPLACE WITH POINT CLOUD RADIUS FOR OBJECTS WITHIN SCENE
+	//double rad = min(fov_X, fov_Y) * 0.5;
+	//double theta = sin(rad);
+	//double dist = (rad / theta);
 
-	dir_V.mult(dist);
-	target.add(&dir_V);
-	eye.set(&target);
+	//dir_V.mult(dist);
+	//target.add(&dir_V);
+	//eye.set(&target);
 
-	baseApp->camX = eye.x;
-	baseApp->camY = eye.y;
-	baseApp->camZ = eye.z;
+	//baseApp->camX = eye.x;
+	//baseApp->camY = eye.y;
+	//baseApp->camZ = eye.z;
 
-	view_Update();
+	//view_Update();
 }
 void ntGLFWsetup::view_Top(){
 	if (view == vP) {
@@ -849,13 +838,21 @@ void ntGLFWsetup::view_Top(){
 	view = vT;
 	is_vOrtho = true;
 
-	view_Reset();
-	baseApp->camX = 0.0f;
-	baseApp->camY = 0.0f;
-	baseApp->camZ = 3.0f;
-	baseApp->rolX = 0.0f;
-	baseApp->rolY = 1.0f;
-	baseApp->rolZ = 0.0f;
+	baseApp->rotX = baseApp->cam01[0];
+	baseApp->rotY = baseApp->cam01[1];
+	baseApp->rotZ = baseApp->cam01[2];
+	baseApp->camX = baseApp->cam01[3];
+	baseApp->camY = baseApp->cam01[4];
+	baseApp->camZ = baseApp->cam01[5];
+	baseApp->tarX = baseApp->cam01[6];
+	baseApp->tarY = baseApp->cam01[7];
+	baseApp->tarZ = baseApp->cam01[8];
+	baseApp->rolX = baseApp->cam01[9];
+	baseApp->rolY = baseApp->cam01[10];
+	baseApp->rolZ = baseApp->cam01[11];
+	baseApp->fovA = baseApp->cam01[12];
+	baseApp->zoom = baseApp->cam01[13];
+
 	view_Update();
 }
 void ntGLFWsetup::view_Bottom(){
@@ -865,12 +862,20 @@ void ntGLFWsetup::view_Bottom(){
 	view = vB;
 	is_vOrtho = true;
 
-	view_Reset();
-	baseApp->camX = 0.0f;
-	baseApp->camY = 0.0f;
-	baseApp->camZ = -3.0f;
-	baseApp->rolX = 0.0f;
-	baseApp->rolY = 1.0f;
+	baseApp->rotX = baseApp->cam05[0];
+	baseApp->rotY = baseApp->cam05[1];
+	baseApp->rotZ = baseApp->cam05[2];
+	baseApp->camX = baseApp->cam05[3];
+	baseApp->camY = baseApp->cam05[4];
+	baseApp->camZ = baseApp->cam05[5];
+	baseApp->tarX = baseApp->cam05[6];
+	baseApp->tarY = baseApp->cam05[7];
+	baseApp->tarZ = baseApp->cam05[8];
+	baseApp->rolX = baseApp->cam05[9];
+	baseApp->rolY = baseApp->cam05[10];
+	baseApp->rolZ = baseApp->cam05[11];
+	baseApp->fovA = baseApp->cam05[12];
+	baseApp->zoom = baseApp->cam05[13];
 	baseApp->rolZ = 0.0f;
 	view_Update();
 }
@@ -881,13 +886,20 @@ void ntGLFWsetup::view_Right(){
 	view = vR;
 	is_vOrtho = true;
 
-	view_Reset();
-	baseApp->camX = 0.0f;
-	baseApp->camY = 3.0f;
-	baseApp->camZ = 0.0f;
-	baseApp->rolX = 0.0f;
-	baseApp->rolY = 0.0f;
-	baseApp->rolZ = 1.0f;
+	baseApp->rotX = baseApp->cam03[0];
+	baseApp->rotY = baseApp->cam03[1];
+	baseApp->rotZ = baseApp->cam03[2];
+	baseApp->camX = baseApp->cam03[3];
+	baseApp->camY = baseApp->cam03[4];
+	baseApp->camZ = baseApp->cam03[5];
+	baseApp->tarX = baseApp->cam03[6];
+	baseApp->tarY = baseApp->cam03[7];
+	baseApp->tarZ = baseApp->cam03[8];
+	baseApp->rolX = baseApp->cam03[9];
+	baseApp->rolY = baseApp->cam03[10];
+	baseApp->rolZ = baseApp->cam03[11];
+	baseApp->fovA = baseApp->cam03[12];
+	baseApp->zoom = baseApp->cam03[13];
 	view_Update();
 }
 void ntGLFWsetup::view_Left(){
@@ -897,13 +909,20 @@ void ntGLFWsetup::view_Left(){
 	view = vL;
 	is_vOrtho = true;
 
-	view_Reset();
-	baseApp->camX = 3.0f;
-	baseApp->camY = 0.0f;
-	baseApp->camZ = 0.0f;
-	baseApp->rolX = 0.0f;
-	baseApp->rolY = 0.0f;
-	baseApp->rolZ = 1.0f;
+	baseApp->rotX = baseApp->cam04[0];
+	baseApp->rotY = baseApp->cam04[1];
+	baseApp->rotZ = baseApp->cam04[2];
+	baseApp->camX = baseApp->cam04[3];
+	baseApp->camY = baseApp->cam04[4];
+	baseApp->camZ = baseApp->cam04[5];
+	baseApp->tarX = baseApp->cam04[6];
+	baseApp->tarY = baseApp->cam04[7];
+	baseApp->tarZ = baseApp->cam04[8];
+	baseApp->rolX = baseApp->cam04[9];
+	baseApp->rolY = baseApp->cam04[10];
+	baseApp->rolZ = baseApp->cam04[11];
+	baseApp->fovA = baseApp->cam04[12];
+	baseApp->zoom = baseApp->cam04[13];
 	view_Update();
 }
 void ntGLFWsetup::view_Front(){
@@ -913,13 +932,20 @@ void ntGLFWsetup::view_Front(){
 	view = vF;
 	is_vOrtho = true;
 
-	view_Reset();
-	baseApp->camX = 0.0f;
-	baseApp->camY =-3.0f;
-	baseApp->camZ = 0.0f;
-	baseApp->rolX = 0.0f;
-	baseApp->rolY = 0.0f;
-	baseApp->rolZ = 1.0f;
+	baseApp->rotX = baseApp->cam02[0];
+	baseApp->rotY = baseApp->cam02[1];
+	baseApp->rotZ = baseApp->cam02[2];
+	baseApp->camX = baseApp->cam02[3];
+	baseApp->camY = baseApp->cam02[4];
+	baseApp->camZ = baseApp->cam02[5];
+	baseApp->tarX = baseApp->cam02[6];
+	baseApp->tarY = baseApp->cam02[7];
+	baseApp->tarZ = baseApp->cam02[8];
+	baseApp->rolX = baseApp->cam02[9];
+	baseApp->rolY = baseApp->cam02[10];
+	baseApp->rolZ = baseApp->cam02[11];
+	baseApp->fovA = baseApp->cam02[12];
+	baseApp->zoom = baseApp->cam02[13];
 	view_Update();
 }
 void ntGLFWsetup::view_Pers(){
@@ -940,7 +966,6 @@ void ntGLFWsetup::view_Pers(){
 	baseApp->rolZ =  baseApp->cam00[11];
 	baseApp->fovA =  baseApp->cam00[12];
 	baseApp->zoom =  baseApp->cam00[13];
-
 	view_Update();
 }
 void ntGLFWsetup::view_Save() {

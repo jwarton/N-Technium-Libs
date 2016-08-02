@@ -31,11 +31,12 @@ private:
 	string path_IMG_IN = path_IN + "imgs\\c3\\01\\";
 
 	//string file_TXT = "AC_001";
-	//string file_TXT = "C3_401";		// TRIVIAL SURFACE
-	string file_TXT = "C3_004";		// XY PLANE
+	//string file_TXT = "C3_001";			// PLANE FOLDS
+	string file_TXT = "C3_401";		// TRIVIAL SURFACE
+	//string file_TXT = "C3_004";		// XY PLANE
 	//string file_IMG = "lenna";
-	string file_IMG = "profile";
-	//string file_IMG = "ovis_4x4_CBJW-10k";
+	//string file_IMG = "profile";
+	string file_IMG = "ovis_4x4_CBJW-10k";
 
 	string path_Out = nt_Utility::getPathToOutput() + "c3\\03\\";
 	
