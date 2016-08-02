@@ -423,7 +423,7 @@ void ntPanel::plot_Perf(int div, grid_Type grid, perf_Type type) {
 	else if (grid == DIA || grid == SQU) {
 		plot_Perf_GR(div, grid);
 	}
-	//plot_Fast(div);
+	plot_Fast(div);
 }
 void ntPanel::plot_Perf_GR(int div, enum grid_Type grid) {
 	ntVec3* vec;
@@ -516,14 +516,15 @@ void ntPanel::plot_Perf_SD(int div) {
 }
 
 ntVec3* ntPanel::eval_Fastener(std::vector <ntVec3*> vecs, ntVec3* vec, int index, bool isAsc) {
+
 	ntVec3 * pt = vecs.at(index);
 	float d1 = pt->distSqrd(vec);
 	float d2 = pow(6, 2);
 
-	if ( d1 > d2 && isAsc == false) {
+	if (d1 > d2 && isAsc == false && index > 0) {
 		index -= 1;
 		pt = eval_Fastener(vecs, vec, index, isAsc);
-	} else if ( d1 > d2 && isAsc == true ) {
+	} else if ( d1 > d2 && isAsc == true && index < vecs.size()-1) {
 		index += 1;
 		pt = eval_Fastener(vecs, vec, index, isAsc);
 	}
@@ -583,11 +584,8 @@ void ntPanel::add_Perf() {
 	///////////////////////////////////////////////////////////////
 	// //////////////////////// INSTANTIATE POLYLINE DATA STRUCTURE 
 	if (perf_type == TRICELL) {
-
-		/// SET TRICELLS
 		set_TriCells();
 		
-
 		int index = perf_style; // perf_type INDEX
 		for (int i = 0; i < cells_L.size(); i++) {
 			int cnt = cells_L.at(i).get_Polylines()[index].size();
@@ -1020,7 +1018,6 @@ void ntPanel::display_Edge() {
 	edges.at(0).display(.5);
 	edges.at(1).display(.5);
 	edges.at(2).display(.5);
-
 }
 void ntPanel::display_EdgeSd(int gen) {
 	if (gen > 0) {
@@ -1068,13 +1065,13 @@ void ntPanel::display_EdgeSD_G(int gen) {
 void ntPanel::display_Face_L(L_mode mode, int gen) {
 	if (gen <= faces_L.size()) {
 		for (int i = 0; i < faces_L.at(gen)->size(); i++) {
+			faces_L.at(gen)->at(i).display(mode);
 			///// SHOW ODD
 			//if (i % 2 == 0) {
 			//	faces_L.at(gen)->at(i).display(mode);
 			//}
 		}
-	}
-	else {
+	} else {
 		// EXCEPTION FOR EXCEEDING GERERATIONS WITHIN BOUNDS
 		std::cout << gen << " EXCEEDS AVAILABLE GENERATIONS" << endl;
 		display_Face_L(mode, gen - 1);
@@ -1090,7 +1087,7 @@ void ntPanel::display_Face_G(int gen) {
 		}
 	}
 	else {
-		// EXCEPTION FOR EXCEEDING GERERATIONS WITHIN BOUNDS
+		// EXCEPTION FOR EXCEEDING SD GERERATION BOUNDS
 		display_Face_G(gen - 1);
 	}
 }

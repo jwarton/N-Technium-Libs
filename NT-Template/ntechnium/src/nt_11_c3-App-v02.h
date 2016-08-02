@@ -30,10 +30,10 @@ private:
 	string path_TXT_IN = path_IN + "txt\\c3\\";
 	string path_IMG_IN = path_IN + "imgs\\c3\\01\\";
 
-	//string file_TXT = "AC_001";
-	//string file_TXT = "C3_001";			// PLANE FOLDS
-	string file_TXT = "C3_401";		// TRIVIAL SURFACE
-	//string file_TXT = "C3_004";		// XY PLANE
+	string file_TXT = "AC_001";
+	//string file_TXT = "C3_400";		// PLANE FOLDS
+	//string file_TXT = "C3_401";		// XY PLANE
+	//string file_TXT = "C3_402";		// TRIVIAL SURFACE
 	//string file_IMG = "lenna";
 	//string file_IMG = "profile";
 	string file_IMG = "ovis_4x4_CBJW-10k";

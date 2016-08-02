@@ -87,7 +87,6 @@ namespace jpw{
 		enum B_mode {b0, b1, b2, b3};	// BUTTON MODES
 		B_mode button = b0;
 
-
 		bool isProjection = false;
 		bool isFullScreen = true;
 		///////////////////////////////////////////////////////////////

@@ -35,7 +35,7 @@ void genApp::init() {
 	
 	content->set_Bounds();
 	content->set_Centroid();
-	content->grid();
+	content->set_Grid();
 
 	ntVec3* min = new ntVec3();
 	ntVec3* max = new ntVec3();
@@ -46,6 +46,7 @@ void genApp::init() {
 	fovA = 15;
 	zoom = 100;
 
+	///REFINE FIT FUNCTION AND CAMERA POSITON
 	float BS_X = max->x - min->x;
 	float BS_Y = max->y - min->y;
 	float BS_Z = max->z - min->z;
@@ -57,6 +58,7 @@ void genApp::init() {
 	float V_magnitude = sin(fovA + zoom) * BS_radius;
 	float d = abs(V_magnitude);
 
+	//INITIALIZE DEFAULT CAMERA
 	rotX = 0.0f;
 	rotY = 0.0f;
 	rotZ = 0.0f;
@@ -202,7 +204,6 @@ void genApp::init() {
 	///////////////////////////////////////////////////////////////
 	/////////////////////////////////////// PERMANENTLY BIND SHADER
 	shader.bind();
-	
 }
 void genApp::initUniforms(){
 	///////////////////////////////////////////////////////////////
@@ -231,9 +232,11 @@ void genApp::run(){
 	glUniform4fv(lightSpecular0_U, 1, &light0.getSpecular().r);
 
 	///
-	//display();
-	content->grid_display();
-	content->display_BBox();
+	display();
+	if (isGridActive == true) {
+		content->display_Grid();
+		content->display_BBox();
+	}
 	content->run();
 	///
 }

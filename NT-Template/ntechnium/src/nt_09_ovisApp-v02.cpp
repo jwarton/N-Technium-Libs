@@ -11,14 +11,13 @@ void ovisApp02::init() {
 
 	std::string url_TXT = path_TXT_IN + file_TXT;
 	skin_00 = ntTriSkin(url_TXT, url_IMG, "OVIS");
-	skin_00.set_Gen(2);
+	skin_00.set_Gen(1);
 	skin_00.set_Parameters(TRI, DOT, 1.5);
-	skin_00.set_FileCnt( 1, 2);
+	skin_00.set_FileCnt(1,3);
 	skin_00.setPathOut(path_Out);
-	
 
 	//skin_00.save_IMG();
-	skin_00.save_TXT();
+	//skin_00.save_TXT();
 	skin_00.init();
 
 	///////////////////////////////////////////////////////////////
@@ -27,23 +26,23 @@ void ovisApp02::init() {
 void ovisApp02::run(){
 
 	if (glfwGetKey(window, GLFW_KEY_1) == GLFW_PRESS) {
-		skin_00.set_Gen(0);
+		skin_00.set_GenDisplay(0);
 		skin_00.set_PerfStyle(perf_01);
 	}
 	if (glfwGetKey(window, GLFW_KEY_2) == GLFW_PRESS) {
-		skin_00.set_Gen(1);
+		skin_00.set_GenDisplay(1);
 		skin_00.set_PerfStyle(perf_02);
 	}
 	if (glfwGetKey(window, GLFW_KEY_3) == GLFW_PRESS) {
-		skin_00.set_Gen(2);
+		skin_00.set_GenDisplay(2);
 		skin_00.set_PerfStyle(perf_03);
 	}
 	if (glfwGetKey(window, GLFW_KEY_4) == GLFW_PRESS) {
-		skin_00.set_Gen(3);
+		skin_00.set_GenDisplay(3);
 		skin_00.set_PerfStyle(perf_04);
 	}
 	if (glfwGetKey(window, GLFW_KEY_5) == GLFW_PRESS) {
-		skin_00.set_Gen(4);
+		skin_00.set_GenDisplay(4);
 		skin_00.set_PerfStyle(perf_05);
 	}
 	if (glfwGetKey(window, GLFW_KEY_6) == GLFW_PRESS) {

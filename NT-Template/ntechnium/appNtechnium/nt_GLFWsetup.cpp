@@ -446,6 +446,13 @@ void ntGLFWsetup::EventHandler_KEYBD(){
 	if (glfwGetKey(window, GLFW_KEY_LEFT_ALT) == GLFW_PRESS || glfwGetKey(window, GLFW_KEY_RIGHT_ALT) == GLFW_PRESS) {
 		state_Alt = true;
 	}
+	if (glfwGetKey(window, GLFW_KEY_G) == GLFW_PRESS) {
+		if (baseApp->isGridActive == false) {
+			baseApp->isGridActive = true;
+		} else {
+			baseApp->isGridActive = false;
+		}
+	}
 
 	///////////////////////////////////////////////////////////////
 	///////////////////////////////////////////// KEY FUNCTIONALITY
@@ -570,8 +577,8 @@ void ntGLFWsetup::EventHandler_MOUSE(){
 		D_xpos = M_xpos - P_xpos;
 		D_ypos = M_ypos - P_ypos;
 
-		baseApp->rotX += (D_xpos * .01);
-		baseApp->rotZ += (D_ypos * .01);
+		baseApp->rotX += (D_ypos * .01);
+		baseApp->rotZ += (D_xpos * .01);
 
 	}
 	/// ZOOM

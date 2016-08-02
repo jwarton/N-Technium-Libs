@@ -247,11 +247,13 @@ public:
 
 	/////////////////////////////////////////////////// CONVIENENCE
 	///////////////////////////////////////////////////////////////
-	void set_FileCnt(int begin, int end);
+	void set_FileCnt(int begin, int end = 0);
 	void set_Parameters(grid_Type grid_type, perf_Type perf_type, float perf_spacing);
 	void set_PerfStyle(perf_Style perf_style);
 	void set_PerfType( perf_Type perf_type);
+	//void set_Fastener(float min, float max);
 	void set_Gen(int gen);
+	void set_GenDisplay(int gen);
 	void set_Mode(D_mode mode);
 	void set_Mode_L(L_mode mode);
 	void set_ImgMosaic(string url);

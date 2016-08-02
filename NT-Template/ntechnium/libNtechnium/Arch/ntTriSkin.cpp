@@ -755,7 +755,12 @@ void ntTriSkin::setPathOut(std::string path) {
 void ntTriSkin::set_FileCnt(int begin, int end) {
 	isTxtSeq = true;
 	file_begin = begin;
-	file_end = end;
+	if (end == 0) {
+		file_end = begin;
+	}
+	else {
+		file_end = end;
+	}
 }
 ///////////////////////////////////////////////////////////////
 void ntTriSkin::funct(ntPanel* panel_ptr) {
@@ -854,7 +859,7 @@ void ntTriSkin::funct(ntPanel* panel_ptr) {
 	t = clock();
 	/// SCALE PANELS TO VIEW--- REPLACE WITH CAMERA FIT FUNCTION !
 	/// !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-	set_Scale2D(panel_ptr, 8);
+	set_Scale2D(panel_ptr, 10);
 	t_SC2 += (clock() - t);
 	///
 }
@@ -1333,6 +1338,7 @@ void ntTriSkin::set_Scale2D(ntPanel* panel_ptr, double scFx) {
 	/// TRANSLATE TO HUD LOCATION
 	ntVec3 posXY = ntVec3(55, 580, 0);  /////// POSITION FOR 2D HUD		//!!!!!!!!!!!!!!!
 	float sc_Factor = scFx;
+
 	for (int j = 0; j < panel_ptr->vecs_SD.size(); j++) {
 		ntMatrix4 SC1 = ntMatrix4(panel_ptr->vecs_SD[j]);
 		SC1.scale3d(sc_Factor);
@@ -1378,7 +1384,11 @@ void ntTriSkin::run(){
 void ntTriSkin::set_Gen(int gen) {
 		this->gen = gen;
 		gen_G = gen;
-		gen_L = gen;
+}
+void ntTriSkin::set_GenDisplay(int gen) {
+	if (gen_G > gen) {
+		this->gen = gen;
+	} 
 }
 void ntTriSkin::display_Next() {
 	if (panel_Index < panel_Dim - 1) {
@@ -1552,11 +1562,11 @@ void ntTriSkin::display_2D() {
 		if (mode_M == vA) {
 			panels.at(panel_Index)->display_Face_L(mode_L, gen_L);
 		}
-		if (mode_M == vD) {
-			panels.at(panel_Index)->display_Face_L(mode_L, gen);
-		}
 		if (mode_M == vS) {
 			panels.at(panel_Index)->display_EdgeSd(gen);
+		}
+		if (mode_M == vD) {
+			panels.at(panel_Index)->display_Face_L(mode_L, gen);
 		}
 		panels.at(panel_Index)->display_Edge();
 		panels.at(panel_Index)->display_Nodes();

@@ -66,7 +66,7 @@ void AppContent::set_AppDim(int x, int y) {
 	this->appHeight = y;
 }
 
-void AppContent::grid(){
+void AppContent::set_Grid(){
 	float BS_X = BB_max->x - BB_min->x;
 	float BS_Y = BB_max->y - BB_min->y;
 	float BS_Z = BB_max->z - BB_min->z;
@@ -90,15 +90,13 @@ void AppContent::grid(){
 	axisZ = ntEdge(vO, vZ, Col4(0.5, 0.5, 0.5, 0.5), 1);
 	///
 }
-void AppContent::grid_display(){
-	if (glfwGetKey(window, GLFW_KEY_G) == GLFW_PRESS){
-		glBegin(GL_LINES);
-		axisX.display();
-		axisY.display();
-		glLineStipple(1, 0x0101);
-		axisZ.display();
-		glDisable(GL_LINE_STIPPLE);
-	}
+void AppContent::display_Grid() {
+	glBegin(GL_LINES);
+	axisX.display();
+	axisY.display();
+	glLineStipple(1, 0x0101);
+	axisZ.display();
+	glDisable(GL_LINE_STIPPLE);
 }
 
 void AppContent::view_Model() {

@@ -39,8 +39,8 @@ public:
 
 	void set_AppDim(int x, int y);
 
-	void grid();
-	void grid_display();
+	void set_Grid();
+	void display_Grid();
 	void view_Model();
 	void view_Orth();
 
