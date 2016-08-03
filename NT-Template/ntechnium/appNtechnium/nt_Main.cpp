@@ -68,12 +68,6 @@ int main(int argc, char const** argv){
 	int	x = 1920;
 	int y = 1080;
 
-	if (0 > 1) {
-		x = 3200;
-		y = 1800;
-	}
-
-
 	///GRAPHICS
 	//AppContent* c = new meshImportApp();
 	//AppContent* c = new meshApp();
@@ -96,14 +90,14 @@ int main(int argc, char const** argv){
 	//AppContent* c = new afApp01();		//ARRAY FIRE IMPELEMENTATION PROTOTYPE TEST
 	//AppContent* c = new afApp02();		
 	//AppContent* c = new tokyoApp00();		//C3 VISUALIZING TOKYO VIGNETTES
-	AppContent* c = new tokyoApp01();		//C3 PROFILE SUBDIVISION
-	//AppContent* c = new tokyoApp02();		//C3 ORIGAMI STRUCTURE | IMAGE MAPPING
+	//AppContent* c = new tokyoApp01();		//C3 IMAGE SUBDIVISION AND TILING
+	//AppContent* c = new tokyoApp02();		//C3 TRIVIAL SURFACE | MOSAIC IMAGE MAPPING
 
 	///TYPE
 	//AppContent* c = new typeApp();
 	///OVIS
 	//AppContent* c = new ovisApp();
-	//AppContent* c = new ovisApp02();
+	AppContent* c = new ovisApp02();
 
 	///KUKA SOURCE CODE APPLICATIONS
 	//AppContent* c = new krlApp();
@@ -114,9 +108,8 @@ int main(int argc, char const** argv){
 	//AppContent* c = new krlMatLab;
 
 	c->set_AppDim(x, y);
-	//jpw::ntGLFWsetup program(100, 100, "NT-INTERFACE", new genApp(c));
-	//jpw::ntGLFWsetup program("NT-INTERFACE", new genApp(c));
-	jpw::ntGLFWsetup program(x,y, "NT-INTERFACE", new genApp(c)); 
+	jpw::ntGLFWsetup program("NT-INTERFACE", new genApp(c));
+	//jpw::ntGLFWsetup program(x,y, "NT-INTERFACE", new genApp(c)); 
 	//simple app minimal ogl setup/ test
 	//jpw::ntSimpleApp simpleApp = ntSimpleApp(900, 900,"SIMPLE APP_TITLE");
 

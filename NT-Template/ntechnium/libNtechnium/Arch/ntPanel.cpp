@@ -680,17 +680,28 @@ void ntPanel::set_fG(ntVec3* pt, int index) {
 	f_L.push_back(pt_L);
 	vecs[index] = pt_L;
 }
-void ntPanel::set_fCLines() {
+void ntPanel::set_Edges() {
 	int cnt = f_L.size();
 	cnt = 3;	//TEMPORARY OVER WRITE  | 0,0,0 FOR NON-INIT POINTS FAULTY
 	for (int i = 0; i < cnt; i++) {
 		int ind_0 = i;
-		int ind_1 = i+1;
+		int ind_1 = i + 1;
 		if (i == cnt - 1) {
 			ind_1 = 0;
 		}
 		ntEdge e = ntEdge(f_L.at(ind_0), f_L.at(ind_1));
-		e.setCol( ntCol4(1, 1, 1, 0.75));
+		e.setCol(ntCol4(1, 0, 0, 0.25));
+		edges.push_back(e);
+	}	
+	
+	for (int i = 0; i < cnt; i++) {
+		int ind_0 = i;
+		int ind_1 = i + 1;
+		if (i == cnt - 1) {
+			ind_1 = 0;
+		}
+		ntEdge e = ntEdge(c_L.at(ind_0), c_L.at(ind_1));
+		e.setCol(ntCol4(1, 1, 1, 0.25));
 		edges.push_back(e);
 	}
 }
@@ -810,9 +821,8 @@ float ntPanel::get_AngleMax() {
 	return val;
 }
 float ntPanel::get_EdgeMin() {
-	set_fCLines();		///TEMPORARY SOLUTION !!!!!!!!!!!!
-	float lenMin = 999999999999;// v1->x;
 
+	float lenMin = 999999999999;// v1->x;
 	for (int i = 3; i < 6; i++) {
 		float len = edges[i].getLength();
 		if (len < lenMin) {
@@ -960,12 +970,6 @@ void ntPanel::display(){
 	glVertex3f(v2->x, v2->y, v2->z);
 	glEnd();
 }
-void ntPanel::display_Graph() {
-	if (is_Graph == true) {
-		graph.display();
-		graph_A.display();
-	}
-}
 
 void ntPanel::display_Perf() {
 	if (perf_type == DOT) {
@@ -988,31 +992,9 @@ void ntPanel::display_Joint() {
 	}
 }
 void ntPanel::display_CL() {
-	glLineWidth(1);
-	glColor4f(1, 1, 1, 0.25);
-
-	glBegin(GL_LINES);
-	glVertex3f(c_L[0]->x, c_L[0]->y, c_L[0]->z);
-	glVertex3f(c_L[1]->x, c_L[1]->y, c_L[1]->z);
-
-	glVertex3f(c_L[1]->x, c_L[1]->y, c_L[1]->z);
-	glVertex3f(c_L[2]->x, c_L[2]->y, c_L[2]->z);
-
-	glVertex3f(c_L[2]->x, c_L[2]->y, c_L[2]->z);
-	glVertex3f(c_L[0]->x, c_L[0]->y, c_L[0]->z);
-	glEnd();
-
-	glColor4f(1, 0, 0, 0.25);
-	glBegin(GL_LINES);
-	glVertex3f(f_L[0]->x, f_L[0]->y, f_L[0]->z);
-	glVertex3f(f_L[1]->x, f_L[1]->y, f_L[1]->z);
-
-	glVertex3f(f_L[1]->x, f_L[1]->y, f_L[1]->z);
-	glVertex3f(f_L[2]->x, f_L[2]->y, f_L[2]->z);
-
-	glVertex3f(f_L[2]->x, f_L[2]->y, f_L[2]->z);
-	glVertex3f(f_L[0]->x, f_L[0]->y, f_L[0]->z);
-	glEnd();
+	for (int i = 3; i < 9; i++) {
+		edges.at(i).display(.5);
+	}
 }
 void ntPanel::display_Edge() {
 	edges.at(0).display(.5);
@@ -1031,29 +1013,6 @@ void ntPanel::display_EdgeSd(int gen) {
 				faces_L.at(gen)->at(i).edges.at(0).display();
 				faces_L.at(gen)->at(i).edges.at(1).display();
 				faces_L.at(gen)->at(i).edges.at(2).display();
-			}
-		}
-		else {
-			// EXCEPTION FOR EXCEEDING GERERATIONS WITHIN BOUNDS
-			std::cout << gen << " EXCEEDS AVAILABLE GENERATIONS" << endl;
-		}
-	}
-}
-void ntPanel::display_EdgeSD_G(int gen) {
-	if (gen > 0) {
-		ntColor4f col = ntColor4f(1, 1, 1, .2);
-		if (gen <= faces_G.size()) {
-			for (int i = 0; i < faces_G.at(gen)->size(); i++) {
-				faces_G.at(gen)->at(i).edges.at(0).setCol(col);
-				faces_G.at(gen)->at(i).edges.at(1).setCol(col);
-				faces_G.at(gen)->at(i).edges.at(2).setCol(col);
-
-				faces_G.at(gen)->at(i).edges.at(0).display();
-				faces_G.at(gen)->at(i).edges.at(1).display();
-				faces_G.at(gen)->at(i).edges.at(2).display();
-			}
-			for (int i = 0; i < cells.size(); i++) {
-				cells.at(i).displaySubD(perf_03);
 			}
 		}
 		else {
@@ -1091,5 +1050,35 @@ void ntPanel::display_Face_G(int gen) {
 		display_Face_G(gen - 1);
 	}
 }
+void ntPanel::display_EdgeSD_G(int gen) {
+	if (gen > 0) {
+		ntColor4f col = ntColor4f(1, 1, 1, .2);
+		if (gen <= faces_G.size()) {
+			for (int i = 0; i < faces_G.at(gen)->size(); i++) {
+				faces_G.at(gen)->at(i).edges.at(0).setCol(col);
+				faces_G.at(gen)->at(i).edges.at(1).setCol(col);
+				faces_G.at(gen)->at(i).edges.at(2).setCol(col);
 
+				faces_G.at(gen)->at(i).edges.at(0).display();
+				faces_G.at(gen)->at(i).edges.at(1).display();
+				faces_G.at(gen)->at(i).edges.at(2).display();
+			}
+			for (int i = 0; i < cells.size(); i++) {
+				cells.at(i).displaySubD(perf_style);
+			}
+		}
+		else {
+			// EXCEPTION FOR EXCEEDING GERERATIONS WITHIN BOUNDS
+			std::cout << gen << " EXCEEDS AVAILABLE GENERATIONS" << endl;
+		}
+	}
+}
 
+///////////////////////////////////////////////////////////////
+//////////////////////////////////////// DISPLAYS 2D GRAPH DATA
+void ntPanel::display_Graph() {
+	if (is_Graph == true) {
+		graph.display();
+		graph_A.display();
+	}
+}

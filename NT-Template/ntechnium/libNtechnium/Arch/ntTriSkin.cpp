@@ -409,8 +409,8 @@ void ntTriSkin::read_DATA(string url){
 			panel->set_Dir(panel_Dir);			// STRNG DIR
 			panel->set_Weight(panel_Weight);
 			panel->set_Region(panel_Region);
-			//panel->vecs_UV.swap(params_UV);		// FOR RHINO READ ONLY ---REMOVE AFTER UVW SUBDIVIDE COMPLETED
-			
+			panel->set_Edges();
+
 			panels.push_back(panel);
 
 			panel_ID		=	"<< ERROR >>";
@@ -782,8 +782,6 @@ void ntTriSkin::funct(ntPanel* panel_ptr) {
 	///
 	t_transform += (clock() - t);
 	t = clock();
-	panel_ptr->faces_L.at(0)->at(0).calcCentroid();	//REQUIRED AFTER SCALING
-	panel_ptr->faces_L.at(0)->at(0).calcNorm();		//REQUIRED AFTER SCALING
 	panel_ptr->calcArea();
 	panel_ptr->calcPhi();
 	float areaP = panel_ptr->get_Area();
@@ -857,7 +855,7 @@ void ntTriSkin::funct(ntPanel* panel_ptr) {
 	}
 	///////////////////////////////////////////////////////////////
 	t = clock();
-	/// SCALE PANELS TO VIEW--- REPLACE WITH CAMERA FIT FUNCTION !
+	/// SCALE TO 2ND VIEWPORT--REPLACE WITH CAMERA FIT FUNCTION !
 	/// !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 	set_Scale2D(panel_ptr, 10);
 	t_SC2 += (clock() - t);
@@ -1336,7 +1334,7 @@ void ntTriSkin::set_Scale3D(ntPanel* panel_ptr, double scFx) {
 void ntTriSkin::set_Scale2D(ntPanel* panel_ptr, double scFx) {
 	/// SCALE PANELS TO VIEW--- REPLACE WITH CAMERA FIT FUNCTION		//!!!!!!!!!!!!!!!
 	/// TRANSLATE TO HUD LOCATION
-	ntVec3 posXY = ntVec3(55, 580, 0);  /////// POSITION FOR 2D HUD		//!!!!!!!!!!!!!!!
+	ntVec3 posXY = ntVec3(55, 560, 0);  /////// POSITION FOR 2D HUD		//!!!!!!!!!!!!!!!
 	float sc_Factor = scFx;
 
 	for (int j = 0; j < panel_ptr->vecs_SD.size(); j++) {
@@ -1394,16 +1392,24 @@ void ntTriSkin::display_Next() {
 	if (panel_Index < panel_Dim - 1) {
 		float c = panels.at(panel_Index)->image_Val;
 		panels.at(panel_Index)->faces_G.at(0)->at(0).setColor(Col4(c, c, c, 1));
+		if (mode_M == vQ) {
+			ntColor4f col = panels.at(panel_Index)->col;
+			panels.at(panel_Index)->faces_G.at(0)->at(0).setColor(col);
+		}
 		panel_Index = panel_Index + 1;
 		std::cout << panel_Index << endl;
 	}
 	else {
 		float c = panels.at(panel_Dim - 1)->image_Val;
 		panels.at(panel_Dim - 1)->faces_G.at(0)->at(0).setColor(Col4(c, c, c, 1));
+		if (mode_M == vQ) {
+			ntColor4f col = panels.at(panel_Index)->col;
+			panels.at(panel_Index)->faces_G.at(0)->at(0).setColor(col);
+		}
 		panel_Index = 0;
 		std::cout << panel_Index << endl;
 	}
-	if (mode_M == vW) {
+	if (mode_M == vW || mode_M == vA) {
 		panels.at(panel_Index)->faces_G.at(0)->at(0).setColor(col_Select);
 	}
 }
@@ -1411,12 +1417,20 @@ void ntTriSkin::display_Prev() {
 	if (panel_Index > 0 && panel_Index < panel_Dim) {
 		float c = panels.at(panel_Index)->image_Val;
 		panels.at(panel_Index)->faces_G.at(0)->at(0).setColor(Col4(c, c, c, 1));
+		if (mode_M == vQ) {
+			ntColor4f col = panels.at(panel_Index)->col;
+			panels.at(panel_Index)->faces_G.at(0)->at(0).setColor(col);
+		}
 		panel_Index = panel_Index - 1;
 		std::cout << panel_Index << endl;
 	}
 	else {
 		float c = panels.at(0)->image_Val;
 		panels.at(0)->faces_G.at(0)->at(0).setColor(Col4(c, c, c, 1));
+		if (mode_M == vQ) {
+			ntColor4f col = panels.at(panel_Index)->col;
+			panels.at(panel_Index)->faces_G.at(0)->at(0).setColor(col);
+		}
 		panel_Index = panel_Dim - 1;
 		std::cout << panel_Index << endl;
 	}
@@ -1460,6 +1474,7 @@ void ntTriSkin::set_Mode(D_mode mode) {
 			g = mapRange(0, 0.8, 0, 1, w);
 			b = 0;
 
+			panels.at(i)->set_Color(ntColor4f(r,g,b,1));
 			panels.at(i)->faces_G.at(0)->at(0).setColor(Col4(r, g, b, 1));
 			panels.at(i)->faces_G.at(0)->at(0).edges.at(0).setCol(ntColor4f(0, 0, 0, .5));
 			panels.at(i)->faces_G.at(0)->at(0).edges.at(1).setCol(ntColor4f(0, 0, 0, .5));

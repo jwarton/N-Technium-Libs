@@ -164,10 +164,10 @@ private:
 
 	///////////////////////////////////////////////////////////////
 	////////////////////////////////////// DEFAULT PANEL PARAMETERS
-	perf_Mode perf_mode		= SUBD;
-	perf_Type perf_type		= DOT;
-	perf_Style perf_style	= perf_06;
-	grid_Type grid_type		= TRI;
+	perf_Mode  perf_mode		= SUBD;
+	perf_Type  perf_type		= DOT;
+	perf_Style perf_style		= perf_06;
+	grid_Type  grid_type		= TRI;
 
 	///////////////////////////////////////////////////////////////
 	//////////////////////////////////////////// LIST OF ALL PANELS
@@ -189,8 +189,8 @@ private:
 	float areaP_Min =	99999999;
 
 	float phi_Min =		180;
-	float phi_Max =		0;
-	int	  perfSpacing = 1.5;
+	float phi_Max =		0.0;
+	float perfSpacing = 1.5;
 	///////////////////////////////////////////////////////////////
 	/////////////////////////////////////////////////////// DISPLAY
 	D_mode mode_M = vW;						// CURRENT DISPLAY MODE
@@ -248,7 +248,7 @@ public:
 	/////////////////////////////////////////////////// CONVIENENCE
 	///////////////////////////////////////////////////////////////
 	void set_FileCnt(int begin, int end = 0);
-	void set_Parameters(grid_Type grid_type, perf_Type perf_type, float perf_spacing);
+	void set_Parameters(grid_Type grid_type, perf_Type perf_type, float perf_spacing = 1.5f);
 	void set_PerfStyle(perf_Style perf_style);
 	void set_PerfType( perf_Type perf_type);
 	//void set_Fastener(float min, float max);

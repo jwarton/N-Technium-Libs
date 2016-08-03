@@ -33,6 +33,7 @@
 *.tlog
 *.log
 *.sql
+*.sdf
 *.sqlite
 
 # OS generated files #

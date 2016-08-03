@@ -589,13 +589,17 @@ void ntGLFWsetup::EventHandler_MOUSE(){
 			P_xpos = M_xpos;
 			P_ypos = M_ypos;
 		}
-		if (M_ypos > P_ypos) {
-			baseApp->zoom -= (D_xpos * .05);
-			baseApp->fovA -= (D_xpos * .05);
+		if (M_ypos > P_ypos && baseApp->zoom > 0) {
+			baseApp->zoom -= (D_xpos * .1);
+			if (baseApp->zoom < 0) {
+				baseApp->zoom = 0;
+			}
 		}
-		if (M_ypos < P_ypos) {
-			baseApp->zoom += (D_xpos * .05);
-			baseApp->fovA += (D_xpos * .05);
+		if (M_ypos < P_ypos && baseApp->zoom < 165 - baseApp->fovA) {
+			baseApp->zoom += (D_xpos * .1);
+			if (baseApp->zoom > 165 - baseApp->fovA) {
+				baseApp->zoom = 165 - baseApp->fovA;
+			}
 		}
 	}
 	/// PAN
@@ -609,10 +613,10 @@ void ntGLFWsetup::EventHandler_MOUSE(){
 		D_xpos = M_xpos - P_xpos;
 		D_ypos = M_ypos - P_ypos;
 
-		baseApp->camX -= (D_xpos * .0005);
-		baseApp->camZ += (D_ypos * .0005);
-		baseApp->tarX -= (D_xpos * .0005);
-		baseApp->tarZ += (D_ypos * .0005);
+		baseApp->camX -= (D_xpos * .005);
+		baseApp->camZ += (D_ypos * .005);
+		baseApp->tarX -= (D_xpos * .005);
+		baseApp->tarZ += (D_ypos * .005);
 	}
 }
 

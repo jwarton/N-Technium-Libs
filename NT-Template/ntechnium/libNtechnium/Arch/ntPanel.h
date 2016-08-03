@@ -69,7 +69,9 @@ public:
 	ntVec3							*vecs[13];
 	ntVertex						*vert0,*vert1,*vert2;
 	std::vector<ntVertex*>			 verts;
-	std::vector<ntEdge>				 edges;
+	std::vector<ntEdge>				 edges;		// CENTERLINE 0-2 : NODE 
+												// CENTERLINE 3-5 : FASTENER 
+												// CENTERLINE 6-8 : GAP 
 
 	std::vector<ntVec3*> c_G;		  //GLOBAL PANEL CORNER POSITONS
 	std::vector<ntVec3*> c_L;		  //LOCAL  PANEL CORNER POSITONS
@@ -175,8 +177,7 @@ public:
 	void set_vG();
 	void set_cG(ntVec3* pt, int index);
 	void set_fG(ntVec3* pt, int index);
-	void set_fCLines();
-	void set_nG(string n_G);
+	void set_Edges();	void set_nG(string n_G);
 	void set_UVW(string string_UVW);
 	void set_UVW(std::vector <ntVec3*>	vecs_UV);
 	void set_Dir(string dir);
