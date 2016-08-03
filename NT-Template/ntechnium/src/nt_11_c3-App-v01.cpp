@@ -8,7 +8,7 @@ void tokyoApp01::init() {
 	bool doSubTiles			= false;
 	bool doMosaic			= false;
 	bool doWritePixels		= false;
-	bool doWriteAvgTiles	= true;
+	bool doWriteAvgTiles	= false;
 	///////////////////////////////////////////////////////////////
 	//////// GRID IMAGE AND COMPUTE MATRIX MANIPULATION PERFORMANCE
 	path_Out = path_Out + pathExtension;
@@ -55,14 +55,14 @@ void tokyoApp01::init() {
 		img_C.save(path_Out, fileName + "_invert.jpg" );
 
 		img_C.reset();
-		//img_C.sort(0);
-		//img_C.save(path_Out, fileName + "_sort.jpg");
+		img_C.sort(0);
+		img_C.save(path_Out, fileName + "_sort.jpg");
 
-		//img_C.add();
-		//img_C.save(path_Out, fileName + "_add.jpg");
+		img_C.add();
+		img_C.save(path_Out, fileName + "_add.jpg");
 
-		//img_C.sub();
-		//img_C.save(path_Out, fileName + "_sub.jpg");
+		img_C.sub();
+		img_C.save(path_Out, fileName + "_sub.jpg");
 	}
 	
 	///////////////////////////////////////////////////////////////
