@@ -96,8 +96,8 @@ int main(int argc, char const** argv){
 	//AppContent* c = new afApp01();		//ARRAY FIRE IMPELEMENTATION PROTOTYPE TEST
 	//AppContent* c = new afApp02();		
 	//AppContent* c = new tokyoApp00();		//C3 VISUALIZING TOKYO VIGNETTES
-	//AppContent* c = new tokyoApp01();		//C3 PROFILE SUBDIVISION
-	AppContent* c = new tokyoApp02();		//C3 ORIGAMI STRUCTURE | IMAGE MAPPING
+	AppContent* c = new tokyoApp01();		//C3 PROFILE SUBDIVISION
+	//AppContent* c = new tokyoApp02();		//C3 ORIGAMI STRUCTURE | IMAGE MAPPING
 
 	///TYPE
 	//AppContent* c = new typeApp();
@@ -115,8 +115,8 @@ int main(int argc, char const** argv){
 
 	c->set_AppDim(x, y);
 	//jpw::ntGLFWsetup program(100, 100, "NT-INTERFACE", new genApp(c));
-	jpw::ntGLFWsetup program("NT-INTERFACE", new genApp(c));
-	//jpw::ntGLFWsetup program(x,y, "NT-INTERFACE", new genApp(c)); 
+	//jpw::ntGLFWsetup program("NT-INTERFACE", new genApp(c));
+	jpw::ntGLFWsetup program(x,y, "NT-INTERFACE", new genApp(c)); 
 	//simple app minimal ogl setup/ test
 	//jpw::ntSimpleApp simpleApp = ntSimpleApp(900, 900,"SIMPLE APP_TITLE");
 

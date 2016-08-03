@@ -52,4 +52,5 @@ Thumbs.db
 *.jpg
 
 NT-Template/ntechnium/libsImport/**
-NT-Template/ntechnium/output/
+NT-Template/ntechnium/output/*
+NT-Template/nt-project template/.vs/NT-Template/v14/*
