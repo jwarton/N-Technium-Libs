@@ -9,6 +9,8 @@
 #define VEC3_JPW_NTECHNIUM
 
 #include <GLFW/glfw3.h>
+#include <math.h>
+#include <armadillo>
 
 namespace jpw{
 
@@ -44,12 +46,17 @@ namespace jpw{
 		void invert();
 		//returns magnitude as float value
 		float mag();
+		float mag2(); //magnitude squared;  //efficency
 		//distance to argument
 		float distance(ntVec3* v);
 		float distSqrd(ntVec3* v);
 		//transormations
 		void translate(ntVec3* pos, ntVec3* dir, float dist);
 		void scale(ntVec3* pos, float factor);
+		void align(ntVec3* axis_T);
+		void align2v(ntVec3* axis_T, ntVec3* axis_S);
+		void round(float t);
+		bool compare(ntVec3* vec);
 
 		void unitize();
 		void normalize();

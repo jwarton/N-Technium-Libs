@@ -13,6 +13,7 @@
 #include <array>
 #include <vector>
 #include <numeric>
+
 #include "ntVec3.h"
 #include "ntColor4f.h"
 #include "ntVertex.h"
@@ -119,7 +120,7 @@ public:
 	float	r_Min			= 0.1875;		//3/16"
 	float	r_Max			= 0.5;			// 0.625;	//5/8"
 	float	edge_Offset		= 0.75 + r_Max;
-	int		n_seg			= 36;
+	int		n_seg			= 90;
 	int		perf_size;
 	double	perf_spaceMin	= 1.5;
 	double	perf_area;

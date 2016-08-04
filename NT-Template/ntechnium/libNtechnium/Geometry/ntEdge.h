@@ -46,6 +46,8 @@ public:
 	ntEdge(ntVec3* v0,ntVec3* v1,ntVertex* vert0, ntVertex* vert1);
 
 	float getLength();
+	float getLength2();
+
 	ntVec3*  getMid();
 	ntVec3*	 get_PtP(double param);
 	void setCol(ntColor4f col);
@@ -56,7 +58,19 @@ public:
 	void display_X();	///TEMPORARY FOR TRUSS DISPLAY
 };
 
-inline float ntEdge::getLength() {
+inline float ntEdge::getLength() {	
+	ntVec3*axis = new ntVec3(1,0,0);
+	ntVec3 vE;
+
+	vE.set(v1);
+	vE.sub(v0);
+	vE.align(axis);
+
+	float length = abs(vE.x);
+	return length;
+}
+inline float ntEdge::getLength2() {
+
 	float length = v0->distance(v1);
 	return length;
 }
@@ -71,22 +85,9 @@ inline ntVec3* ntEdge::getMid() {
 	return v;
 }
 inline ntVec3* ntEdge::get_PtP(double param) {
-	//float len = getLength();
-	//float mag = len * param;
+
 	ntVec3 * v = new ntVec3(v1->x, v1->y, v1->z);
 	v->scale(v0, param);
-
-	//ntVec3 * v = new ntVec3(v1->x, v1->y, v1->z);
-	//if (param > 0 && param < 1) {
-	//	float x = (v0->x + v1->x) * param;
-	//	float y = (v0->y + v1->y) * param;
-	//	float z = (v0->z + v1->z) * param;
-
-	//	v = new ntVec3(x, y, z);
-	//}
-	//if (param == 0) {
-	//	v = new ntVec3(v0->x, v0->y, v0->z);
-	//}
 	return v;
 }
 

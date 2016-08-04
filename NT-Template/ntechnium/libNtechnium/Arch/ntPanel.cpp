@@ -390,9 +390,9 @@ void ntPanel::plot_Fast(int div){
 			double distMin = pow(len,2) * 2;
 
 			for (int k = 0; k < pts_P.size(); k++) {
-				double dist = pts_F.at(j)->distSqrd(pts_P.at(k));
-				if (dist <= distMin) {
-					distMin = dist;
+				double dist2 = pts_F.at(j)->distSqrd(pts_P.at(k));
+				if (dist2 <= distMin) {
+					distMin = dist2;
 					index = k;
 				}
 			}
@@ -822,13 +822,25 @@ float ntPanel::get_AngleMax() {
 }
 float ntPanel::get_EdgeMin() {
 
-	float lenMin = 999999999999;// v1->x;
+	float lenMin = 999999999999;
+	float d2;
+	ntVec3* vS   = new ntVec3();
+	ntVec3* vE   = new ntVec3();
+	int index;
+
 	for (int i = 3; i < 6; i++) {
-		float len = edges[i].getLength();
-		if (len < lenMin) {
-			lenMin = len;
+		vS->set(edges[i].v0);
+		vE->set(edges[i].v1);
+		d2 = vS->distSqrd(vE);
+
+		if (d2 < lenMin) {
+			lenMin = d2;
+			index = i;
 		}
 	}
+	delete vS, vE;
+	//SET LENGTH TO ACTUAL EDGE LENGTH
+	lenMin = edges[index].getLength();
 	return lenMin;
 }
 float ntPanel::get_Weight() {
