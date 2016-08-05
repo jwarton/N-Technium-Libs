@@ -19,6 +19,9 @@
 #include <iomanip>
 #include <armadillo>
 
+#include <vector>
+#include <algorithm>
+#include <numeric>
 #include <thread>
 #include <future>
 #include <chrono>
@@ -108,7 +111,7 @@ private:
 	///////////////////////////////////////////////////////////////
 	////////////////////////////////////// SOURCE DATA AND FILE I/O
 	string url_IMG;
-	string url_IMGs;
+	static string url_IMGs;
 	string url_TXT;
 	string path_OUT;
 
@@ -119,11 +122,10 @@ private:
 
 	ntImage  img_SRC;
 	af::array img_IN;
-	arma::mat img_00;
-	//arma::mat img_SD;
+	static arma::mat img_00;
 
-	bool isImgLoaded	= false;
-	bool isImgMosaic	= false;
+	static bool isImgLoaded;
+	static bool isImgMosaic;
 	bool isExceed		= false;
 
 	///////////////////////////////////////////////////////////////
@@ -164,10 +166,10 @@ private:
 
 	///////////////////////////////////////////////////////////////
 	////////////////////////////////////// DEFAULT PANEL PARAMETERS
-	perf_Mode  perf_mode		= SUBD;
-	perf_Type  perf_type		= DOT;
-	perf_Style perf_style		= perf_06;
-	grid_Type  grid_type		= TRI;
+	static perf_Mode  perf_mode;
+	static perf_Type  perf_type;
+	static perf_Style perf_style;
+	static grid_Type  grid_type;
 
 	///////////////////////////////////////////////////////////////
 	//////////////////////////////////////////// LIST OF ALL PANELS
@@ -180,17 +182,17 @@ private:
 	ntGraph graph01;	// PERFORATION AREA
 	ntGraph graph02;	// IMAGE HISTOGRAM
 
-	std::vector<float> p_Rad;
+	static std::vector<float> p_Rad;
 
-	int	n_perf =		0;
-	float areaS_gross = 0;
-	float areaS_net =	0;
-	float areaP_Max =	0;
-	float areaP_Min =	99999999;
+	static int	n_perf;
+	static float areaS_gross;
+	static float areaS_net;
+	static float areaP_Max;
+	static float areaP_Min;
 
-	float phi_Min =		180;
-	float phi_Max =		0.0;
-	float perfSpacing = 1.5;
+	static float phi_Min;
+	static float phi_Max;
+	static float perfSpacing;
 	///////////////////////////////////////////////////////////////
 	/////////////////////////////////////////////////////// DISPLAY
 	D_mode mode_M = vW;						// CURRENT DISPLAY MODE
@@ -198,40 +200,40 @@ private:
 
 	///////////////////////////////////////////////////////////////
 	//////////////////////////////////////////// UTILITIY FUNCTIONS
+	/// ///////////////////////////////////////////////////////////
+	static bool set_MT(int ind_S, int ind_E, std::vector<ntPanel*>* panels, int index);
+	static void funct_MT(ntPanel* panel_ptr);
 	void funct(ntPanel* panel_ptr);
 
-	int gen = 1;
+	static int gen;
 	int gen_G = gen;
 	int gen_L = gen;
 
 	void read_DATA(string url);
 	void read_IMG();					// IMAGE DATA:  GLOBAL
-	void read_IMG(string url);			// IMAGE DATA:  LOCAL 
+	static void read_IMG(string url);			// IMAGE DATA:  LOCAL 
 
 	ntVec3 add_VEC(string line);
 	string format_STR(string line);
 	string format_VEC(ntVec3* vec);
 
-	void align_Panel(ntPanel* panel_ptr, ntVec3* axis);
-	void align_Panel(ntPanel* panel_ptr, ntVec3* axis_A, ntVec3* axis_B, ntVec3* pos);
-	void round_Pos(ntPanel* panel_ptr, float tolerance);
-	void log_Angles(ntPanel* panel_ptr);
+	static void align_Panel(ntPanel* panel_ptr, ntVec3* axis_A, ntVec3* axis_B, ntVec3* pos);
+	static void log_Angles(ntPanel* panel_ptr);
 
 	void write_Panel_TXT(ntPanel* panel_ptr);
 	void write_Panel_IMG(ntPanel* panel_ptr);
 
 	//void map_ImgCol(ntPanel* panel_ptr);				// BUILD COLOR INDEX FROM UV
-	void map_ImgCol(ntPanel* panel_ptr, arma::mat* img_ptr);	// REMAP COLOR FROM IMAGE FILE
-	void map_ImgCol(ntPanel* panel_ptr, arma::fmat* img_ptr);	// REMAP COLOR FROM IMAGE FILE
-	void tile_Img(int U, int V, af::array img);
+	static void map_ImgCol(ntPanel* panel_ptr, arma::mat* img_ptr);	// REMAP COLOR FROM IMAGE FILE
+	static void map_ImgCol(ntPanel* panel_ptr, arma::fmat* img_ptr);	// REMAP COLOR FROM IMAGE FILE
+	//void tile_Img(int U, int V, af::array img);
 
 	bool doSaveTXT = false;
 	bool doSaveIMG = false;
 
 	///////////////////////////////////////////////////////////////
 	///////////////////////////////////// DIPSLAY SCALING FUNCTIONS
-	void set_Scale3D(ntPanel* panel_ptr, double scFx);		// TEMPORARY FUNCTION FOR DISPLAY ONLY
-	void set_Scale2D(ntPanel* panel_ptr, double scFx);		// TEMPORARY FUNCTION FOR DISPLAY ONLY
+	static void set_Scale2D(ntPanel* panel_ptr, double scFx);		// TEMPORARY FUNCTION FOR DISPLAY ONLY
 public:
 	///////////////////////////////////////////////////////////////
 	////////////////////////////////////////////////// CONSTRUCTORS

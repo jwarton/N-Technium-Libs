@@ -2,11 +2,34 @@
 
 using namespace arma;
 
+
+int ntTriSkin::gen = 1;
+
+perf_Mode  ntTriSkin::perf_mode  = SUBD;
+perf_Type  ntTriSkin::perf_type  = DOT;
+perf_Style ntTriSkin::perf_style = perf_06;
+grid_Type  ntTriSkin::grid_type  = TRI;
+bool ntTriSkin::isImgLoaded = false;
+bool ntTriSkin::isImgMosaic = false;
+string ntTriSkin::url_IMGs;
+arma::mat ntTriSkin::img_00 = zeros<mat>(1, 1);
+
+std::vector<float> ntTriSkin::p_Rad;
+int	ntTriSkin::n_perf;
+float ntTriSkin::areaS_gross = 0;
+float ntTriSkin::areaS_net = 0;
+float ntTriSkin::areaP_Max = 0;
+float ntTriSkin::areaP_Min = 99999999;
+float ntTriSkin::phi_Min = 180;
+float ntTriSkin::phi_Max = 0.0;
+float ntTriSkin::perfSpacing = 1.5;
+
 ntTriSkin::ntTriSkin() {}
 ntTriSkin::ntTriSkin(std::string url_TXT, std::string url_IMG, std::string obj_Name) :
 	url_TXT(url_TXT), url_IMG(url_IMG), obj_Name(obj_Name) {
 
 }
+
 void ntTriSkin::init() {
 	if (isPathDefined == true) {
 		///
@@ -21,7 +44,8 @@ void ntTriSkin::init() {
 				read_DATA(url);
 				std::cout << url << endl;
 			}
-		} else {
+		}
+		else {
 			url = url_TXT + ".txt";
 			read_DATA(url);
 		}
@@ -44,23 +68,92 @@ void ntTriSkin::init() {
 		std::cout << "READ IMG COMPLETE           -----------------------------------" << endl;
 		std::cout << "IMAGE SIZE:                 " << img_X << " x " << img_Y << "\n" << endl;
 		std::cout << "CALCULATING PANEL GEOMETRY  -----------------------------------" << endl;
-		
-		unsigned thread_Cnt = std::thread::hardware_concurrency();
-	
-		int index_S = 0;
-		int index_E = 0;
-		float items = (panel_Dim / thread_Cnt) + 1;
-		items = ceil(items);
 
-		//std::cout << panel_Dim << endl;
 		///
 		t_CPU = clock();
-		for (int i = 0; i < panel_Dim; i++) {
+		/// TEST MULTITHREADING
+		bool isMultiThread = true;
+		unsigned thread_Cnt = std::thread::hardware_concurrency();
 
-			ntPanel* panel_ptr(panels.at(i));
-			//std::cout << panel_ptr->get_ID() << endl;
-			funct(panel_ptr);
+		std::cout <<  "USING "  << thread_Cnt << " THREADS\n" << endl;
+
+		if (isMultiThread == true) {
+			int index_S = 0;
+			int index_E = 0;
+			//float items = (panel_Dim / thread_Cnt) + 1;
+			float items = panel_Dim / 12;
+			items = ceil(items);
+
+			index_E = items - 1;
+
+			std::future<bool> result1 = std::async(std::launch::async, set_MT, index_S, index_E, &panels, 1);
+			index_S += items;
+			index_E += items;
+			std::future<bool> result2 = std::async(std::launch::async, set_MT, index_S, index_E, &panels, 2);
+			index_S += items;
+			index_E += items;
+			std::future<bool> result3 = std::async(std::launch::async, set_MT, index_S, index_E, &panels, 3);
+			index_S += items;
+			index_E += items;
+			std::future<bool> result4 = std::async(std::launch::async, set_MT, index_S, index_E, &panels, 4);
+			index_S += items;
+			index_E += items;
+			std::future<bool> result5 = std::async(std::launch::async, set_MT, index_S, index_E, &panels, 5);
+			index_S += items;
+			index_E += items;
+			std::future<bool> result6 = std::async(std::launch::async, set_MT, index_S, index_E, &panels, 6);
+			index_S += items;
+			index_E += items;
+			std::future<bool> result7 = std::async(std::launch::async, set_MT, index_S, index_E, &panels, 7);
+			index_S += items;
+			index_E += items;
+			std::future<bool> result8 = std::async(std::launch::async, set_MT, index_S, index_E, &panels, 8);
+			index_S += items;
+			index_E += items;
+			std::future<bool> result9 = std::async(std::launch::async, set_MT, index_S, index_E, &panels, 9);
+			index_S += items;
+			index_E += items;
+			std::future<bool> result10 = std::async(std::launch::async, set_MT, index_S, index_E, &panels, 10);
+			index_S += items;
+			index_E += items;
+			std::future<bool> result11 = std::async(std::launch::async, set_MT, index_S, index_E, &panels, 11);
+			index_S += items;
+			index_E += items;
+			std::future<bool> result12 = std::async(std::launch::async, set_MT, index_S, index_E, &panels, 12);
+
+			bool ret1 = result1.get();
+			bool ret2 = result2.get();
+			bool ret3 = result3.get();
+			bool ret4 = result4.get();
+			bool ret5 = result5.get();
+			bool ret6 = result6.get();
+			bool ret7 = result7.get();
+			bool ret8 = result8.get();
+			bool ret9 = result9.get();
+			bool ret10 = result10.get();
+			bool ret11 = result11.get();
+			bool ret12 = result12.get();
+
+		//float items = (panel_Dim / thread_Cnt) + 1;
+		//items = ceil(items);
+
+			//for (int i = 0; i < thread_Cnt; i++) {
+
+			//	index_S = items * i;
+			//	index_E = (items * i) + items - 1;
+
+			//	std::future<bool> result = std::async(std::launch::async, set_MT, index_S, index_E, &panels);
+			//	bool ret = result.get();
+			//}
+		} else {
+			for (int i = 0; i < panel_Dim; i++) {
+
+				ntPanel* panel_ptr(panels.at(i));
+				//std::cout << panel_ptr->get_ID() << endl;
+				funct(panel_ptr);
+			}
 		}
+
 		time = format_SEC(clock() - t_CPU);
 		///
 		///////////////////////////////////////////////////////////////////////
@@ -97,8 +190,6 @@ void ntTriSkin::init() {
 		std::cout << "DEVIATION:                  " << phi_Max - phi_Min << "\n" << endl;
 
 		std::cout << "///////////////////////////////////////////////////////////////\n";
-		index_S = 0;
-		index_E = 0;
 	
 		///////////////////////////////////////////////////////////////////////
 		/////////////////////////////////////// GRAPH PERFORATION | PANELS DATA
@@ -442,7 +533,8 @@ void ntTriSkin::read_IMG() {
 	img_X = img_IN.dims(1);
 	img_Y = img_IN.dims(0);
 
-	img_00 = zeros<mat>(img_IN.dims(0), img_IN.dims(1));
+	//img_00 = zeros<mat>(img_IN.dims(0), img_IN.dims(1));
+	img_00.resize(img_IN.dims(0), img_IN.dims(1));
 	af::array img_LOADER(img_IN.dims(0), img_IN.dims(1), img_00.memptr());
 	img_LOADER += img_IN;
 	
@@ -763,6 +855,103 @@ void ntTriSkin::set_FileCnt(int begin, int end) {
 	}
 }
 ///////////////////////////////////////////////////////////////
+bool ntTriSkin::set_MT(int ind_S, int ind_E, std::vector<ntPanel*>* panels, int index) {
+	for (int i = ind_S; i <= ind_E; i++) {
+		if (i < panels->size()) {
+			funct_MT(panels->at(i));
+		}
+	}
+	std::cout << "THREAD:  " << index << " COMPLETE" << endl;
+	return true;
+}
+void ntTriSkin::funct_MT(ntPanel* panel_ptr) {
+	Vec3* axis_Z = new Vec3(0, 0, 1);
+	Vec3* axis_X = new Vec3(1, 0, 0);
+
+	///////////////////////////////////////////////////////////////
+	/////////////////////////////// ALIGN CENTROID/NORMAL TO Z-AXIS
+	panel_ptr->calcCentroid();
+	panel_ptr->calcNorm();
+	
+	align_Panel(panel_ptr, axis_Z, &panel_ptr->norm, panel_ptr->cent);
+	///////////////////////////////////////////////////////////////
+	/////////////////////////////////////// ALIGN V0/EDGE TO X-AXIS
+	Vec3 edge_X = Vec3(panel_ptr->v1->x, panel_ptr->v1->y, panel_ptr->v1->z);
+	edge_X.sub(panel_ptr->v0);
+	align_Panel(panel_ptr, axis_X, &edge_X, panel_ptr->v0);
+
+	panel_ptr->calcArea();
+	panel_ptr->calcPhi();
+	float areaP = panel_ptr->get_Area();
+
+	/// //END PERFORATION TIMER
+	///////////////////////////////////////////////////////////////
+	panel_ptr->sub_Div(gen);	    // SUBDIVIDE FOR GLOBAL DISPLAY
+									// REVISE PER FASTENER GRID !!!
+									// !!!!!!!!!!!!!!!!!!!!!!!!!!!!
+	///////////////////////////////////////////////////////////////
+	///////////////////////////////////// CALCULATE PEFORATION GRID
+	int div = floor(panel_ptr->get_EdgeMin() / perfSpacing);
+	panel_ptr->plot_Perf(div, grid_type, perf_type);
+	panel_ptr->set_PerfStyle(perf_style);
+
+	///////////////////////////////////////////////////////////////
+	////////////////////////////////// LOAD TEXTURE MAP TO SURFACES
+	if (isImgLoaded == true) {
+		map_ImgCol(panel_ptr, &img_00);
+	}
+	///////////////////////////////////////////////////////////////
+	///////////////////////////////////// EVALUATE MEAN VALUE INDEX
+	//if (isImgMosaic == true) {
+	//	float mean = panel_ptr->get_MeanVal();
+	//	int index = ceil(mapRange(0, 255, 0, 1, mean));
+	//	string url = url_IMGs + to_string(index) + ".jpg";
+	//	ntImage image(url);
+	//	arma::fmat* matrix = image.getMatrix();
+	//	//*matrix = 255 - *matrix;
+	//	read_IMG(url);
+	//	panel_ptr->reparam_UV();
+	//	map_ImgCol(panel_ptr, matrix);
+	//}
+	///////////////////////////////////////////////////////////////
+	//////////////////////////////////// CALCULATE PERFORATION SIZE
+	panel_ptr->add_Perf();
+	//panel_ptr->set_Graph();
+	///////////////////////////////////////////////////////////////
+	//////////////////////////////////////// GRAPH PERFORATION DATA
+	//for (int i = 0; i < panel_ptr->perf_size; i++) {
+	//	/// POINTER TO MATRICES
+	//	/// FLATTEN MATRIX
+	//	/// VECTOR PUSHBACK PROCESS IS TOO COMPUTATIONALLY INTENSIVE 
+	//	p_Rad.push_back(panel_ptr->p_Rad.at(i));
+	//}
+
+	//log_Angles(panel_ptr);
+
+	//n_perf += panel_ptr->perf_size;
+	//areaS_gross += areaP;
+	//areaS_net += (areaP - panel_ptr->perf_area);
+
+	//if (areaP < areaP_Min) {
+	//	areaP_Min = areaP;
+	//}
+	//if (areaP > areaP_Max) {
+	//	areaP_Max = areaP;
+	//}
+	///////////////////////////////////////////////////////////////
+	////////////////////////////////////////// SAVE PANEL DATA DATA
+	//if (doSaveTXT == true) {
+	//	write_Panel_TXT(panel_ptr);
+	//}
+	//if (doSaveIMG == true) {
+	//	write_Panel_IMG(panel_ptr);
+	//}
+	///////////////////////////////////////////////////////////////
+	/// SCALE TO 2ND VIEWPORT--REPLACE WITH CAMERA FIT FUNCTION !
+	/// !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+	set_Scale2D(panel_ptr, 10);
+	///
+}
 void ntTriSkin::funct(ntPanel* panel_ptr) {
 	clock_t t = clock();
 	Vec3* axis_Z = new Vec3(0, 0, 1);
@@ -772,7 +961,7 @@ void ntTriSkin::funct(ntPanel* panel_ptr) {
 	/////////////////////////////// ALIGN CENTROID/NORMAL TO Z-AXIS
 	panel_ptr->calcCentroid();
 	panel_ptr->calcNorm();
-	
+
 	align_Panel(panel_ptr, axis_Z, &panel_ptr->norm, panel_ptr->cent);
 	///////////////////////////////////////////////////////////////
 	/////////////////////////////////////// ALIGN V0/EDGE TO X-AXIS
@@ -985,7 +1174,7 @@ vertPos[cnt] = val;
 
 ///////////////////////////////////////////////////////////////
 //////////////////// PANEL TRANSFORMATION AND MAPPING FUNCTIONS
-void ntTriSkin::align_Panel(ntPanel* panel_ptr, Vec3* axis_A, Vec3* axis_B, ntVec3* pos) {
+void ntTriSkin::align_Panel(ntPanel* panel_ptr, ntVec3* axis_A, ntVec3* axis_B, ntVec3* pos) {
 	int cnt = 13;	//length of vecs[]
 	////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 	/////////////////////////////////////////////////////////////////////////////////////////////// TRANSLATE TO POS

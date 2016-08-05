@@ -62,14 +62,8 @@ void ovisApp::init() {
 				index_E = panel_Dim - 1;
 			}
 
-			async(launch::async, ovisApp::fun02, index_S, index_E, &panels, i);
-			//a.get();
-
-			//vector<thread> ths;
-			//ths.push_back(thread(ovisApp::fun02, index_S, index_E, &panels, i));
-			//for (auto& th : ths) {
-			//	th.join();
-			//}
+			std::future<void> result = std::async(std::launch::async, fun02, index_S, index_E, &panels, i);
+			result.get();
 		}
 	} else {
 		///////////////////////////////////////////////////////////////
@@ -706,7 +700,7 @@ void ovisApp::funct(ntPanel* panel_ptr) {
 	//if (TB > 58 && TB < 60 && ZP > 12) {
 	//if (TB > 59) {
 	//write_Panel_TXT(panel_ptr);
-	write_Panel_IMG(panel_ptr);
+	//write_Panel_IMG(panel_ptr);
 	//}
 
 	t = clock() - t;
