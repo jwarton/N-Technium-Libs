@@ -117,8 +117,8 @@ void AppContent::view_Orth() {
 void AppContent::set_Bounds() {
 	ntVertex v;
 	v.getBounds(BB_min, BB_max);
-	BB_min->print();
-	BB_max->print();
+	//BB_min->print();
+	//BB_max->print();
 }
 void AppContent::set_Centroid() {
 
