@@ -71,80 +71,35 @@ void ntTriSkin::init() {
 
 		///
 		t_CPU = clock();
-		/// TEST MULTITHREADING
-		bool isMultiThread = true;
+
+		///////////////////////////////////////////////////////////////////////
+		//////////////////////////////////////////// MULTITHREAD BUILD FUNCTION
 		unsigned thread_Cnt = std::thread::hardware_concurrency();
-
-		std::cout <<  "USING "  << thread_Cnt << " THREADS\n" << endl;
-
 		if (isMultiThread == true) {
-			int index_S = 0;
-			int index_E = 0;
-			//float items = (panel_Dim / thread_Cnt) + 1;
-			float items = panel_Dim / 12;
-			items = ceil(items);
+			std::vector <std::future<bool>> threads;
 
-			index_E = items - 1;
+			if (panel_Dim > 1000) {
+				thread_Cnt *= 100; /// REVEIW LITERATURE ON THREAD POOLS
+				float items = (panel_Dim / thread_Cnt) + 1;
+				items = ceil(items);
+				int index_S = 0;
+				int index_E = 0;
 
-			std::future<bool> result1 = std::async(std::launch::async, set_MT, index_S, index_E, &panels, 1);
-			index_S += items;
-			index_E += items;
-			std::future<bool> result2 = std::async(std::launch::async, set_MT, index_S, index_E, &panels, 2);
-			index_S += items;
-			index_E += items;
-			std::future<bool> result3 = std::async(std::launch::async, set_MT, index_S, index_E, &panels, 3);
-			index_S += items;
-			index_E += items;
-			std::future<bool> result4 = std::async(std::launch::async, set_MT, index_S, index_E, &panels, 4);
-			index_S += items;
-			index_E += items;
-			std::future<bool> result5 = std::async(std::launch::async, set_MT, index_S, index_E, &panels, 5);
-			index_S += items;
-			index_E += items;
-			std::future<bool> result6 = std::async(std::launch::async, set_MT, index_S, index_E, &panels, 6);
-			index_S += items;
-			index_E += items;
-			std::future<bool> result7 = std::async(std::launch::async, set_MT, index_S, index_E, &panels, 7);
-			index_S += items;
-			index_E += items;
-			std::future<bool> result8 = std::async(std::launch::async, set_MT, index_S, index_E, &panels, 8);
-			index_S += items;
-			index_E += items;
-			std::future<bool> result9 = std::async(std::launch::async, set_MT, index_S, index_E, &panels, 9);
-			index_S += items;
-			index_E += items;
-			std::future<bool> result10 = std::async(std::launch::async, set_MT, index_S, index_E, &panels, 10);
-			index_S += items;
-			index_E += items;
-			std::future<bool> result11 = std::async(std::launch::async, set_MT, index_S, index_E, &panels, 11);
-			index_S += items;
-			index_E += items;
-			std::future<bool> result12 = std::async(std::launch::async, set_MT, index_S, index_E, &panels, 12);
-
-			bool ret1 = result1.get();
-			bool ret2 = result2.get();
-			bool ret3 = result3.get();
-			bool ret4 = result4.get();
-			bool ret5 = result5.get();
-			bool ret6 = result6.get();
-			bool ret7 = result7.get();
-			bool ret8 = result8.get();
-			bool ret9 = result9.get();
-			bool ret10 = result10.get();
-			bool ret11 = result11.get();
-			bool ret12 = result12.get();
-
-		//float items = (panel_Dim / thread_Cnt) + 1;
-		//items = ceil(items);
-
-			//for (int i = 0; i < thread_Cnt; i++) {
-
-			//	index_S = items * i;
-			//	index_E = (items * i) + items - 1;
-
-			//	std::future<bool> result = std::async(std::launch::async, set_MT, index_S, index_E, &panels);
-			//	bool ret = result.get();
-			//}
+				for (int i = 0; i < thread_Cnt; i++) {
+					index_S = items * i;
+					index_E = (items * i) + items - 1;
+					threads.push_back(std::async(std::launch::async, set_MT, index_S, index_E, &panels, i));
+				}
+			} else {
+				for (int i = 0; i < panel_Dim; i++) {
+					ntPanel* panel_ptr(panels.at(i));
+					threads.push_back(std::async(std::launch::async, build_MT, panel_ptr));
+				}
+			}
+			std::cout << "USING " << threads.size() << " THREADS\n" << endl;
+			for (int i = 0; i < threads.size(); i++) {
+				bool ret = threads[i].get();
+			}
 		} else {
 			for (int i = 0; i < panel_Dim; i++) {
 
@@ -858,13 +813,12 @@ void ntTriSkin::set_FileCnt(int begin, int end) {
 bool ntTriSkin::set_MT(int ind_S, int ind_E, std::vector<ntPanel*>* panels, int index) {
 	for (int i = ind_S; i <= ind_E; i++) {
 		if (i < panels->size()) {
-			funct_MT(panels->at(i));
+			build_MT(panels->at(i));
 		}
 	}
-	std::cout << "THREAD:  " << index << " COMPLETE" << endl;
 	return true;
 }
-void ntTriSkin::funct_MT(ntPanel* panel_ptr) {
+bool ntTriSkin::build_MT(ntPanel* panel_ptr) {
 	Vec3* axis_Z = new Vec3(0, 0, 1);
 	Vec3* axis_X = new Vec3(1, 0, 0);
 
@@ -951,6 +905,7 @@ void ntTriSkin::funct_MT(ntPanel* panel_ptr) {
 	/// !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 	set_Scale2D(panel_ptr, 10);
 	///
+	return true;
 }
 void ntTriSkin::funct(ntPanel* panel_ptr) {
 	clock_t t = clock();

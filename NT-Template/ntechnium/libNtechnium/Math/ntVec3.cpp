@@ -117,7 +117,7 @@ void ntVec3::scale(ntVec3* pos, float factor){
 	z *= factor;
 	add(pos);
 }
-void ntVec3::align(ntVec3* axis_T) {
+void ntVec3::align(ntVec3* axis_T  /*TARGET TO ALIGN WITH*/) {
 	if (compare(axis_T) == false) {
 		ntVec3* axis_A = new ntVec3(x, y, z);
 		axis_A->unitize();
@@ -156,6 +156,9 @@ void ntVec3::align(ntVec3* axis_T) {
 	//http://math.stackexchange.com/questions/180418/calculate-rotation-matrix-to-align-vector-a-to-vector-b-in-3d
 }
 void ntVec3::align2v(ntVec3* axis_T, ntVec3* axis_S) {
+
+	///////////////////////////////////////////////////////////////////////////////////////////////////////////
+	//////////////////////////////////////// FUNCTION TRANSFORMS THE POINT TO TARGET VEC RELATIVE TO SOURCE VEC
 
 	if (axis_S->compare(axis_T) == false) {
 		ntVec3 axis_A, axis_B;

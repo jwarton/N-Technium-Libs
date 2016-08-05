@@ -57,7 +57,7 @@ private:
 	void init_SysData();
 	void display_SysData();
 	void write_SysData(std::vector<string> lines);
-	//string format_SEC(clock_t time);
+	bool isMultiThread = true;
 
 	clock_t t_CPU			= 0;
 
@@ -202,7 +202,7 @@ private:
 	//////////////////////////////////////////// UTILITIY FUNCTIONS
 	/// ///////////////////////////////////////////////////////////
 	static bool set_MT(int ind_S, int ind_E, std::vector<ntPanel*>* panels, int index);
-	static void funct_MT(ntPanel* panel_ptr);
+	static bool build_MT(ntPanel* panel_ptr);
 	void funct(ntPanel* panel_ptr);
 
 	static int gen;
