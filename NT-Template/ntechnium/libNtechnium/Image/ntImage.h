@@ -109,12 +109,27 @@ public:
 	void tile(int cols, int rows, bool doSave = false);
 	void tile(int cols, int rows, std::string path);
 	void tile_CPU(int cols, int rows);
+	void tile_GPU_02(int cols, int rows, int sd_t);
 	void tile_GPU(int cols, int rows);
+	af::array tile_SD(af::array matrix, int sd_t, int gen_Max);
 
 	int getPixel(double u, double v);
 	void writePixels(std::vector<int> values, std::string url);
 
+
+	//utility functions
+	float get_Width();
+	float get_Height();
+
 	void run();
 	void display();
 };
+
+inline float ntImage::get_Width() {
+	return img_X;
+}
+inline float ntImage::get_Height() {
+	return img_Y;
+}
+
 #endif

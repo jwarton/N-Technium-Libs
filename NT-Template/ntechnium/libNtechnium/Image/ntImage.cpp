@@ -281,6 +281,107 @@ void ntImage::tile_CPU(int cols, int rows) {
 	string time = format_SEC(t);
 	std::cout << "\nPIXEL WISE PROCESSING:  " << time << "\n"  << endl;
 }
+void ntImage::tile_GPU_02(int cols, int rows, int sd_t) {
+
+	clock_t t = clock();
+
+	int avg = 0;
+	int tile_W = (floor(img_W / cols));
+	int tile_H = (floor(img_H / rows));
+
+	///
+	af::array mat_XX;	/// matrix of previously joined columns
+	af::array mat_c0;	/// matrix of previous cells in current column
+	af::array mat_r0;	/// matrix containing tile | join to mat_0
+	af::array tile_SRC;	/// matrix containing current image from tile library
+	int dim_y = floor(img_2D.dims(0) / rows);
+	int dim_x = floor(img_2D.dims(1) / cols);
+	///
+
+	for (int i = 0; i < cols; i++) {
+		for (int j = 0; j < rows; j++) {
+			///
+			int ind_x0 = dim_x * i;
+			int ind_x1 = dim_x * i + dim_x - 1;
+			int ind_y0 = dim_y * j;
+			int ind_y1 = dim_y * j + dim_y - 1;
+			tile_SRC = img_2D(af::seq(ind_y0, ind_y1), af::seq(ind_x0, ind_x1), af::span);
+
+			///
+			mat_r0 = tile_SD(tile_SRC, sd_t, 3);
+
+			/// JOIN NEXT ROW TO CURRENT COLUMN
+			if (j == 0) {
+				mat_c0 = mat_r0;
+				/// std::cout << i << " | " << j << endl;
+			}
+			else {
+				///std::cout << i << " | " << j << endl;
+				mat_c0 = af::join(0, mat_c0, mat_r0);
+			}
+		}
+		/// JOIN NEXT COLUMN TO MATRIX
+		if (i == 0) {
+			mat_XX = mat_c0;
+		}
+		else {
+			if (mat_c0.dims(0) == mat_XX.dims(0)) {
+				mat_XX = af::join(1, mat_XX, mat_c0);
+			}
+			else {
+				std::cout << "//////////////   ERROR:  COLUMN EXCEEDS MATRIX DIM(0)" << endl;
+			}
+		}
+	}
+	img_2D = mat_XX;
+
+	t = clock() - t;
+	string time = format_SEC(t);
+	std::cout << "\nPIXEL WISE PROCESSING:  " << time << "\n" << endl;
+}
+
+af::array ntImage::tile_SD(af::array matrix, int sd_t, int gen_Max) {
+	arma::fmat tile;
+	int avg = af::mean<int>(matrix);
+
+	int dim_y = matrix.dims(0);
+	int dim_x = matrix.dims(1);
+	int d = floor(dim_x * 0.5);
+
+	af::array tile_0_0 = matrix(af::seq(0, d - 1), af::seq(0, d - 1), af::span);
+	af::array tile_0_1 = matrix(af::seq(0, d - 1), af::seq(d, dim_x - 1), af::span);
+	af::array tile_1_0 = matrix(af::seq(d, dim_y - 1), af::seq(0, d - 1), af::span);
+	af::array tile_1_1 = matrix(af::seq(d, dim_y - 1), af::seq(d, dim_x - 1), af::span);
+
+	int avg_0_0 = af::mean<int>(tile_0_0);
+	int avg_0_1 = af::mean<int>(tile_0_1);
+	int avg_1_0 = af::mean<int>(tile_1_0);
+	int avg_1_1 = af::mean<int>(tile_1_1);
+
+	bool cond_00 = (avg_0_0 - avg < sd_t && avg_0_0 - avg > -sd_t);
+	bool cond_01 = (avg_0_1 - avg < sd_t && avg_0_1 - avg > -sd_t);
+	bool cond_02 = (avg_1_0 - avg < sd_t && avg_1_0 - avg > -sd_t);
+	bool cond_03 = (avg_1_1 - avg < sd_t && avg_1_1 - avg > -sd_t);
+
+	tile = zeros<fmat>(dim_y, dim_x);
+
+		matrix *= 0;
+		matrix += avg;
+
+	if (cond_00 && cond_01 && cond_02 && cond_03 && gen_Max != 0) {
+		gen_Max -= 1;
+		tile_0_0 = tile_SD(tile_0_0, sd_t, gen_Max);
+		tile_0_1 = tile_SD(tile_0_0, sd_t, gen_Max);
+		tile_1_0 = tile_SD(tile_0_0, sd_t, gen_Max);
+		tile_1_1 = tile_SD(tile_0_0, sd_t, gen_Max);
+
+		af::array c0 = af::join(0, tile_0_0, tile_1_0);
+		af::array c1 = af::join(0, tile_0_1, tile_1_1);
+		matrix = af::join(1, c0, c1);
+	}
+
+	return matrix;
+}
 void ntImage::tile_GPU(int cols, int rows) {
 	clock_t t = clock();
 
@@ -335,6 +436,7 @@ void ntImage::tile_GPU(int cols, int rows) {
 	string time = format_SEC(t);
 	std::cout << "\nMATRIX FUNCTION PROCESSING:  " << time << "\n" << endl;
 }
+
 void ntImage::tile(int cols, int rows, std::string path) {
 	path_OUT = path;
 	tile(cols, rows, true);

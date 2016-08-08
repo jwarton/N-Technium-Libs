@@ -84,6 +84,7 @@
     <ClCompile Include="..\..\ntechnium\src\nt_11_c3-App-v00.cpp" />
     <ClCompile Include="..\..\ntechnium\src\nt_11_c3-App-v01.cpp" />
     <ClCompile Include="..\..\ntechnium\src\nt_11_c3-App-v02.cpp" />
+    <ClCompile Include="..\..\ntechnium\src\nt_11_c3-App-v03.cpp" />
     <ClCompile Include="..\..\ntechnium\src\nt_App.cpp" />
     <ClCompile Include="..\..\ntechnium\src\nt_genApp.cpp" />
     <ClCompile Include="..\..\ntechnium\src\nt_simpleApp.cpp" />
@@ -161,6 +162,7 @@
     <ClInclude Include="..\..\ntechnium\src\nt_11_c3-App-v00.h" />
     <ClInclude Include="..\..\ntechnium\src\nt_11_c3-App-v01.h" />
     <ClInclude Include="..\..\ntechnium\src\nt_11_c3-App-v02.h" />
+    <ClInclude Include="..\..\ntechnium\src\nt_11_c3-App-v03.h" />
     <ClInclude Include="..\..\ntechnium\src\nt_App.h" />
     <ClInclude Include="..\..\ntechnium\src\nt_genApp.h" />
     <ClInclude Include="..\..\ntechnium\src\nt_simpleApp.h" />

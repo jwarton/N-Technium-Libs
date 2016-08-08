@@ -48,6 +48,7 @@
 #include "nt_11_c3-App-v00.h"
 #include "nt_11_c3-App-v01.h"
 #include "nt_11_c3-App-v02.h"
+#include "nt_11_c3-App-v03.h"
 
 #include <iostream>
 #include <array>
@@ -92,12 +93,14 @@ int main(int argc, char const** argv){
 	//AppContent* c = new tokyoApp00();		//C3 VISUALIZING TOKYO VIGNETTES
 	//AppContent* c = new tokyoApp01();		//C3 IMAGE SUBDIVISION AND TILING
 	//AppContent* c = new tokyoApp02();		//C3 TRIVIAL SURFACE | MOSAIC IMAGE MAPPING
+	AppContent* c = new tokyoApp03();		//C3 IMAGE SUBDIVISION AND TILING
+
 
 	///TYPE
 	//AppContent* c = new typeApp();
 	///OVIS
 	//AppContent* c = new ovisApp();
-	AppContent* c = new ovisApp02();
+	//AppContent* c = new ovisApp02();
 
 	///KUKA SOURCE CODE APPLICATIONS
 	//AppContent* c = new krlApp();
@@ -108,8 +111,8 @@ int main(int argc, char const** argv){
 	//AppContent* c = new krlMatLab;
 
 	c->set_AppDim(x, y);
-	jpw::ntGLFWsetup program("NT-INTERFACE", new genApp(c));
-	//jpw::ntGLFWsetup program(x,y, "NT-INTERFACE", new genApp(c)); 
+	//jpw::ntGLFWsetup program("NT-INTERFACE", new genApp(c));
+	jpw::ntGLFWsetup program(x,y, "NT-INTERFACE", new genApp(c)); 
 	//simple app minimal ogl setup/ test
 	//jpw::ntSimpleApp simpleApp = ntSimpleApp(900, 900,"SIMPLE APP_TITLE");
 
