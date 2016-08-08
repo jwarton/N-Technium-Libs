@@ -25,9 +25,9 @@ void tokyoApp03::init() {
 		/// WRITE IMAGE PATH
 		url_OUT = path_Out + fileName + "_TEST" + fileExt;
 
-		int w = 48 * 100;
-		int h = 86 * 100;
-		float tile_size = 1;// 0.125;//0.5; // 4;// 
+		int w = 48 * 72;
+		int h = 96 * 72;
+		float tile_size = 2;// 1;// 0.125;//0.5; // 
 
 		img_H.set_Dim(w, h);				// RESIZE IMAGE 
 
@@ -40,7 +40,6 @@ void tokyoApp03::init() {
 		int img_y = img_h * 72;
 
 		std::cout << "dim_x: " << img_x << " dim_y: " << img_y << endl;
-
 		//img_H.crop(1, img_x-1, 1, img_y-1);
 
 		int tiles_x = img_w * (1 / tile_size);
@@ -48,11 +47,10 @@ void tokyoApp03::init() {
 
 		std::cout << "tiles_x: " << tiles_x << " tiles_y: " << tiles_y << " total tiles: " << tiles_y * tiles_x << endl;
 
-
 		//img_H.tile(20, 10, path_Out);
 		//img_H.tile_GPU(tiles_x, tiles_y);
 
-		img_H.tile_GPU_02(tiles_x, tiles_y, 5);
+		img_H.tile_GPU_02(tiles_x, tiles_y, 10);
 
 		img_H.save(url_OUT);
 	}
@@ -138,7 +136,7 @@ void tokyoApp03::display(){
 	glLoadIdentity();
 
 	//img_C.display();
-	//img_H.display();
+	img_H.display();
 	//img_M.display();
 	///////////////////////////////////////////////////////////////
 }

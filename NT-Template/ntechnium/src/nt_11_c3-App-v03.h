@@ -33,7 +33,7 @@ private:
 	string fileExt = ".jpg";
 
 	string path_Out = nt_Utility::getPathToOutput();
-	string pathExtension = "c3\\hercules\\mosaic";
+	string pathExtension = "c3\\hercules\\mosaic\\";
 	
 	ntImage img_H;		// GLOBAL IMAGE
 	ntImage img_C;		// CONVOLUTION FILTERS

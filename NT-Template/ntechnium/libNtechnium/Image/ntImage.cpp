@@ -286,6 +286,7 @@ void ntImage::tile_GPU_02(int cols, int rows, int sd_t) {
 	clock_t t = clock();
 
 	int avg = 0;
+	int gen = 5;
 	int tile_W = (floor(img_W / cols));
 	int tile_H = (floor(img_H / rows));
 
@@ -307,8 +308,10 @@ void ntImage::tile_GPU_02(int cols, int rows, int sd_t) {
 			int ind_y1 = dim_y * j + dim_y - 1;
 			tile_SRC = img_2D(af::seq(ind_y0, ind_y1), af::seq(ind_x0, ind_x1), af::span);
 
+			///std::cout << "SRC:  " << tile_SRC.dims(0) << " | " << tile_SRC.dims(1) << endl;
+
 			///
-			mat_r0 = tile_SD(tile_SRC, sd_t, 3);
+			mat_r0 = tile_SD(tile_SRC, sd_t, gen);
 
 			/// JOIN NEXT ROW TO CURRENT COLUMN
 			if (j == 0) {
@@ -316,7 +319,7 @@ void ntImage::tile_GPU_02(int cols, int rows, int sd_t) {
 				/// std::cout << i << " | " << j << endl;
 			}
 			else {
-				///std::cout << i << " | " << j << endl;
+				///std::cout << "col: "  << i << " | row: " << j << endl;
 				mat_c0 = af::join(0, mat_c0, mat_r0);
 			}
 		}
@@ -327,9 +330,11 @@ void ntImage::tile_GPU_02(int cols, int rows, int sd_t) {
 		else {
 			if (mat_c0.dims(0) == mat_XX.dims(0)) {
 				mat_XX = af::join(1, mat_XX, mat_c0);
+			} else if(mat_c0.dims(0) > mat_XX.dims(0)) {
+				std::cout << "//////////////   ERROR:  COLUMN EXCEEDS MATRIX DIM(0): " << mat_c0.dims(0) << " : " << mat_XX.dims(0) << endl;
 			}
-			else {
-				std::cout << "//////////////   ERROR:  COLUMN EXCEEDS MATRIX DIM(0)" << endl;
+			else if (mat_c0.dims(0) < mat_XX.dims(0)) {
+				std::cout << "//////////////   ERROR:  MATRIX DIM(0) EXCEEDS COLUMN: " << mat_XX.dims(0) << " : " << mat_c0.dims(0) << endl;
 			}
 		}
 	}
@@ -346,40 +351,63 @@ af::array ntImage::tile_SD(af::array matrix, int sd_t, int gen_Max) {
 
 	int dim_y = matrix.dims(0);
 	int dim_x = matrix.dims(1);
-	int d = floor(dim_x * 0.5);
+	int dy = floor(dim_y * 0.5);
+	int dx = floor(dim_x * 0.5);
 
-	af::array tile_0_0 = matrix(af::seq(0, d - 1), af::seq(0, d - 1), af::span);
-	af::array tile_0_1 = matrix(af::seq(0, d - 1), af::seq(d, dim_x - 1), af::span);
-	af::array tile_1_0 = matrix(af::seq(d, dim_y - 1), af::seq(0, d - 1), af::span);
-	af::array tile_1_1 = matrix(af::seq(d, dim_y - 1), af::seq(d, dim_x - 1), af::span);
+	int avg_min = 255;
+	int avg_max = 0;
 
-	int avg_0_0 = af::mean<int>(tile_0_0);
-	int avg_0_1 = af::mean<int>(tile_0_1);
-	int avg_1_0 = af::mean<int>(tile_1_0);
-	int avg_1_1 = af::mean<int>(tile_1_1);
 
-	bool cond_00 = (avg_0_0 - avg < sd_t && avg_0_0 - avg > -sd_t);
-	bool cond_01 = (avg_0_1 - avg < sd_t && avg_0_1 - avg > -sd_t);
-	bool cond_02 = (avg_1_0 - avg < sd_t && avg_1_0 - avg > -sd_t);
-	bool cond_03 = (avg_1_1 - avg < sd_t && avg_1_1 - avg > -sd_t);
+	if (dim_x >= 10) {
+		af::array tile_0_0 = matrix(af::seq(0, dy - 1), af::seq(0, dx - 1), af::span);
+		af::array tile_0_1 = matrix(af::seq(0, dy - 1), af::seq(dx, dim_x - 1), af::span);
+		af::array tile_1_0 = matrix(af::seq(dy, dim_y - 1), af::seq(0, dx - 1), af::span);
+		af::array tile_1_1 = matrix(af::seq(dy, dim_y - 1), af::seq(dx, dim_x - 1), af::span);
 
-	tile = zeros<fmat>(dim_y, dim_x);
+		int avg_0_0 = af::mean<int>(tile_0_0);
+		int avg_0_1 = af::mean<int>(tile_0_1);
+		int avg_1_0 = af::mean<int>(tile_1_0);
+		int avg_1_1 = af::mean<int>(tile_1_1);
+
+		int avgs[4] = { af::mean<int>(tile_0_0), af::mean<int>(tile_0_1), af::mean<int>(tile_1_0), af::mean<int>(tile_1_1) };
+
+		for (int i = 0; i < 4; i++) {
+			if (avgs[i] < avg_min) { avg_min = avgs[i]; }
+			if (avgs[i] > avg_max) { avg_max = avgs[i]; }
+		}
+
+		int dev = avg_max - avg_min;
+
+		bool cond_00 = (avg_0_0 - avg < sd_t && avg_0_0 - avg > -sd_t);
+		bool cond_01 = (avg_0_1 - avg < sd_t && avg_0_1 - avg > -sd_t);
+		bool cond_02 = (avg_1_0 - avg < sd_t && avg_1_0 - avg > -sd_t);
+		bool cond_03 = (avg_1_1 - avg < sd_t && avg_1_1 - avg > -sd_t);
+		bool cond_04 = (dev > sd_t);
+
+		tile = zeros<fmat>(dim_y, dim_x);
 
 		matrix *= 0;
-		matrix += avg;
+		gen_Max = gen_Max - 1;
+		//cond_00 && cond_01 && cond_02 && cond_03 && 
+		if (cond_04 && gen_Max > 0) {
+			tile_0_0 = tile_SD(tile_0_0, sd_t, gen_Max);
+			tile_0_1 = tile_SD(tile_0_1, sd_t, gen_Max);
+			tile_1_0 = tile_SD(tile_1_0, sd_t, gen_Max);
+			tile_1_1 = tile_SD(tile_1_1, sd_t, gen_Max);
 
-	if (cond_00 && cond_01 && cond_02 && cond_03 && gen_Max != 0) {
-		gen_Max -= 1;
-		tile_0_0 = tile_SD(tile_0_0, sd_t, gen_Max);
-		tile_0_1 = tile_SD(tile_0_0, sd_t, gen_Max);
-		tile_1_0 = tile_SD(tile_0_0, sd_t, gen_Max);
-		tile_1_1 = tile_SD(tile_0_0, sd_t, gen_Max);
-
-		af::array c0 = af::join(0, tile_0_0, tile_1_0);
-		af::array c1 = af::join(0, tile_0_1, tile_1_1);
-		matrix = af::join(1, c0, c1);
+			af::array c0 = af::join(0, tile_0_0, tile_1_0);
+			af::array c1 = af::join(0, tile_0_1, tile_1_1);
+			matrix += af::join(1, c0, c1);
+			/// std::cout <<"mat:  " << matrix.dims(0) << " | " << matrix.dims(1) << " gen: " << gen_Max << endl;
+		}
+		else {
+			matrix += avg;
+		}
 	}
-
+	else {
+		matrix *= 0;
+		matrix += avg;
+	}
 	return matrix;
 }
 void ntImage::tile_GPU(int cols, int rows) {
