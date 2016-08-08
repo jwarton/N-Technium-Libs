@@ -19,6 +19,7 @@
 
 #include <ctime>
 #include <time.h>
+#include <chrono>
 
 #include <memory>
 #include <thread>
@@ -56,15 +57,29 @@ static std::string format_INT(int num, int len) {
 	std::string s = ss.str();
 	return s;
 }
-static std::string format_SEC(clock_t time) {
-	double sec = ((double)time) / CLOCKS_PER_SEC;
+static std::string format_SEC(double sec) {
 	std::stringstream ss;
-	ss << std::setw(10) << std::setfill('_');
+	ss << std::setw(10) << std::setfill(' ');
 	ss << std::to_string(sec);
 	std::string t = ss.str() + "  SEC";
 	return t;
 }
-
+static std::string format_SEC(clock_t time) {
+	double sec = 55555555;// ((double)time) / CLOCKS_PER_SEC;
+	return format_SEC(sec);
+}
+static std::string format_SEC(std::chrono::duration<double> time) {
+	/////////////////////////////////
+	// HIGH PRECISION CLOCK TO STRING
+	double sec = time.count();
+	return format_SEC(sec);
+}
+static double duration_DBL(std::chrono::duration<float> time) {
+	std::chrono::milliseconds msec = std::chrono::duration_cast<std::chrono::milliseconds>(time);
+	double sec = msec.count() * 0.001;
+	//double sec = time.count();
+	return sec;
+}
 /// I/O UTILITY FUNCITONS
 static bool isFile(const std::string& name) {
 	struct stat buffer;

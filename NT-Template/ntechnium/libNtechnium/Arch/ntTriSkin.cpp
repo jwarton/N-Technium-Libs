@@ -9,20 +9,31 @@ perf_Mode  ntTriSkin::perf_mode  = SUBD;
 perf_Type  ntTriSkin::perf_type  = DOT;
 perf_Style ntTriSkin::perf_style = perf_06;
 grid_Type  ntTriSkin::grid_type  = TRI;
-bool ntTriSkin::isImgLoaded = false;
+bool ntTriSkin::isImgLoaded	= false;
 bool ntTriSkin::isImgMosaic = false;
 string ntTriSkin::url_IMGs;
 arma::mat ntTriSkin::img_00 = zeros<mat>(1, 1);
 
 std::vector<float> ntTriSkin::p_Rad;
 int	ntTriSkin::n_perf;
-float ntTriSkin::areaS_gross = 0;
-float ntTriSkin::areaS_net = 0;
-float ntTriSkin::areaP_Max = 0;
-float ntTriSkin::areaP_Min = 99999999;
-float ntTriSkin::phi_Min = 180;
-float ntTriSkin::phi_Max = 0.0;
-float ntTriSkin::perfSpacing = 1.5;
+float ntTriSkin::areaS_gross	= 0;
+float ntTriSkin::areaS_net		= 0;
+float ntTriSkin::areaP_Max		= 0;
+float ntTriSkin::areaP_Min		= 99999999;
+float ntTriSkin::phi_Min		= 180;
+float ntTriSkin::phi_Max		= 0.0;
+float ntTriSkin::perfSpacing	= 1.5;
+
+clock_t ntTriSkin::t_CPU		= 0;
+double ntTriSkin::t_transform	= 0;
+double ntTriSkin::t_SD			= 0;
+double ntTriSkin::t_SC2			= 0;
+double ntTriSkin::t_perforate	= 0;
+double ntTriSkin::t_calcArea	= 0;
+double ntTriSkin::t_saveTXT		= 0;
+double ntTriSkin::t_saveIMG		= 0;
+double ntTriSkin::t_eval		= 0;
+
 
 ntTriSkin::ntTriSkin() {}
 ntTriSkin::ntTriSkin(std::string url_TXT, std::string url_IMG, std::string obj_Name) :
@@ -33,10 +44,8 @@ ntTriSkin::ntTriSkin(std::string url_TXT, std::string url_IMG, std::string obj_N
 void ntTriSkin::init() {
 	if (isPathDefined == true) {
 		///
-		double t_eval;
-		t_eval = clock();
 
-		t_CPU = clock();
+		auto t0 = std::chrono::high_resolution_clock::now();
 		string url;
 		if (isTxtSeq == true) {
 			for (int i = file_begin; i < file_end + 1; i++) {
@@ -52,17 +61,18 @@ void ntTriSkin::init() {
 
 		isTxtLoaded = true;
 		string time;
-		time = format_SEC(clock() - t_CPU);
+		auto t1 = std::chrono::high_resolution_clock::now();
+		time = format_SEC(t1 - t0);
 		t_LoadPanels += time;
 
 		std::cout << "\n\n///////////////////////////////////////////////////////////////\n";
 		std::cout << "READ TXT COMPLETE           -----------------------------------" << endl;
 		panel_Dim = panels.size();
 		std::cout << "TOTAL PANELS LOADED:        " << panel_Dim << "\n" << endl;
-
-		t_CPU = clock();
+		t0 = std::chrono::high_resolution_clock::now();
 		read_IMG();
-		time = format_SEC(clock() - t_CPU);
+		t1 = std::chrono::high_resolution_clock::now();
+		time = format_SEC(t1 - t0);
 		t_LoadImage += time;
 		///
 		std::cout << "READ IMG COMPLETE           -----------------------------------" << endl;
@@ -70,15 +80,14 @@ void ntTriSkin::init() {
 		std::cout << "CALCULATING PANEL GEOMETRY  -----------------------------------" << endl;
 
 		///
-		t_CPU = clock();
-
 		///////////////////////////////////////////////////////////////////////
 		//////////////////////////////////////////// MULTITHREAD BUILD FUNCTION
 		unsigned thread_Cnt = std::thread::hardware_concurrency();
 		thread_Cnt = 10;
-
+		/// START TOTAL PROCESSING TIME CLOCK
+		auto t_eval = std::chrono::high_resolution_clock::now();
+		t0 = std::chrono::high_resolution_clock::now();
 		if (isMultiThread == true) {
-			/*if (isFunctDiscrt == false) {*/
 				std::vector <std::future<bool>> threads;
 				if (panel_Dim > 1000) {
 					float items = (panel_Dim / thread_Cnt) + 1;
@@ -101,59 +110,6 @@ void ntTriSkin::init() {
 						threads.push_back(std::async(std::launch::async, build_MT, panel_ptr));
 					}
 				}
-			/*} else {
-				int index_S = 0;
-				int index_E = 0;
-				float items = (panel_Dim / thread_Cnt) + 1;
-				items = ceil(items);
-
-				/// 01
-				std::vector <std::future<bool>> threads_01;
-				for (int i = 0; i < thread_Cnt; i++) {
-					index_S = items * i;
-					index_E = (items * i) + items - 1;
-					threads_01.push_back(std::async(std::launch::async, MT_01, index_S, index_E, &panels));
-				}
-				for (int i = 0; i < threads_01.size(); i++) {
-					bool ret = threads_01[i].get();
-				}
-				/// 02
-				index_S = 0;
-				index_E = 0;
-				std::vector <std::future<bool>> threads_02;
-				for (int i = 0; i < thread_Cnt; i++) {
-					index_S = items * i;
-					index_E = (items * i) + items - 1;
-					threads_02.push_back(std::async(std::launch::async, MT_02, index_S, index_E, &panels));
-				}
-				for (int i = 0; i < threads_02.size(); i++) {
-					bool ret = threads_02[i].get();
-				}
-				/// 03
-				index_S = 0;
-				index_E = 0;
-				std::vector <std::future<bool>> threads_03;
-				for (int i = 0; i < thread_Cnt; i++) {
-					index_S = items * i;
-					index_E = (items * i) + items - 1;
-					threads_03.push_back(std::async(std::launch::async, MT_03, index_S, index_E, &panels));
-				}
-				for (int i = 0; i < threads_03.size(); i++) {
-					bool ret = threads_03[i].get();
-				}
-				/// 04
-				index_S = 0;
-				index_E = 0;
-				std::vector <std::future<bool>> threads_04;
-				for (int i = 0; i < thread_Cnt; i++) {
-					index_S = items * i;
-					index_E = (items * i) + items - 1;
-					threads_04.push_back(std::async(std::launch::async, MT_04, index_S, index_E, &panels));
-				}
-				for (int i = 0; i < threads_04.size(); i++) {
-					bool ret = threads_04[i].get();
-				}
-			}*/
 		} else {
 			for (int i = 0; i < thread_Cnt; i++) {
 				ntPanel* panel_ptr(panels.at(i));
@@ -161,8 +117,13 @@ void ntTriSkin::init() {
 				funct(panel_ptr);
 			}
 		}
+		t1 = std::chrono::high_resolution_clock::now();
+		time = format_SEC(t1 - t0);
+		string eval = format_SEC(t1 - t_eval);
 
-		time = format_SEC(clock() - t_CPU);
+		std::cout << "f() took "
+			<< std::chrono::duration_cast<std::chrono::seconds>(t1 - t_eval).count()
+			<< " milliseconds\n";
 		///
 		///////////////////////////////////////////////////////////////////////
 		////////////////////////////////////// UPDATE STRING WITH TIMER VALUES
@@ -172,7 +133,6 @@ void ntTriSkin::init() {
 		t_Perforate += format_SEC(t_perforate);
 		t_CalcArea  += format_SEC(t_calcArea);
 		t_Process	+= time;
-		t_eval		 = clock() - t_eval;
 		t_saveTxt	+= format_SEC(t_saveTXT);
 		t_saveImage += format_SEC(t_saveIMG);
 
@@ -180,8 +140,7 @@ void ntTriSkin::init() {
 
 		gen_L = panels.at(0)->faces_L.size()-1;
 
-		std::cout << "\nEVAL_CPU TIME  [SECONDS]:   " << format_SEC(t_eval) << "\n" << endl;
-
+		std::cout << "\nEVAL_CPU TIME  [SECONDS]:   CHRONO" << eval << "\n" << endl;
 		std::cout << "SYSTEM STATISTICS           -----------------------------------" << endl;
 		std::cout << "SUBDIVISION GENERATION:     " << panels.at(0)->cnt_SubDiv << endl;
 		std::cout << "FACE VECTOR SIZE [GEN]:     " << panels.at(0)->faces_G.size() << endl;
@@ -239,7 +198,6 @@ void ntTriSkin::init_SysData() {
 
 	///////////////////////////////////////////////////////////////////////
 	///////////////////////////////////// TYPOGRAPHIC CONTENT | PANELS DATA
-
 	std::vector <string> lines;
 
 	string del_01 = "/////////////////////////////////////////////";
@@ -569,9 +527,7 @@ void ntTriSkin::read_IMG(string url) {
 }
 
 void ntTriSkin::write_Panel_TXT(ntPanel* panel_ptr) {
-
-	clock_t t = clock();
-
+	auto t0 = std::chrono::high_resolution_clock::now();
 	stringstream ss;
 	ss << std::setw(5) << std::setfill('0');
 	ss << panel_ptr->get_ID();
@@ -704,13 +660,11 @@ void ntTriSkin::write_Panel_TXT(ntPanel* panel_ptr) {
 	file.close();
 
 	std::cout << "PANEL:: " + ss.str() << " TXT SAVED" << endl;
-
-	t = clock() - t;
-	t_saveTXT += t;
+	auto t1 = std::chrono::high_resolution_clock::now();
+	t_saveTXT += duration_DBL(t1 - t0);
 }
 void ntTriSkin::write_Panel_IMG(ntPanel* panel_ptr) {
-
-	clock_t t = clock();
+	auto t0 = std::chrono::high_resolution_clock::now();
 
 	stringstream ss;
 	ss << std::setw(6) << std::setfill('0');
@@ -799,9 +753,8 @@ void ntTriSkin::write_Panel_IMG(ntPanel* panel_ptr) {
 		af::saveImage(file, img_AF);
 		std::cout << "PANEL:: " + ss.str() << " IMG SAVED\n" << endl;
 	}
-
-	t = clock() - t;
-	t_saveIMG += t;
+	auto t1 = std::chrono::high_resolution_clock::now();
+	t_saveIMG += duration_DBL(t1 - t0);
 }
 void ntTriSkin::write_SysData(std::vector<string> lines) {
 
@@ -883,29 +836,39 @@ bool ntTriSkin::set_MT(int ind_S, int ind_E, std::vector<ntPanel*>* panels, int 
 	return true;
 }
 bool ntTriSkin::build_MT(ntPanel* panel_ptr) {
+	auto t0 = std::chrono::high_resolution_clock::now();
 	Vec3* axis_Z = new Vec3(0, 0, 1);
 	Vec3* axis_X = new Vec3(1, 0, 0);
-
 	///////////////////////////////////////////////////////////////
 	/////////////////////////////// ALIGN CENTROID/NORMAL TO Z-AXIS
 	panel_ptr->calcCentroid();
 	panel_ptr->calcNorm();
-	
 	align_Panel(panel_ptr, axis_Z, &panel_ptr->norm, panel_ptr->cent);
 	///////////////////////////////////////////////////////////////
 	/////////////////////////////////////// ALIGN V0/EDGE TO X-AXIS
 	Vec3 edge_X = Vec3(panel_ptr->v1->x, panel_ptr->v1->y, panel_ptr->v1->z);
 	edge_X.sub(panel_ptr->v0);
 	align_Panel(panel_ptr, axis_X, &edge_X, panel_ptr->v0);
+	///
+	auto t1 = std::chrono::high_resolution_clock::now();
+	t_transform += duration_DBL(t1 - t0);
 
+	t0 = std::chrono::high_resolution_clock::now();
+	///
 	panel_ptr->calcArea();
 	panel_ptr->calcPhi();
 	float areaP = panel_ptr->get_Area();
-
+	///
+	t1 = std::chrono::high_resolution_clock::now();
+	t_calcArea += duration_DBL(t1 - t0);
+	t0 = std::chrono::high_resolution_clock::now();
 	///////////////////////////////////////////////////////////////
 	panel_ptr->sub_Div(gen);	    // SUBDIVIDE FOR GLOBAL DISPLAY
 									// REVISE PER FASTENER GRID !!!
 									// !!!!!!!!!!!!!!!!!!!!!!!!!!!!
+	t1 = std::chrono::high_resolution_clock::now();
+	t_SD += duration_DBL(t1 - t0);
+	t0 = std::chrono::high_resolution_clock::now();
 	///////////////////////////////////////////////////////////////
 	///////////////////////////////////// CALCULATE PEFORATION GRID
 	int div = floor(panel_ptr->get_EdgeMin() / perfSpacing);
@@ -933,6 +896,11 @@ bool ntTriSkin::build_MT(ntPanel* panel_ptr) {
 	///////////////////////////////////////////////////////////////
 	//////////////////////////////////// CALCULATE PERFORATION SIZE
 	panel_ptr->add_Perf();
+	t1 = std::chrono::high_resolution_clock::now();
+	t_perforate += duration_DBL(t1 - t0);
+
+	std::cout << " SECONDS TOTAL:  " << t_perforate << "\n";
+	std::cout << " SECONDS/ PANEL: " << std::chrono::duration_cast<std::chrono::seconds>(t1 - t0).count() << "\n";
 	//panel_ptr->set_Graph();
 	///////////////////////////////////////////////////////////////
 	//////////////////////////////////////// GRAPH PERFORATION DATA
@@ -966,7 +934,10 @@ bool ntTriSkin::build_MT(ntPanel* panel_ptr) {
 	///////////////////////////////////////////////////////////////
 	/// SCALE TO 2ND VIEWPORT--REPLACE WITH CAMERA FIT FUNCTION !
 	/// !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+	t0 = std::chrono::high_resolution_clock::now();
 	set_Scale2D(panel_ptr, 10);
+	t1 = std::chrono::high_resolution_clock::now();
+	t_SC2 += duration_DBL(t1 - t0);
 	///
 	return true;
 }
@@ -1096,10 +1067,13 @@ void ntTriSkin::funct(ntPanel* panel_ptr) {
 	///
 	t_transform += (clock() - t);
 	t = clock();
+	///
 	panel_ptr->calcArea();
 	panel_ptr->calcPhi();
 	float areaP = panel_ptr->get_Area();
+	///
 	t_calcArea = (clock() - t);
+	t = clock();
 	/// //END PERFORATION TIMER
 	///////////////////////////////////////////////////////////////
 	panel_ptr->sub_Div(gen);	    // SUBDIVIDE FOR GLOBAL DISPLAY

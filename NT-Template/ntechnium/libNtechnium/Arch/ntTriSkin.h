@@ -60,16 +60,16 @@ private:
 	bool isMultiThread = true;
 	bool isFunctDiscrt = false;
 
-	clock_t t_CPU			= 0;
+	static clock_t t_CPU;
 
-	double t_transform		= 0;
-	double t_SD				= 0;
-	double t_SC2			= 0;	
-	double t_perforate		= 0;
-	double t_calcArea		= 0;
-	double t_saveTXT		= 0;
-	double t_saveIMG		= 0;
-	double t_eval			= 0;
+	static double t_transform;
+	static double t_SD;
+	static double t_SC2;
+	static double t_perforate;
+	static double t_calcArea;
+	static double t_saveTXT;
+	static double t_saveIMG;
+	static double t_eval;
 
 	string t_LoadPanels		= "PANEL DATA LOAD TIME:         ";
 	string t_LoadImage		= "IMAGE DATA LOAD TIME:         ";
