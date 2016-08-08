@@ -49,7 +49,13 @@ static float toDegrees(double theta) {
 	theta = theta / M_PI * 180;
 	return theta;
 }
-
+/// STRING FORMAT FUNCTIONS
+static std::string format_INT(int num, int len) {
+	std::stringstream ss;
+	ss << std::setw(len) << std::setfill('0') << num;
+	std::string s = ss.str();
+	return s;
+}
 static std::string format_SEC(clock_t time) {
 	double sec = ((double)time) / CLOCKS_PER_SEC;
 	std::stringstream ss;
@@ -57,6 +63,12 @@ static std::string format_SEC(clock_t time) {
 	ss << std::to_string(sec);
 	std::string t = ss.str() + "  SEC";
 	return t;
+}
+
+/// I/O UTILITY FUNCITONS
+static bool isFile(const std::string& name) {
+	struct stat buffer;
+	return (stat(name.c_str(), &buffer) == 0);
 }
 
 static std::string getPC_Name() {

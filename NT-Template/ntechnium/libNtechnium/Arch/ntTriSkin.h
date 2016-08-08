@@ -205,15 +205,15 @@ private:
 	/// MULTI THREADED 
 	static bool set_MT(int ind_S, int ind_E, std::vector<ntPanel*>* panels, int index);
 	static bool build_MT(ntPanel* panel_ptr);
-	/// DISCRETE MULTI THREADED FUNCTIONS
-	static bool MT_01(int ind_S, int ind_E, std::vector<ntPanel*>* panels);
-	static bool MT_02(int ind_S, int ind_E, std::vector<ntPanel*>* panels);
-	static bool MT_03(int ind_S, int ind_E, std::vector<ntPanel*>* panels);
-	static bool MT_04(int ind_S, int ind_E, std::vector<ntPanel*>* panels);
-	static bool pan_2D(ntPanel* panel_ptr);
-	static bool pan_SD(ntPanel* panel_ptr);
-	static bool pan_P0(ntPanel* panel_ptr);
-	static bool pan_F0(ntPanel* panel_ptr);
+	///// DISCRETE MULTI THREADED FUNCTIONS
+	//static bool MT_01(int ind_S, int ind_E, std::vector<ntPanel*>* panels);
+	//static bool MT_02(int ind_S, int ind_E, std::vector<ntPanel*>* panels);
+	//static bool MT_03(int ind_S, int ind_E, std::vector<ntPanel*>* panels);
+	//static bool MT_04(int ind_S, int ind_E, std::vector<ntPanel*>* panels);
+	//static bool pan_2D(ntPanel* panel_ptr);
+	//static bool pan_SD(ntPanel* panel_ptr);
+	//static bool pan_P0(ntPanel* panel_ptr);
+	//static bool pan_F0(ntPanel* panel_ptr);
 	/// SINGLE THREAD
 	void funct(ntPanel* panel_ptr);
 

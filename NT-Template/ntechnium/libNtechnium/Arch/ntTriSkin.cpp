@@ -78,7 +78,7 @@ void ntTriSkin::init() {
 		thread_Cnt = 10;
 
 		if (isMultiThread == true) {
-			if (isFunctDiscrt == false) {
+			/*if (isFunctDiscrt == false) {*/
 				std::vector <std::future<bool>> threads;
 				if (panel_Dim > 1000) {
 					float items = (panel_Dim / thread_Cnt) + 1;
@@ -101,7 +101,7 @@ void ntTriSkin::init() {
 						threads.push_back(std::async(std::launch::async, build_MT, panel_ptr));
 					}
 				}
-			} else {
+			/*} else {
 				int index_S = 0;
 				int index_E = 0;
 				float items = (panel_Dim / thread_Cnt) + 1;
@@ -153,7 +153,7 @@ void ntTriSkin::init() {
 				for (int i = 0; i < threads_04.size(); i++) {
 					bool ret = threads_04[i].get();
 				}
-			}
+			}*/
 		} else {
 			for (int i = 0; i < thread_Cnt; i++) {
 				ntPanel* panel_ptr(panels.at(i));
@@ -804,6 +804,8 @@ void ntTriSkin::write_Panel_IMG(ntPanel* panel_ptr) {
 	t_saveIMG += t;
 }
 void ntTriSkin::write_SysData(std::vector<string> lines) {
+
+
 	///////////////////////////////////////////////////////////////
 	//////////////////////////////////////////////// SET TIME STAMP
 	struct tm timeData;
@@ -829,10 +831,19 @@ void ntTriSkin::write_SysData(std::vector<string> lines) {
 	string pathExtension = "txt\\";
 	string fileName = ss.str();
 	string fileExt = ".txt";
-	string url = path_OUT + pathExtension + fileName + fileExt;
+	int ind = 0;
+	string fileIndex = "_" + format_INT(ind,2);
+	string url = path_OUT + pathExtension + fileName + fileIndex + fileExt;
 
 	///////////////////////////////////////////////////////////////
 	//////////////////////////////////////////// WRITE FILE CONTENT
+	while (isFile(url)) {
+		std::cout << "FILE EXIST: " << fileIndex << endl;
+		ind += 1;
+		fileIndex = "_" + format_INT(ind, 2);
+		url = path_OUT + pathExtension + fileName + fileIndex + fileExt;
+	}
+
 	ofstream file(url);
 
 	file << "//  HKS | LINE\n";
@@ -846,7 +857,7 @@ void ntTriSkin::write_SysData(std::vector<string> lines) {
 	}
 	file.close();
 
-	std::cout << "TRI-SKIN:: " + ss.str() << " TXT SAVED" << endl;
+	std::cout << "TRI-SKIN:: " + ss.str() << fileIndex << " TXT SAVED" << endl;
 }
 void ntTriSkin::setPathOut(std::string path) {
 	path_OUT = path;
@@ -959,7 +970,7 @@ bool ntTriSkin::build_MT(ntPanel* panel_ptr) {
 	///
 	return true;
 }
-
+/*
 bool ntTriSkin::MT_01(int ind_S, int ind_E, std::vector<ntPanel*>* panels){
 	for (int i = ind_S; i <= ind_E; i++) {
 		if (i < panels->size()) {
@@ -1065,7 +1076,7 @@ bool ntTriSkin::pan_F0(ntPanel* panel_ptr){
 	///
 	return true;
 }
-
+*/
 void ntTriSkin::funct(ntPanel* panel_ptr) {
 	clock_t t = clock();
 	Vec3* axis_Z = new Vec3(0, 0, 1);

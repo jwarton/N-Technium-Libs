@@ -92,8 +92,8 @@ int main(int argc, char const** argv){
 	//AppContent* c = new afApp02();		
 	//AppContent* c = new tokyoApp00();		//C3 VISUALIZING TOKYO VIGNETTES
 	//AppContent* c = new tokyoApp01();		//C3 IMAGE SUBDIVISION AND TILING
-	//AppContent* c = new tokyoApp02();		//C3 TRIVIAL SURFACE | MOSAIC IMAGE MAPPING
-	AppContent* c = new tokyoApp03();		//C3 IMAGE SUBDIVISION AND TILING
+	AppContent* c = new tokyoApp02();		//C3 TRIVIAL SURFACE | MOSAIC IMAGE MAPPING
+	//AppContent* c = new tokyoApp03();		//C3 IMAGE SUBDIVISION AND TILING
 
 
 	///TYPE
