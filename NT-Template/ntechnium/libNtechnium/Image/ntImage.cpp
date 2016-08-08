@@ -408,6 +408,10 @@ af::array ntImage::tile_SD(af::array matrix, int sd_t, int gen_Max) {
 		matrix *= 0;
 		matrix += avg;
 	}
+
+	matrix.row(0) *= 0;
+	matrix.col(0) *= 0;
+
 	return matrix;
 }
 void ntImage::tile_GPU(int cols, int rows) {

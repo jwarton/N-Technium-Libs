@@ -27,7 +27,7 @@ void tokyoApp03::init() {
 
 		int w = 48 * 72;
 		int h = 96 * 72;
-		float tile_size = 2;// 1;// 0.125;//0.5; // 
+		float tile_size = 4;// 1;// 0.125;//0.5; // 
 
 		img_H.set_Dim(w, h);				// RESIZE IMAGE 
 
