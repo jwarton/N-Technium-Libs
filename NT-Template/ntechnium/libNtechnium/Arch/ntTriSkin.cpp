@@ -15,7 +15,7 @@ string ntTriSkin::url_IMGs;
 arma::mat ntTriSkin::img_00 = zeros<mat>(1, 1);
 
 std::vector<float> ntTriSkin::p_Rad;
-int	ntTriSkin::n_perf;
+int	  ntTriSkin::n_perf			= 0;
 float ntTriSkin::areaS_gross	= 0;
 float ntTriSkin::areaS_net		= 0;
 float ntTriSkin::areaP_Max		= 0;
@@ -33,13 +33,35 @@ double ntTriSkin::t_calcArea	= 0;
 double ntTriSkin::t_graphData	= 0;
 double ntTriSkin::t_saveTXT		= 0;
 double ntTriSkin::t_saveIMG		= 0;
-double ntTriSkin::t_eval		= 0;
-
 
 ntTriSkin::ntTriSkin() {}
 ntTriSkin::ntTriSkin(std::string url_TXT, std::string url_IMG, std::string obj_Name) :
 	url_TXT(url_TXT), url_IMG(url_IMG), obj_Name(obj_Name) {
 
+	isImgLoaded		= false;
+	isImgMosaic		= false;
+	url_IMGs		= "";
+	img_00			= zeros<mat>(1, 1);
+
+	p_Rad.clear();
+	n_perf			= 0;
+	areaS_gross		= 0;
+	areaS_net		= 0;
+	areaP_Max		= 0;
+	areaP_Min		= 99999999;
+	phi_Min			= 180;
+	phi_Max			= 0.0;
+	perfSpacing		= 1.5;
+
+	t_CPU			= 0;
+	t_transform		= 0;
+	t_SD			= 0;
+	t_SC2			= 0;
+	t_perforate		= 0;
+	t_calcArea		= 0;
+	t_graphData		= 0;
+	t_saveTXT		= 0;
+	t_saveIMG		= 0;
 }
 
 void ntTriSkin::init() {
@@ -62,7 +84,6 @@ void ntTriSkin::init() {
 			url = url_TXT + ".txt";
 			read_DATA(url);
 		}
-
 		isTxtLoaded = true;
 		///
 		string time;
@@ -91,8 +112,6 @@ void ntTriSkin::init() {
 		std::cout << "CALCULATING PANEL GEOMETRY  -----------------------------------" << endl;
 		///////////////////////////////////////////////////////////////////////
 		//////////////////////////////////////////// MULTITHREAD BUILD FUNCTION
-		unsigned thread_Cnt = std::thread::hardware_concurrency();
-		thread_Cnt = 10;
 		/// START TOTAL PROCESSING TIME CLOCK
 		auto t_eval = std::chrono::steady_clock::now();
 		t0 = std::chrono::steady_clock::now();
@@ -139,6 +158,7 @@ void ntTriSkin::init() {
 		t_Scale2d	+= format_SEC(t_SC2);
 		t_Perforate += format_SEC(t_perforate);
 		t_CalcArea  += format_SEC(t_calcArea);
+		t_Graph		+= format_SEC(t_graphData);
 		t_Process	+= time;
 		t_TranPan	+= p_time;
 		t_saveTxt	+= format_SEC(t_saveTXT);
@@ -159,7 +179,7 @@ void ntTriSkin::init() {
 		std::cout << "SURFACE AREA GROSS:         " << areaS_gross / 144 << endl;
 		std::cout << "SURFACE AREA NET:           " << areaS_net / 144 << endl;
 		std::cout << "PERCENT OF OPENING:         " << 100 - (areaS_net / areaS_gross) * 100 << "\n" << endl;
-		std::cout << "PERFORATIONS:               " << p_Rad.size() << "\n" << endl;
+		std::cout << "PERFORATIONS:               " << n_perf << "\n" << endl;
 
 		std::cout << "MIN ANGLE:                  " << phi_Min << endl;
 		std::cout << "MAX ANGLE:                  " << phi_Max << endl;
@@ -171,9 +191,21 @@ void ntTriSkin::init() {
 		/////////////////////////////////////// GRAPH PERFORATION | PANELS DATA
 		int w = 448;
 		int h = 40;
+		ntVec3 *graphPos = new ntVec3(5, 460, 0);
+		ntVec3 *graphDim = new ntVec3(w, h, 0);
+		///////////////////////////////////////////////////////////////
+		//////////////////////////////////////// GRAPH PERFORATION DATA
+		for (int i = 0; i < panel_Dim; i++) {
+			ntPanel* panel_ptr(panels.at(i));
+			panel_ptr->set_Graph();
+			for (int j = 0; j < panel_ptr->perf_size; j++) {
+				/// POINTER TO MATRICES
+				/// FLATTEN MATRIX
+				/// VECTOR PUSHBACK PROCESS IS TOO COMPUTATIONALLY INTENSIVE 
+				p_Rad.push_back(panel_ptr->p_Rad.at(j));
+			}
+		}
 
-		ntVec3 *graphPos = new ntVec3(  5, 460, 0);
-		ntVec3 *graphDim = new ntVec3(w,  h, 0);
 		int set_size = p_Rad.size() - 1;
 
 		if (set_size > 0) {
@@ -219,7 +251,7 @@ void ntTriSkin::init_SysData() {
 	string str_06 = "SURFACE AREA GROSS:           " + to_string(areaS_gross / 144);
 	string str_07 = "SURFACE AREA NET:             " + to_string(areaS_net / 144);
 	string str_08 = "PERCENT OF OPENING:           " + to_string(100 - (areaS_net / areaS_gross) * 100);
-	string str_09 = "PERFORATIONS:                 " + to_string(p_Rad.size());
+	string str_09 = "PERFORATIONS:                 " + to_string(n_perf);
 
 	string str_10 = "MIN ANGLE:                    " + to_string(phi_Min);
 	string str_11 = "MAX ANGLE:                    " + to_string(phi_Max);
@@ -237,6 +269,9 @@ void ntTriSkin::init_SysData() {
 	lines.push_back("WORKSTATION NAME:             " + pc_Id);
 	lines.push_back("CPU SPECIFICATION:            " + cpu_Spec);
 	lines.push_back("MEMORY:                       " + memory_Size + "   GB");
+	if (isMultiThread == true) {
+		lines.push_back("ALLOCATED THREADS:        " + to_string(thread_Cnt));
+	}
 	lines.push_back("");
 	lines.push_back(t_LoadPanels);
 	lines.push_back(t_LoadImage);
@@ -247,7 +282,7 @@ void ntTriSkin::init_SysData() {
 		lines.push_back(t_Transform);
 		lines.push_back(t_CalcArea);
 		lines.push_back(t_Scale2d);
-		///lines.push_back(t_Graph);
+		lines.push_back(t_Graph);
 	}
 	lines.push_back(t_saveTxt);
 	lines.push_back(t_saveImage);
@@ -506,7 +541,7 @@ void ntTriSkin::read_IMG() {
 	///////////////////////////////////////////////////////////////
 	/////////////////////////////////// IMAGE FOR PERF CALCULATIONS
 	const char * file = url.c_str();
-	img_IN = af::loadImage(file, false);
+	img_IN = img_SRC.img_2D;//af::loadImage(file, false);
 
 	img_X = img_IN.dims(1);
 	img_Y = img_IN.dims(0);
@@ -889,28 +924,20 @@ bool ntTriSkin::build_MT(ntPanel* panel_ptr) {
 	///////////////////////////////////////////////////////////////
 	//////////////////////////////////// CALCULATE PERFORATION SIZE
 	panel_ptr->add_Perf();
-	//panel_ptr->set_Graph();
-	///////////////////////////////////////////////////////////////
-	//////////////////////////////////////// GRAPH PERFORATION DATA
-	//for (int i = 0; i < panel_ptr->perf_size; i++) {
-	//	/// POINTER TO MATRICES
-	//	/// FLATTEN MATRIX
-	//	/// VECTOR PUSHBACK PROCESS IS TOO COMPUTATIONALLY INTENSIVE 
-	//	p_Rad.push_back(panel_ptr->p_Rad.at(i));
-	//}
+	///panel_ptr->set_Graph();
 
-	//log_Angles(panel_ptr);
+	log_Angles(panel_ptr);
 
-	//n_perf += panel_ptr->perf_size;
-	//areaS_gross += areaP;
-	//areaS_net += (areaP - panel_ptr->perf_area);
+	n_perf += panel_ptr->perfs.size();
+	areaS_gross += areaP;
+	areaS_net += (areaP - panel_ptr->perf_area);
 
-	//if (areaP < areaP_Min) {
-	//	areaP_Min = areaP;
-	//}
-	//if (areaP > areaP_Max) {
-	//	areaP_Max = areaP;
-	//}
+	if (areaP < areaP_Min) {
+		areaP_Min = areaP;
+	}
+	if (areaP > areaP_Max) {
+		areaP_Max = areaP;
+	}
 	///////////////////////////////////////////////////////////////
 	////////////////////////////////////////// SAVE PANEL DATA DATA
 	//if (doSaveTXT == true) {
@@ -920,8 +947,6 @@ bool ntTriSkin::build_MT(ntPanel* panel_ptr) {
 	//	write_Panel_IMG(panel_ptr);
 	//}
 	///////////////////////////////////////////////////////////////
-	/// SCALE TO 2ND VIEWPORT--REPLACE WITH CAMERA FIT FUNCTION !
-	/// !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 	set_Scale2D(panel_ptr, 10);
 	return true;
 }
@@ -1115,17 +1140,10 @@ void ntTriSkin::funct(ntPanel* panel_ptr) {
 	/// /////////////////////////////////////////// BEGIN TIMER- 04
 	t0 = std::chrono::steady_clock::now();
 	///
-	panel_ptr->set_Graph();
-	for (int i = 0; i < panel_ptr->perf_size; i++) {
-		/// POINTER TO MATRICES
-		/// FLATTEN MATRIX
-		/// VECTOR PUSHBACK PROCESS IS TOO COMPUTATIONALLY INTENSIVE 
-		p_Rad.push_back(panel_ptr->p_Rad.at(i));
-	}
-
+	///panel_ptr->set_Graph();
 	log_Angles(panel_ptr);
 
-	n_perf += panel_ptr->perf_size;
+	n_perf += panel_ptr->perfs.size();
 	areaS_gross += areaP;
 	areaS_net += (areaP - panel_ptr->perf_area);
 

@@ -38,15 +38,15 @@ private:
 	string file_TXT = "C3_402";		// TRIVIAL SURFACE
 
 	//string file_IMG = "lenna";
-	//string file_IMG = "profile";
-	string file_IMG = "hercules";
+	string file_IMG = "profile";
+	//string file_IMG = "hercules";
 	
 
 	string path_Out = nt_Utility::getPathToOutput() + "c3\\03\\";
 	
 	ntImage img_00;
 	ntTextIO ptData_00;
-	ntTriSkin skin_00;
+	//ntTriSkin skin_00;
 
 	///////////////////////////////////////////////////////////////
 	////////////////////////////////// SYSTEM DATA AND PERFORMANCE

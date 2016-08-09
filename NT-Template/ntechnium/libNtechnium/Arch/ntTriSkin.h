@@ -58,6 +58,8 @@ private:
 	void display_SysData();
 	void write_SysData(std::vector<string> lines);
 	bool isMultiThread = true;
+	//unsigned thread_Cnt = std::thread::hardware_concurrency();
+	unsigned thread_Cnt = 10;
 	bool isFunctDiscrt = false;
 
 	static clock_t t_CPU;
@@ -70,7 +72,6 @@ private:
 	static double t_graphData;
 	static double t_saveTXT;
 	static double t_saveIMG;
-	static double t_eval;
 
 	string t_LoadPanels		= "PANEL DATA LOAD TIME:         ";
 	string t_LoadImage		= "IMAGE DATA LOAD TIME:         ";
@@ -79,7 +80,7 @@ private:
 	string t_Scale2d		= "  SCALE 2D:                   ";
 	string t_Perforate		= "  PERFORATION:                ";
 	string t_CalcArea		= "  SURFACE AREA:               ";
-	//string t_Graph			= "";
+	string t_Graph			= "  GRAPH PANEL STATS           ";
 	string t_Process		= "TOTAL PROCESSING TIME:        ";
 	string t_saveTxt		= "  SAVE PANEL DATA:            ";
 	string t_saveImage		= "  SAVE PANEL IMAGE MAPS:      ";

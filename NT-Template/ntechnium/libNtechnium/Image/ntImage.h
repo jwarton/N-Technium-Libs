@@ -34,7 +34,7 @@ private:
 	std::string prefix;
 	std::string path_OUT;
 
-	af::array img_2D;
+	
 	arma::fmat img_2d;
 
 	arma::fmat img_00;
@@ -68,6 +68,8 @@ private:
 	//af::array blur(const af::array& img, const af::array mask = af::gaussianKernel(3, 3));
 
 public:
+	af::array img_2D;
+
 	ntImage();
 	ntImage(int width, int height, float col = 255);
 	ntImage(std::string url);
