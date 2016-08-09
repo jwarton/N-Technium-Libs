@@ -28,6 +28,8 @@
 enum D_mode { vQ, vF, vP, vS, vW, vA, vD };
 enum L_mode { vX, vC, vV };
 
+//typedef std::chrono::high_resolution_clock tempus;
+
 static float mapRange(float minA, float maxA, float minB, float maxB, float valB, bool inc = true){
 	float rangeA = maxA - minA;
 	float rangeB = maxB - minB;
@@ -65,7 +67,7 @@ static std::string format_SEC(double sec) {
 	return t;
 }
 static std::string format_SEC(clock_t time) {
-	double sec = 55555555;// ((double)time) / CLOCKS_PER_SEC;
+	double sec = ((double)time) / CLOCKS_PER_SEC;
 	return format_SEC(sec);
 }
 static std::string format_SEC(std::chrono::duration<double> time) {
@@ -75,10 +77,34 @@ static std::string format_SEC(std::chrono::duration<double> time) {
 	return format_SEC(sec);
 }
 static double duration_DBL(std::chrono::duration<float> time) {
-	std::chrono::milliseconds msec = std::chrono::duration_cast<std::chrono::milliseconds>(time);
-	double sec = msec.count() * 0.001;
-	//double sec = time.count();
+	std::chrono::microseconds msec = std::chrono::duration_cast<std::chrono::microseconds>(time);
+	double sec = msec.count() *0.000001;
 	return sec;
+}
+static double set_duration(std::chrono::duration<float> time) {
+	double sec = time.count();
+	return sec;
+}
+static void print_duration(std::chrono::duration<float> time) {
+	std::cout << " NANOSEC/  PANEL: " << std::chrono::duration_cast<std::chrono::nanoseconds>(time).count() << "\n";
+	std::cout << " MIRCOSEC/ PANEL: " << std::chrono::duration_cast<std::chrono::microseconds>(time).count() << "\n";
+	std::cout << " MILLISEC/ PANEL: " << std::chrono::duration_cast<std::chrono::milliseconds>(time).count() << "\n";
+	std::cout << " SECONDS/  PANEL: " << std::chrono::duration_cast<std::chrono::seconds>(time).count() << "\n\n";
+}
+static void print_chronos() {
+	//std::cout << "SYSTEM_CLOCK" << "\n";
+	//std::cout << std::chrono::system_clock::period::num << "\n";
+	//std::cout << std::chrono::system_clock::period::den << "\n";
+	//std::cout << "STEADY = " << std::boolalpha << std::chrono::system_clock::is_steady << "\n" << "\n";
+	std::cout << "HIGH_RESOLUTION_CLOCK:" << "\n";
+	std::cout << std::chrono::high_resolution_clock::period::num << "\n";
+	std::cout << std::chrono::high_resolution_clock::period::den << "\n";
+	std::cout << "STEADY: " << std::boolalpha << std::chrono::high_resolution_clock::is_steady << "\n" << "\n";
+	std::cout << "STEADY_CLOCK" << "\n";
+	std::cout << std::chrono::steady_clock::period::num << "\n";
+	std::cout << std::chrono::steady_clock::period::den << "\n";
+	std::cout << "STEADY: " << std::boolalpha << std::chrono::steady_clock::is_steady << "\n" << "\n";
+//https://solarianprogrammer.com/2012/10/14/cpp-11-timing-code-performance/
 }
 /// I/O UTILITY FUNCITONS
 static bool isFile(const std::string& name) {

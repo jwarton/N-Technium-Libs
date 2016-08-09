@@ -67,6 +67,7 @@ private:
 	static double t_SC2;
 	static double t_perforate;
 	static double t_calcArea;
+	static double t_graphData;
 	static double t_saveTXT;
 	static double t_saveIMG;
 	static double t_eval;
@@ -78,10 +79,11 @@ private:
 	string t_Scale2d		= "  SCALE 2D:                   ";
 	string t_Perforate		= "  PERFORATION:                ";
 	string t_CalcArea		= "  SURFACE AREA:               ";
+	//string t_Graph			= "";
 	string t_Process		= "TOTAL PROCESSING TIME:        ";
 	string t_saveTxt		= "  SAVE PANEL DATA:            ";
 	string t_saveImage		= "  SAVE PANEL IMAGE MAPS:      ";
-	string t_TranPan		= "  AVG PANEL TRANSFORM TIME:   ";
+	string t_TranPan		= "  AVERAGE EVAL TIME / PANEL:  ";
 
 	///////////////////////////////////////////////////////////////
 	////////////////////////////////////// SYSTEM DISPLAY VARIABLES
