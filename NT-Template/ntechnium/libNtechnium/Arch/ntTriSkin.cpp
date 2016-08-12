@@ -541,7 +541,7 @@ void ntTriSkin::read_IMG() {
 	///////////////////////////////////////////////////////////////
 	/////////////////////////////////// IMAGE FOR PERF CALCULATIONS
 	const char * file = url.c_str();
-	img_IN = img_SRC.img_2D;//af::loadImage(file, false);
+	img_IN = af::loadImage(file, false); //img_SRC.img_2D;//
 
 	img_X = img_IN.dims(1);
 	img_Y = img_IN.dims(0);

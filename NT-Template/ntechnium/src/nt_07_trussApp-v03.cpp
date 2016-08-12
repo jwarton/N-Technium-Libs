@@ -279,16 +279,6 @@ void trussApp03::init() {
 	graph00.set_Param(truss00.get_t_GPU(), 1);
 	graph00.set_Param(truss00.get_t_copy(),1);
 	graph00.init();
-	///////////////////////////////////////////////////////////////////////
-	//////////////////////////////////////////////////// CAMERA OREINTATION
-	int n = nodes.size();
-	for (int i = 0; i < n; i++){
-		ntMatrix4 mat = ntMatrix4(nodes.at(i)->pos);
-		mat.scale3d(0.1);
-	}
-
-	glRotatef(55, 1.f, 0.f, 0.f);
-	glRotatef(-50, 0.f, 0.f, 1.f);
 }
 
 void trussApp03::run(){

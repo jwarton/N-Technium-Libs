@@ -284,19 +284,6 @@ void trussApp02::init() {
 	truss00 = ntTruss(nodes, elements);
 	truss00.display_mode(vS);
 	truss00.write_txt("FEM_002" + suffix);
-
-	int n = nodes.size();
-	for (int i = 0; i < n; i++){
-		ntMatrix4 mat = ntMatrix4(nodes.at(i)->pos);
-		///ADD SCALE FACTOR BASED ON DIMS
-		mat.scale3d(.3333);
-	}
-	/////////////////////////////////////////////////////////////
-	///////////////////////////////////// OBJECTS COLOR BY VERTEX
-
-	glRotatef(-45, 1.f, 0.f, 0.f);
-	//glRotatef(-10, 0.f, 1.f, 0.f);
-	glRotatef(15, 0.f, 0.f, 1.f);
 }
 
 void trussApp02::run(){

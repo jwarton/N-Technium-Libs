@@ -43,6 +43,7 @@ void ntImage::init() {
 	load_IMG(url_IN);
 }
 void ntImage::load_IMG(std::string) {
+
 	const char * file = url_IN.c_str();
 	img_IN = af::loadImage(file, false);
 	img_2D = af::array(img_IN);

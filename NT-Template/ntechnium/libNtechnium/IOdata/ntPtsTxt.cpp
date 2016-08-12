@@ -12,7 +12,8 @@ ntTextIO::ntTextIO(){
 ntTextIO::ntTextIO(std::string fileName) :
 fileName(fileName){
 	this->path = nt_Utility::getPathToResources();
-	this->pathExtension = "ntechnium\\resources\\data\\";
+	//this->pathExtension = "ntechnium\\resources\\data\\";
+	this->pathExtension = "\\data\\";
 	init();
 }
 
@@ -44,6 +45,9 @@ void ntTextIO::setUrl(){
 
 void ntTextIO::read(){
 	ifstream file(url);
+
+	std::cout << url << endl;
+
 	std::string lineStr;
 	if (file.is_open()){
 		while (getline(file, lineStr)){
