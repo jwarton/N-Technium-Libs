@@ -3,12 +3,17 @@
 using namespace std;
 using namespace jpw;
 
-ntVec3::ntVec3(){}
-
+ntVec3::ntVec3(){
+	x = y = z = 0;
+}
 ntVec3::ntVec3(float x, float y, float z){
 	this->x = x;
 	this->y = y;
 	this->z = z;
+}
+ntVec3::ntVec3(ntVec3 * v0, ntVec3 * v1){
+	set(v1);
+	sub(v0);
 }
 ///TODO -COPY CONSTRUCTOR CAUSES OVERWRITE OR DELETION IN SPHERE
 //ntVec3::ntVec3(const ntVec3& v){
@@ -56,19 +61,20 @@ void ntVec3::set(ntVec3* v){
 	z = v->z;
 }
 
-//returns dot product as new vector object
-//represented as angle between vectors in 3d space
+///////////////////////////////////////////////////////////////
+////////////// REPRESENTED AS ANGLE BETWEEN VECTORS IN 3D SPACE
 float ntVec3::dot(ntVec3* v){
 	//RETURNS COS THETA
 	return ((x * v->x) + (y * v->y) + (z * v->z));
 }
+///////////////////////////////////////////////////////////////
+/////////////////////////////////////// RETURNS THETA [RADIANS]
 float ntVec3::angle(ntVec3* v) {
-	//RETURNS THETA [RADIANS]
 	double phi = acos(dot(v));
 	return phi;
 }
-
-//returns cross product as vector perpendicular
+///////////////////////////////////////////////////////////////
+///////////////// RETURNS CROSS PRODUCT AS VECTOR PERPENDICULAR
 ntVec3 ntVec3::cross(ntVec3* v){
 	
 	float xx=  ((y * v->z) - (z * v->y));
@@ -77,32 +83,29 @@ ntVec3 ntVec3::cross(ntVec3* v){
 
 	return ntVec3(xx, yy, zz);
 }
-//set vector to (0,0,0)
+///////////////////////////////////////////////////////////////
+///////////////////////////////////////// SET VECTOR TO (0,0,0)
 void ntVec3::clear(){
-	x = 0;
-	y = 0;
-	z = 0;
+	x = y = z = 0;
 }
-//reverse direction of vector
+///////////////////////////////////////////////////////////////
+/////////////////////////////////// REVERSE DIRECTION OF VECTOR
 void ntVec3::invert(){
 	mult(-1);
 }
-//returns magnitude as float value
+///////////////////////////////////////////////////////////////
+////////////////////////////// RETURNS MAGNITUDE AS FLOAT VALUE
 float ntVec3::mag(){
-	return sqrt(mag2());
+	return sqrt(magSqrd());
 }
-float ntVec3::mag2() {
+float ntVec3::magSqrd() {
 	return x*x + y*y + z*z;
 }
-
 void ntVec3::unitize(){
 	float m = mag();
-	div(m);
-}
-
-void ntVec3::normalize() {
-	float m = mag();
-	div(abs(m));
+	if (m != 0) {
+		div(m);
+	}
 }
 
 void ntVec3::translate(ntVec3* pos, ntVec3* dir, float dist){
@@ -128,7 +131,7 @@ void ntVec3::align(ntVec3* axis_T  /*TARGET TO ALIGN WITH*/) {
 
 		ntVec3 v = axis_T->cross(axis_A);
 		double c = axis_T->dot(axis_A);							///angle cos [rad]		//dot(A,B)
-		double s = (v.mag2());									///norm of vector		//||v||
+		double s = (v.magSqrd());								///norm of vector		//||v||
 		arma::mat ssc = arma::zeros<arma::mat>(rows, cols);		///ssc = [0, -v(3), v(2); v(3), 0, -v(1); -v(2), v(1), 0];
 
 		ssc << 0 << -v.z << v.y << arma::endr
@@ -155,7 +158,7 @@ void ntVec3::align(ntVec3* axis_T  /*TARGET TO ALIGN WITH*/) {
 	}
 	//http://math.stackexchange.com/questions/180418/calculate-rotation-matrix-to-align-vector-a-to-vector-b-in-3d
 }
-void ntVec3::align2v(ntVec3* axis_T, ntVec3* axis_S) {
+void ntVec3::orient(ntVec3* axis_T, ntVec3* axis_S) {
 
 	///////////////////////////////////////////////////////////////////////////////////////////////////////////
 	//////////////////////////////////////// FUNCTION TRANSFORMS THE POINT TO TARGET VEC RELATIVE TO SOURCE VEC
@@ -173,7 +176,7 @@ void ntVec3::align2v(ntVec3* axis_T, ntVec3* axis_S) {
 
 		ntVec3 v = axis_A.cross(&axis_B);
 		double c = axis_A.dot(&axis_B);							///angle cos [rad]		//dot(A,B)
-		double s = (v.mag2());									///norm of vector		//||v||
+		double s = (v.magSqrd());									///norm of vector		//||v||
 		arma::mat ssc = arma::zeros<arma::mat>(rows, cols);		///ssc = [0, -v(3), v(2); v(3), 0, -v(1); -v(2), v(1), 0];
 
 		ssc << 0 << -v.z << v.y << arma::endr
@@ -233,6 +236,9 @@ void ntVec3::display(){
 void ntVec3::print() {
 	std::cout << "VEC: (" << x << ", " << y << ", " << z <<  " )" << endl;
 }
+void ntVec3::print(std::string s){
+	std::cout << "VEC " << s << ": (" << x << ", " << y << ", " << z << " )" << endl;
+}
 ///////////////////////////////////////////////////////////////////
 ///////////////////////////////////////////////////////////////////
 float ntVec3::distance(ntVec3* v){
@@ -248,4 +254,87 @@ float ntVec3::distSqrd(ntVec3* v){
 	float dZ = this->z - v->z;
 	float distSqrd = (pow(dX, 2) + pow(dY, 2) + pow(dZ, 2));
 	return distSqrd;
+}
+
+///////////////////////////////////////////////////////////////
+//////////////////////////////////////////// OPERATOR OVERLOADS
+ntVec3 ntVec3::operator+(Vec3 v) {
+	ntVec3 vec(x + v.x, y + v.y, z + v.z);
+	return vec;
+}
+ntVec3 ntVec3::operator-(Vec3 v) {
+	ntVec3 vec(x - v.x, y - v.y, z - v.z);
+	return vec;
+}
+ntVec3 ntVec3::operator*(Vec3 v) {
+	ntVec3 vec(x * v.x, y * v.y, z * v.z);
+	return vec;
+}
+ntVec3 ntVec3::operator/(Vec3 v) {
+	ntVec3 vec(x / v.x, y / v.y, z / v.z);
+	return vec;
+}
+
+void ntVec3::operator=(Vec3 v) {
+	x = v.x;
+	y = v.y;
+	z = v.z;
+}
+void ntVec3::operator+=(Vec3 v){
+	x += v.x;
+	y += v.y;
+	z += v.z;
+}
+void ntVec3::operator-=(Vec3 v){
+	x -= v.x;
+	y -= v.y;
+	z -= v.z;
+}
+void ntVec3::operator*=(Vec3 v){
+	x *= v.x;
+	y *= v.y;
+	z *= v.z;
+}
+void ntVec3::operator/=(Vec3 v){
+	x /= v.x;
+	y /= v.y;
+	z /= v.z;
+}
+
+bool ntVec3::operator==(Vec3 v){
+	bool isEq = false;
+	if (v.x == x && v.y == y && v.z == z) {
+		isEq = true;
+	}
+	return isEq;
+}
+///////////////////////////////////////////////////////////////
+ntVec3*  ntVec3::operator+(Vec3* v) {
+	ntVec3 vec(x + v->x, y + v->y, z + v->z);
+	return &vec;
+}
+ntVec3*  ntVec3::operator-(Vec3* v) {
+	ntVec3 vec = ntVec3(x - v->x, y - v->y, z - v->z);
+	return &vec;
+}
+ntVec3*  ntVec3::operator*(Vec3* v) {
+	ntVec3 vec = ntVec3(x * v->x, y * v->y, z * v->z);
+	return &vec;
+}
+ntVec3*  ntVec3::operator/(Vec3* v) {
+	ntVec3 vec = ntVec3(x / v->x, y / v->y, z / v->z);
+	return &vec;
+}
+
+void  ntVec3::operator=(Vec3* v) {
+	x = v->x;
+	y = v->y;
+	z = v->z;
+}
+bool ntVec3::operator==(Vec3* v) {
+	bool isEq = false;
+	if (v->x == x && v->y == y && v->z == z) {
+		isEq = true;
+	}
+	return isEq;
 }

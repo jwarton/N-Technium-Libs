@@ -229,6 +229,53 @@ void ntTriSkin::init() {
 	else {
 		std::cout << "ERROR:  PATH TO WRITE FILES IS UNDEFINED" << endl;
 	}
+
+	ntVec3 A = ntVec3(5, 5, 5);
+	ntVec3 B = ntVec3(2, 1, 4);
+
+	ntVec3 C;
+	C = A;
+	C.print("C = A");
+ 
+	C = A + B;
+	C.print("C = A + B");
+	C = A - B;
+	C.print("C = A - B");
+	C = A * B;
+	C.print("C = A * B");
+	C = A / B;
+	C.print("C = A / B");
+
+	A += B;
+	A.print("A += B");
+	A -= B;
+	A.print("A -= B");
+	A *= B;
+	A.print("A *= B");
+	A /= B;
+	A.print("A /= B");
+
+	bool compare = C == A;
+	std::cout << compare << endl;
+	C = A;
+	compare = C == A;
+	std::cout << compare << endl;
+
+	ntVec3* D = new ntVec3(3, 3, 3);
+	ntVec3* E = new ntVec3(8, 1, 7);
+
+	C = D;
+	C.print("C = D");
+	C = *D + E;
+	C.print("C = D + E");
+	C = *D - E;
+	C.print("C = D - E");
+	C = *D * E;
+	C.print("C = D * E");
+	C = *D / E;
+	C.print("C = D / E");
+
+
 }
 
 void ntTriSkin::init_SysData() {
@@ -1322,7 +1369,7 @@ void ntTriSkin::align_Panel(ntPanel* panel_ptr, ntVec3* axis_A, ntVec3* axis_B, 
 	Vec3 trans_V = Vec3(pos->x, pos->y, pos->z);	///TRANSLATION VECTOR
 	for (int i = 0; i < cnt; i++) {
 		panel_ptr->vecs[i]->sub(&trans_V);
-		panel_ptr->vecs[i]->align2v(axis_A, axis_B);
+		panel_ptr->vecs[i]->orient(axis_A, axis_B);
 	}
 	panel_ptr->calcCentroid();
 	panel_ptr->calcNorm();

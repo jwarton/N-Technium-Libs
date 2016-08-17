@@ -25,6 +25,8 @@
 #include <thread>
 #include "windows.h"
 
+//#include "ntVec3.h"
+
 enum D_mode { vQ, vF, vP, vS, vW, vA, vD };
 enum L_mode { vX, vC, vV };
 
@@ -42,12 +44,10 @@ static float mapRange(float minA, float maxA, float minB, float maxB, float valB
 		return (rangeA - perc) + minA;
 	}
 }
-
 static float toRadians(double theta) {
 	theta = theta / 180 * M_PI;
 	return theta;
 }
-
 static float toDegrees(double theta) {
 	theta = theta / M_PI * 180;
 	return theta;
