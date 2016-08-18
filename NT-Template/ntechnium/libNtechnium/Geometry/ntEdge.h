@@ -45,6 +45,7 @@ public:
 	ntEdge(ntVec3* v0,ntVec3* v1,ntColor4f col,float weight);
 	ntEdge(ntVec3* v0,ntVec3* v1,ntVertex* vert0, ntVertex* vert1);
 
+	double length();
 	float getLength();
 	float getLength2();
 
@@ -57,7 +58,10 @@ public:
 	void display();		///REFACTOR FOR UNIFORM APPROACH
 	void display_X();	///TEMPORARY FOR TRUSS DISPLAY
 };
-
+inline double ntEdge::length() {
+	double length = v0->distance(v1);
+	return length;
+}
 inline float ntEdge::getLength() {	
 	ntVec3*axis = new ntVec3(1,0,0);
 	ntVec3 vE;
@@ -65,6 +69,8 @@ inline float ntEdge::getLength() {
 	vE.set(v1);
 	vE.sub(v0);
 	vE.align(axis);
+
+	delete axis;
 
 	float length = abs(vE.x);
 	return length;

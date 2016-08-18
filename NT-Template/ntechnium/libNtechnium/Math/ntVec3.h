@@ -25,7 +25,6 @@ namespace jpw{
 		ntVec3(ntVec3* v);						//COPY CONSTRUCTORS
 		ntVec3(const ntVec3& v);				//COPY CONSTRUCTORS
 		ntVec3(ntVec3* pt0, ntVec3* pt1);		//CONSTRUCTS VECTOR BETWEEN POINTS
-		//ntVec3(const ntVec3& v);
 		//ntVec3& operator=(const ntVec3& v);
 		//~ntVec3();
 

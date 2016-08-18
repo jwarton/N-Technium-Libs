@@ -32,8 +32,8 @@ private:
 
 	int genTotal;	//growth generations
 
-	int branchCnt = 3;	//new branches at current node
-	int leafCnt = 5;	//leaves at final branch
+	int branchCnt	= 3;	//new branches at current node
+	int leafCnt		= 5;	//leaves at final branch
 
 	float theta;	//rotation about current node vector
 	float phi;		//rotation from current vector
@@ -53,11 +53,11 @@ private:
 	float maxL = 1.25;
 
 	//physics variables
-	bool enablePhysics = false;	//unique constructor enables physics
-	bool isFixedRoot = true;
-	bool isFixedBase = true;
-	bool isFixedLeaves = false;
-	bool isLeafSet = false;
+	bool enablePhysics	= false;	//unique constructor enables physics
+	bool isFixedRoot	= true;
+	bool isFixedBase	= true;
+	bool isFixedLeaves	= false;
+	bool isLeafSet		= false;
 	
 	float leaf_Z;
 

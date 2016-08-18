@@ -17,6 +17,7 @@
 #include "nt_02_treeApp-v01.h"
 #include "nt_02_treeApp-v02.h"
 #include "nt_02_treeApp-v03.h"
+#include "nt_02_treeApp-v04.h"
 //#include "nt_03_swarmApp.h"
 #include "nt_04_emitterApp.h"
 #include "nt_05_shapeApp.h"
@@ -70,13 +71,15 @@ int main(int argc, char const** argv){
 	int	x = 1920;
 	int y = 1080;
 	///MATH
-	AppContent* c = new vec3TestApp();
+	//AppContent* c = new vec3TestApp();
+
 	///GRAPHICS
 	//AppContent* c = new meshImportApp();
 	//AppContent* c = new meshApp();
 	//AppContent* c = new treeApp01();
 	//AppContent* c = new treeApp02();
 	//AppContent* c = new treeApp03();
+	AppContent* c = new treeApp04();
 	//AppContent* c = new swarmApp();
 	//AppContent* c = new emitterApp(10000,.1);
 	//AppContent* c = new shapeApp();
@@ -91,15 +94,15 @@ int main(int argc, char const** argv){
 
 	///IMAGE PROCESSING
 	//AppContent* c = new afApp01();		//ARRAY FIRE IMPELEMENTATION PROTOTYPE TEST
-	//AppContent* c = new afApp02();		
+	//AppContent* c = new afApp02();		//TENSILE COUPON IMAGE CALIBRATION
 	//AppContent* c = new tokyoApp00();		//C3 VISUALIZING TOKYO VIGNETTES
 	//AppContent* c = new tokyoApp01();		//C3 IMAGE SUBDIVISION AND TILING
 	//AppContent* c = new tokyoApp02();		//C3 TRIVIAL SURFACE | MOSAIC IMAGE MAPPING
 	//AppContent* c = new tokyoApp03();		//C3 IMAGE SUBDIVISION AND TILING
 
-
 	///TYPE
 	//AppContent* c = new typeApp();
+
 	///OVIS
 	//AppContent* c = new ovisApp();
 	//AppContent* c = new ovisApp02();

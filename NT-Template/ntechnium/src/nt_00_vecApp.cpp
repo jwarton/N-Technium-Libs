@@ -112,4 +112,21 @@ void vec3TestApp::init() {
 	compare = *D > E;
 	std::cout << "D >  E :  " << compare << endl;
 	std::cout << "\n" << endl;
+
+	//A + B = C;
+	//C.print("C");
+	//B.print("B");
+	//A.print("A");
+	//
+	//std::cout << "\n" << endl;
+	//C = A + B;
+	//C.print("C");
+	//B.print("B");
+	//A.print("A");
+
+	//std::cout << "\n" << endl;
+	//A + B = C;
+	//C.print("C");
+	//B.print("B");
+	//A.print("A");
 }

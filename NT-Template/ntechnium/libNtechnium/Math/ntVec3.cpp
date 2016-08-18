@@ -14,7 +14,7 @@ ntVec3::ntVec3(float x, float y, float z){
 ntVec3::ntVec3(ntVec3 * v) {
 	set(v);
 }
-///TODO -COPY CONSTRUCTOR CAUSES OVERWRITE OR DELETION IN SPHERE CLASS
+///TODO -CONST COPY CONSTRUCTOR CAUSES OVERWRITE OR DELETION IN SPHERE CLASS
 ntVec3::ntVec3(const ntVec3& v) {
 	this->x = v.x;
 	this->y = v.y;
@@ -25,7 +25,7 @@ ntVec3::ntVec3(ntVec3 * v0, ntVec3 * v1){
 	set(v1);
 	sub(v0);
 }
-/// DESTRUCTOR
+// DESTRUCTOR
 //ntVec3::~ntVec3(){
 //
 //}

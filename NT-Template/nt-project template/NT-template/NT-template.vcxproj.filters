@@ -261,6 +261,12 @@
     <ClCompile Include="..\..\ntechnium\src\nt_00_vecApp.cpp">
       <Filter>src programs</Filter>
     </ClCompile>
+    <ClCompile Include="..\..\ntechnium\src\nt_02_treeApp-v04.cpp">
+      <Filter>src programs</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\ntechnium\libNtechnium\Geometry\ntNodeGen.cpp">
+      <Filter>lib_geometry</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\ntechnium\appNtechnium\nt_BaseApp.h">
@@ -493,6 +499,12 @@
     </ClInclude>
     <ClInclude Include="..\..\ntechnium\src\nt_00_vecApp.h">
       <Filter>src programs</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\ntechnium\src\nt_02_treeApp-v04.h">
+      <Filter>src programs</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\ntechnium\libNtechnium\Geometry\ntNodeGen.h">
+      <Filter>lib_geometry</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>
