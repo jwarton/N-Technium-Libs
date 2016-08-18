@@ -229,53 +229,6 @@ void ntTriSkin::init() {
 	else {
 		std::cout << "ERROR:  PATH TO WRITE FILES IS UNDEFINED" << endl;
 	}
-
-	ntVec3 A = ntVec3(5, 5, 5);
-	ntVec3 B = ntVec3(2, 1, 4);
-
-	ntVec3 C;
-	C = A;
-	C.print("C = A");
- 
-	C = A + B;
-	C.print("C = A + B");
-	C = A - B;
-	C.print("C = A - B");
-	C = A * B;
-	C.print("C = A * B");
-	C = A / B;
-	C.print("C = A / B");
-
-	A += B;
-	A.print("A += B");
-	A -= B;
-	A.print("A -= B");
-	A *= B;
-	A.print("A *= B");
-	A /= B;
-	A.print("A /= B");
-
-	bool compare = C == A;
-	std::cout << compare << endl;
-	C = A;
-	compare = C == A;
-	std::cout << compare << endl;
-
-	ntVec3* D = new ntVec3(3, 3, 3);
-	ntVec3* E = new ntVec3(8, 1, 7);
-
-	C = D;
-	C.print("C = D");
-	C = *D + E;
-	C.print("C = D + E");
-	C = *D - E;
-	C.print("C = D - E");
-	C = *D * E;
-	C.print("C = D * E");
-	C = *D / E;
-	C.print("C = D / E");
-
-
 }
 
 void ntTriSkin::init_SysData() {

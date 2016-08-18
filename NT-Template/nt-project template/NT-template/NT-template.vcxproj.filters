@@ -258,6 +258,9 @@
     <ClCompile Include="..\..\ntechnium\src\nt_11_c3-App-v03.cpp">
       <Filter>src programs</Filter>
     </ClCompile>
+    <ClCompile Include="..\..\ntechnium\src\nt_00_vecApp.cpp">
+      <Filter>src programs</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\ntechnium\appNtechnium\nt_BaseApp.h">
@@ -486,6 +489,9 @@
       <Filter>src programs</Filter>
     </ClInclude>
     <ClInclude Include="..\..\ntechnium\src\nt_11_c3-App-v03.h">
+      <Filter>src programs</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\ntechnium\src\nt_00_vecApp.h">
       <Filter>src programs</Filter>
     </ClInclude>
   </ItemGroup>

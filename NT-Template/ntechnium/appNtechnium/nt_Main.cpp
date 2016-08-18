@@ -11,6 +11,7 @@
 #include "nt_genApp.h"
 #include "nt_simpleApp.h"
 //
+#include "nt_00_vecApp.h"
 #include "nt_00_meshApp.h"
 #include "nt_01_meshApp.h"
 #include "nt_02_treeApp-v01.h"
@@ -68,7 +69,8 @@ int main(int argc, char const** argv){
 
 	int	x = 1920;
 	int y = 1080;
-
+	///MATH
+	AppContent* c = new vec3TestApp();
 	///GRAPHICS
 	//AppContent* c = new meshImportApp();
 	//AppContent* c = new meshApp();
@@ -92,7 +94,7 @@ int main(int argc, char const** argv){
 	//AppContent* c = new afApp02();		
 	//AppContent* c = new tokyoApp00();		//C3 VISUALIZING TOKYO VIGNETTES
 	//AppContent* c = new tokyoApp01();		//C3 IMAGE SUBDIVISION AND TILING
-	AppContent* c = new tokyoApp02();		//C3 TRIVIAL SURFACE | MOSAIC IMAGE MAPPING
+	//AppContent* c = new tokyoApp02();		//C3 TRIVIAL SURFACE | MOSAIC IMAGE MAPPING
 	//AppContent* c = new tokyoApp03();		//C3 IMAGE SUBDIVISION AND TILING
 
 

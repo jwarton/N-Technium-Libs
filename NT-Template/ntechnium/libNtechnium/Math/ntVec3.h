@@ -17,14 +17,14 @@ namespace jpw{
 	typedef ntVec3 Vec3;
 
 	class ntVec3 {
-	private:
-
 	public:
 		float x, y, z;
 
-		ntVec3();
-		ntVec3(float x, float y, float z);
-		ntVec3(ntVec3* v0, ntVec3* v1);
+		ntVec3();								//0,0,0
+		ntVec3(float x, float y, float z);		//STANDARD
+		ntVec3(ntVec3* v);						//COPY CONSTRUCTORS
+		ntVec3(const ntVec3& v);				//COPY CONSTRUCTORS
+		ntVec3(ntVec3* pt0, ntVec3* pt1);		//CONSTRUCTS VECTOR BETWEEN POINTS
 		//ntVec3(const ntVec3& v);
 		//ntVec3& operator=(const ntVec3& v);
 		//~ntVec3();
@@ -42,16 +42,16 @@ namespace jpw{
 		ntVec3 cross(ntVec3* v);
 
 		///////////////////////////////////////////////////////////////
+		void unitize();		////////////////// NORMALIZE VECTOR -1 TO 1
+		void invert();		/////////////// REVERSE DIRECTION OF VECTOR
+		void clear();		///////////////////// SET VECTOR TO (0,0,0)
+		void round(float t);
+
+		///////////////////////////////////////////////////////////////
 		float mag();		////////// RETURNS MAGNITUDE AS FLOAT VALUE
 		float magSqrd();	////RETURNS MAGNITUDE SQUARED;  //EFFICENCY
-		void round(float t);
-		void unitize();
-		void invert();		/////////////// REVERSE DIRECTION OF VECTOR
-		void clear();							//SET VECTOR TO (0,0,0)
-
-		//DISTANCE TO VECTOR/POINT
-		float distance(ntVec3* v);
-		float distSqrd(ntVec3* v);
+		float distance(ntVec3* v);			// DISTANCE TO VECTOR/POINT
+		float distSqrd(ntVec3* v);			// DISTANCE SQUARED
 		///////////////////////////////////////////////////////////////
 		////////////////////////////////////// EUCLIDIAN TRANSORMATIONS
 		void translate(ntVec3* pos, ntVec3* dir, float dist);
@@ -61,7 +61,7 @@ namespace jpw{
 		void rotate(ntVec3* axis_R);
 
 		///////////////////////////////////////////////////////////////
-		////////////////////////////////////////////// DO VECTORS ALIGN
+		////////////////////////////////////////// ARE VECTORS PARALLEL
 		bool compare(ntVec3* vec);
 
 		void display();
@@ -80,7 +80,12 @@ namespace jpw{
 		void operator-=(Vec3 v);
 		void operator*=(Vec3 v);
 		void operator/=(Vec3 v);
+
 		bool operator==(Vec3 v);
+		bool operator<=(Vec3 v);
+		bool operator>=(Vec3 v);
+		bool operator<(Vec3 v);
+		bool operator>(Vec3 v);
 
 		///////////////////////////////////////////////////////////////
 		ntVec3* operator+(Vec3* v);
@@ -89,7 +94,16 @@ namespace jpw{
 		ntVec3* operator/(Vec3* v);
 
 		void operator= (Vec3* v);
+		void operator+=(Vec3* v);
+		void operator-=(Vec3* v);
+		void operator*=(Vec3* v);
+		void operator/=(Vec3* v);
+
 		bool operator==(Vec3* v);
+		bool operator<=(Vec3* v);
+		bool operator>=(Vec3* v);
+		bool operator<(Vec3* v);
+		bool operator>(Vec3* v);
 	};
 
 	static double distance(ntVec3* v0, ntVec3* v1) {

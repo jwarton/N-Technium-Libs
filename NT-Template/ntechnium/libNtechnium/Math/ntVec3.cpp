@@ -11,30 +11,24 @@ ntVec3::ntVec3(float x, float y, float z){
 	this->y = y;
 	this->z = z;
 }
+ntVec3::ntVec3(ntVec3 * v) {
+	set(v);
+}
+///TODO -COPY CONSTRUCTOR CAUSES OVERWRITE OR DELETION IN SPHERE CLASS
+ntVec3::ntVec3(const ntVec3& v) {
+	this->x = v.x;
+	this->y = v.y;
+	this->z = v.z;
+}
 ntVec3::ntVec3(ntVec3 * v0, ntVec3 * v1){
+	//CONSTRUCTS VECTOR BETWEEN POINTS
 	set(v1);
 	sub(v0);
 }
-///TODO -COPY CONSTRUCTOR CAUSES OVERWRITE OR DELETION IN SPHERE
-//ntVec3::ntVec3(const ntVec3& v){
-//	this->x = v.x;
-//	this->x = v.y;
-//	this->x = v.z;
-//}
-//
-//ntVec3& ntVec3::operator=(const ntVec3& v){
-//	if (this != &v){
-//		this->x = v.x;
-//		this->x = v.y;
-//		this->x = v.z;
-//	}
-//	return *this;
-//}
-//
+/// DESTRUCTOR
 //ntVec3::~ntVec3(){
 //
 //}
-
 void ntVec3::add(ntVec3* v){
 	x += v->x;
 	y += v->y;
@@ -276,9 +270,11 @@ ntVec3 ntVec3::operator/(Vec3 v) {
 }
 
 void ntVec3::operator=(Vec3 v) {
-	x = v.x;
-	y = v.y;
-	z = v.z;
+	if (this != &v) {
+		x = v.x;
+		y = v.y;
+		z = v.z;
+	}
 }
 void ntVec3::operator+=(Vec3 v){
 	x += v.x;
@@ -308,6 +304,43 @@ bool ntVec3::operator==(Vec3 v){
 	}
 	return isEq;
 }
+bool ntVec3::operator<=(Vec3 v){
+	bool b = false;
+	double m0 = magSqrd();
+	double m1 = v.magSqrd();
+	if (m0 <= m1) {
+		b = true;
+	}
+	return b;
+}
+bool ntVec3::operator>=(Vec3 v)
+{
+	bool b = false;
+	double m0 = magSqrd();
+	double m1 = v.magSqrd();
+	if (m0 >= m1) {
+		b = true;
+	}
+	return b;
+}
+bool ntVec3::operator<(Vec3 v){
+	bool b = false;
+	double m0 = magSqrd();
+	double m1 = v.magSqrd();
+	if (m0 < m1) {
+		b = true;
+	}
+	return b;
+}
+bool ntVec3::operator>(Vec3 v){
+	bool b = false;
+	double m0 = magSqrd();
+	double m1 = v.magSqrd();
+	if (m0 > m1) {
+		b = true;
+	}
+	return b;
+}
 ///////////////////////////////////////////////////////////////
 ntVec3*  ntVec3::operator+(Vec3* v) {
 	ntVec3 vec(x + v->x, y + v->y, z + v->z);
@@ -327,10 +360,33 @@ ntVec3*  ntVec3::operator/(Vec3* v) {
 }
 
 void  ntVec3::operator=(Vec3* v) {
-	x = v->x;
-	y = v->y;
-	z = v->z;
+	if (this != v) {
+		x = v->x;
+		y = v->y;
+		z = v->z;
+	}
 }
+void ntVec3::operator+=(Vec3* v) {
+	x += v->x;
+	y += v->y;
+	z += v->z;
+}
+void ntVec3::operator-=(Vec3* v) {
+	x -= v->x;
+	y -= v->y;
+	z -= v->z;
+}
+void ntVec3::operator*=(Vec3* v) {
+	x *= v->x;
+	y *= v->y;
+	z *= v->z;
+}
+void ntVec3::operator/=(Vec3* v) {
+	x /= v->x;
+	y /= v->y;
+	z /= v->z;
+}
+
 bool ntVec3::operator==(Vec3* v) {
 	bool isEq = false;
 	if (v->x == x && v->y == y && v->z == z) {
@@ -338,3 +394,51 @@ bool ntVec3::operator==(Vec3* v) {
 	}
 	return isEq;
 }
+
+bool ntVec3::operator<=(Vec3* v) {
+	bool b = false;
+	double m0 = magSqrd();
+	double m1 = v->magSqrd();
+	if (m0 <= m1) {
+		b = true;
+	}
+	return b;
+}
+bool ntVec3::operator>=(Vec3* v)
+{
+	bool b = false;
+	double m0 = magSqrd();
+	double m1 = v->magSqrd();
+	if (m0 >= m1) {
+		b = true;
+	}
+	return b;
+}
+bool ntVec3::operator<(Vec3* v) {
+	bool b = false;
+	double m0 = magSqrd();
+	double m1 = v->magSqrd();
+	if (m0 < m1) {
+		b = true;
+	}
+	return b;
+}
+bool ntVec3::operator>(Vec3* v) {
+	bool b = false;
+	double m0 = magSqrd();
+	double m1 = v->magSqrd();
+	if (m0 > m1) {
+		b = true;
+	}
+	return b;
+}
+
+///ASSIGNMENT OPERATOR
+//ntVec3& ntVec3::operator=(const ntVec3& v){
+//	if (this != &v){
+//		this->x = v.x;
+//		this->y = v.y;
+//		this->z = v.z;
+//	}
+//	return *this;
+//}

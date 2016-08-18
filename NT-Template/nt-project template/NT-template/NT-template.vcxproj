@@ -64,6 +64,7 @@
     <ClCompile Include="..\..\ntechnium\src\kuka\krl_textTemp.cpp" />
     <ClCompile Include="..\..\ntechnium\src\kuka\krl_xaxisDemo.cpp" />
     <ClCompile Include="..\..\ntechnium\src\nt_00_meshApp.cpp" />
+    <ClCompile Include="..\..\ntechnium\src\nt_00_vecApp.cpp" />
     <ClCompile Include="..\..\ntechnium\src\nt_01_meshApp.cpp" />
     <ClCompile Include="..\..\ntechnium\src\nt_02_treeApp-v01.cpp" />
     <ClCompile Include="..\..\ntechnium\src\nt_02_treeApp-v02.cpp" />
@@ -142,6 +143,7 @@
     <ClInclude Include="..\..\ntechnium\src\kuka\krl_textTemp.h" />
     <ClInclude Include="..\..\ntechnium\src\kuka\krl_xaxisDemo.h" />
     <ClInclude Include="..\..\ntechnium\src\nt_00_meshApp.h" />
+    <ClInclude Include="..\..\ntechnium\src\nt_00_vecApp.h" />
     <ClInclude Include="..\..\ntechnium\src\nt_01_meshApp.h" />
     <ClInclude Include="..\..\ntechnium\src\nt_02_treeApp-v01.h" />
     <ClInclude Include="..\..\ntechnium\src\nt_02_treeApp-v02.h" />
