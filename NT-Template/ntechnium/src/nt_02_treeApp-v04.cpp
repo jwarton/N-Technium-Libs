@@ -10,7 +10,7 @@ void treeApp04::init() {
 	float d = 0.5;
 	float z = -.3;
 
-	tree00 = ntTree(&Vec3(0, 0, 0), Vec3(-0.5, 0, .5), .25, 5, false, false);
+	tree00 = ntTree(&Vec3(0, 0, 0), Vec3(-0.5, 0, .5), 10, 5, true, false);
 	tree00.setMutations(3, 3, 12, 0.8); //45 & 90 degrees causes error
 	tree00.setDynamics(.05, k, d);
 	//tree00.setMutations(5, 3, 25, 0.20);
@@ -22,6 +22,8 @@ void treeApp04::init() {
 	tree00.init();
 
 	nodes = ntNodeGen(tree00.branches);
+	nodes.set_Parameters(POLYPARAM, 5, 0.05);
+	nodes.init();
 
 	///////////////////////////////////////////////////////////////
 	/////////////////////////////////////// OBJECTS COLOR BY VERTEX

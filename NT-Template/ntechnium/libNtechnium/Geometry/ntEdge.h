@@ -91,7 +91,6 @@ inline ntVec3* ntEdge::getMid() {
 	return v;
 }
 inline ntVec3* ntEdge::get_PtP(double param) {
-
 	ntVec3 * v = new ntVec3(v1->x, v1->y, v1->z);
 	v->scale(v0, param);
 	return v;
