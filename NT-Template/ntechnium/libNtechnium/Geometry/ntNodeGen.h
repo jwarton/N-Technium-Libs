@@ -25,12 +25,12 @@ enum SectMode {SQUARE, POLYGON, POLYPARAM, RECTANGLE};
 class ntNodeGen{
 private:
 
-	float dimX		= 0.01;				// PROFILE X
-	float dimY		= 0.02;				// PROFILE Y
-	float dimZ;							// PROFILE Z
+	double dimX		= 0.01;				// PROFILE X
+	double dimY		= 0.02;				// PROFILE Y
+	double dimZ;							// PROFILE Z
 	double p = 0.015;					// PROFILE AS RATIO OF BRANCH LENGTH
 
-	int sides		= 3;						// NUMBER OF PROFILE SEGMENTS 
+	int sides		= 6;						// NUMBER OF PROFILE SEGMENTS 
 	int div			= 5;				// REPLACE WITH SET FUNCTION
 	double neck		= 0.1;				// EDGE PARAMETER AT BASE OF NODE
 	double t_max	= 0.45;				// MAX NECK PARAMERTER
@@ -52,7 +52,7 @@ private:
 
 	// PROFILE TYPES:  SQUARE, POLYGON, POLYPARM, RECTANGLE
 	//std::vector <ntVec3*> gen_profile(ntEdge* edge, ntPolygon polygon);
-	std::vector <ntVec3*> gen_profile(ntEdge* edge, float p);
+	std::vector <ntVec3*> gen_profile(ntEdge* edge, float w);
 	std::vector <ntVec3*> gen_profile(ntEdge* edge, int sides, float radius);
 	std::vector <ntVec3*> gen_profile(ntEdge* edge, float dimX, float dimY);
 	void gen_profiles();

@@ -59,6 +59,6 @@ void treeApp04::run(){
 }
 
 void treeApp04::display(){
-	//tree00.display();
+	tree00.display();
 	nodes.display_Edges();
 }

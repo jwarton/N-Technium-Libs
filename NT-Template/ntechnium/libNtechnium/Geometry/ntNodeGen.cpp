@@ -80,8 +80,8 @@ void ntNodeGen::gen_profiles(){
 		ntEdge seg = ntEdge(vS, vE);
 		float len = seg.length();
 
-		dimX = len * dimX;
-		dimY = len * dimY;
+		float dim0 = len * dimX;
+		float dim1 = len * dimY;
 
 		ntVec3 axis_T = ntVec3(v0, v1);
 		ntVec3 axis_S(0, 0, 1);
@@ -90,21 +90,21 @@ void ntNodeGen::gen_profiles(){
 			std::vector <ntVec3*> pts;
 			// PLOT PROFILE VERTICES
 			if (mode == SQUARE) {
-				pts = gen_profile(edges[i], dimX);
+				pts = gen_profile(edges[i], dim0);
 			} else if (mode == POLYGON) {
-				//pts = gen_profile(edges[i], 0.1);
+				//pts = (gen_profile(edges[i], 0.1);
 			} else if (mode == POLYPARAM) {
-				pts = gen_profile(edges[i], sides, dimX);
+				pts = gen_profile(edges[i], sides, dim0);
 			} else if (mode == RECTANGLE) {
-				pts = gen_profile(edges[i], dimX, dimY);
+				pts = gen_profile(edges[i], dim0, dim1);
 			}
 			//ALIGN PROFILE TO EDGE VECTOR AND TRANSLATE TO POSITION
-			double pt_param = (1 / div) * j;
+			double pt_param = (1.0 / div) * j;
 			ntVec3* vP = seg.get_PtP(pt_param);
 
 			for (int k = 0; k < pts.size(); k++) {
-				//pts[k]->orient(&axis_T, &axis_S);
-				//pts[k]->add(vP);
+				pts[k]->orient(&axis_T, &axis_S);
+				pts[k]->add(vP);
 			}
 
 			ntPolyline *profile = new ntPolyline(pts, true);
@@ -140,10 +140,10 @@ void ntNodeGen::set_Color(ntColor4f col){
 void ntNodeGen::set_Parameters(SectMode mode, int div, double neck){
 	this->mode = mode;
 
-	if (div > 1) {
+	if (div >= 1) {
 		this->div = div;
 	} else {
-		div == 1;
+		this->div = 1;
 		std::cout << "BRANCH DIVISIONS MUST BE >= TO 1" << endl;
 	}
 
