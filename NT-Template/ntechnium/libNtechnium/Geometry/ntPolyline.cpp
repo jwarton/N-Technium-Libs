@@ -1,17 +1,28 @@
 #include "ntPolyline.h"
 
 ntPolyline::ntPolyline() {}
+ntPolyline::ntPolyline(ntVec3* vS, ntVec3* vE):
+vS(vS), vE(vE){
+	vecs.push_back(vS);
+	vecs.push_back(vE);
+	isClosed = false;
+	init();
+}
 ntPolyline::ntPolyline(std::vector <ntVec3*> vecs, bool isClosed) :
 	vecs(vecs), isClosed(isClosed) {
 	if (isClosed == true) {
 		this->vecs.push_back(vecs[0]);
 	}
-	col = ntColor4f(0.25, 0.25, 0.25, 1);
-	w = .1f;
+
 	init();
 }
 
 void ntPolyline::init() {
+	//DEFAULT LINE TYPE
+	col = ntColor4f(0.25, 0.25, 0.25, 1);
+	w = .1f;
+
+	//INITIALIZE POLYLINE VERTEX DATA STRUCTURES
 	int cnt = vecs.size();
 	vS = vecs[0];
 	vE = vecs[cnt];

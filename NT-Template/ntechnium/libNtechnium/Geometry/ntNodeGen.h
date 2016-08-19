@@ -24,40 +24,43 @@ using namespace jpw;
 enum SectMode {SQUARE, POLYGON, POLYPARAM, RECTANGLE};
 class ntNodeGen{
 private:
-	void init();
 
-	int mode = RECTANGLE;
+	int div = 5;					/// REPLACE WITH SET FUNCTION
+	float neck = 0.1;				/// EDGE PARAMETER AT BASE OF 
+	SectMode mode = POLYPARAM;		/// ADD SET FUNCTION
+
 	//NODE OBJECTS
 	//ntVec3 *v0;					//NODE JUNCTURE	
 	//std::vector<ntVec3 *> vecs;	//SPOKE END POINTS v1
 	//std::vector<ntEdge*> edges;	//NODE SPOKES
 
-	std::vector<ntVec3 *>	vecs;
-	std::vector<ntVertex*>	verts;
-	std::vector<ntEdge*>	edges;
-	std::vector<ntFace3*>	faces;
+	std::vector<ntVec3 *>		vecs;
+	std::vector<ntVertex*>		verts;
+	std::vector<ntEdge*>		edges;
+	std::vector<ntFace3*>		faces;
+	std::vector<ntPolyline*>	profiles;
 
-	std::vector<ntPolyline*> profiles;
-
-	ntColor4f col;
+	ntColor4f col = ntColor4f(0.25f,0.25f,0.25f,1);
 	std::vector<ntCol4> cols;
 
-	void gen_profile(ntEdge* edge);
+	// PROFILE TYPES:  SQUARE, POLYGON, POLYPARM, RECTANGLE
 	void gen_profile(ntEdge* edge, float p);	//proportional to length
 	//void gen_profile(ntEdge* edge, ntPolygon polygon);
 	void gen_profile(ntEdge* edge, int sides, float radius);
 	void gen_profile(ntEdge* edge, float dim0, float dim1);
 
-	void gen_branch(int sides);
+	void gen_branch();
 	void gen_node();
 
+	void init();
 public:
 
 	ntNodeGen();
 	ntNodeGen(std::vector<ntEdge*>* edges);
 	ntNodeGen(std::vector<ntEdge*> edges);
 
-	void setColor(ntColor4f col);
+	void set_Color(ntColor4f col);
+	void set_Parameters(SectMode mode, int div, float neck);
 
 	void display();
 	void display_Verts();

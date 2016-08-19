@@ -25,6 +25,7 @@ private:
 	std::vector <ntVec3*>	vecs;
 	std::vector <ntVertex>	verts;
 	std::vector <ntEdge>	edges;
+	std::vector <ntEdge>	edges_brep;
 
 	ntColor4f col;
 	float w;							// LINE WEIGHT THICKNESS
@@ -34,6 +35,7 @@ private:
 public:
 
 	ntPolyline();
+	ntPolyline(ntVec3* vS, ntVec3* vE);
 	ntPolyline(std::vector <ntVec3*> vecs, bool isClosed = false);
 
 	double get_Length();

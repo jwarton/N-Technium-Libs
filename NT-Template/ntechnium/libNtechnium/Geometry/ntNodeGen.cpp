@@ -32,22 +32,12 @@ void ntNodeGen::init(){
 			// RECTANGLE PARAMETERS, X, Y
 			gen_profile(edges[i], 0.05f, 0.025f);
 		}
-		else{
-			gen_profile(edges[i]);
-		}
 	}
 	///////////////////////////////////////////////////////////////
 	// BUILD JUNCTIONS
-
+	gen_branch();
 	///////////////////////////////////////////////////////////////
 	// SUBDIVIDE AND/OR SMOOTH
-}
-void ntNodeGen::gen_profile(ntEdge* edge) {
-	ntVec3* v0 = edge->v0;
-	ntVec3* v1 = edge->v1;
-	float l = edge->length();
-
-	std::cout << "FUNCTION IN PROGRESS:  GEN_PROFILE" << endl;
 }
 void ntNodeGen::gen_profile(ntEdge* edge, float p) {
 	//BRANCH PARAMETERS
@@ -101,6 +91,7 @@ void ntNodeGen::gen_profile(ntEdge* edge, int sides, float radius){
 	ntVec3 axis_T = ntVec3(v0, v1);
 	ntVec3 axis_S(0, 0, 1);
 
+	/// temporary 
 	radius = len * radius;
 
 	// BUILD PROFILES
@@ -134,7 +125,6 @@ void ntNodeGen::gen_profile(ntEdge* edge, float dim0, float dim1) {
 	ntVec3* v0	= edge->v0;
 	ntVec3* v1	= edge->v1;
 	float len	= edge->length();
-	int div		= 5;
 	float h		= len / div;
 
 	ntVec3 axis_T = ntVec3(v0, v1);
@@ -168,13 +158,41 @@ void ntNodeGen::gen_profile(ntEdge* edge, float dim0, float dim1) {
 		profiles.push_back(profile);
 	}
 }
+void ntNodeGen::gen_branch() {
+
+	std::cout << "running gen_branch" << endl;
+	int cnt_profiles = div - 1;
 
 
-void ntNodeGen::setColor(ntColor4f col){
+	for (int i = 0; i < edges.size(); i++) {
+		for (int j = 0; j < cnt_profiles; j++) {
+
+			int id = (i * div) + j;
+			int cnt_pts = profiles[id]->get_Vecs().size() - 1;
+
+			for (int k = 0; k < cnt_pts; k++) {
+				ntPolyline* e = new ntPolyline(profiles[id]->get_Vecs()[k], profiles[id+1]->get_Vecs()[k]);
+				e->setCol(col);
+				profiles.push_back(e);
+			}
+		}
+	}
+
+	std::cout << "gen_branch complete" << endl;
+}
+
+void ntNodeGen::set_Color(ntColor4f col){
 	this->col=col;
 	for(int i = 0; i<verts.size(); i++){
 		verts.at(i)->setColor(col);
 	}
+}
+void ntNodeGen::set_Parameters(SectMode mode, int div, float neck)
+{
+	this->mode = mode;
+	this->div = div;
+	this->neck = neck;
+
 }
 void ntNodeGen::display(){
 	for (int i = 0; i < 3; i++) {
