@@ -72,7 +72,7 @@ std::vector <ntVec3*> ntNodeGen::gen_profile(ntEdge* edge, float dim0, float dim
 void ntNodeGen::gen_profiles(){
 	int cnt_branch = edges.size();
 	for (int i = 0; i < cnt_branch; i++) {
-		//BRANCH PARAMETERS
+		//BRANCH PARAMETERS  /// MODIFY TO RECIEVE BRANCH OBJECT // PROPERTIES FOR THICKNESS
 		ntVec3* v0 = edges[i]->v0;
 		ntVec3* v1 = edges[i]->v1;
 		ntVec3* vS = edges[i]->get_PtP(neck);
