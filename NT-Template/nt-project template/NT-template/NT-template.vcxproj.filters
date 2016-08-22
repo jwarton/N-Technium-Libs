@@ -267,6 +267,12 @@
     <ClCompile Include="..\..\ntechnium\libNtechnium\Geometry\ntNodeGen.cpp">
       <Filter>lib_geometry</Filter>
     </ClCompile>
+    <ClCompile Include="..\..\ntechnium\libNtechnium\Geometry\ntConvexHull.cpp">
+      <Filter>lib_geometry</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\ntechnium\src\nt_05_convexhullApp.cpp">
+      <Filter>src programs</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\ntechnium\appNtechnium\nt_BaseApp.h">
@@ -505,6 +511,12 @@
     </ClInclude>
     <ClInclude Include="..\..\ntechnium\libNtechnium\Geometry\ntNodeGen.h">
       <Filter>lib_geometry</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\ntechnium\libNtechnium\Geometry\ntConvexHull.h">
+      <Filter>lib_geometry</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\ntechnium\src\nt_05_convexhullApp.h">
+      <Filter>src programs</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

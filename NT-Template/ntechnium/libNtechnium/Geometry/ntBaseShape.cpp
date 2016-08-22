@@ -27,3 +27,38 @@ vecsPtr(vecsPtr){
 
 void BaseShape::move(){
 }
+
+void BaseShape::display_norms(float len){
+	for (int i = 0; i<faces.size(); ++i) {
+		faces.at(i).normal.setLength(len);
+		faces.at(i).normal.display();
+	}
+}
+void BaseShape::display_verts(float dim){
+	for (int i = 0; i<verts.size(); ++i) {
+		verts.at(i)->setSize(dim);
+		verts.at(i)->display();
+	}
+}
+void BaseShape::display_edges(float w){
+	for (int i = 0; i<edges.size(); ++i) {
+		edges.at(i).display(w);
+	}
+}
+
+void BaseShape::display_norms() {
+	for (int i = 0; i<faces.size(); ++i) {
+		faces.at(i).normal.display();
+	}
+}
+
+void BaseShape::display_verts(){
+	for (int i = 0; i<verts.size(); ++i) {
+		verts.at(i)->display();
+	}
+}
+void BaseShape::display_edges(){
+	for (int i = 0; i<edges.size(); ++i) {
+		edges.at(i).display();
+	}
+}

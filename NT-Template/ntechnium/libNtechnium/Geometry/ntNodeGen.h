@@ -18,6 +18,7 @@
 #include "ntPolyline.h"
 #include "ntNormal.h"
 #include "ntFace3.h"
+#include "ntConvexHull.h"
 #include "ntMath.h"
 using namespace jpw;
 
@@ -25,21 +26,30 @@ enum SectMode {SQUARE, POLYGON, POLYPARAM, RECTANGLE};
 class ntNodeGen{
 private:
 
-	double dimX		= 0.01;				// PROFILE X
-	double dimY		= 0.02;				// PROFILE Y
-	double dimZ;							// PROFILE Z
-	double p = 0.015;					// PROFILE AS RATIO OF BRANCH LENGTH
+	/// REFACTOR TO SEPARATE NODE OBJECTS
+	//LOCAL PROPERTIES---VARIABLE FOR EACH NODE
+	double dim00 = 0.0;					// PROFILE X
+	double dim01 = 0.0;					// PROFILE Y
 
-	int sides		= 6;						// NUMBER OF PROFILE SEGMENTS 
+										//NODE OBJECTS
+										//ntVec3 *v0;					//NODE JUNCTURE	
+										//std::vector<ntVec3 *> vecs;	//SPOKE END POINTS v1
+										//std::vector<ntEdge*> edges;	//NODE SPOKES
+	ntConvexHull node;
+	/// ^^^^^^^^^^^^^^^
+	//GLOBAL PROPERTIES---TEMPORARY
+	double dimX		= 0.02;				// PROFILE X
+	double dimY		= 0.035;			// PROFILE Y
+	double dimZ;						// PROFILE Z
+	double p		= 0.015;			// PROFILE AS RATIO OF BRANCH LENGTH
+
+	int sides		= 6;				// NUMBER OF PROFILE SEGMENTS 
 	int div			= 5;				// REPLACE WITH SET FUNCTION
 	double neck		= 0.1;				// EDGE PARAMETER AT BASE OF NODE
 	double t_max	= 0.45;				// MAX NECK PARAMERTER
 	SectMode mode	= POLYPARAM;		// DEFAULT PROFILE MODE
 
-	//NODE OBJECTS
-	//ntVec3 *v0;					//NODE JUNCTURE	
-	//std::vector<ntVec3 *> vecs;	//SPOKE END POINTS v1
-	//std::vector<ntEdge*> edges;	//NODE SPOKES
+	bool isUniform	= false;
 
 	std::vector<ntVec3 *>		vecs;
 	std::vector<ntVertex*>		verts;
@@ -51,14 +61,20 @@ private:
 	std::vector<ntCol4> cols;
 
 	// PROFILE TYPES:  SQUARE, POLYGON, POLYPARM, RECTANGLE
-	//std::vector <ntVec3*> gen_profile(ntEdge* edge, ntPolygon polygon);
+	void gen_profiles();
+	std::vector <ntVec3*> gen_profile(ntEdge* edge, ntPolyline polygon);
 	std::vector <ntVec3*> gen_profile(ntEdge* edge, float w);
 	std::vector <ntVec3*> gen_profile(ntEdge* edge, int sides, float radius);
 	std::vector <ntVec3*> gen_profile(ntEdge* edge, float dimX, float dimY);
-	void gen_profiles();
 
 	void gen_branch();
 	void gen_node();
+
+	// 
+	void gen_convex();
+
+	// PROPERTY MANAGEMENT
+	void calc_thickness();
 
 public:
 
@@ -70,6 +86,7 @@ public:
 
 	void set_Color(ntColor4f col);
 	void set_Parameters(SectMode mode, int div, double neck);
+	void set_Parameters();
 
 	void display();
 	void display_Verts();

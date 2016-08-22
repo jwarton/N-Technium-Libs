@@ -23,6 +23,7 @@
 #include "nt_05_shapeApp.h"
 #include "nt_05_cubeApp.h"
 #include "nt_05_triApp.h"
+#include "nt_05_convexhullApp.h"
 #include "nt_07_trussApp-v01.h"
 #include "nt_07_trussApp-v02.h"
 #include "nt_07_trussApp-v03.h"
@@ -79,12 +80,13 @@ int main(int argc, char const** argv){
 	//AppContent* c = new treeApp01();
 	//AppContent* c = new treeApp02();
 	//AppContent* c = new treeApp03();
-	AppContent* c = new treeApp04();
+	//AppContent* c = new treeApp04();
 	//AppContent* c = new swarmApp();
 	//AppContent* c = new emitterApp(10000,.1);
 	//AppContent* c = new shapeApp();
 	//AppContent* c = new cubeApp();
 	//AppContent* c = new triApp();
+	AppContent* c = new convexApp();
 
 	///FEM
 	//AppContent* c = new trussApp01();		//VALIDATION 3D TRUSS ELEMENTS
@@ -116,8 +118,8 @@ int main(int argc, char const** argv){
 	//AppContent* c = new krlMatLab;
 
 	c->set_AppDim(x, y);
-	//jpw::ntGLFWsetup program("NT-INTERFACE", new genApp(c));
-	jpw::ntGLFWsetup program(x,y, "NT-INTERFACE", new genApp(c)); 
+	jpw::ntGLFWsetup program("NT-INTERFACE", new genApp(c));
+	//jpw::ntGLFWsetup program(x,y, "NT-INTERFACE", new genApp(c)); 
 	//simple app minimal ogl setup/ test
 	//jpw::ntSimpleApp simpleApp = ntSimpleApp(900, 900,"SIMPLE APP_TITLE");
 

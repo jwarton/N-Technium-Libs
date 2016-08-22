@@ -51,6 +51,9 @@ public:
 
 	ntVec3*  getMid();
 	ntVec3*	 get_PtP(double param);
+
+	bool contains(ntVec3* v);
+
 	void setCol(ntColor4f col);
 	void setEdge(float w);
 	void display(float w);
@@ -94,6 +97,14 @@ inline ntVec3* ntEdge::get_PtP(double param) {
 	ntVec3 * v = new ntVec3(v1->x, v1->y, v1->z);
 	v->scale(v0, param);
 	return v;
+}
+
+inline bool ntEdge::contains(ntVec3* v){
+	bool test = false;
+	if (v0 == v || v1 == v) {
+		test = true;
+	}
+	return test;
 }
 
 #endif

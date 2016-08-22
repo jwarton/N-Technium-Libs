@@ -31,6 +31,7 @@
     <ClCompile Include="..\..\ntechnium\libNtechnium\Geometry\ntBaseGeom.cpp" />
     <ClCompile Include="..\..\ntechnium\libNtechnium\Geometry\ntBaseShape.cpp" />
     <ClCompile Include="..\..\ntechnium\libNtechnium\Geometry\ntCircle.cpp" />
+    <ClCompile Include="..\..\ntechnium\libNtechnium\Geometry\ntConvexHull.cpp" />
     <ClCompile Include="..\..\ntechnium\libNtechnium\Geometry\ntCube.cpp" />
     <ClCompile Include="..\..\ntechnium\libNtechnium\Geometry\ntEdge.cpp" />
     <ClCompile Include="..\..\ntechnium\libNtechnium\Geometry\ntFace3.cpp" />
@@ -72,6 +73,7 @@
     <ClCompile Include="..\..\ntechnium\src\nt_02_treeApp-v03.cpp" />
     <ClCompile Include="..\..\ntechnium\src\nt_02_treeApp-v04.cpp" />
     <ClCompile Include="..\..\ntechnium\src\nt_04_emitterApp.cpp" />
+    <ClCompile Include="..\..\ntechnium\src\nt_05_convexhullApp.cpp" />
     <ClCompile Include="..\..\ntechnium\src\nt_05_cubeApp.cpp" />
     <ClCompile Include="..\..\ntechnium\src\nt_05_shapeApp.cpp" />
     <ClCompile Include="..\..\ntechnium\src\nt_05_triApp.cpp" />
@@ -107,6 +109,7 @@
     <ClInclude Include="..\..\ntechnium\libNtechnium\Geometry\ntBaseShape.h" />
     <ClInclude Include="..\..\ntechnium\libNtechnium\Geometry\ntCircle.h" />
     <ClInclude Include="..\..\ntechnium\libNtechnium\Geometry\ntColor4f.h" />
+    <ClInclude Include="..\..\ntechnium\libNtechnium\Geometry\ntConvexHull.h" />
     <ClInclude Include="..\..\ntechnium\libNtechnium\Geometry\ntCube.h" />
     <ClInclude Include="..\..\ntechnium\libNtechnium\Geometry\ntEdge.h" />
     <ClInclude Include="..\..\ntechnium\libNtechnium\Geometry\ntFace3.h" />
@@ -153,6 +156,7 @@
     <ClInclude Include="..\..\ntechnium\src\nt_02_treeApp-v03.h" />
     <ClInclude Include="..\..\ntechnium\src\nt_02_treeApp-v04.h" />
     <ClInclude Include="..\..\ntechnium\src\nt_04_emitterApp.h" />
+    <ClInclude Include="..\..\ntechnium\src\nt_05_convexhullApp.h" />
     <ClInclude Include="..\..\ntechnium\src\nt_05_cubeApp.h" />
     <ClInclude Include="..\..\ntechnium\src\nt_05_shapeApp.h" />
     <ClInclude Include="..\..\ntechnium\src\nt_05_triApp.h" />

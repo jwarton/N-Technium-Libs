@@ -22,7 +22,7 @@ void treeApp04::init() {
 	tree00.init();
 
 	nodes = ntNodeGen(tree00.branches);
-	nodes.set_Parameters(POLYPARAM, 5, 0.05);
+	nodes.set_Parameters(RECTANGLE, 5, 0.15);
 	nodes.init();
 
 	///////////////////////////////////////////////////////////////
@@ -59,6 +59,6 @@ void treeApp04::run(){
 }
 
 void treeApp04::display(){
-	tree00.display();
+	//tree00.display();
 	nodes.display_Edges();
 }

@@ -26,32 +26,39 @@ protected:
     virtual void init() = 0;
  
 public:
-	std::vector<ntVec3*> vecs;
-	std::vector<ntVertex*> verts;
-    std::vector<ntTup3i> inds;
-	std::vector<ntEdge> edges;
-    std::vector<ntFace3> faces;
+	std::vector<ntVec3*>	vecs;
+	std::vector<ntVertex*>	verts;
+    std::vector<ntTup3i>	inds;
+	std::vector<ntEdge>		edges;
+    std::vector<ntFace3>	faces;
 
-	std::vector<ntVec3*>* vecsPtr;
+	std::vector<ntVec3*>*	vecsPtr;
 
     BaseShape();
 	BaseShape(const ntVec3& pos);
 	BaseShape(const ntVec3& pos, const ntVec3&  rot, const ntVec3&  dim);
     BaseShape(const ntVec3& pos, const ntVec3&  rot, const ntVec3&  dim, const ntColor4f& fillCol, const ntColor4f& strokeCol);
-	//used by derived class mesh 
-	BaseShape(std::vector<ntVec3*>* vecsPtr);
+	
+	BaseShape(std::vector<ntVec3*>* vecsPtr);	//USED BY DERIVED CLASS MESH 
 
 	//virtual ~BaseShape();
     virtual void move();
     virtual void display() = 0;
-    virtual void displayNorms(float len = 3)=0;
+
+	void display_norms(float len = 0.5);
+	void display_verts(float dim);
+	void display_edges(float w);
+
+	void display_norms();
+	void display_verts();
+	void display_edges();
 
     void setPos(const ntVec3& pos);
     ntVec3 getPos() const;
 
-	///add init function to generate vec* pairs
-	///add function that generates collection particles from vecs
-	///add function that generates collection of springs from vec pairs
+	///ADD INIT FUNCTION TO GENERATE VEC* PAIRS
+	///ADD FUNCTION THAT GENERATES COLLECTION PARTICLES FROM VECS
+	///ADD FUNCTION THAT GENERATES COLLECTION OF SPRINGS FROM VEC PAIRS
 };
 
 inline void BaseShape::setPos(const ntVec3& pos){
