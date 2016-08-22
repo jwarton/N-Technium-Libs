@@ -15,36 +15,46 @@ pt_cloud(pt_cloud){
 }
 
 void ntConvexHull::init(){
-	//int cnt = 0;
-	//for (int i=0; i < 2; i++) {
-	//	for (int j=0; j < 2; j++) {
-	//		for (int k = 0; k < 2; k++) {
-	//			ntVec3* ptrVec = new ntVec3(pos.x - (width * 0.5) + (i * width),
-	//				pos.y - (width  * 0.5) + (j * width),
-	//				pos.z - (width  * 0.5) + (k * width));
+	int cnt = 0;
 
-	//			vecs.push_back(ptrVec);
+	if (pt_cloud->size() > 4) {
 
-	//			ntVertex* ptrVert = new ntVertex(vecs.at(cnt));
-	//			verts.push_back(ptrVert);
-	//			cnt++;
-	//			std::cout << "add point" << cnt << endl;
-	//		}
-	//	}
-	//}
+		mesh_addPts();
 
-	//inds.push_back(ntTup3i(1, 0, 2));
-	//inds.push_back(ntTup3i(2, 3, 1));
-	//inds.push_back(ntTup3i(2, 6, 3));
-	//inds.push_back(ntTup3i(7, 3, 6));
-	//inds.push_back(ntTup3i(7, 6, 4));
-	//inds.push_back(ntTup3i(4, 5, 6));
-	//inds.push_back(ntTup3i(4, 0, 1));
-	//inds.push_back(ntTup3i(1, 5, 4));
-	//inds.push_back(ntTup3i(1, 3, 7));
-	//inds.push_back(ntTup3i(7, 5, 1));
-	//inds.push_back(ntTup3i(2, 0, 6));
-	//inds.push_back(ntTup3i(4, 6, 0));
+		/// INITIAL MESH
+
+		/// REMOVE MESH VERTICES FROM LIST
+
+		/// REMOVE POINTS INSIDE OF INITIAL MESH
+
+		/// INCREMENTALLY ADD POINTS TO MESH
+
+			/// REMOVE INTERIOR FACE
+
+		/// PROVIDE VEC INDEX FOR REMAINING FACES
+		inds.push_back(ntTup3i(0, 1, 2));
+		inds.push_back(ntTup3i(3, 0, 1));
+		inds.push_back(ntTup3i(3, 1, 2));
+		inds.push_back(ntTup3i(3, 2, 0));
+
+	} else if (pt_cloud->size() == 4) {
+		mesh_addPts();
+		inds.push_back(ntTup3i(0, 1, 2));
+		inds.push_back(ntTup3i(3, 0, 1));
+		inds.push_back(ntTup3i(3, 1, 2));
+		inds.push_back(ntTup3i(3, 2, 0));
+	} else if (pt_cloud->size() == 3) {
+		/// DEFINE EXCEPTION TO REMOVE COLINEAR POINTS
+		mesh_addPts();
+		inds.push_back(ntTup3i(0, 1, 2));
+		std::cout << "  ERROR:  NO POLYHEDRON WAS FORMED | INSUFFICIENT POINT DATA" << endl;
+	} else if (pt_cloud->size() == 2) {
+		mesh_addPts();
+		std::cout << "  ERROR:  NO POLYHEDRON WAS FORMED | INSUFFICIENT POINT DATA" << endl;
+	} else if (pt_cloud->size() == 1) {
+		mesh_addPts();
+		std::cout << "  ERROR:  NO POLYHEDRON WAS FORMED | INSUFFICIENT POINT DATA" << endl;
+	}
 
 	/////////////////////////////////////////////////////////////////////////// INSTANTIATE FACES
 	for (int i = 0; i<inds.size(); ++i) {
@@ -56,7 +66,43 @@ void ntConvexHull::init(){
 		faces.push_back(ntFace3(vecs.at(inds.at(i).elem0), vecs.at(inds.at(i).elem1), vecs.at(inds.at(i).elem2)));
 	}
 }
+void ntConvexHull::mesh_addPts() {
+	for (int i = 0; i < pt_cloud->size(); i++) {
+		vecs.push_back(pt_cloud->at(i));
+		ntVertex* vertex = new ntVertex(vecs.at(i));
+		verts.push_back(vertex);
+		
+		pts.at(i).setColor(ntCol4(1, 0, 0, 1));
+	}
+}
 
+bool ntConvexHull::pt_isInside(ntVec3 * point, ntMeshPts mesh) {
+	/// VALIDATE POINTS ON BOUNDARY
+	/// ENSURE FACE WINDING ORDER IS CONSISTENT
+
+	bool test = false;
+	int cnt = 0;
+	
+	for (int i = 0; i < mesh.faces.size(); i++) {
+		ntVec3 norm = mesh.faces.at(i).getNorm();
+		ntVec3 cent = mesh.faces.at(i).getCent();
+		ntVec3 v0 = cent - point;
+	
+		v0.unitize();
+		norm.unitize();
+
+		ntVec3 v1 = v0 - norm;
+		double len = v1.magSqrd();
+
+		if (len > 2) {
+			cnt += 1;
+		}
+	}
+	if (cnt <= 0) {
+		test = true;
+	}
+	return test;
+}
 
 void ntConvexHull::add_point(ntVec3 * vec)
 {

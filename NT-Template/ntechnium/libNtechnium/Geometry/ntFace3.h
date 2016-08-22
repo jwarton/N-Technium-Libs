@@ -53,6 +53,9 @@ public:
 	float getFx();
 	std::vector<ntVec3*> getUVW();
 
+	ntVec3 getNorm();
+	ntVec3 getCent();
+
 	void calcNorm();
 	void calcCentroid();
 	void display();
@@ -61,6 +64,15 @@ public:
 	void display_Normal();
 	void display(L_mode mode);
 };
+
+inline ntVec3 ntFace3::getNorm() {
+	calcNorm();
+	return norm;
+}
+inline ntVec3 ntFace3::getCent() {
+	calcCentroid();
+	return *cent;
+}
 inline float ntFace3::getFx() {
 	return scFx;
 }

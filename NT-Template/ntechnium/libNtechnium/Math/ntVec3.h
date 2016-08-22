@@ -57,7 +57,7 @@ namespace jpw{
 		void scale(ntVec3* pos, float factor);
 		void align(ntVec3* axis_T);
 		void orient(ntVec3* axis_T, ntVec3* axis_S);
-		void rotate(ntVec3* axis_R);
+		void rotate(ntVec3* axis_R, float theta);
 
 		///////////////////////////////////////////////////////////////
 		////////////////////////////////////////// ARE VECTORS PARALLEL

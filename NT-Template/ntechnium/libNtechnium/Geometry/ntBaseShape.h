@@ -40,9 +40,22 @@ public:
     BaseShape(const ntVec3& pos, const ntVec3&  rot, const ntVec3&  dim, const ntColor4f& fillCol, const ntColor4f& strokeCol);
 	
 	BaseShape(std::vector<ntVec3*>* vecsPtr);	//USED BY DERIVED CLASS MESH 
-
 	//virtual ~BaseShape();
-    virtual void move();
+
+	///////////////////////////////////////////////////////////////
+	////////////////////////////////////// EUCLIDIAN TRANSORMATIONS
+	void translate(ntVec3 vec);
+	void translate(ntVec3 pt0, ntVec3 pt1);
+	void translate(ntVec3 dir, float mag);
+	void translate(ntVec3 pos, ntVec3 dir, float dist);
+	void rotate_x (ntVec3 pos, float theta);
+	void rotate_y (ntVec3 pos, float theta);
+	void rotate_z (ntVec3 pos, float theta);
+	void rotate_3d(ntVec3 axis, float theta);
+	void orient   (ntVec3 axis_T, ntVec3 axis_S);
+
+	///////////////////////////////////////////////////////////////
+	///////////////////////////////////////////// DISPLAY FUNCTIONS
     virtual void display() = 0;
 
 	void display_norms(float len = 0.5);

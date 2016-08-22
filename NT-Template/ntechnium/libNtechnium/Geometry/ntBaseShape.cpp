@@ -25,9 +25,6 @@ vecsPtr(vecsPtr){
 //BaseShape::~BaseShape(){
 //}
 
-void BaseShape::move(){
-}
-
 void BaseShape::display_norms(float len){
 	for (int i = 0; i<faces.size(); ++i) {
 		faces.at(i).normal.setLength(len);
