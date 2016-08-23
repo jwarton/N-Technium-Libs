@@ -1395,11 +1395,11 @@ void ntTriSkin::map_ImgCol(ntPanel* panel_ptr, arma::fmat* img_ptr) {
 				float col = img_ptr->at(y, x);
 				col = mapRange(0, 1, 0, 255, col);
 
-				panel_ptr->faces_L.at(i)->at(j).verts.at(k)->setColor(ntCol4(col, col, col, 1));
+				panel_ptr->faces_L.at(i)->at(j).verts.at(k)->set_color(ntCol4(col, col, col, 1));
 				panel_ptr->faces_L.at(i)->at(j).setFx(col);  /// color for panel is same a last vertex
 
 				if (i < panel_ptr->faces_G.size()) {
-					panel_ptr->faces_G.at(i)->at(j).verts.at(k)->setColor(ntCol4(col, col, col, 1));
+					panel_ptr->faces_G.at(i)->at(j).verts.at(k)->set_color(ntCol4(col, col, col, 1));
 					panel_ptr->faces_G.at(i)->at(j).setFx(col);  /// color for panel is same a last vertex
 				}
 			}
@@ -1474,11 +1474,11 @@ void ntTriSkin::map_ImgCol(ntPanel* panel_ptr, arma::mat* img_ptr) {
 				float col = img_ptr->at(y, x);
 				col = mapRange(0, 1, 0, 255, col);
 				
-				panel_ptr->faces_L.at(i)->at(j).verts.at(k)->setColor(ntCol4(col, col, col, 1));
+				panel_ptr->faces_L.at(i)->at(j).verts.at(k)->set_color(ntCol4(col, col, col, 1));
 				panel_ptr->faces_L.at(i)->at(j).setFx(col);  /// color for panel is same a last vertex
 
 				if (i < panel_ptr->faces_G.size()) {
-					panel_ptr->faces_G.at(i)->at(j).verts.at(k)->setColor(ntCol4(col, col, col, 1));
+					panel_ptr->faces_G.at(i)->at(j).verts.at(k)->set_color(ntCol4(col, col, col, 1));
 					panel_ptr->faces_G.at(i)->at(j).setFx(col);  /// color for panel is same a last vertex
 				}
 			}
@@ -1574,51 +1574,51 @@ void ntTriSkin::set_GenDisplay(int gen) {
 void ntTriSkin::display_Next() {
 	if (panel_Index < panel_Dim - 1) {
 		float c = panels.at(panel_Index)->image_Val;
-		panels.at(panel_Index)->faces_G.at(0)->at(0).setColor(Col4(c, c, c, 1));
+		panels.at(panel_Index)->faces_G.at(0)->at(0).set_color(Col4(c, c, c, 1));
 		if (mode_M == vQ) {
 			ntColor4f col = panels.at(panel_Index)->col;
-			panels.at(panel_Index)->faces_G.at(0)->at(0).setColor(col);
+			panels.at(panel_Index)->faces_G.at(0)->at(0).set_color(col);
 		}
 		panel_Index = panel_Index + 1;
 		std::cout << panel_Index << endl;
 	}
 	else {
 		float c = panels.at(panel_Dim - 1)->image_Val;
-		panels.at(panel_Dim - 1)->faces_G.at(0)->at(0).setColor(Col4(c, c, c, 1));
+		panels.at(panel_Dim - 1)->faces_G.at(0)->at(0).set_color(Col4(c, c, c, 1));
 		if (mode_M == vQ) {
 			ntColor4f col = panels.at(panel_Index)->col;
-			panels.at(panel_Index)->faces_G.at(0)->at(0).setColor(col);
+			panels.at(panel_Index)->faces_G.at(0)->at(0).set_color(col);
 		}
 		panel_Index = 0;
 		std::cout << panel_Index << endl;
 	}
 	if (mode_M == vW || mode_M == vA) {
-		panels.at(panel_Index)->faces_G.at(0)->at(0).setColor(col_Select);
+		panels.at(panel_Index)->faces_G.at(0)->at(0).set_color(col_Select);
 	}
 }
 void ntTriSkin::display_Prev() {
 	if (panel_Index > 0 && panel_Index < panel_Dim) {
 		float c = panels.at(panel_Index)->image_Val;
-		panels.at(panel_Index)->faces_G.at(0)->at(0).setColor(Col4(c, c, c, 1));
+		panels.at(panel_Index)->faces_G.at(0)->at(0).set_color(Col4(c, c, c, 1));
 		if (mode_M == vQ) {
 			ntColor4f col = panels.at(panel_Index)->col;
-			panels.at(panel_Index)->faces_G.at(0)->at(0).setColor(col);
+			panels.at(panel_Index)->faces_G.at(0)->at(0).set_color(col);
 		}
 		panel_Index = panel_Index - 1;
 		std::cout << panel_Index << endl;
 	}
 	else {
 		float c = panels.at(0)->image_Val;
-		panels.at(0)->faces_G.at(0)->at(0).setColor(Col4(c, c, c, 1));
+		panels.at(0)->faces_G.at(0)->at(0).set_color(Col4(c, c, c, 1));
 		if (mode_M == vQ) {
 			ntColor4f col = panels.at(panel_Index)->col;
-			panels.at(panel_Index)->faces_G.at(0)->at(0).setColor(col);
+			panels.at(panel_Index)->faces_G.at(0)->at(0).set_color(col);
 		}
 		panel_Index = panel_Dim - 1;
 		std::cout << panel_Index << endl;
 	}
 	if (mode_M == vW || mode_M == vA) {
-		panels.at(panel_Index)->faces_G.at(0)->at(0).setColor(col_Select);
+		panels.at(panel_Index)->faces_G.at(0)->at(0).set_color(col_Select);
 	}
 }
 void ntTriSkin::set_Mode(D_mode mode) {
@@ -1658,7 +1658,7 @@ void ntTriSkin::set_Mode(D_mode mode) {
 			b = 0;
 
 			panels.at(i)->set_Color(ntColor4f(r,g,b,1));
-			panels.at(i)->faces_G.at(0)->at(0).setColor(Col4(r, g, b, 1));
+			panels.at(i)->faces_G.at(0)->at(0).set_color(Col4(r, g, b, 1));
 			panels.at(i)->faces_G.at(0)->at(0).edges.at(0).setCol(ntColor4f(0, 0, 0, .5));
 			panels.at(i)->faces_G.at(0)->at(0).edges.at(1).setCol(ntColor4f(0, 0, 0, .5));
 			panels.at(i)->faces_G.at(0)->at(0).edges.at(2).setCol(ntColor4f(0, 0, 0, .5));
@@ -1672,20 +1672,20 @@ void ntTriSkin::set_Mode(D_mode mode) {
 			panels.at(i)->faces_G.at(0)->at(0).edges.at(1).setCol(ntColor4f(1, 1, 1, .5));
 			panels.at(i)->faces_G.at(0)->at(0).edges.at(2).setCol(ntColor4f(1, 1, 1, .5));
 			if (i == panel_Index) {
-				panels.at(i)->faces_G.at(0)->at(0).setColor(col_Select);
+				panels.at(i)->faces_G.at(0)->at(0).set_color(col_Select);
 			}
 		}
 	}
 	if (mode_M == vS) {
 			for (int i = 0; i < panels.size(); i++) {
 				float col = panels.at(i)->image_Val;
-				panels.at(i)->faces_G.at(0)->at(0).setColor(ntColor4f(col, col, col, 1));
+				panels.at(i)->faces_G.at(0)->at(0).set_color(ntColor4f(col, col, col, 1));
 			}
 	}
 	if (mode_M == vD) {
 		for (int i = 0; i < panels.size(); i++) {
 			float col = panels.at(i)->image_Val;
-			panels.at(i)->faces_G.at(0)->at(0).setColor(ntColor4f(col, col, col, 1));
+			panels.at(i)->faces_G.at(0)->at(0).set_color(ntColor4f(col, col, col, 1));
 		}
 	}
 	///////////////////////////////////////////////////////////////
@@ -1696,7 +1696,7 @@ void ntTriSkin::set_Mode(D_mode mode) {
 			panels.at(i)->faces_G.at(0)->at(0).edges.at(1).setCol(ntColor4f(1, 1, 1, .5));
 			panels.at(i)->faces_G.at(0)->at(0).edges.at(2).setCol(ntColor4f(1, 1, 1, .5));
 			if (i == panel_Index) {
-				panels.at(i)->faces_G.at(0)->at(0).setColor(col_Select);
+				panels.at(i)->faces_G.at(0)->at(0).set_color(col_Select);
 			}
 		}
 	}

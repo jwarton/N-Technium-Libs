@@ -21,7 +21,7 @@ void meshApp::init() {
 		float a = mapRange(-.25, 1, 0, val, i, true);
 		float s = mapRange(1, 5, 0, val, i, true);
 		mesh00.verts.at(i)->setSize(s);
-		mesh00.verts.at(i)->setColor(ntColor4f(r, g, b, 1));
+		mesh00.verts.at(i)->set_color(ntColor4f(r, g, b, 1));
 	}
 	
 	for (int i = 0; i < mesh00.faces.size(); i++){
@@ -71,8 +71,8 @@ void meshApp::display(){
 	///////////////////////////////////////////////////////////////
 	
 	//mesh00.display();
-	//mesh00.displayNorms();
-	//mesh00.displayVerts();
-	mesh00.displayEdges(.1);
+	//mesh00.display_norms();
+	//mesh00.display_verts();
+	mesh00.display_edges(.1);
 	///////////////////////////////////////////////////////////////
 }

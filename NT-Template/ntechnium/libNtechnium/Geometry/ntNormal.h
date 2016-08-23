@@ -28,7 +28,7 @@ public:
 
 	void init();
 	void setLength(float length);
-	void setColor(ntColor4f col);
+	void set_color(ntColor4f col);
 	void display(float size);
 	void display();
 };

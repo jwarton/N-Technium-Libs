@@ -99,8 +99,8 @@ public:
 	void setFixedLeaves(bool isFixed);
 
 	void display();
-	void displayVerts();
-	void displayVerts(float dim);
+	void display_verts();
+	void display_verts(float dim);
 	void displayBranches();
 	void displayBranches(float w);
 

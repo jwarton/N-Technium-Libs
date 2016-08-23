@@ -177,7 +177,7 @@ void ntNodeGen::calc_thickness() {
 void ntNodeGen::set_Color(ntColor4f col){
 	this->col=col;
 	for(int i = 0; i<verts.size(); i++){
-		verts.at(i)->setColor(col);
+		verts.at(i)->set_color(col);
 	}
 }
 void ntNodeGen::set_Parameters(SectMode mode, int div, double neck){

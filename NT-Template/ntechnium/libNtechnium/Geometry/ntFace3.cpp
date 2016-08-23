@@ -61,7 +61,7 @@ void ntFace3::calcCentroid(){
     cent->z = (v1->z + v2->z + v0->z)/3;
 	centroid = ntVertex(cent);
 	centroid.setSize(3);
-	centroid.setColor(ntColor4f(1,0,0,1));
+	centroid.set_color(ntColor4f(1,0,0,1));
 }
 
 void ntFace3::calcNorm(){
@@ -95,10 +95,10 @@ bool ntFace3::pt_isInside(ntVec3* vec) {
 	return c;
 }
 
-void ntFace3::setColor(ntColor4f col){
+void ntFace3::set_color(ntColor4f col){
 	this->col=col;
 	for(int i = 0; i<verts.size(); i++){
-		verts.at(i)->setColor(col);
+		verts.at(i)->set_color(col);
 	}
 }
 void ntFace3::setUVW(ntVec3* uvw0, ntVec3* uvw1, ntVec3* uvw2) {

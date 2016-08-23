@@ -38,12 +38,12 @@ namespace jpw{
 
 		void update();	///TODO
 		void display();
-		void displayVerts();
-		void displayVerts(float dim);
-		void displayNorms();
-		void displayNorms(float len);
-		void displayEdges();
-		void displayEdges(float w);
+		void display_verts();
+		void display_verts(float dim);
+		void display_norms();
+		void display_norms(float len);
+		void display_edges();
+		void display_edges(float w);
 
 		std::vector<ntVec3*>* getVecs();
 		///////////////////////////////////////////////////////////

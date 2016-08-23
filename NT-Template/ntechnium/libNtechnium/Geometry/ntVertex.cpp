@@ -60,7 +60,7 @@ void ntVertex::setPos(ntVec3 posF){
 void ntVertex::setSize(float size){
 	this->size = size;
 }
-void ntVertex::setColor(ntColor4f col){
+void ntVertex::set_color(ntColor4f col){
 	this->col = col;
 }
 void ntVertex::setBounds() {

@@ -72,7 +72,7 @@ void ntConvexHull::mesh_addPts() {
 		ntVertex* vertex = new ntVertex(vecs.at(i));
 		verts.push_back(vertex);
 		
-		pts.at(i).setColor(ntCol4(1, 0, 0, 1));
+		pts.at(i).set_color(ntCol4(1, 0, 0, 1));
 	}
 }
 

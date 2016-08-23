@@ -74,6 +74,12 @@ int main(int argc, char const** argv){
 	///MATH
 	//AppContent* c = new vec3TestApp();
 
+	///BASE GEOM
+	AppContent* c = new shapeApp();
+	//AppContent* c = new cubeApp();
+	//AppContent* c = new triApp();
+	//AppContent* c = new convexApp();
+
 	///GRAPHICS
 	//AppContent* c = new meshImportApp();
 	//AppContent* c = new meshApp();
@@ -83,10 +89,7 @@ int main(int argc, char const** argv){
 	//AppContent* c = new treeApp04();
 	//AppContent* c = new swarmApp();
 	//AppContent* c = new emitterApp(10000,.1);
-	//AppContent* c = new shapeApp();
-	//AppContent* c = new cubeApp();
-	//AppContent* c = new triApp();
-	AppContent* c = new convexApp();
+
 
 	///FEM
 	//AppContent* c = new trussApp01();		//VALIDATION 3D TRUSS ELEMENTS

@@ -303,8 +303,8 @@ void trussApp03::run(){
 void trussApp03::display(){
 	if (glfwGetKey(window, GLFW_KEY_M) == GLFW_PRESS){
 		//mesh00.display();
-		//mesh00.displayVerts(3);
-		mesh00.displayEdges(.1);
+		//mesh00.display_verts(3);
+		mesh00.display_edges(.1);
 	}
 	else {
 		truss00.display();

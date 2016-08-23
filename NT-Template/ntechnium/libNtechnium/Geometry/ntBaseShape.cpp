@@ -59,3 +59,27 @@ void BaseShape::display_edges(){
 		edges.at(i).display();
 	}
 }
+
+void BaseShape::print(){
+	std::cout << "GEOM: " << name << endl;
+}
+
+void BaseShape::print(std::string s){
+	std::cout << "GEOM_" << s << ": " << name << endl;
+}
+
+void BaseShape::set_vert_color(ntColor4f col){
+	for (int i = 0; i<verts.size(); ++i) {
+		verts.at(i)->set_color(col);
+	}
+}
+void BaseShape::set_edge_color(ntColor4f col){
+	for (int i = 0; i<edges.size(); ++i) {
+		edges.at(i).setCol(col);
+	}
+}
+void BaseShape::set_face_color(ntColor4f col){
+	for (int i = 0; i<faces.size(); ++i) {
+		faces.at(i).set_color(col);
+	}
+}

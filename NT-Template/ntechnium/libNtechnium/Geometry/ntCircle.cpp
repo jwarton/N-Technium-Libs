@@ -39,7 +39,7 @@ void ntCircle::calcCentroid(){
  //   cent->z = (v1->z + v2->z + v0->z)/3;
 	//centroid = ntVertex(cent);
 	//centroid.setSize(2);
-	//centroid.setColor(ntColor4f(1,1,1,0));
+	//centroid.set_color(ntColor4f(1,1,1,0));
 }
 
 bool ntCircle::pt_isInside(ntVec3* point) {
@@ -83,10 +83,10 @@ void ntCircle::calcArea() {
 double ntCircle::get_Area(){
 	return area;
 }
-void ntCircle::setColor(ntColor4f col){
+void ntCircle::set_color(ntColor4f col){
 	this->col=col;
 	for(int i = 0; i<verts.size(); i++){
-		verts.at(i)->setColor(col);
+		verts.at(i)->set_color(col);
 	}
 }
 void ntCircle::display_dots() {

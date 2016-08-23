@@ -24,16 +24,16 @@ public:
 	ntPlane(const ntVec3& pos, const ntVec3&  rot, const ntVec3&  dim, int U, int V);
 	ntPlane(const ntVec3& pos, const ntVec3&  rot, const ntVec3&  dim, const ntColor4f& fillCol, const ntColor4f& strokeCol);
 
-	void setColor(ntColor4f col);
+	void set_color(ntColor4f col);
 
     void display();
-    void displayNorms(float len);
-	void displayVerts(float dim);
-	void displayEdges(float w);
+    void display_norms(float len);
+	void display_verts(float dim);
+	void display_edges(float w);
 
-	void displayNorms();
-	void displayVerts();
-	void displayEdges();
+	void display_norms();
+	void display_verts();
+	void display_edges();
 
 	///////////////////////////////////////////////////////////
 	//////////////////////////////////////// PHYSICS OPERATIONS

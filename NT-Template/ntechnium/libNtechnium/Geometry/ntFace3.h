@@ -45,7 +45,7 @@ public:
 	ntFace3(ntVec3* v0,ntVec3* v1,ntVec3* v2,ntVertex* vert0,ntVertex* vert1,ntVertex* vert2);
 
 	bool pt_isInside(ntVec3* vec);
-	void setColor(ntColor4f col);
+	void set_color(ntColor4f col);
 	void setUVW(ntVec3* uvw0, ntVec3* uvw1, ntVec3* uvw2);
 	void setUVW(std::vector <ntVec3*>	uvws);
 	void setFx(float factor);

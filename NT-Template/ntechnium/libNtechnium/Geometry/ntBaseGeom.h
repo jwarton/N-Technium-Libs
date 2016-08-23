@@ -33,14 +33,14 @@ protected:
 	//virtual void calcPrimitives();
 	//virtual void addMap();
 
-	void fillDisplayLists();
+	//void fillDisplayLists();
 
 	//
-	std::vector<ntVec3*> vecs;
-	std::vector<ntVertex*> verts;
-	std::vector<ntTup3i> inds;
-	std::vector<ntEdge> edges;
-	std::vector<ntFace3> faces;
+	//std::vector<ntVec3*>	vecs;
+	//std::vector<ntVertex*>	verts;
+	//std::vector<ntTup3i>	inds;
+	//std::vector<ntEdge>		edges;
+	//std::vector<ntFace3>	faces;
 
 	//PRIMITIVES
 	std::vector<float> vertPrims;

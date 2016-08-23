@@ -29,10 +29,10 @@ void meshImportApp::init() {
 		mesh01.verts.at(i)->setSize(s);
 		mesh02.verts.at(i)->setSize(s);
 		mesh03.verts.at(i)->setSize(s);
-		mesh00.verts.at(i)->setColor(ntColor4f(r, g, b, 1));
-		mesh01.verts.at(i)->setColor(ntColor4f(r, g, b, 1));
-		mesh02.verts.at(i)->setColor(ntColor4f(r, g, b, 1));
-		mesh03.verts.at(i)->setColor(ntColor4f(r, g, b, 1));
+		mesh00.verts.at(i)->set_color(ntColor4f(r, g, b, 1));
+		mesh01.verts.at(i)->set_color(ntColor4f(r, g, b, 1));
+		mesh02.verts.at(i)->set_color(ntColor4f(r, g, b, 1));
+		mesh03.verts.at(i)->set_color(ntColor4f(r, g, b, 1));
 	}
 	
 	for (int i = 0; i < mesh00.faces.size(); i++){
@@ -66,20 +66,20 @@ void meshImportApp::display(){
 	//mesh02.display();
 	//mesh03.display();
 
-	mesh00.displayVerts();
-	mesh01.displayVerts();
-	mesh02.displayVerts();
-	mesh03.displayVerts();
+	mesh00.display_verts();
+	mesh01.display_verts();
+	mesh02.display_verts();
+	mesh03.display_verts();
 
-	//mesh00.displayNorms();
-	//mesh01.displayNorms();
-	//mesh02.displayNorms();
-	//mesh03.displayNorms();
+	//mesh00.display_norms();
+	//mesh01.display_norms();
+	//mesh02.display_norms();
+	//mesh03.display_norms();
 
-	//mesh00.displayEdges(.1);
-	//mesh01.displayEdges(.2);
-	//mesh02.displayEdges(.2);
-	//mesh03.displayEdges(.2);
+	//mesh00.display_edges(.1);
+	//mesh01.display_edges(.2);
+	//mesh02.display_edges(.2);
+	//mesh03.display_edges(.2);
 
 	///////////////////////////////////////////////////////////////
 }

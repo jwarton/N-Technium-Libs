@@ -15,19 +15,16 @@ class ntSphere : public BaseShape {
 public:
 
     ntSphere();
-	ntSphere(const ntVec3& pos, const ntVec3&  rot, const ntVec3&  dim, int U, int V);
-    ntSphere(const ntVec3& pos, const ntVec3&  rot, const ntVec3&  dim, const ntColor4f& fillCol, const ntColor4f& strokeCol);
+	ntSphere(const ntVec3& pos, const float&  rad, int U, int V);
+	ntSphere(const ntVec3& pos, const ntVec3&  rot, const ntVec3&  rad, int U, int V);
+    ntSphere(const ntVec3& pos, const ntVec3&  rot, const ntVec3&  rad, const ntColor4f& fillCol, const ntColor4f& strokeCol);
 
-	void setColor(ntColor4f col);
+	void set_color(ntColor4f col);
 
     void display();
-    void displayNorms(float len);
-	void displayVerts(float dim);
-	void displayEdges(float w);
 
-	void displayNorms();
-	void displayVerts();
-	void displayEdges();
+	void display_edges(float w);
+	void display_edges();
 
 private:
     void init();

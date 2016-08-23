@@ -41,7 +41,7 @@ public:
 	ntCircle(ntVec3* pos, float rad, ntCol4 col);
 	ntCircle(ntVec3* pos, float rad, int seg, ntCol4 col);
 
-	void setColor(ntColor4f col);
+	void set_color(ntColor4f col);
 	void calcNorm();
 	void calcCentroid();
 	void calcArea();

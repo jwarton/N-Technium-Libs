@@ -12,17 +12,15 @@
 #include "ntBaseShape.h"
 
 class ntTetra : public BaseShape {
-    
+private:
+
+	std::string name;
+	void init();
+
 public:
     ntTetra();
+	ntTetra(const ntVec3& pos, const float&  rad);
     ntTetra(const ntVec3& pos, const ntVec3&  rot, const ntVec3&  dim, const ntColor4f& fillCol, const ntColor4f& strokeCol, std::string name);
-    
     void display();
-    void displayNorms(float len = 3);
-
-private:
-    
-    std::string name;
-    void init();
 };
 #endif 

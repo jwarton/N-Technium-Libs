@@ -22,9 +22,9 @@ void cubeApp::run(){
 void cubeApp::display(){
 	///////////////////////////////////////////////////////////////
 	//cubeA.display();
-	//cubeA.displayVerts(2);
-	cubeA.displayEdges(.1);
-	//cubeA.displayNorms(.12);
+	//cubeA.display_verts(2);
+	cubeA.display_edges(.1);
+	//cubeA.display_norms(.12);
 
 	///////////////////////////////////////////////////////////////
 }

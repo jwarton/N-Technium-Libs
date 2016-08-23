@@ -89,7 +89,7 @@ void ntSimpleApp::init(){
 		float g = 0;
 		float b = .5 - (.25 / (val / ((float)i + 1)));
 		float a = 1 / (val / ((float)i + 1));
-		sphereA.verts.at(i)->setColor(Col4f(r, g, b, a));
+		sphereA.verts.at(i)->set_color(Col4f(r, g, b, a));
 	}
 	val = sphereC.verts.size();
 	for (int i = 0; i<val; i++){
@@ -97,7 +97,7 @@ void ntSimpleApp::init(){
 		float g = 0;
 		float b = .5 - (.25 / (val / ((float)i + 1)));
 		float a = 1 / (val / ((float)i + 1));
-		sphereC.verts.at(i)->setColor(Col4f(r, g, b, a));
+		sphereC.verts.at(i)->set_color(Col4f(r, g, b, a));
 	}
 	val = sphereD.verts.size();
 	for (int i = 0; i<val; i++){
@@ -105,7 +105,7 @@ void ntSimpleApp::init(){
 		float g = .5 + (.5 / (val / ((float)i + 1)));
 		float b = 1 - (1 / (val / ((float)i + 1)));
 		float a = 1 / (val / ((float)i + 1));
-		sphereD.verts.at(i)->setColor(Col4f(r, g, b, a));
+		sphereD.verts.at(i)->set_color(Col4f(r, g, b, a));
 	}
 }
  
@@ -128,14 +128,14 @@ void ntSimpleApp::run(){
 		//glRotatef(90.f, 0.f, 0.f, 1.f);
 		glRotatef((float)glfwGetTime() * 20.f, 1.f, 0.f, 1.f);  //ROTATION ABOUT Z
 		
-		sphereA.displayVerts(2);
-		//sphereB.displayNorms(1);
+		sphereA.display_verts(2);
+		//sphereB.display_norms(1);
 		//sphereC.display();
-		sphereC.displayEdges();
+		sphereC.display_edges();
 		sphereD.display();
-		sphereD.displayNorms(1);
+		sphereD.display_norms(1);
 		//tetra.display();
-		//tetra.displayNorms(0);
+		//tetra.display_norms(0);
 		//edge.display();
 
 		glfwSwapBuffers(window);

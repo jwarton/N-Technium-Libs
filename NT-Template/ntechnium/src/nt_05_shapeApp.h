@@ -13,7 +13,10 @@
 #include "ntMatrix4.h"
 #include "nt_AppContent.h"
 
+#include "ntCube.h"
+#include "ntTetra.h"
 #include "ntSphere.h"
+
 
 using namespace jpw;
 class shapeApp : public AppContent {
@@ -22,10 +25,24 @@ private:
 public:
 	//////////////////////////////VARIABLES UNIQUE TO DERIVED CLASS
 	///////////////////////////////////////////////////////////////
-	ntSphere sphereA;
-	ntSphere sphereB;
-	ntSphere sphereC;
-	ntSphere sphereD;
+	/// ADD POLYHEDRON PRIMITIVE
+	/// BASE CLASS TO MANAGE MESH DATA STRUCTURE
+	/// UNIFIFIED INIT FUNCTION
+
+	ntCube cube_00;
+	ntCube cube_01;
+	ntCube cube_02;
+	ntCube cube_03;
+
+	ntTetra tetra_00;
+	ntTetra tetra_01;
+	ntTetra tetra_02;
+	ntTetra tetra_03;
+
+	ntSphere sphere_00;
+	ntSphere sphere_01;
+	ntSphere sphere_02;
+	ntSphere sphere_03;
 	////////////////////////////////////////////////// CONSTRUCTORS
 	//////////////////////////////// DEFAULT NOT NEEDED FOR DERIVED
 	///////////////////////////////////////////////////////////////

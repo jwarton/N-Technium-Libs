@@ -3,6 +3,19 @@
 ntSphere::ntSphere(){
 }
 
+ntSphere::ntSphere(const ntVec3 & pos, const float & rad, int U, int V):
+BaseShape(pos), U(U), V(V)
+{
+	dim.x = rad;
+	dim.y = 0;
+	dim.z = 0;
+	rot.x = 0;
+	rot.y = 0;
+	rot.z = 0;
+
+	init();
+}
+
 ntSphere::ntSphere(const ntVec3& pos, const ntVec3&  rot, const ntVec3&  dim, const ntColor4f& fillCol, const ntColor4f& strokeCol):
 BaseShape(pos,rot,dim,fillCol,strokeCol)
 {	
@@ -10,29 +23,28 @@ BaseShape(pos,rot,dim,fillCol,strokeCol)
 }
 
 ntSphere::ntSphere(const ntVec3& pos, const ntVec3&  rot, const ntVec3&  dim, int U, int V):
-BaseShape(pos,rot,dim), U(U), V(V)
+BaseShape(pos,rot,dim)
 {	
 	init();
 }
 
 void ntSphere::init(){
-	//distance of vertex from face to centroid
 	float radius = dim.x;
-	//temp variables for column and row
 	float phi = 0;
 	float theta = 0;
-	//plot vertex coordinates
+
+	//PLOT VERTEX COORDINATES
 	int cnt = 0;
 	for (int i=0; i< U +1; i++) {
 		for (int j=0; j< V; j++) {
 			theta =(2*M_PI/U)*(j);
 			phi = (M_PI/V)*i;
 
-			ntVec3* ptrVec = new ntVec3( pos.x +(cos(theta) * sin(phi) * radius), 
+			ntVec3* vec = new ntVec3( pos.x +(cos(theta) * sin(phi) * radius), 
 				pos.y +(sin(theta) * sin(phi) * radius), 
 				pos.z +(cos(phi) * radius));
 
-			vecs.push_back(ptrVec);
+			vecs.push_back(vec);
 
 			ntVertex* ptrVert = new ntVertex (vecs.at(cnt));
 			verts.push_back(ptrVert);
@@ -73,10 +85,9 @@ void ntSphere::init(){
 	*/
 }
 
-void ntSphere::setColor(ntColor4f col){
-
+void ntSphere::set_color(ntColor4f col){
 	for(int i = 0; i<faces.size(); i++){
-		faces.at(i).setColor(col);
+		faces.at(i).set_color(col);
 	}
 }
 
@@ -86,21 +97,7 @@ void ntSphere::display(){
 	}
 }
 
-void ntSphere::displayNorms(float len){
-	for(int i = 0;i<faces.size();++i){
-		faces.at(i).normal.setLength(len);
-		faces.at(i).normal.display();
-	}
-}
-
-void ntSphere::displayVerts(float dim){
-	for(int i = 0;i<verts.size();++i){
-		verts.at(i)->setSize(dim);
-		verts.at(i)->display();
-	}
-}
-
-void ntSphere::displayEdges(float w){
+void ntSphere::display_edges(float w){
 	for(int i = 0;i<faces.size();++i){
 		for(int j = 0;j<3;j++){
 			faces.at(i).edges.at(j).display(w);
@@ -108,19 +105,7 @@ void ntSphere::displayEdges(float w){
 	}
 }
 
-void ntSphere::displayNorms(){
-	for (int i = 0; i<faces.size(); ++i){
-		faces.at(i).normal.display();
-	}
-}
-
-void ntSphere::displayVerts(){
-	for (int i = 0; i<verts.size(); ++i){
-		verts.at(i)->display();
-	}
-}
-
-void ntSphere::displayEdges(){
+void ntSphere::display_edges(){
 	for (int i = 0; i<faces.size(); ++i){
 		for (int j = 0; j<3; j++){
 			faces.at(i).edges.at(j).display();

@@ -17,7 +17,8 @@
 using namespace std;
 using namespace jpw;
 class BaseShape {
-    
+	std::string name;
+
 protected:
     ntVec3 pos;
     ntVec3 dim, rot;
@@ -25,6 +26,9 @@ protected:
     
     virtual void init() = 0;
  
+	///ADD INIT FUNCTION TO GENERATE VEC* PAIRS
+	///ADD FUNCTION THAT GENERATES COLLECTION PARTICLES FROM VECS
+	///ADD FUNCTION THAT GENERATES COLLECTION OF SPRINGS FROM VEC PAIRS
 public:
 	std::vector<ntVec3*>	vecs;
 	std::vector<ntVertex*>	verts;
@@ -43,6 +47,11 @@ public:
 	//virtual ~BaseShape();
 
 	///////////////////////////////////////////////////////////////
+	///////////////////////////////////////////// UTILITY FUNCTIONS
+	void setPos(const ntVec3& pos);
+	ntVec3 getPos() const;
+
+	///////////////////////////////////////////////////////////////
 	////////////////////////////////////// EUCLIDIAN TRANSORMATIONS
 	void translate(ntVec3 vec);
 	void translate(ntVec3 pt0, ntVec3 pt1);
@@ -51,14 +60,20 @@ public:
 	void rotate_x (ntVec3 pos, float theta);
 	void rotate_y (ntVec3 pos, float theta);
 	void rotate_z (ntVec3 pos, float theta);
-	void rotate_3d(ntVec3 axis, float theta);
+	void rotate_3D(ntVec3 axis, float theta);
 	void orient   (ntVec3 axis_T, ntVec3 axis_S);
+
+	///////////////////////////////////////////////////////////////
+	//////////////////////////////////////////// DISPLAY PROPERTIES
+	void set_vert_color(ntColor4f col);
+	void set_edge_color(ntColor4f col);
+	void set_face_color(ntColor4f col);
 
 	///////////////////////////////////////////////////////////////
 	///////////////////////////////////////////// DISPLAY FUNCTIONS
     virtual void display() = 0;
 
-	void display_norms(float len = 0.5);
+	void display_norms(float len);
 	void display_verts(float dim);
 	void display_edges(float w);
 
@@ -66,12 +81,8 @@ public:
 	void display_verts();
 	void display_edges();
 
-    void setPos(const ntVec3& pos);
-    ntVec3 getPos() const;
-
-	///ADD INIT FUNCTION TO GENERATE VEC* PAIRS
-	///ADD FUNCTION THAT GENERATES COLLECTION PARTICLES FROM VECS
-	///ADD FUNCTION THAT GENERATES COLLECTION OF SPRINGS FROM VEC PAIRS
+	void print();
+	void print(std::string s);
 };
 
 inline void BaseShape::setPos(const ntVec3& pos){

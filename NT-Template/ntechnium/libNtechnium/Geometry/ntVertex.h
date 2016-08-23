@@ -49,7 +49,7 @@ public:
 
 	void setPos(ntVec3 posF);
 	void setSize(float size);
-	void setColor(ntColor4f col);
+	void set_color(ntColor4f col);
 	ntColor4f getColor();
 	void display(float size);
 	void display();

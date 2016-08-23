@@ -67,36 +67,36 @@ void ntMeshPts::display(){
 		faces.at(i).display();
 	}
 }
-void ntMeshPts::displayVerts(){
+void ntMeshPts::display_verts(){
 	for (int i = 0; i<verts.size(); ++i){
 		verts.at(i)->display();
 	}
 }
-void ntMeshPts::displayVerts(float dim){
+void ntMeshPts::display_verts(float dim){
 	for (int i = 0; i<verts.size(); ++i){
 		verts.at(i)->setSize(dim);
 		verts.at(i)->display();
 	}
 }
-void ntMeshPts::displayNorms(){
+void ntMeshPts::display_norms(){
 	for (int i = 0; i<faces.size(); ++i){
 		faces.at(i).normal.display();
 	}
 }
-void ntMeshPts::displayNorms(float len){
+void ntMeshPts::display_norms(float len){
 	for (int i = 0; i<faces.size(); ++i){
 		faces.at(i).normal.setLength(len);
 		faces.at(i).normal.display();
 	}
 }
-void ntMeshPts::displayEdges(){
+void ntMeshPts::display_edges(){
 	for (int i = 0; i<faces.size(); ++i){
 		for (int j = 0; j<3; j++){
 			faces.at(i).edges.at(j).display();
 		}
 	}
 }
-void ntMeshPts::displayEdges(float w){
+void ntMeshPts::display_edges(float w){
 	for (int i = 0; i<faces.size(); ++i){
 		for (int j = 0; j<3; j++){
 			faces.at(i).edges.at(j).display(w);

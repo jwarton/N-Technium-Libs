@@ -28,7 +28,7 @@ void ntNormal::setLength(float length){
 	end.mult(length);	//scale by new size
 	end.add(&pos);	//translate to vertex coord
 }
-void ntNormal::setColor(ntColor4f col){
+void ntNormal::set_color(ntColor4f col){
 	this->colS = col;
 	this->colE = col;
 }

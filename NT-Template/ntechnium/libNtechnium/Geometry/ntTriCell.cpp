@@ -71,7 +71,7 @@ void ntTriCell::calcCentroid(){
     cent->z = (v1->z + v2->z + v0->z)/3;
 	centroid = ntVertex(cent);
 	centroid.setSize(3);
-	centroid.setColor(ntColor4f(1,0,0,1));
+	centroid.set_color(ntColor4f(1,0,0,1));
 }
 void ntTriCell::calcNorm(){
 	ntVec3* t1 = new ntVec3();
@@ -179,7 +179,7 @@ void ntTriCell::calc_Faces() {
 		int ind1 = index[i][1];
 		int ind2 = index[i][2];
 		ntFace3* f = new ntFace3(vecs_SD[ind0], vecs_SD[ind1], vecs_SD[ind2]);
-		f->setColor(ntCol4(1, 1, 1, 0.75));
+		f->set_color(ntCol4(1, 1, 1, 0.75));
 		faces.push_back(f);
 	}
 }
@@ -224,10 +224,10 @@ void ntTriCell::setScale(float scFx) {
 		vecs_SD.at(i + 4)->set(pt);
 	}
 }
-void ntTriCell::setColor(ntColor4f col){
+void ntTriCell::set_color(ntColor4f col){
 	this->col=col;
 	for(int i = 0; i<verts.size(); i++){
-		verts.at(i)->setColor(col);
+		verts.at(i)->set_color(col);
 	}
 }
 void ntTriCell::setUVW(ntVec3* uvw0, ntVec3* uvw1, ntVec3* uvw2) {
@@ -384,7 +384,7 @@ void ntTriCell::displaySubD(perf_Style mode) {
 		}
 	}
 	//if (mode == perf_07) {
-	//	faces.at(0)->setColor(ntCol4(1, 0, 0, 1));
+	//	faces.at(0)->set_color(ntCol4(1, 0, 0, 1));
 	//	faces.at(0)->display();
 	//}
 	if (mode == perf_08) {

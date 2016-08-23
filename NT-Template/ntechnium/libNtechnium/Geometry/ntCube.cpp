@@ -7,6 +7,14 @@ ntCube::ntCube(const ntVec3& pos, const float&  width):
 BaseShape(pos)
 {	
 	this->width = width;
+
+	dim.x = width;
+	dim.y = 0;
+	dim.z = 0;
+	rot.x = 0;
+	rot.y = 0;
+	rot.z = 0;
+
 	init();
 }
 
@@ -24,7 +32,6 @@ void ntCube::init(){
 				ntVertex* ptrVert = new ntVertex(vecs.at(cnt));
 				verts.push_back(ptrVert);
 				cnt++;
-				std::cout << "add point" << cnt << endl;
 			}
 		}
 	}
@@ -53,55 +60,8 @@ void ntCube::init(){
 	}
 }
 
-void ntCube::setColor(ntColor4f col){
-
-	for(int i = 0; i<faces.size(); i++){
-		faces.at(i).setColor(col);
-	}
-}
-
 void ntCube::display(){
 	for(int i = 0;i<faces.size();++i){
 		faces.at(i).display();
-	}
-}
-
-void ntCube::displayNorms(float len){
-	for(int i = 0;i<faces.size();++i){
-		faces.at(i).normal.setLength(len);
-		faces.at(i).normal.display();
-	}
-}
-
-void ntCube::displayVerts(float dim){
-	for(int i = 0;i<verts.size();++i){
-		verts.at(i)->setSize(dim);
-		verts.at(i)->display();
-	}
-}
-
-void ntCube::displayEdges(float w){
-	for(int i = 0;i<edges.size();++i){
-			edges.at(i).display(w);
-	}
-}
-
-void ntCube::displayNorms(){
-	for (int i = 0; i<faces.size(); ++i){
-		faces.at(i).normal.display();
-	}
-}
-
-void ntCube::displayVerts(){
-	for (int i = 0; i<verts.size(); ++i){
-		verts.at(i)->display();
-	}
-}
-
-void ntCube::displayEdges(){
-	for (int i = 0; i<faces.size(); ++i){
-		for (int j = 0; j<3; j++){
-			faces.at(i).edges.at(j).display();
-		}
 	}
 }

@@ -195,15 +195,15 @@ void ntTree::setFixedLeaves(bool isFixed){
 }
 
 void ntTree::display(){
-	displayVerts();
+	display_verts();
 	displayBranches();
 }
-void ntTree::displayVerts(){
+void ntTree::display_verts(){
 	for (int i = 0; i<verts.size(); ++i){
 		verts.at(i)->display();
 	}
 }
-void ntTree::displayVerts(float dim){
+void ntTree::display_verts(float dim){
 	for (int i = 0; i<verts.size(); ++i){
 		verts.at(i)->setSize(dim);
 		verts.at(i)->display();

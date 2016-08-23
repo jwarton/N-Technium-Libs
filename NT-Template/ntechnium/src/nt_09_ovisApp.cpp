@@ -1061,10 +1061,10 @@ void ovisApp::map_ImgCol(ntPanel* panel_ptr) {
 				col = mapRange(0, 1, 0, 255, col);
 				//std::cout << col << endl;
 				
-				panel_ptr->faces_L.at(i)->at(j).verts.at(k)->setColor(ntCol4(col, col, col, 1));
+				panel_ptr->faces_L.at(i)->at(j).verts.at(k)->set_color(ntCol4(col, col, col, 1));
 
 				if (i < panel_ptr->faces_G.size()) {
-					panel_ptr->faces_G.at(i)->at(j).verts.at(k)->setColor(ntCol4(col, col, col, 1));
+					panel_ptr->faces_G.at(i)->at(j).verts.at(k)->set_color(ntCol4(col, col, col, 1));
 				}
 			}
 		}
@@ -1088,8 +1088,8 @@ void ovisApp::map_ImgCol(ntPanel* panel_ptr) {
 
 	//	if (gen_ID < panel_ptr->faces_G.size()) {
 
-	//		panel_ptr->faces_G.at(gen_ID)->at(face_ID).setColor(ntCol4(col, col, col, 1));
-	//		panel_ptr->faces_L.at(gen_ID)->at(face_ID).setColor(ntCol4(col, col, col, 1));
+	//		panel_ptr->faces_G.at(gen_ID)->at(face_ID).set_color(ntCol4(col, col, col, 1));
+	//		panel_ptr->faces_L.at(gen_ID)->at(face_ID).set_color(ntCol4(col, col, col, 1));
 
 	//		if (face_ID < (panel_ptr->faces_G.at(gen_ID)->size() - 1)) {
 	//			face_ID++;
@@ -1148,8 +1148,8 @@ void ovisApp::map_ImgCol(ntPanel* panel_ptr) {
 
 	//			index++;
 
-	//			panel_ptr->faces_G.at(i)->at(j).verts.at(k)->setColor(ntCol4(col, col, col, 1));
-	//			panel_ptr->faces_L.at(i)->at(j).verts.at(k)->setColor(ntCol4(col, col, col, 1));
+	//			panel_ptr->faces_G.at(i)->at(j).verts.at(k)->set_color(ntCol4(col, col, col, 1));
+	//			panel_ptr->faces_L.at(i)->at(j).verts.at(k)->set_color(ntCol4(col, col, col, 1));
 	//		}
 	//	}
 	//}
@@ -1213,35 +1213,35 @@ void ovisApp::run(){
 	if (glfwGetKey(window, GLFW_KEY_PAGE_UP) == GLFW_PRESS || glfwGetKey(window, GLFW_KEY_EQUAL) == GLFW_PRESS) {
 		if (panel_Index < panel_Dim-1) {
 			float c = panels.at(panel_Index)->image_Val;
-			panels.at(panel_Index)->faces_G.at(0)->at(0).setColor(Col4(c, c, c, 1));
+			panels.at(panel_Index)->faces_G.at(0)->at(0).set_color(Col4(c, c, c, 1));
 			panel_Index = panel_Index + 1;
 			std::cout << panel_Index << endl;
 		}
 		else {
 			float c = panels.at(panel_Dim-1)->image_Val;
-			panels.at(panel_Dim - 1)->faces_G.at(0)->at(0).setColor(Col4(c, c, c, 1));
+			panels.at(panel_Dim - 1)->faces_G.at(0)->at(0).set_color(Col4(c, c, c, 1));
 			panel_Index = 0;
 			std::cout << panel_Index << endl;
 		}
 		if (m == vW) {
-			panels.at(panel_Index)->faces_G.at(0)->at(0).setColor(colSel);
+			panels.at(panel_Index)->faces_G.at(0)->at(0).set_color(colSel);
 		}
 	}
 	if (glfwGetKey(window, GLFW_KEY_PAGE_DOWN) == GLFW_PRESS || glfwGetKey(window, GLFW_KEY_MINUS) == GLFW_PRESS) {
 		if (panel_Index > 0 && panel_Index < panel_Dim) {
 			float c = panels.at(panel_Index)->image_Val;
-			panels.at(panel_Index)->faces_G.at(0)->at(0).setColor(Col4(c, c, c, 1));
+			panels.at(panel_Index)->faces_G.at(0)->at(0).set_color(Col4(c, c, c, 1));
 			panel_Index = panel_Index - 1;
 			std::cout << panel_Index << endl;
 		}
 		else {
 			float c = panels.at(0)->image_Val;
-			panels.at(0)->faces_G.at(0)->at(0).setColor(Col4(c, c, c, 1));
+			panels.at(0)->faces_G.at(0)->at(0).set_color(Col4(c, c, c, 1));
 			panel_Index = panel_Dim-1;
 			std::cout << panel_Index << endl;
 		}
 		if (m == vW || m == vA) {
-			panels.at(panel_Index)->faces_G.at(0)->at(0).setColor(colSel);
+			panels.at(panel_Index)->faces_G.at(0)->at(0).set_color(colSel);
 		}
 	}
 	if (glfwGetKey(window, GLFW_KEY_Q) == GLFW_PRESS) {
@@ -1255,7 +1255,7 @@ void ovisApp::run(){
 			float r = mapRange(0, 1, areaP_Min, areaP_Max, a);
 			float b = mapRange(0, 1, areaP_Min, areaP_Max, a, false);
 
-			panels.at(i)->faces_G.at(0)->at(0).setColor(Col4(r, 0, b, 1));
+			panels.at(i)->faces_G.at(0)->at(0).set_color(Col4(r, 0, b, 1));
 			panels.at(i)->faces_G.at(0)->at(0).edges.at(0).setCol(ntColor4f(0, 0, 0, .5));
 			panels.at(i)->faces_G.at(0)->at(0).edges.at(1).setCol(ntColor4f(0, 0, 0, .5));
 			panels.at(i)->faces_G.at(0)->at(0).edges.at(2).setCol(ntColor4f(0, 0, 0, .5));
@@ -1271,7 +1271,7 @@ void ovisApp::run(){
 				panels.at(i)->faces_G.at(0)->at(0).edges.at(1).setCol(ntColor4f(1, 1, 1, .5));
 				panels.at(i)->faces_G.at(0)->at(0).edges.at(2).setCol(ntColor4f(1, 1, 1, .5));
 				if (i == panel_Index) {
-					panels.at(i)->faces_G.at(0)->at(0).setColor(colSel);
+					panels.at(i)->faces_G.at(0)->at(0).set_color(colSel);
 				}
 			}
 		} else {
@@ -1282,14 +1282,14 @@ void ovisApp::run(){
 		m = vS;
 		for (int i = 0; i < panels.size(); i++) {
 			float col = panels.at(i)->image_Val;
-			panels.at(i)->faces_G.at(0)->at(0).setColor(ntColor4f(col, col, col, 1));
+			panels.at(i)->faces_G.at(0)->at(0).set_color(ntColor4f(col, col, col, 1));
 		}
 	}
 	if (glfwGetKey(window, GLFW_KEY_D) == GLFW_PRESS) {
 		m = vD;
 		for (int i = 0; i < panels.size(); i++) {
 			float col = panels.at(i)->image_Val;
-			panels.at(i)->faces_G.at(0)->at(0).setColor(ntColor4f(col, col, col, 1));
+			panels.at(i)->faces_G.at(0)->at(0).set_color(ntColor4f(col, col, col, 1));
 		}
 	}
 	///////////////////////////////////////////////////////////////
@@ -1301,7 +1301,7 @@ void ovisApp::run(){
 			panels.at(i)->faces_G.at(0)->at(0).edges.at(1).setCol(ntColor4f(1, 1, 1, .5));
 			panels.at(i)->faces_G.at(0)->at(0).edges.at(2).setCol(ntColor4f(1, 1, 1, .5));
 			if (i == panel_Index) {
-				panels.at(i)->faces_G.at(0)->at(0).setColor(colSel);
+				panels.at(i)->faces_G.at(0)->at(0).set_color(colSel);
 			}
 		}
 	}

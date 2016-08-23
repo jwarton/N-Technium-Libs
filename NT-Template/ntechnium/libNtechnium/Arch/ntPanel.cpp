@@ -69,7 +69,7 @@ void ntPanel::calcCentroid(){
     cent->z = (v1->z + v2->z + v0->z)/3;
 	centroid = ntVertex(cent);
 	centroid.setSize(2);
-	centroid.setColor(ntColor4f(1,1,1,0));
+	centroid.set_color(ntColor4f(1,1,1,0));
 }
 void ntPanel::calcNorm(){
 	ntVec3* t1 = new ntVec3();
@@ -646,7 +646,7 @@ void ntPanel::reparam_UV() {
 void ntPanel::set_Color(ntColor4f col){
 	this->col = col;
 	for(int i = 0; i<verts.size(); i++){
-		verts.at(i)->setColor(col);
+		verts.at(i)->set_color(col);
 	}
 }
 void ntPanel::set_ID(string panel_ID){
