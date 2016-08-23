@@ -63,7 +63,6 @@ void BaseShape::display_edges(){
 void BaseShape::print(){
 	std::cout << "GEOM: " << name << endl;
 }
-
 void BaseShape::print(std::string s){
 	std::cout << "GEOM_" << s << ": " << name << endl;
 }

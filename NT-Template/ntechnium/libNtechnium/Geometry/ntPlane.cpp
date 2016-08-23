@@ -109,56 +109,6 @@ void ntPlane::display(){
 		faces.at(i).display();
 	}
 }
-
-void ntPlane::display_norms(float len){
-	for(int i = 0;i<faces.size();++i){
-		faces.at(i).normal.setLength(len);
-		faces.at(i).normal.display();
-	}
-}
-
-void ntPlane::display_verts(float dim){
-	for(int i = 0;i<verts.size();++i){
-		verts.at(i)->setSize(dim);
-		verts.at(i)->display();
-	}
-}
-
-void ntPlane::display_edges(float w){
-	//if (enablePhysics == true){
-	//	for (int i = 0; i<edges.size(); ++i){
-	//		edges.at(i).display(w);
-	//	}
-	//}
-	//else{
-		for (int i = 0; i<faces.size(); ++i){
-			for (int j = 0; j<3; j++){
-				faces.at(i).edges.at(j).display(w);
-			}
-		}
-	//}
-}
-
-void ntPlane::display_norms(){
-	for (int i = 0; i<faces.size(); ++i){
-		faces.at(i).normal.display();
-	}
-}
-
-void ntPlane::display_verts(){
-	for (int i = 0; i<verts.size(); ++i){
-		verts.at(i)->display();
-	}
-}
-
-void ntPlane::display_edges(){
-	for (int i = 0; i<faces.size(); ++i){
-		for (int j = 0; j<3; j++){
-			faces.at(i).edges.at(j).display();
-		}
-	}
-}
-
 ///MOVE TO BASE CLASS
 ///////////////////////////////////////////////////////////
 //////////////////////////////////////// PHYSICS OPERATIONS

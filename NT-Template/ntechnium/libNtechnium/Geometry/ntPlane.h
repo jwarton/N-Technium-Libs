@@ -17,7 +17,6 @@ class ntPlane : public BaseShape {
 	int V;
 
 	//ntParticle* corners[4];
-
 public:
 	ntPlane();
 	ntPlane(const ntVec3& pos, const float&  dimX, const float&  dimY, int U, int V);
@@ -25,22 +24,14 @@ public:
 	ntPlane(const ntVec3& pos, const ntVec3&  rot, const ntVec3&  dim, const ntColor4f& fillCol, const ntColor4f& strokeCol);
 
 	void set_color(ntColor4f col);
-
     void display();
-    void display_norms(float len);
-	void display_verts(float dim);
-	void display_edges(float w);
-
-	void display_norms();
-	void display_verts();
-	void display_edges();
 
 	///////////////////////////////////////////////////////////
 	//////////////////////////////////////// PHYSICS OPERATIONS
-	bool enablePhysics = false;	//unique constructor enables physics
-	std::vector <Particle*> particles;  //node with particle dynamics
+	bool enablePhysics = false;			//UNIQUE CONSTRUCTOR ENABLES PHYSICS
+	std::vector <Particle*> particles;  //NODE WITH PARTICLE DYNAMICS
 	std::vector <Particle*> corners;
-	std::vector <Spring*> springs;		//branch with spring dynamics
+	std::vector <Spring*>	springs;	//BRANCH WITH SPRING DYNAMICS
 	
 
 	void addPhysics(bool enable);
@@ -50,7 +41,7 @@ public:
 
 	std::vector<Particle*>* getParticles();
 	std::vector<Particle*>* getCorners();
-	std::vector<Spring*>* getSprings();
+	std::vector<Spring*>*	getSprings();
 
 private:
     void init();

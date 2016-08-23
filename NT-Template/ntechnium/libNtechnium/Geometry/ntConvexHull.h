@@ -27,7 +27,7 @@ public:
 
 	void solve();		/// CALCULATE CONVEX HULL FROM PT_CLOUD
 
-	bool pt_isInside(ntVec3* point, ntMeshPts mesh);
+	bool pt_isInside(ntVec3* point, ntMeshPts mesh);  /// ADD FUNCTION TO BASE GEOM CLASS
 
 	void add_point(ntVec3* vec);
 	void add_points(std::vector<ntVec3*>* vecs);
