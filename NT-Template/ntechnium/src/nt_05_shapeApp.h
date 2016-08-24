@@ -13,6 +13,11 @@
 #include "ntMatrix4.h"
 #include "nt_AppContent.h"
 
+#include "ntPolyline.h"
+#include "ntPolygon.h"
+#include "ntCircle.h"
+#include "ntRectangle.h"
+#include "ntSquare.h"
 #include "ntCube.h"
 #include "ntTetra.h"
 #include "ntSphere.h"
@@ -28,6 +33,11 @@ public:
 	/// ADD POLYHEDRON PRIMITIVE
 	/// BASE CLASS TO MANAGE MESH DATA STRUCTURE
 	/// UNIFIFIED INIT FUNCTION
+	
+	ntPolygon	triangle;
+	ntSquare	square;
+	ntRectangle rectangle;
+	ntCircle	circle;
 
 	ntCube cube_00;
 	ntCube cube_01;

@@ -67,8 +67,7 @@ private:
 	std::vector<ntCol4> cols;
 
 	// PROFILE TYPES:  SQUARE, POLYGON, POLYPARM, RECTANGLE
-	void gen_profiles();
-	std::vector <ntVec3*> gen_profile(ntPolygon polygon);
+	void gen_profile();
 	std::vector <ntVec3*> gen_profile(float w);
 
 	void gen_branch();

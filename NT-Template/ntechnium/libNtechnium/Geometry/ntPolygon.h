@@ -14,18 +14,34 @@ using namespace std;
 
 class ntPolygon : public ntPolyline{
 private:
-	double radius;
+
 	int sides;
+	double radius;
+
+	void calc_norm();
+	void calc_centroid();
+	void calc_area();
 
 	void init();
 protected:
-	bool isClosed = true;
+	ntPolygon(const ntVec3& pos);
 
+	double area;
+	ntVec3 norm;
+	ntVec3* cent;
+
+	ntVertex centroid;
+	ntNormal normal;
 public:
 
 	ntPolygon();
-	ntPolygon(const ntVec3& pos);
 	ntPolygon(float radius, int sides);
 	ntPolygon(const ntVec3& pos, float radius, int sides);
+
+	ntPolygon(float radius, int sides, ntCol4 color);
+	ntPolygon(const ntVec3& pos, float radius, int sides, ntCol4 color);
+
+	bool pt_isInside(ntVec3* point);
+	double get_area();
 };
 #endif

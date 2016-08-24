@@ -18,24 +18,29 @@ private:
 	void init();
 
 protected:
+	bool isClosed = false;
+
 	ntPolyline(const ntVec3& pos);
 	void init_edges();
 
-	bool isClosed = false;
-	ntColor4f col;
-	float stroke;
-
+	ntCol4 col = ntCol4(0.25, 0.25, 0.25, 1);
+	float stroke  = 0.5;
 public:
 
 	ntPolyline();
 	ntPolyline(ntVec3* vS, ntVec3* vE);
-	ntPolyline(std::vector <ntVec3*> vecs, bool isClosed = false);
+	ntPolyline(std::vector <ntVec3*> vecs);
+	ntPolyline(std::vector <ntVec3*> vecs, bool isClosed);
+
+	ntPolyline(ntVec3* vS, ntVec3* vE, ntCol4 col);
+	ntPolyline(std::vector <ntVec3*> vecs, ntCol4 col);
+	ntPolyline(std::vector <ntVec3*> vecs, bool isClosed, ntCol4 col);
 
 	double length();
 	double length_seg(int seg);
 	std::vector <ntVec3*> get_Vecs();
 
-	void set_color(ntColor4f col);
+	void set_color(ntCol4 col);
 	void set_stroke(float w);
 	void close();
 

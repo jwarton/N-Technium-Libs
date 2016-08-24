@@ -1,56 +1,34 @@
-// ntCircle.h
-// openGl scratch libs
-// created by James Warton on 10/25/2015
+///////////////////////////////////////////////////////////////////
+/////////////////////////////////////////////////////// ntCircle.h
+// openGl scratch libs							///////////////////
+// Circlke Class extends Polygon | BaseShape	///////////////////
+// created by James Warton on 10/25/2015		///////////////////
+///////////////////////////////////////////////////////////////////
 
-#ifndef CIRCLE_JPW_NTECHNIUM
-#define CIRCLE_JPW_NTECHNIUM
+#ifndef CIRCLE_POLYGON_JPW_NTECHNIUM
+#define CIRCLE_POLYGON_JPW_NTECHNIUM
 #define _USE_MATH_DEFINES
 
-#include <iostream>
-#include <vector>
-#include <math.h>
-
-#include "ntVertex.h"
-#include "ntVec3.h"
-#include "ntEdge.h"
-#include "ntNormal.h"
+#include "ntPolygon.h"
  
 using namespace jpw;
 
-class ntCircle{
+class ntCircle: public ntPolygon{
 private:
+	int seg;		//sides
+	float rad;		//radius
+
+	void calc_area();
 	void init();
-	double area;
-
 public:
-	ntVec3* pos;
-	float rad;
-	std::vector<ntVec3*> vecs;
-	std::vector<ntVertex*> verts;
-	std::vector<ntEdge> edges;
-	ntColor4f col;
-	int seg;
-
-	ntVec3 norm;
-	ntVec3* cent;
-	ntVertex centroid;
-	ntNormal normal;
 
 	ntCircle();
-	ntCircle(ntVec3* pos, float rad);
-	ntCircle(ntVec3* pos, float rad, ntCol4 col);
-	ntCircle(ntVec3* pos, float rad, int seg, ntCol4 col);
+	ntCircle(const ntVec3& pos, float rad);
+	ntCircle(const ntVec3& pos, float rad, int seg);
 
-	void set_color(ntColor4f col);
-	void calcNorm();
-	void calcCentroid();
-	void calcArea();
+	ntCircle(const ntVec3& pos, float rad, ntCol4 col);
+	ntCircle(const ntVec3& pos, float rad, int seg, ntCol4 col);
 
-	bool pt_isInside(ntVec3* point);
-	
-	double get_Area();
-
-	void display();
 	void display_dots();
 };
 #endif

@@ -24,6 +24,12 @@ void shapeApp::init() {
 
 	float radius = x_sp * 0.45;
 	float dim0 = x_sp * 0.9;
+	float dim1 = y_sp * 0.5;
+
+	triangle =	ntPolygon(grid[0], radius, 3);
+	square =	ntSquare(grid[1], dim0);
+	rectangle = ntRectangle(grid[2], dim0, dim1);
+	circle =	ntCircle(grid[3], radius);
 
 	tetra_00 = ntTetra(grid[4], radius);
 	tetra_01 = ntTetra(grid[5], radius);
@@ -84,6 +90,15 @@ void shapeApp::run(){
 void shapeApp::display(){
 	///////////////////////////////////////////////////////////////
 	//
+	triangle.display();
+	triangle.display_verts();
+	square.display();
+	//square.display_verts();
+	rectangle.display();
+	//rectangle.display_verts();
+	circle.display();
+	//circle.display_verts();
+
 	cube_00.display_verts();
 	cube_00.display_edges(0.5);
 	cube_01.display_norms(1);

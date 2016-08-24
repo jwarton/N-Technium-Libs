@@ -5,7 +5,10 @@ ntPolyline::ntPolyline(ntVec3* vS, ntVec3* vE):
 	BaseShape(),vS(vS), vE(vE){
 	vecs.push_back(vS);
 	vecs.push_back(vE);
-	isClosed = false;
+	init();
+}
+ntPolyline::ntPolyline(std::vector<ntVec3*> vecs) :
+	BaseShape(vecs) {
 	init();
 }
 ntPolyline::ntPolyline(std::vector <ntVec3*> vecs, bool isClosed):
@@ -13,7 +16,24 @@ ntPolyline::ntPolyline(std::vector <ntVec3*> vecs, bool isClosed):
 	if (isClosed == true) {
 		this->vecs.push_back(vecs[0]);
 	}
+	init();
+}
 
+ntPolyline::ntPolyline(ntVec3 * vS, ntVec3 * vE, ntCol4 col):
+	BaseShape(), vS(vS), vE(vE), col(col) {
+	vecs.push_back(vS);
+	vecs.push_back(vE);
+	init();
+}
+ntPolyline::ntPolyline(std::vector<ntVec3*> vecs, ntCol4 col):
+	BaseShape(vecs),col(col) {
+	init();
+}
+ntPolyline::ntPolyline(std::vector<ntVec3*> vecs, bool isClosed, ntCol4 col):
+	BaseShape(vecs), isClosed(isClosed),col(col) {
+	if (isClosed == true) {
+		this->vecs.push_back(vecs[0]);
+	}
 	init();
 }
 //PROTECTED CONSTRUCTOR--ONLY ACCESSIBLE TO DERIVED
@@ -22,27 +42,25 @@ ntPolyline::ntPolyline(const ntVec3 & pos) :
 }
 
 void ntPolyline::init() {
+	stroke = 0.5;
 	//INITIALIZE POLYLINE VERTEX DATA STRUCTURES
 	vS = vecs[0];
 	vE = vecs[vecs.size()];
 	ntVertex vert = ntVertex(vS);
 	verts.push_back(&vert);
-
 	for (int i = 1; i < vecs.size(); i++) {
 		if ((i != vecs.size() - 1) && (isClosed == true)) {
 			vert = ntVertex(vecs[i]);
 			verts.push_back(&vert);
 		}
 	}
-
 	init_edges();
 }
 
 void ntPolyline::init_edges() {
-	//DEFAULT LINE TYPE
-	col = ntColor4f(0.25, 0.25, 0.25, 1);
-	stroke = 0.5;
-
+	if (isClosed == true) {
+		vecs.push_back(vecs[0]);
+	}
 	for (int i = 1; i < vecs.size(); i++) {
 		ntEdge e = ntEdge(vecs[i - 1], vecs[i]);
 		e.setCol(col);
@@ -59,7 +77,7 @@ void ntPolyline::close() {
 		isClosed = true;
 	}
 }
-void ntPolyline::set_color(ntColor4f col){
+void ntPolyline::set_color(ntCol4 col){
 	this->col = col;
 	set_edge_color(col);
 }

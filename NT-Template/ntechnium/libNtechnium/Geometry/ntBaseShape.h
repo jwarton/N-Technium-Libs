@@ -32,10 +32,9 @@ public:
 	std::vector<ntVec3*>	vecs;
     std::vector<ntTup3i>	inds;
 
-	std::vector<ntVertex*>	verts;
+	std::vector<ntVertex*>	verts;		///SHOULD ALL CONTAINERS MANAGE PTR???
 	std::vector<ntEdge>		edges;
 	std::vector<ntFace3>	faces;
-
 
     BaseShape();
 	///CONSTRUCTORS USED BY PRIMITIVE SOLIDS

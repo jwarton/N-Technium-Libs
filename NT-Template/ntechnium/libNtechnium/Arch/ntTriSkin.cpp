@@ -1526,14 +1526,14 @@ void ntTriSkin::set_Scale2D(ntPanel* panel_ptr, double scFx) {
 		SC1.translate(posXY);
 	}
 	for (int j = 0; j < panel_ptr->perfs.size(); j++) {
-		for (int k = 0; k < panel_ptr->perfs.at(j)->seg; k++) {
+		for (int k = 0; k < panel_ptr->perfs.at(j)->vecs.size(); k++) {
 			ntMatrix4 SC3 = ntMatrix4(panel_ptr->perfs.at(j)->vecs.at(k));
 			SC3.scale3d(sc_Factor);
 			SC3.translate(posXY);
 		}
 	}
 	for (int j = 0; j < panel_ptr->fastr.size(); j++) {
-		for (int k = 0; k < panel_ptr->fastr.at(j)->seg; k++) {
+		for (int k = 0; k < panel_ptr->fastr.at(j)->vecs.size(); k++) {
 			ntMatrix4 SC3 = ntMatrix4(panel_ptr->fastr.at(j)->vecs.at(k));
 			SC3.scale3d(sc_Factor);
 			SC3.translate(posXY);

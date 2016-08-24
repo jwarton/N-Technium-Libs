@@ -16,9 +16,11 @@ protected:
 	double dimX, dimY;
 
 public:
-
 	ntRectangle();
 	ntRectangle(float dimX, float dimY);
 	ntRectangle(const ntVec3& pos, float dimX, float dimY);
+
+	ntRectangle(float dimX, float dimY, ntCol4 color);
+	ntRectangle(const ntVec3& pos, float dimX, float dimY, ntCol4 color);
 };
 #endif

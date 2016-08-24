@@ -362,7 +362,7 @@ void ntPanel::plot_Fast(int div){
 			ntVec3* pt = edges.at(i).get_PtP(param);
 			pts_P.push_back(pt);
 
-			ntCircle * fastener = new ntCircle(pt, 0.05, n_seg, Col4(1, 0, 0, 1));
+			ntCircle* fastener = new ntCircle(pt, 0.05, n_seg, Col4(1, 0, 0, 1));
 			fastr.push_back(fastener);
 		}
 		/// REDEFINE CENTERLINE END POINTS
@@ -409,7 +409,7 @@ void ntPanel::plot_Fast(int div){
 	float rad = ((r_Max - r_Min) * 0.5) + r_Min;
 	for (int i = 0; i < f_Pos.size(); i++) {
 		ntVec3* pt = f_Pos.at(i);
-		ntCircle * fastener = new ntCircle(pt, rad, n_seg, Col4(.5, 0, 0, 1));
+		ntCircle* fastener = new ntCircle(pt, rad, n_seg, Col4(.5, 0, 0, 1));
 		fastr.push_back(fastener);
 	}
 }
@@ -624,7 +624,7 @@ void ntPanel::add_Perf() {
 				if (r > 0 && isUnique == true) {
 					ntCircle * perf = new ntCircle(vec, r, n_seg, Col4(.25, .25, .25, 1));
 					perfs.push_back(perf);
-					perf_area += perf->get_Area();
+					perf_area += perf->get_area();
 				}
 			}
 		//}

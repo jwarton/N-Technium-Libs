@@ -19,7 +19,7 @@ void ntNodeGen::init(){
 	//std::cout << "ACTIVE PROFILE MODE:  POLYGON" << endl;
 	//std::cout << "ACTIVE PROFILE MODE:  POLYGON PARAMETERS" << endl;
 	//std::cout << "ACTIVE PROFILE MODE:  RECTANGLE" << endl;
-	gen_profiles();
+	gen_profile();
 	gen_branch();
 	///////////////////////////////////////////////////////////////
 	/////////////////////////////////////////////// BUILD JUNCTIONS
@@ -28,7 +28,7 @@ void ntNodeGen::init(){
 	// SUBDIVIDE AND/OR SMOOTH
 }
 
-void ntNodeGen::gen_profiles() {
+void ntNodeGen::gen_profile() {
 	int cnt_branch = edges.size();
 
 	for (int i = 0; i < cnt_branch; i++) {
@@ -84,21 +84,6 @@ void ntNodeGen::gen_profiles() {
 		}
 	}
 }
-std::vector <ntVec3*> ntNodeGen::gen_profile(float w) {
-	// SQUARE PROFILE
-	std::vector <ntVec3*> pts;
-	ntVec3 *p00 = new ntVec3( w,  w, 0);
-	ntVec3 *p01 = new ntVec3(-w,  w, 0);
-	ntVec3 *p10 = new ntVec3(-w, -w, 0);
-	ntVec3 *p11 = new ntVec3( w, -w, 0);
-	pts.push_back(p00);
-	pts.push_back(p01);
-	pts.push_back(p10);
-	pts.push_back(p11);
-	return pts;
-}
-
-
 void ntNodeGen::gen_branch() {
 	int cnt_profiles = div + 1;
 

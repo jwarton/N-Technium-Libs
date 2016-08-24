@@ -16,5 +16,8 @@ public:
 	ntSquare();
 	ntSquare(float dim);
 	ntSquare(const ntVec3& pos, float dim);
+
+	ntSquare(float dim, ntCol4 color);
+	ntSquare(const ntVec3& pos, float dim, ntCol4 color);
 };
 #endif

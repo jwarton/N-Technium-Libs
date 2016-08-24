@@ -75,7 +75,7 @@ int main(int argc, char const** argv){
 	//AppContent* c = new vec3TestApp();
 
 	///BASE GEOM
-	//AppContent* c = new shapeApp();
+	AppContent* c = new shapeApp();
 	//AppContent* c = new cubeApp();
 	//AppContent* c = new triApp();
 	//AppContent* c = new convexApp();
@@ -86,7 +86,7 @@ int main(int argc, char const** argv){
 	//AppContent* c = new treeApp01();
 	//AppContent* c = new treeApp02();
 	//AppContent* c = new treeApp03();
-	AppContent* c = new treeApp04();
+	//AppContent* c = new treeApp04();
 	//AppContent* c = new swarmApp();
 	//AppContent* c = new emitterApp(10000,.1);
 
