@@ -1,7 +1,7 @@
 ///////////////////////////////////////////////////////////////////
 ///////////////////////////////////////////////////////// nt_Main.h
 // openGl scratch libs							///////////////////
-// Main Execute Progam FILE						///////////////////
+// Main Execute Program Content					///////////////////
 // created by James Warton on 04/01/2014		///////////////////
 ///////////////////////////////////////////////////////////////////
 
@@ -86,7 +86,7 @@ int main(int argc, char const** argv){
 	//AppContent* c = new treeApp01();
 	//AppContent* c = new treeApp02();
 	//AppContent* c = new treeApp03();
-	//AppContent* c = new treeApp04();
+	AppContent* c = new treeApp04();
 	//AppContent* c = new swarmApp();
 	//AppContent* c = new emitterApp(10000,.1);
 

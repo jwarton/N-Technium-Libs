@@ -48,8 +48,8 @@ void ntBasePhysics::run(){
 		rungeKuttaIntegration();
 	} else {
 		rungeKuttaIntegration();
-		//modEulerIntegration();
-		//eulerIntegration();
+		//modEulerIntegration();	///NEEDS WORK
+		//eulerIntegration();		///ALSO NEEDS WORK
 	}
 }
 ///////////////////////////////////////////////////////////////////

@@ -2,24 +2,30 @@
 
 BaseShape::BaseShape(){
 }
-
 BaseShape::BaseShape(const ntVec3& pos) :
 pos(pos){
 	rot = ntVec3(0, 0, 0);
 	dim = ntVec3(0, 0, 0);
 }
-
-BaseShape::BaseShape(const ntVec3& pos, const ntVec3&  rot, const ntVec3&  dim): 
+BaseShape::BaseShape(const ntVec3& pos, const ntVec3& rot):
+	pos(pos),rot(rot){
+	dim = ntVec3(0, 0, 0);
+}
+BaseShape::BaseShape(const ntVec3& pos, const ntVec3& rot, const ntVec3&  dim): 
 pos(pos), rot(rot), dim(dim){
 }
 
-BaseShape::BaseShape(const ntVec3& pos, const ntVec3&  rot, const ntVec3&  dim, const ntColor4f& fillCol, const ntColor4f& strokeCol): 
-pos(pos), rot(rot), dim(dim), fillCol(fillCol), strokeCol(strokeCol){
+BaseShape::BaseShape(std::vector<ntVec3*> vecs):
+	vecs(vecs) {
+	pos = ntVec3(0, 0, 0);
+	rot = ntVec3(0, 0, 0);
+	dim = ntVec3(0, 0, 0);
 }
-
-BaseShape::BaseShape(std::vector<ntVec3*>* vecsPtr = nullptr):
+BaseShape::BaseShape(std::vector<ntVec3*>* vecs = nullptr):
 vecsPtr(vecsPtr){
-
+	pos = ntVec3(0, 0, 0);
+	rot = ntVec3(0, 0, 0);
+	dim = ntVec3(0, 0, 0);
 }
 //
 //BaseShape::~BaseShape(){
@@ -67,6 +73,12 @@ void BaseShape::print(std::string s){
 	std::cout << "GEOM_" << s << ": " << name << endl;
 }
 
+void BaseShape::set_color(ntColor4f col) {
+	/// REVISE TO SET ALL PRIMITIVES??????
+	for (int i = 0; i<faces.size(); i++) {
+		faces.at(i).set_color(col);
+	}
+}
 void BaseShape::set_vert_color(ntColor4f col){
 	for (int i = 0; i<verts.size(); ++i) {
 		verts.at(i)->set_color(col);

@@ -16,6 +16,7 @@
 #include "ntVertex.h"
 #include "ntEdge.h"
 #include "ntPolyline.h"
+#include "ntPolygon.h"
 #include "ntNormal.h"
 #include "ntFace3.h"
 #include "ntConvexHull.h"
@@ -62,7 +63,7 @@ private:
 
 	// PROFILE TYPES:  SQUARE, POLYGON, POLYPARM, RECTANGLE
 	void gen_profiles();
-	std::vector <ntVec3*> gen_profile(ntEdge* edge, ntPolyline polygon);
+	std::vector <ntVec3*> gen_profile(ntEdge* edge, ntPolygon polygon);
 	std::vector <ntVec3*> gen_profile(ntEdge* edge, float w);
 	std::vector <ntVec3*> gen_profile(ntEdge* edge, int sides, float radius);
 	std::vector <ntVec3*> gen_profile(ntEdge* edge, float dimX, float dimY);

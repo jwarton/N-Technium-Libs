@@ -2,9 +2,8 @@
 
 ntSphere::ntSphere(){
 }
-
 ntSphere::ntSphere(const ntVec3 & pos, const float & rad, int U, int V):
-BaseShape(pos), U(U), V(V)
+ntBrep(pos), U(U), V(V)
 {
 	dim.x = rad;
 	dim.y = 0;
@@ -15,16 +14,12 @@ BaseShape(pos), U(U), V(V)
 
 	init();
 }
+ntSphere::ntSphere(const ntVec3 & pos, const ntVec3 & rot, float rad, int U, int V) :
+	ntBrep(pos, rot),U(U),V(V){
+	dim.x = rad;
+	dim.y = 0;
+	dim.z = 0;
 
-ntSphere::ntSphere(const ntVec3& pos, const ntVec3&  rot, const ntVec3&  dim, const ntColor4f& fillCol, const ntColor4f& strokeCol):
-BaseShape(pos,rot,dim,fillCol,strokeCol)
-{	
-	init();
-}
-
-ntSphere::ntSphere(const ntVec3& pos, const ntVec3&  rot, const ntVec3&  dim, int U, int V):
-BaseShape(pos,rot,dim)
-{	
 	init();
 }
 
@@ -85,18 +80,11 @@ void ntSphere::init(){
 	*/
 }
 
-void ntSphere::set_color(ntColor4f col){
-	for(int i = 0; i<faces.size(); i++){
-		faces.at(i).set_color(col);
-	}
-}
-
 void ntSphere::display(){
 	for(int i = 0;i<faces.size();++i){
 		faces.at(i).display();
 	}
 }
-
 void ntSphere::display_edges(float w){
 	for(int i = 0;i<faces.size();++i){
 		for(int j = 0;j<3;j++){
@@ -104,7 +92,6 @@ void ntSphere::display_edges(float w){
 		}
 	}
 }
-
 void ntSphere::display_edges(){
 	for (int i = 0; i<faces.size(); ++i){
 		for (int j = 0; j<3; j++){

@@ -6,20 +6,17 @@
 #define SPHERE_JPW_NTECHNIUM
 #define _USE_MATH_DEFINES
 
-#include <iostream>
-#include "ntBaseShape.h"
+#include "ntBaseSolid.h"
 
-class ntSphere : public BaseShape {
+class ntSphere : public ntBrep {
     int U;
 	int V;
 public:
 
     ntSphere();
 	ntSphere(const ntVec3& pos, const float&  rad, int U, int V);
-	ntSphere(const ntVec3& pos, const ntVec3&  rot, const ntVec3&  rad, int U, int V);
-    ntSphere(const ntVec3& pos, const ntVec3&  rot, const ntVec3&  rad, const ntColor4f& fillCol, const ntColor4f& strokeCol);
+	ntSphere(const ntVec3& pos, const ntVec3&  rot, float rad, int U, int V);
 
-	void set_color(ntColor4f col);
 
     void display();
 

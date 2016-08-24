@@ -1,23 +1,37 @@
-// ntCube.h extends ntBaseShape.h
-// openGl scratch libs
-// created by James Warton on 02/23/2014
+///////////////////////////////////////////////////////////////////
+///////////////////////////////////////////////////// ntBaseShape.h
+// openGl scratch libs							///////////////////
+// BaseSolid Class for all derived geom class	///////////////////
+// created by James Warton on 08/24/2016		///////////////////
+///////////////////////////////////////////////////////////////////
 
-#ifndef CUBE_JPW_NTECHNIUM
-#define CUBE_JPW_NTECHNIUM
+#ifndef BREP_SOLID_JPW_NTECHNIUM
+#define BREP_SOLID_JPW_NTECHNIUM
 #define _USE_MATH_DEFINES
 
 #include <iostream>
 #include "ntBaseShape.h"
 
-class ntCube : public BaseShape {
+class ntBrep : public BaseShape {
 private:
-	void init();
-	float width;
+
+	double vol;
+	ntVec3 cent;
+	virtual void init() = 0;
+
 public:
+    ntBrep();
+	ntBrep(const ntVec3& pos);
+	ntBrep(const ntVec3& pos, const ntVec3& rot);
+	ntBrep(const ntVec3& pos, const ntVec3& rot, const ntVec3& dim);
 
-    ntCube();
-	ntCube(const ntVec3& pos, const float&  width);
+	///////////////////////////////////////////////////////////////
+	///////////////////////////////////////////// UTILITY FUNCTIONS
+	double volume();
+	ntVec3 centroid();
 
-    void display();
+	bool pt_isInside(ntVec3* point);
+	bool pt_isOnFace(ntVec3* point);
+
 };
 #endif 

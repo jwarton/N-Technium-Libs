@@ -20,37 +20,44 @@ class BaseShape {
 	std::string name;
 
 protected:
-    ntVec3 pos;
-    ntVec3 dim, rot;
-    ntColor4f fillCol, strokeCol;
-    
+    ntVec3 pos, dim, rot;
+ 
     virtual void init() = 0;
  
 	///ADD INIT FUNCTION TO GENERATE VEC* PAIRS
 	///ADD FUNCTION THAT GENERATES COLLECTION PARTICLES FROM VECS
 	///ADD FUNCTION THAT GENERATES COLLECTION OF SPRINGS FROM VEC PAIRS
 public:
-	std::vector<ntVec3*>	vecs;
-	std::vector<ntVertex*>	verts;
-    std::vector<ntTup3i>	inds;
-	std::vector<ntEdge>		edges;
-    std::vector<ntFace3>	faces;
 
-	std::vector<ntVec3*>*	vecsPtr;
+	std::vector<ntVec3*>*	vecsPtr;	/// MOVE TO PRIVATE
+	std::vector<ntVec3*>	vecs;
+    std::vector<ntTup3i>	inds;
+
+	std::vector<ntVertex*>	verts;
+	std::vector<ntEdge>		edges;
+	std::vector<ntFace3>	faces;
+
 
     BaseShape();
+	///CONSTRUCTORS USED BY PRIMITIVE SOLIDS
 	BaseShape(const ntVec3& pos);
+	BaseShape(const ntVec3& pos, const ntVec3&  rot);
 	BaseShape(const ntVec3& pos, const ntVec3&  rot, const ntVec3&  dim);
-    BaseShape(const ntVec3& pos, const ntVec3&  rot, const ntVec3&  dim, const ntColor4f& fillCol, const ntColor4f& strokeCol);
-	
-	BaseShape(std::vector<ntVec3*>* vecsPtr);	//USED BY DERIVED CLASS MESH 
+
+	///CONSTRUCTORS USED BY ARBITRARY SHAPE CLASSES
+	BaseShape(std::vector<ntVec3*> vecs);	//USED BY DERIVED CLASS MESH 
+	BaseShape(std::vector<ntVec3*>* vecs);
 	//virtual ~BaseShape();
 
 	///////////////////////////////////////////////////////////////
 	///////////////////////////////////////////// UTILITY FUNCTIONS
-	void setPos(const ntVec3& pos);
-	ntVec3 getPos() const;
+	void set_pos(const ntVec3& pos);
+	void set_rot(const ntVec3& rot);
 
+	ntVec3 get_pos() const;
+	ntVec3 get_rot() const;
+
+	std::string get_name() const;
 	///////////////////////////////////////////////////////////////
 	////////////////////////////////////// EUCLIDIAN TRANSORMATIONS
 	void translate(ntVec3 vec);
@@ -65,6 +72,7 @@ public:
 
 	///////////////////////////////////////////////////////////////
 	//////////////////////////////////////////// DISPLAY PROPERTIES
+	void set_color(ntColor4f col);
 	void set_vert_color(ntColor4f col);
 	void set_edge_color(ntColor4f col);
 	void set_face_color(ntColor4f col);
@@ -85,11 +93,20 @@ public:
 	void print(std::string s);
 };
 
-inline void BaseShape::setPos(const ntVec3& pos){
+inline void BaseShape::set_pos(const ntVec3& pos){
     this->pos = pos;
 }
+inline void BaseShape::set_rot(const ntVec3& rot) {
+	this->rot = rot;
+}
 
-inline ntVec3 BaseShape::getPos() const{
+inline ntVec3 BaseShape::get_pos() const{
     return pos;
+}
+inline ntVec3 BaseShape::get_rot() const {
+	return rot;
+}
+inline std::string BaseShape::get_name() const {
+	return name;
 }
 #endif

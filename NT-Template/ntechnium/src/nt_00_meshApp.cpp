@@ -1,9 +1,6 @@
 #include "nt_00_meshApp.h"
 
 void meshImportApp::init() {
-	//glRotatef( 90, 1.f, 0.f, 0.f);
-	//glRotatef( -10, 0.f, 1.f, 0.f);
-	glRotatef(-90, 0.f, 0.f, 1.f);
 	///////////////////////////////////////////////////////////////
 	/////////////////////////////////////////////////////// OBJECTS
 	ntTextIO ptData00 = ntTextIO("pointPos_00.txt");

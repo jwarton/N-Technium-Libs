@@ -8,49 +8,41 @@
 #ifndef POLYLINE_JPW_NTECHNIUM
 #define POLYLINE_JPW_NTECHNIUM
 
-#include <iostream>
-#include <sstream>
-#include <vector>
-#include "ntVec3.h"
-#include "ntVertex.h"
-#include "ntEdge.h"
+#include "ntBaseShape.h"
 
-using namespace std;
-using namespace jpw;
-
-class ntPolyline{
+class ntPolyline : BaseShape{
 private:
 	ntVec3* vS;
 	ntVec3* vE;
-	std::vector <ntVec3*>	vecs;
-	std::vector <ntVertex>	verts;
-	std::vector <ntEdge>	edges;
-	std::vector <ntEdge>	edges_brep;
 
 	ntColor4f col;
-	float w;							// LINE WEIGHT THICKNESS
+	float stroke;
+
 	bool isClosed = false;
 
 	void init();
+protected:
+	ntPolyline(const ntVec3& pos);
+
 public:
 
 	ntPolyline();
 	ntPolyline(ntVec3* vS, ntVec3* vE);
 	ntPolyline(std::vector <ntVec3*> vecs, bool isClosed = false);
 
-	double get_Length();
-	double get_SegLength(int seg);
+	double length();
+	double length_seg(int seg);
 	std::vector <ntVec3*> get_Vecs();
 
-	void setCol(ntColor4f col);
-	void setWeight(float w);
-	void setClosed();
+	void set_color(ntColor4f col);
+	void set_stroke(float w);
+	void close();
 
 	void display(float w);
 	void display();
 };
 
-inline double ntPolyline::get_Length() {
+inline double ntPolyline::length() {
 	float length = 0;
 	int cnt = vecs.size();
 	for (int i = 0; i < cnt; i++) {
@@ -58,7 +50,7 @@ inline double ntPolyline::get_Length() {
 	}
 	return length;
 }
-inline double ntPolyline::get_SegLength(int seg) {
+inline double ntPolyline::length_seg(int seg) {
 	double length;
 	int i;
 	if (seg < edges.size()) {
@@ -70,6 +62,7 @@ inline double ntPolyline::get_SegLength(int seg) {
 	length = edges.at(i).getLength();
 	return length;
 }
+/// MOVE TO BASE SHAPE
 inline std::vector <ntVec3*> ntPolyline::get_Vecs() {
 	return vecs;
 }

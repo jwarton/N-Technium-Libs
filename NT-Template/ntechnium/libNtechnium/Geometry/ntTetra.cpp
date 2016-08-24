@@ -2,9 +2,8 @@
 
 ntTetra::ntTetra(){
 }
-ntTetra::ntTetra(const ntVec3& pos, const float& rad) :
-	BaseShape(pos), name(name)
-{
+ntTetra::ntTetra(const ntVec3& pos, float rad) :
+	ntBrep(pos){
 	dim.x = rad * 2;
 	dim.y = 0;
 	dim.z = 0;
@@ -14,14 +13,7 @@ ntTetra::ntTetra(const ntVec3& pos, const float& rad) :
 
 	init();
 }
-ntTetra::ntTetra(const ntVec3& pos, const ntVec3&  rot, const ntVec3&  dim, 
-				 const ntColor4f& fillCol, const ntColor4f& strokeCol, 
-				 std::string name):
-BaseShape(pos,rot,dim,fillCol,strokeCol), name(name)
-{	
-	init();
-}
-    
+
 void ntTetra::init(){
 	///////////////////////////////////////////////////////////////////////////area of base triangle
 	float area = ((sqrt(3))/4 * (dim.x * dim.x));

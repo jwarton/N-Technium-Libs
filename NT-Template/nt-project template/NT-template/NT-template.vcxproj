@@ -30,6 +30,7 @@
     <ClCompile Include="..\..\ntechnium\libNtechnium\FEM\ntTruss3d.cpp" />
     <ClCompile Include="..\..\ntechnium\libNtechnium\Geometry\ntBaseGeom.cpp" />
     <ClCompile Include="..\..\ntechnium\libNtechnium\Geometry\ntBaseShape.cpp" />
+    <ClCompile Include="..\..\ntechnium\libNtechnium\Geometry\ntBaseSolid.cpp" />
     <ClCompile Include="..\..\ntechnium\libNtechnium\Geometry\ntCircle.cpp" />
     <ClCompile Include="..\..\ntechnium\libNtechnium\Geometry\ntConvexHull.cpp" />
     <ClCompile Include="..\..\ntechnium\libNtechnium\Geometry\ntCube.cpp" />
@@ -39,6 +40,7 @@
     <ClCompile Include="..\..\ntechnium\libNtechnium\Geometry\ntNodeGen.cpp" />
     <ClCompile Include="..\..\ntechnium\libNtechnium\Geometry\ntNormal.cpp" />
     <ClCompile Include="..\..\ntechnium\libNtechnium\Geometry\ntPlane.cpp" />
+    <ClCompile Include="..\..\ntechnium\libNtechnium\Geometry\ntPolygon.cpp" />
     <ClCompile Include="..\..\ntechnium\libNtechnium\Geometry\ntPolyline.cpp" />
     <ClCompile Include="..\..\ntechnium\libNtechnium\Geometry\ntSphere.cpp" />
     <ClCompile Include="..\..\ntechnium\libNtechnium\Geometry\ntTetra.cpp" />
@@ -107,6 +109,7 @@
     <ClInclude Include="..\..\ntechnium\libNtechnium\FEM\ntTruss3d.h" />
     <ClInclude Include="..\..\ntechnium\libNtechnium\Geometry\ntBaseGeom.h" />
     <ClInclude Include="..\..\ntechnium\libNtechnium\Geometry\ntBaseShape.h" />
+    <ClInclude Include="..\..\ntechnium\libNtechnium\Geometry\ntBaseSolid.h" />
     <ClInclude Include="..\..\ntechnium\libNtechnium\Geometry\ntCircle.h" />
     <ClInclude Include="..\..\ntechnium\libNtechnium\Geometry\ntColor4f.h" />
     <ClInclude Include="..\..\ntechnium\libNtechnium\Geometry\ntConvexHull.h" />
@@ -117,6 +120,7 @@
     <ClInclude Include="..\..\ntechnium\libNtechnium\Geometry\ntNodeGen.h" />
     <ClInclude Include="..\..\ntechnium\libNtechnium\Geometry\ntNormal.h" />
     <ClInclude Include="..\..\ntechnium\libNtechnium\Geometry\ntPlane.h" />
+    <ClInclude Include="..\..\ntechnium\libNtechnium\Geometry\ntPolygon.h" />
     <ClInclude Include="..\..\ntechnium\libNtechnium\Geometry\ntPolyline.h" />
     <ClInclude Include="..\..\ntechnium\libNtechnium\Geometry\ntSphere.h" />
     <ClInclude Include="..\..\ntechnium\libNtechnium\Geometry\ntTetra.h" />

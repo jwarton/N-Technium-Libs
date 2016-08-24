@@ -9,10 +9,10 @@
 #define _USE_MATH_DEFINES
 
 #include <iostream>
-#include "ntBaseShape.h"
+#include "ntBaseSolid.h"
 #include "ntMeshPts.h"
 
-class ntConvexHull : public BaseShape {
+class ntConvexHull : public ntBrep {
 private:
 	void init();
 
@@ -26,8 +26,6 @@ public:
 	ntConvexHull(std::vector<ntVec3*>* pt_cloud);
 
 	void solve();		/// CALCULATE CONVEX HULL FROM PT_CLOUD
-
-	bool pt_isInside(ntVec3* point, ntMeshPts mesh);  /// ADD FUNCTION TO BASE GEOM CLASS
 
 	void add_point(ntVec3* vec);
 	void add_points(std::vector<ntVec3*>* vecs);

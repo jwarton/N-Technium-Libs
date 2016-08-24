@@ -19,9 +19,9 @@ class ntPlane : public BaseShape {
 	//ntParticle* corners[4];
 public:
 	ntPlane();
-	ntPlane(const ntVec3& pos, const float&  dimX, const float&  dimY, int U, int V);
-	ntPlane(const ntVec3& pos, const ntVec3&  rot, const ntVec3&  dim, int U, int V);
-	ntPlane(const ntVec3& pos, const ntVec3&  rot, const ntVec3&  dim, const ntColor4f& fillCol, const ntColor4f& strokeCol);
+	ntPlane(float dimX, float dimY, int U, int V);
+	ntPlane(const ntVec3& pos, const float&  dimX, const float& dimY, int U, int V);
+	ntPlane(const ntVec3& pos, const ntVec3&  rot, const ntVec3& dim, int U, int V);
 
 	void set_color(ntColor4f col);
     void display();

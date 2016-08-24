@@ -76,10 +76,10 @@ void ntSimpleApp::init(){
 	//ntFace3 face = ntFace3(pt0,pt1,pt2);
 	//ntTetra tetra = ntTetra(pt0,ntVec3(0,0,0),ntVec3(.2,.5,.5),ntColor4f(1,1,1,1),ntColor4f(1,1,1,1),"name");
 
-	sphereA = ntSphere(pt1, Vec3(0, 0, 0), Vec3(.25, .5, .5), 50, 50);
-	sphereB = ntSphere(pt2, Vec3(0, 0, 0), Vec3(.25, .5, .5), 50, 50);
-	sphereC = ntSphere(pt2, Vec3(0, 0, 0), Vec3(.25, .5, .5), 10, 10);
-	sphereD = ntSphere(pt3, Vec3(0, 0, 0), Vec3(.25, .5, .5), 25, 25);
+	sphereA = ntSphere(pt1, 0.25, 50, 50);
+	sphereB = ntSphere(pt2, 0.25, 50, 50);
+	sphereC = ntSphere(pt2, 0.25, 10, 10);
+	sphereD = ntSphere(pt3, 0.25, 25, 25);
 
 	///////////////////////////////////////////////////////////////
 	/////////////////////////////////////// OBJECTS COLOR BY VERTEX

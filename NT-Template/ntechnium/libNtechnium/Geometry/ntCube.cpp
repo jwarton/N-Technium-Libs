@@ -2,10 +2,8 @@
 
 ntCube::ntCube(){
 }
-
-ntCube::ntCube(const ntVec3& pos, const float&  width):
-BaseShape(pos)
-{	
+ntCube::ntCube(const ntVec3& pos, float  width):
+ntBrep(pos){	
 	this->width = width;
 
 	dim.x = width;
@@ -59,7 +57,6 @@ void ntCube::init(){
 		faces.push_back(ntFace3(vecs.at(inds.at(i).elem0), vecs.at(inds.at(i).elem1), vecs.at(inds.at(i).elem2)));
 	}
 }
-
 void ntCube::display(){
 	for(int i = 0;i<faces.size();++i){
 		faces.at(i).display();

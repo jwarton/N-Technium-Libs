@@ -27,7 +27,7 @@ void ntCircle::init(){															//add set function and unique constructor
 		vecs.push_back(vec);											//output vertex
 	}
 
-	//initialize centroid and normal
+	//INITIALIZE CENTROID AND NORMAL
 	//calcCentroid();
 	//calcNorm();
 	calcArea();

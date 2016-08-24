@@ -2,19 +2,27 @@
 
 ntPlane::ntPlane(){
 }
+ntPlane::ntPlane(float  dimX, float  dimY, int U, int V):
+U(U), V(V) {
+	pos.x = 0;
+	pos.y = 0;
+	pos.z = 0;
+	this->dim.x = dimX;
+	this->dim.y = dimY;
+	dim.z = 0;
+	rot.x = 0;
+	rot.y = 0;
+	rot.z = 0;
 
-ntPlane::ntPlane(const ntVec3& pos, const float&  dimX, const float&  dimY, int U, int V) :
+	init();
+}
+ntPlane::ntPlane(const ntVec3& pos, const float&  dimX, const float&  dimY, int U, int V):
 BaseShape(pos), U(U), V(V){
 	this->dim.x = dimX;
 	this->dim.y = dimY;
 	init();
 }
-ntPlane::ntPlane(const ntVec3& pos, const ntVec3&  rot, const ntVec3&  dim, 
-				 const ntColor4f& fillCol, const ntColor4f& strokeCol):
-BaseShape(pos,rot,dim,fillCol,strokeCol)
-{	
-	init();
-}
+
 
 ntPlane::ntPlane(const ntVec3& pos, const ntVec3&  rot, const ntVec3&  dim, int U, int V):
 BaseShape(pos,rot,dim), U(U), V(V)

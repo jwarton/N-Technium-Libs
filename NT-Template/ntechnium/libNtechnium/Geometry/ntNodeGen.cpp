@@ -135,7 +135,6 @@ void ntNodeGen::gen_branch() {
 
 			for (int k = 0; k < cnt_pts; k++) {
 				ntPolyline* e = new ntPolyline(profiles[id]->get_Vecs()[k], profiles[id+1]->get_Vecs()[k]);
-				e->setCol(col);
 				profiles.push_back(e);
 			}
 		}
@@ -165,9 +164,6 @@ void ntNodeGen::gen_node() {
 		}
 	}
 	// SORT FACES OF CONVEX HULL
-
-
-
 
 }
 void ntNodeGen::calc_thickness() {

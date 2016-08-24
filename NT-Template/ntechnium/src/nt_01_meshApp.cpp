@@ -1,14 +1,13 @@
 #include "nt_01_meshApp.h"
 
 void meshApp::init() {
-	std::cout << "\ninit meshApp" << endl;
-
-	glRotatef( 60, 1.f, 0.f, 0.f);
-	//glRotatef( -60, 0.f, 1.f, 0.f);
-	glRotatef(-30, 0.f, 0.f, 1.f);
 	///////////////////////////////////////////////////////////////
 	/////////////////////////////////////////////////////// OBJECTS
-	mesh00 = ntPlane(Vec3(0,0,0),1,1,50,50);
+	int dimX, dimY;
+	int dimU, dimV;
+	dimX = dimY = 10;
+	dimU = dimV = 50;
+	mesh00 = ntPlane(dimX, dimX, dimU, dimV);
 
 	///////////////////////////////////////////////////////////////
 	/////////////////////////////////////// OBJECTS COLOR BY VERTEX

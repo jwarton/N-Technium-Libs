@@ -76,34 +76,6 @@ void ntConvexHull::mesh_addPts() {
 	}
 }
 
-bool ntConvexHull::pt_isInside(ntVec3 * point, ntMeshPts mesh) {
-	/// VALIDATE POINTS ON BOUNDARY
-	/// ENSURE FACE WINDING ORDER IS CONSISTENT
-
-	bool test = false;
-	int cnt = 0;
-	
-	for (int i = 0; i < mesh.faces.size(); i++) {
-		ntVec3 norm = mesh.faces.at(i).getNorm();
-		ntVec3 cent = mesh.faces.at(i).getCent();
-		ntVec3 v0 = cent - point;
-	
-		v0.unitize();
-		norm.unitize();
-
-		ntVec3 v1 = v0 - norm;
-		double len = v1.magSqrd();
-
-		if (len > 2) {
-			cnt += 1;
-		}
-	}
-	if (cnt <= 0) {
-		test = true;
-	}
-	return test;
-}
-
 void ntConvexHull::add_point(ntVec3 * vec)
 {
 	pt_cloud->push_back(vec);

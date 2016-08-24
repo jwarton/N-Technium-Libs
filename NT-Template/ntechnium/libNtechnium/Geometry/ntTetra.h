@@ -8,19 +8,16 @@
 #define TETRAHEDRON_JPW_NTECHNIUM
 #define _USE_MATH_DEFINES
 
-#include <iostream>
-#include "ntBaseShape.h"
+#include "ntBaseSolid.h"
 
-class ntTetra : public BaseShape {
+class ntTetra : public ntBrep {
 private:
 
-	std::string name;
 	void init();
 
 public:
     ntTetra();
-	ntTetra(const ntVec3& pos, const float&  rad);
-    ntTetra(const ntVec3& pos, const ntVec3&  rot, const ntVec3&  dim, const ntColor4f& fillCol, const ntColor4f& strokeCol, std::string name);
+	ntTetra(const ntVec3& pos, float rad);
     void display();
 };
 #endif 
