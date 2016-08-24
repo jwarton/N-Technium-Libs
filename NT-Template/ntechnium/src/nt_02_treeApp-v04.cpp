@@ -22,7 +22,7 @@ void treeApp04::init() {
 	tree00.init();
 
 	nodes = ntNodeGen(tree00.branches);
-	nodes.set_Parameters(POLYPARAM, 5, 0.15);
+	nodes.set_Parameters(SQUARE, 5, 0.15);
 	nodes.init();
 
 	///////////////////////////////////////////////////////////////

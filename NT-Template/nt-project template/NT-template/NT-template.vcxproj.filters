@@ -282,6 +282,9 @@
     <ClCompile Include="..\..\ntechnium\libNtechnium\Geometry\ntRectangle.cpp">
       <Filter>lib_geometry</Filter>
     </ClCompile>
+    <ClCompile Include="..\..\ntechnium\libNtechnium\Geometry\ntSquare.cpp">
+      <Filter>lib_geometry</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\ntechnium\appNtechnium\nt_BaseApp.h">
@@ -534,6 +537,9 @@
       <Filter>lib_geometry</Filter>
     </ClInclude>
     <ClInclude Include="..\..\ntechnium\libNtechnium\Geometry\ntRectangle.h">
+      <Filter>lib_geometry</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\ntechnium\libNtechnium\Geometry\ntSquare.h">
       <Filter>lib_geometry</Filter>
     </ClInclude>
   </ItemGroup>

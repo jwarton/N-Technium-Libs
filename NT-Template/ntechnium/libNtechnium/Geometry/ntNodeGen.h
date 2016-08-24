@@ -18,6 +18,7 @@
 #include "ntPolyline.h"
 #include "ntPolygon.h"
 #include "ntRectangle.h"
+#include "ntSquare.h"
 #include "ntNormal.h"
 #include "ntFace3.h"
 #include "ntConvexHull.h"
@@ -69,7 +70,6 @@ private:
 	void gen_profiles();
 	std::vector <ntVec3*> gen_profile(ntPolygon polygon);
 	std::vector <ntVec3*> gen_profile(float w);
-	std::vector <ntVec3*> gen_profile(float dimX, float dimY);
 
 	void gen_branch();
 	void gen_node();

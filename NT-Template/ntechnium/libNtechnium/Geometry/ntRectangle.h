@@ -10,12 +10,9 @@
 
 #include "ntPolygon.h"
 
-using namespace std;
-
 class ntRectangle : public ntPolygon{
-private:
-	void init();
 protected:
+	void init();
 	double dimX, dimY;
 
 public:

@@ -31,22 +31,12 @@ void ntRectangle::init() {
 	vecs.push_back(v2);
 	vecs.push_back(v3);
 
+	//	/// UPDATE: TRANSFORM TO POS, ROT//
+
 	for (int i = 0; i < vecs.size(); i++) {
 		ntVertex vert = ntVertex(vecs[i]);
 		verts.push_back(&vert);
 	}
-
-	//for (int j = 0; j < sides; j++) {
-	//	float theta = 2.0f * M_PI * j / sides;
-	//	float x = radius * cosf(theta);
-	//	float y = radius * sinf(theta);
-
-	//	ntVec3* v = new ntVec3(x, y, 0);
-	//	vecs.push_back(v);
-	//	/// UPDATE: TRANSFORM TO POS, ROT//
-	//	ntVertex vert = ntVertex(v);
-	//	verts.push_back(&vert);
-	//}
 
 	init_edges();
 }

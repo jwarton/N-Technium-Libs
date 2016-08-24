@@ -55,10 +55,7 @@ void ntNodeGen::gen_profiles() {
 		for (int j = 0; j <= div; j++) {
 			std::vector <ntVec3*> pts;
 			// PLOT PROFILE VERTICES
-			if (mode == SQUARE) {
-				//pts = gen_profile(dim0);
-			}
-			else if (mode == POLYGON) {
+			if (mode == POLYGON) {
 				//pts = (gen_profile(0.1);
 			}
 			else if (mode == POLYPARAM) {
@@ -66,6 +63,9 @@ void ntNodeGen::gen_profiles() {
 			}
 			else if (mode == RECTANGLE) {
 				profile = ntRectangle(dim0, dim1);
+			}
+			else if (mode == SQUARE) {
+				profile = ntSquare(dim0);
 			}
 
 			pts = profile.vecs;
@@ -97,19 +97,7 @@ std::vector <ntVec3*> ntNodeGen::gen_profile(float w) {
 	pts.push_back(p11);
 	return pts;
 }
-std::vector <ntVec3*> ntNodeGen::gen_profile(float dim0, float dim1) {
-	// RECTANGULAR PROFILE
-	std::vector <ntVec3*> pts;
-	ntVec3 *p00 = new ntVec3( dim0,  dim1, 0);
-	ntVec3 *p01 = new ntVec3(-dim0,  dim1, 0);
-	ntVec3 *p10 = new ntVec3(-dim0, -dim1, 0);
-	ntVec3 *p11 = new ntVec3( dim0, -dim1, 0);
-	pts.push_back(p00);
-	pts.push_back(p01);
-	pts.push_back(p10);
-	pts.push_back(p11);
-	return pts;
-}
+
 
 void ntNodeGen::gen_branch() {
 	int cnt_profiles = div + 1;
