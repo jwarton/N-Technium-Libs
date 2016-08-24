@@ -42,6 +42,7 @@
     <ClCompile Include="..\..\ntechnium\libNtechnium\Geometry\ntPlane.cpp" />
     <ClCompile Include="..\..\ntechnium\libNtechnium\Geometry\ntPolygon.cpp" />
     <ClCompile Include="..\..\ntechnium\libNtechnium\Geometry\ntPolyline.cpp" />
+    <ClCompile Include="..\..\ntechnium\libNtechnium\Geometry\ntRectangle.cpp" />
     <ClCompile Include="..\..\ntechnium\libNtechnium\Geometry\ntSphere.cpp" />
     <ClCompile Include="..\..\ntechnium\libNtechnium\Geometry\ntTetra.cpp" />
     <ClCompile Include="..\..\ntechnium\libNtechnium\Geometry\ntTree.cpp" />
@@ -122,6 +123,7 @@
     <ClInclude Include="..\..\ntechnium\libNtechnium\Geometry\ntPlane.h" />
     <ClInclude Include="..\..\ntechnium\libNtechnium\Geometry\ntPolygon.h" />
     <ClInclude Include="..\..\ntechnium\libNtechnium\Geometry\ntPolyline.h" />
+    <ClInclude Include="..\..\ntechnium\libNtechnium\Geometry\ntRectangle.h" />
     <ClInclude Include="..\..\ntechnium\libNtechnium\Geometry\ntSphere.h" />
     <ClInclude Include="..\..\ntechnium\libNtechnium\Geometry\ntTetra.h" />
     <ClInclude Include="..\..\ntechnium\libNtechnium\Geometry\ntTree.h" />

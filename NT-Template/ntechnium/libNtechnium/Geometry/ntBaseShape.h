@@ -17,9 +17,8 @@
 using namespace std;
 using namespace jpw;
 class BaseShape {
-	std::string name;
-
 protected:
+	std::string name;
     ntVec3 pos, dim, rot;
  
     virtual void init() = 0;

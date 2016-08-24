@@ -17,6 +17,7 @@
 #include "ntEdge.h"
 #include "ntPolyline.h"
 #include "ntPolygon.h"
+#include "ntRectangle.h"
 #include "ntNormal.h"
 #include "ntFace3.h"
 #include "ntConvexHull.h"
@@ -58,15 +59,17 @@ private:
 	std::vector<ntFace3*>		faces;
 	std::vector<ntPolyline*>	profiles;
 
+	ntPolygon profile;	///ONLY USED WHEN ALL PROFILES ARE UNIFORM
+						///OTHER WISE REPLACED WITH LAST PROFILE
+
 	ntColor4f col = ntColor4f(0.25f,0.25f,0.25f,1);
 	std::vector<ntCol4> cols;
 
 	// PROFILE TYPES:  SQUARE, POLYGON, POLYPARM, RECTANGLE
 	void gen_profiles();
-	std::vector <ntVec3*> gen_profile(ntEdge* edge, ntPolygon polygon);
-	std::vector <ntVec3*> gen_profile(ntEdge* edge, float w);
-	std::vector <ntVec3*> gen_profile(ntEdge* edge, int sides, float radius);
-	std::vector <ntVec3*> gen_profile(ntEdge* edge, float dimX, float dimY);
+	std::vector <ntVec3*> gen_profile(ntPolygon polygon);
+	std::vector <ntVec3*> gen_profile(float w);
+	std::vector <ntVec3*> gen_profile(float dimX, float dimY);
 
 	void gen_branch();
 	void gen_node();
@@ -88,7 +91,7 @@ public:
 	void set_Color(ntColor4f col);
 	void set_Parameters(SectMode mode, int div, double neck);
 	void set_Parameters();
-
+	void set_Profile(ntPolygon profile);
 	void display();
 	void display_Verts();
 	void display_Edges();

@@ -56,17 +56,20 @@ void ntNodeGen::gen_profiles() {
 			std::vector <ntVec3*> pts;
 			// PLOT PROFILE VERTICES
 			if (mode == SQUARE) {
-				pts = gen_profile(edges[i], dim0);
+				//pts = gen_profile(dim0);
 			}
 			else if (mode == POLYGON) {
-				//pts = (gen_profile(edges[i], 0.1);
+				//pts = (gen_profile(0.1);
 			}
 			else if (mode == POLYPARAM) {
-				pts = gen_profile(edges[i], sides, dim0);
+				profile = ntPolygon(dim0, sides);
 			}
 			else if (mode == RECTANGLE) {
-				pts = gen_profile(edges[i], dim0, dim1);
+				profile = ntRectangle(dim0, dim1);
 			}
+
+			pts = profile.vecs;
+
 			//ALIGN PROFILE TO EDGE VECTOR AND TRANSLATE TO POSITION
 			double pt_param = (1.0 / div) * j;
 			ntVec3* vP = seg.get_PtP(pt_param);
@@ -81,7 +84,8 @@ void ntNodeGen::gen_profiles() {
 		}
 	}
 }
-std::vector <ntVec3*> ntNodeGen::gen_profile(ntEdge* edge, float w) {
+std::vector <ntVec3*> ntNodeGen::gen_profile(float w) {
+	// SQUARE PROFILE
 	std::vector <ntVec3*> pts;
 	ntVec3 *p00 = new ntVec3( w,  w, 0);
 	ntVec3 *p01 = new ntVec3(-w,  w, 0);
@@ -93,35 +97,18 @@ std::vector <ntVec3*> ntNodeGen::gen_profile(ntEdge* edge, float w) {
 	pts.push_back(p11);
 	return pts;
 }
-std::vector <ntVec3*> ntNodeGen::gen_profile(ntEdge* edge, int sides, float radius){
-	// EXCEPTION FOR INVALID POLYGON SEGMENTS
-	if (sides < 3) {
-		sides = 3;
-	}
+std::vector <ntVec3*> ntNodeGen::gen_profile(float dim0, float dim1) {
+	// RECTANGULAR PROFILE
 	std::vector <ntVec3*> pts;
-	// PLOT PROFILE POINTS
-	int	cnt_pts = sides;
-	for (int j = 0; j < cnt_pts; j++) {
-		float theta = 2.0f * M_PI * j / sides;
-		float x = radius * cosf(theta);
-		float y = radius * sinf(theta);
-
-		ntVec3 *pt = new ntVec3(x, y, 0);
-		pts.push_back(pt);
-	}
+	ntVec3 *p00 = new ntVec3( dim0,  dim1, 0);
+	ntVec3 *p01 = new ntVec3(-dim0,  dim1, 0);
+	ntVec3 *p10 = new ntVec3(-dim0, -dim1, 0);
+	ntVec3 *p11 = new ntVec3( dim0, -dim1, 0);
+	pts.push_back(p00);
+	pts.push_back(p01);
+	pts.push_back(p10);
+	pts.push_back(p11);
 	return pts;
-}
-std::vector <ntVec3*> ntNodeGen::gen_profile(ntEdge* edge, float dim0, float dim1) {
-		std::vector <ntVec3*> pts;
-		ntVec3 *p00 = new ntVec3( dim0,  dim1, 0);
-		ntVec3 *p01 = new ntVec3(-dim0,  dim1, 0);
-		ntVec3 *p10 = new ntVec3(-dim0, -dim1, 0);
-		ntVec3 *p11 = new ntVec3( dim0, -dim1, 0);
-		pts.push_back(p00);
-		pts.push_back(p01);
-		pts.push_back(p10);
-		pts.push_back(p11);
-		return pts;
 }
 
 void ntNodeGen::gen_branch() {
@@ -191,6 +178,10 @@ void ntNodeGen::set_Parameters(SectMode mode, int div, double neck){
 	} else {
 		this->neck = t_max;
 	}
+}
+void ntNodeGen::set_Profile(ntPolygon profile)
+{
+	this->profile = profile;
 }
 void ntNodeGen::display(){
 	for (int i = 0; i < 3; i++) {

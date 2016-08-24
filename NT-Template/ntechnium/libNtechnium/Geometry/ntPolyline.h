@@ -10,19 +10,20 @@
 
 #include "ntBaseShape.h"
 
-class ntPolyline : BaseShape{
+class ntPolyline : public BaseShape{
 private:
 	ntVec3* vS;
 	ntVec3* vE;
 
-	ntColor4f col;
-	float stroke;
-
-	bool isClosed = false;
-
 	void init();
+
 protected:
 	ntPolyline(const ntVec3& pos);
+	void init_edges();
+
+	bool isClosed = false;
+	ntColor4f col;
+	float stroke;
 
 public:
 

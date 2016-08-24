@@ -16,37 +16,40 @@ ntPolyline::ntPolyline(std::vector <ntVec3*> vecs, bool isClosed):
 
 	init();
 }
+//PROTECTED CONSTRUCTOR--ONLY ACCESSIBLE TO DERIVED
+ntPolyline::ntPolyline(const ntVec3 & pos) :
+	BaseShape(pos) {
+}
 
 void ntPolyline::init() {
+	//INITIALIZE POLYLINE VERTEX DATA STRUCTURES
+	vS = vecs[0];
+	vE = vecs[vecs.size()];
+	ntVertex vert = ntVertex(vS);
+	verts.push_back(&vert);
+
+	for (int i = 1; i < vecs.size(); i++) {
+		if ((i != vecs.size() - 1) && (isClosed == true)) {
+			vert = ntVertex(vecs[i]);
+			verts.push_back(&vert);
+		}
+	}
+
+	init_edges();
+}
+
+void ntPolyline::init_edges() {
 	//DEFAULT LINE TYPE
 	col = ntColor4f(0.25, 0.25, 0.25, 1);
 	stroke = 0.5;
 
-	//INITIALIZE POLYLINE VERTEX DATA STRUCTURES
-	int cnt = vecs.size();
-	vS = vecs[0];
-	vE = vecs[cnt];
-	ntVertex vert = ntVertex(vS);
-	verts.push_back(&vert);
-
-	for (int i = 1; i < cnt; i++) {
-			ntVec3* v0 = vecs[i - 1];
-			ntVec3* v1 = vecs[i];
-			if ((i != cnt - 1) && (isClosed == true)) {
-				vert = ntVertex(v1);
-				verts.push_back(&vert);
-			}
-			ntEdge e = ntEdge(v0, v1);
-			e.setCol(col);
-			e.setEdge(stroke);
-			edges.push_back(e);
+	for (int i = 1; i < vecs.size(); i++) {
+		ntEdge e = ntEdge(vecs[i - 1], vecs[i]);
+		e.setCol(col);
+		e.setEdge(stroke);
+		edges.push_back(e);
 	}
 }
-
-ntPolyline::ntPolyline(const ntVec3 & pos):
-	BaseShape(pos){
-}
-
 void ntPolyline::close() {
 	if (isClosed == false) {
 		int i = vecs.size() - 1;

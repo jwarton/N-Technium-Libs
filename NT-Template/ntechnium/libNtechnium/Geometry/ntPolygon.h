@@ -14,16 +14,18 @@ using namespace std;
 
 class ntPolygon : public ntPolyline{
 private:
-
-	int sides;
 	double radius;
-
-	bool isClosed = true;
+	int sides;
 
 	void init();
+protected:
+	bool isClosed = true;
+
 public:
 
 	ntPolygon();
-	//ntPolygon(const ntVec3& pos, float radius, int sides);
+	ntPolygon(const ntVec3& pos);
+	ntPolygon(float radius, int sides);
+	ntPolygon(const ntVec3& pos, float radius, int sides);
 };
 #endif
