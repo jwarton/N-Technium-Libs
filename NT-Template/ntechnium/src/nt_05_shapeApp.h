@@ -21,6 +21,7 @@
 #include "ntCube.h"
 #include "ntTetra.h"
 #include "ntSphere.h"
+#include "ntOctahedron.h"
 
 
 using namespace jpw;
@@ -39,20 +40,26 @@ public:
 	ntRectangle rectangle;
 	ntCircle	circle;
 
-	ntCube cube_00;
-	ntCube cube_01;
-	ntCube cube_02;
-	ntCube cube_03;
-
 	ntTetra tetra_00;
 	ntTetra tetra_01;
 	ntTetra tetra_02;
 	ntTetra tetra_03;
 
+	ntCube cube_00;
+	ntCube cube_01;
+	ntCube cube_02;
+	ntCube cube_03;
+
+	ntOctahedron octo_00;
+	ntOctahedron octo_01;
+	ntOctahedron octo_02;
+	ntOctahedron octo_03;
+
 	ntSphere sphere_00;
 	ntSphere sphere_01;
 	ntSphere sphere_02;
 	ntSphere sphere_03;
+
 	////////////////////////////////////////////////// CONSTRUCTORS
 	//////////////////////////////// DEFAULT NOT NEEDED FOR DERIVED
 	///////////////////////////////////////////////////////////////

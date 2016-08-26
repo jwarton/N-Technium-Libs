@@ -75,7 +75,7 @@ int main(int argc, char const** argv){
 	//AppContent* c = new vec3TestApp();
 
 	///BASE GEOM
-	//AppContent* c = new shapeApp();
+	AppContent* c = new shapeApp();
 	//AppContent* c = new cubeApp();
 	//AppContent* c = new triApp();
 	//AppContent* c = new convexApp();
@@ -110,7 +110,7 @@ int main(int argc, char const** argv){
 
 	///OVIS
 	//AppContent* c = new ovisApp();
-	AppContent* c = new ovisApp02();
+	//AppContent* c = new ovisApp02();
 
 	///KUKA SOURCE CODE APPLICATIONS
 	//AppContent* c = new krlApp();

@@ -4,7 +4,7 @@ void shapeApp::init() {
 	///////////////////////////////////////////////////////////////
 	////////////////////////////////////////////// OBJECT POSITIONS
 	std::vector <Vec3*> grid;
-	int cols = 4;
+	int cols = 5;
 	int rows = 4;
 	int x_sp = 10;
 	int y_sp = 10;
@@ -47,10 +47,18 @@ void shapeApp::init() {
 	cube_00.set_edge_color(Col4f(1.0, 1.0, 1.0, 0.2));
 	cube_01.set_edge_color(Col4f(1.0, 0.0, 0.0, 0.5));
 
-	sphere_00 = ntSphere(grid[12], radius, 50, 50);
-	sphere_01 = ntSphere(grid[13], radius, 50, 50);
-	sphere_02 = ntSphere(grid[14], radius, 35, 35);
-	sphere_03 = ntSphere(grid[15], radius, 25, 25);
+	octo_00 = ntOctahedron(grid[12], radius);
+	octo_01 = ntOctahedron(grid[13], radius);
+	octo_02 = ntOctahedron(grid[14], radius);
+	octo_03 = ntOctahedron(grid[15], radius);
+
+	octo_00.set_edge_color(Col4f(1.0, 1.0, 1.0, 0.2));
+	octo_01.set_edge_color(Col4f(1.0, 0.0, 0.0, 0.5));
+
+	sphere_00 = ntSphere(grid[16], radius, 50, 50);
+	sphere_01 = ntSphere(grid[17], radius, 50, 50);
+	sphere_02 = ntSphere(grid[18], radius, 35, 35);
+	sphere_03 = ntSphere(grid[19], radius, 25, 25);
 
 	///////////////////////////////////////////////////////////////
 	/////////////////////////////////////// OBJECTS COLOR BY VERTEX
@@ -112,6 +120,13 @@ void shapeApp::display(){
 	tetra_01.display_edges();
 	tetra_02.display_edges();
 	tetra_03.display();
+
+	octo_00.display_verts();
+	octo_00.display_edges(0.5);
+	octo_01.display_norms(1);
+	octo_01.display_edges();
+	octo_02.display_edges();
+	octo_03.display();
 
 	sphere_00.display_verts();
 	sphere_01.display_norms(.1);

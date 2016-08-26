@@ -114,6 +114,10 @@ void ntVec3::scale(ntVec3* pos, float factor){
 	z *= factor;
 	add(pos);
 }
+void jpw::ntVec3::scale(float factor)
+{
+	mult(factor);
+}
 void ntVec3::align(ntVec3* axis_T  /*TARGET TO ALIGN WITH*/) {
 	if (compare(axis_T) == false) {
 		ntVec3* axis_A = new ntVec3(x, y, z);

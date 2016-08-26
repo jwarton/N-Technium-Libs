@@ -55,6 +55,7 @@ namespace jpw{
 		////////////////////////////////////// EUCLIDIAN TRANSORMATIONS
 		void translate(ntVec3* pos, ntVec3* dir, float dist);
 		void scale(ntVec3* pos, float factor);
+		void scale(float factor);
 		void align(ntVec3* axis_T);
 		void orient(ntVec3* axis_T, ntVec3* axis_S);
 		void rotate(ntVec3* axis_R, float theta);

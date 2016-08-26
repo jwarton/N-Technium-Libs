@@ -39,6 +39,7 @@
     <ClCompile Include="..\..\ntechnium\libNtechnium\Geometry\ntMeshPts.cpp" />
     <ClCompile Include="..\..\ntechnium\libNtechnium\Geometry\ntNodeGen.cpp" />
     <ClCompile Include="..\..\ntechnium\libNtechnium\Geometry\ntNormal.cpp" />
+    <ClCompile Include="..\..\ntechnium\libNtechnium\Geometry\ntOctahedron.cpp" />
     <ClCompile Include="..\..\ntechnium\libNtechnium\Geometry\ntPlane.cpp" />
     <ClCompile Include="..\..\ntechnium\libNtechnium\Geometry\ntPolygon.cpp" />
     <ClCompile Include="..\..\ntechnium\libNtechnium\Geometry\ntPolyline.cpp" />
@@ -121,6 +122,7 @@
     <ClInclude Include="..\..\ntechnium\libNtechnium\Geometry\ntMeshPts.h" />
     <ClInclude Include="..\..\ntechnium\libNtechnium\Geometry\ntNodeGen.h" />
     <ClInclude Include="..\..\ntechnium\libNtechnium\Geometry\ntNormal.h" />
+    <ClInclude Include="..\..\ntechnium\libNtechnium\Geometry\ntOctahedron.h" />
     <ClInclude Include="..\..\ntechnium\libNtechnium\Geometry\ntPlane.h" />
     <ClInclude Include="..\..\ntechnium\libNtechnium\Geometry\ntPolygon.h" />
     <ClInclude Include="..\..\ntechnium\libNtechnium\Geometry\ntPolyline.h" />

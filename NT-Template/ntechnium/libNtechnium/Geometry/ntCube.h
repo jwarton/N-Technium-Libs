@@ -11,13 +11,14 @@
 
 class ntCube : public ntBrep {
 private:
+
 	void init();
 	float width;
+
 public:
 
     ntCube();
 	ntCube(const ntVec3& pos, float width);
-
     void display();
 };
 #endif 
