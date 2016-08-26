@@ -22,6 +22,7 @@
 #include "ntTetra.h"
 #include "ntSphere.h"
 #include "ntOctahedron.h"
+#include "ntIcashedron.h"
 
 
 using namespace jpw;
@@ -54,6 +55,11 @@ public:
 	ntOctahedron octo_01;
 	ntOctahedron octo_02;
 	ntOctahedron octo_03;
+
+	ntIcashedron icas_00;
+	ntIcashedron icas_01;
+	ntIcashedron icas_02;
+	ntIcashedron icas_03;
 
 	ntSphere sphere_00;
 	ntSphere sphere_01;

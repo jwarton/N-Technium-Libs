@@ -4,7 +4,7 @@ void shapeApp::init() {
 	///////////////////////////////////////////////////////////////
 	////////////////////////////////////////////// OBJECT POSITIONS
 	std::vector <Vec3*> grid;
-	int cols = 5;
+	int cols = 6;
 	int rows = 4;
 	int x_sp = 10;
 	int y_sp = 10;
@@ -55,10 +55,20 @@ void shapeApp::init() {
 	octo_00.set_edge_color(Col4f(1.0, 1.0, 1.0, 0.2));
 	octo_01.set_edge_color(Col4f(1.0, 0.0, 0.0, 0.5));
 
-	sphere_00 = ntSphere(grid[16], radius, 50, 50);
-	sphere_01 = ntSphere(grid[17], radius, 50, 50);
-	sphere_02 = ntSphere(grid[18], radius, 35, 35);
-	sphere_03 = ntSphere(grid[19], radius, 25, 25);
+	icas_00 = ntIcashedron(grid[16], radius);
+	icas_01 = ntIcashedron(grid[17], radius);
+	icas_02 = ntIcashedron(grid[18], radius);
+	icas_03 = ntIcashedron(grid[19], radius);
+
+	icas_00.set_edge_color(Col4f(1.0, 1.0, 1.0, 0.2));
+	icas_01.set_edge_color(Col4f(1.0, 0.0, 0.0, 0.5));
+
+	sphere_00 = ntSphere(grid[20], radius, 50, 50);
+	sphere_01 = ntSphere(grid[21], radius, 50, 50);
+	sphere_02 = ntSphere(grid[22], radius, 35, 35);
+	sphere_03 = ntSphere(grid[23], radius, 25, 25);
+
+	sphere_00.set_edge_color(Col4f(1.0, 1.0, 1.0, 0.2));
 
 	///////////////////////////////////////////////////////////////
 	/////////////////////////////////////// OBJECTS COLOR BY VERTEX
@@ -128,8 +138,16 @@ void shapeApp::display(){
 	octo_02.display_edges();
 	octo_03.display();
 
-	sphere_00.display_verts();
-	sphere_01.display_norms(.1);
+	icas_00.display_verts();
+	icas_00.display_edges(0.5);
+	icas_01.display_norms(1);
+	icas_01.display_edges();
+	icas_02.display_edges();
+	icas_03.display();
+
+	sphere_00.display_verts(0.5);
+	//sphere_00.display_edges(0.5);
+	sphere_01.display_norms(0.5);
 	sphere_02.display_edges(0.5);
 	sphere_03.display();
 	///////////////////////////////////////////////////////////////

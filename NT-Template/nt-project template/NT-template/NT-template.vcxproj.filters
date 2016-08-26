@@ -288,6 +288,9 @@
     <ClCompile Include="..\..\ntechnium\libNtechnium\Geometry\ntOctahedron.cpp">
       <Filter>lib_geometry</Filter>
     </ClCompile>
+    <ClCompile Include="..\..\ntechnium\libNtechnium\Geometry\ntIcashedron.cpp">
+      <Filter>lib_geometry</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\ntechnium\appNtechnium\nt_BaseApp.h">
@@ -546,6 +549,9 @@
       <Filter>lib_geometry</Filter>
     </ClInclude>
     <ClInclude Include="..\..\ntechnium\libNtechnium\Geometry\ntOctahedron.h">
+      <Filter>lib_geometry</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\ntechnium\libNtechnium\Geometry\ntIcashedron.h">
       <Filter>lib_geometry</Filter>
     </ClInclude>
   </ItemGroup>
