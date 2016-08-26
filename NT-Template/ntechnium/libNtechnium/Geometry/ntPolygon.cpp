@@ -52,8 +52,8 @@ void ntPolygon::init() {
 		vecs.push_back(v);
 
 		*vecs[i] += pos;						//APPLY POSITION
-		ntVertex vert = ntVertex(v);
-		verts.push_back(&vert);
+		ntVertex* vert = new ntVertex(v);
+		verts.push_back(vert);
 	}
 	init_edges();
 }

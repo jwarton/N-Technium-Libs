@@ -52,8 +52,8 @@ void ntRectangle::init() {
 	for (int i = 0; i < vecs.size(); i++) {
 		*vecs[i] += pos;						//APPLY POSITION
 												//ROTATE rot
-		ntVertex vert = ntVertex(vecs[i]);
-		verts.push_back(&vert);
+		ntVertex* vert = new ntVertex(vecs[i]);
+		verts.push_back(vert);
 	}
 	init_edges();
 }

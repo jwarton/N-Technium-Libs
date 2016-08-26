@@ -42,8 +42,8 @@ void ntCircle::init(){
 		ntVec3* v = new ntVec3(x + pos.x, y + pos.y, 0);
 		vecs.push_back(v);
 		/// UPDATE: TRANSFORM TO POS, ROT//
-		ntVertex vert = ntVertex(v);
-		verts.push_back(&vert);
+		ntVertex* vert = new  ntVertex(v);
+		verts.push_back(vert);
 	}
 	init_edges();
 	//INITIALIZE CENTROID AND NORMAL

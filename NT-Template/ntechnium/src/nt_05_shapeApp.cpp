@@ -93,11 +93,11 @@ void shapeApp::display(){
 	triangle.display();
 	triangle.display_verts();
 	square.display();
-	//square.display_verts();
+	square.display_verts();
 	rectangle.display();
-	//rectangle.display_verts();
+	rectangle.display_verts();
 	circle.display();
-	//circle.display_verts();
+	circle.display_verts();
 
 	cube_00.display_verts();
 	cube_00.display_edges(0.5);
