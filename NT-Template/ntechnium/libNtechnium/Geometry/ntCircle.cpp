@@ -27,7 +27,8 @@ ntCircle::ntCircle(const ntVec3& pos, float rad, int seg, ntCol4 col) :
 	init();
 }
 
-void ntCircle::init(){	
+void ntCircle::init(){
+	isClosed = true;
 	// EXCEPTION FOR INVALID POLYGON SEGMENTS
 	if (seg < 18) {
 		this->seg = 18;

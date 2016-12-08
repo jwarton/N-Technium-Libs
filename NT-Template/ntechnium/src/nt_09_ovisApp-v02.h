@@ -31,7 +31,7 @@ private:
 	string path_TXT_IN = path_IN + "txt\\" + projectName;
 	string path_IMG_IN = path_IN + "imgs\\" + projectName;
 
-	string file_TXT = "Z";
+	string file_TXT = "JW_composite_";// "Z";
 	string file_IMG	= "ovis_4x4_CBJW-10k";
 
 	string path_Out = nt_Utility::getPathToOutput() + projectName;

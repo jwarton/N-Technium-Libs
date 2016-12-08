@@ -75,7 +75,7 @@ int main(int argc, char const** argv){
 	//AppContent* c = new vec3TestApp();
 
 	///BASE GEOM
-	AppContent* c = new shapeApp();
+	//AppContent* c = new shapeApp();
 	//AppContent* c = new cubeApp();
 	//AppContent* c = new triApp();
 	//AppContent* c = new convexApp();
@@ -89,7 +89,6 @@ int main(int argc, char const** argv){
 	//AppContent* c = new treeApp04();
 	//AppContent* c = new swarmApp();
 	//AppContent* c = new emitterApp(10000,.1);
-
 
 	///FEM
 	//AppContent* c = new trussApp01();		//VALIDATION 3D TRUSS ELEMENTS
@@ -110,7 +109,7 @@ int main(int argc, char const** argv){
 
 	///OVIS
 	//AppContent* c = new ovisApp();
-	//AppContent* c = new ovisApp02();
+	AppContent* c = new ovisApp02();
 
 	///KUKA SOURCE CODE APPLICATIONS
 	//AppContent* c = new krlApp();

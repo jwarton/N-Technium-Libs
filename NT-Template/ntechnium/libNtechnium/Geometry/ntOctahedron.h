@@ -20,4 +20,6 @@ public:
 	ntOctahedron(const ntVec3& pos, float rad);
     void display();
 };
-#endif 
+#endif
+
+//http://rubyquiz.com/quiz3.html

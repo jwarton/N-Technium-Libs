@@ -57,9 +57,9 @@ private:
 	void init_SysData();
 	void display_SysData();
 	void write_SysData(std::vector<string> lines);
-	bool isMultiThread = true;
+	bool isMultiThread = false;
 	//unsigned thread_Cnt = std::thread::hardware_concurrency();
-	unsigned thread_Cnt = 10;
+	unsigned thread_Cnt = 16;
 	bool isFunctDiscrt = false;
 
 	static clock_t t_CPU;
@@ -149,6 +149,8 @@ private:
 	int files_CNT	= 1;
 	int file_begin	= 0;
 	int file_end	= 1;
+	int panel_begin = 0;
+	int panel_end	= 1;
 	int panel_Dim	= 0;		/// PANELS IN PANEL VECTOR
 	int panel_Index = 0;		/// DISPLAY INDEX FOR CURRENT PANEL
 	///////////////////////////////////////////////////////////////
@@ -265,6 +267,7 @@ public:
 	/////////////////////////////////////////////////// CONVIENENCE
 	///////////////////////////////////////////////////////////////
 	void set_FileCnt(int begin, int end = 0);
+	void set_PanelRange(int begin, int end = 0);
 	void set_Parameters(grid_Type grid_type, perf_Type perf_type, float perf_spacing = 1.5f);
 	void set_PerfStyle(perf_Style perf_style);
 	void set_PerfType( perf_Type perf_type);

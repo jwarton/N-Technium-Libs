@@ -115,9 +115,12 @@ void ntTriSkin::init() {
 		/// START TOTAL PROCESSING TIME CLOCK
 		auto t_eval = std::chrono::steady_clock::now();
 		t0 = std::chrono::steady_clock::now();
+
+		panel_Dim = panel_end - panel_begin;
+
 		if (isMultiThread == true) {
 				std::vector <std::future<bool>> threads;
-				if (panel_Dim > 1000) {
+				//if (panel_Dim > 1000) {
 					float items = (panel_Dim / thread_Cnt) + 1;
 					items = ceil(items);
 					int index_S = 0;
@@ -132,14 +135,14 @@ void ntTriSkin::init() {
 					for (int i = 0; i < threads.size(); i++) {
 						bool ret = threads[i].get();
 					}
-				} else {
-					for (int i = 0; i < panel_Dim; i++) {
-						ntPanel* panel_ptr(panels.at(i));
-						threads.push_back(std::async(std::launch::async, build_MT, panel_ptr));
-					}
-				}
+				//} else {
+					//for (int i = 0; i < panel_Dim; i++) {
+						//ntPanel* panel_ptr(panels.at(i));
+						//threads.push_back(std::async(std::launch::async, build_MT, panel_ptr));
+					//}
+				//}
 		} else {
-			for (int i = 0; i < panel_Dim; i++) {
+			for (int i = panel_begin; i < panel_Dim; i++) {
 				ntPanel* panel_ptr(panels.at(i));
 				//std::cout << panel_ptr->get_ID() << endl;
 				funct(panel_ptr);
@@ -866,6 +869,11 @@ void ntTriSkin::set_FileCnt(int begin, int end) {
 		file_end = end;
 	}
 }
+void ntTriSkin::set_PanelRange(int begin, int end)
+{
+	panel_begin = begin;
+	panel_end = end;
+}
 ///////////////////////////////////////////////////////////////
 bool ntTriSkin::set_MT(int ind_S, int ind_E, std::vector<ntPanel*>* panels, int index) {
 	for (int i = ind_S; i <= ind_E; i++) {
@@ -1526,14 +1534,14 @@ void ntTriSkin::set_Scale2D(ntPanel* panel_ptr, double scFx) {
 		SC1.translate(posXY);
 	}
 	for (int j = 0; j < panel_ptr->perfs.size(); j++) {
-		for (int k = 0; k < panel_ptr->perfs.at(j)->vecs.size(); k++) {
+		for (int k = 1; k < panel_ptr->perfs.at(j)->vecs.size(); k++) {
 			ntMatrix4 SC3 = ntMatrix4(panel_ptr->perfs.at(j)->vecs.at(k));
 			SC3.scale3d(sc_Factor);
 			SC3.translate(posXY);
 		}
 	}
 	for (int j = 0; j < panel_ptr->fastr.size(); j++) {
-		for (int k = 0; k < panel_ptr->fastr.at(j)->vecs.size(); k++) {
+		for (int k = 1; k < panel_ptr->fastr.at(j)->vecs.size(); k++) {
 			ntMatrix4 SC3 = ntMatrix4(panel_ptr->fastr.at(j)->vecs.at(k));
 			SC3.scale3d(sc_Factor);
 			SC3.translate(posXY);

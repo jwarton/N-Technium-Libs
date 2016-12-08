@@ -77,7 +77,7 @@ void shapeApp::init() {
 	for (int i = 0; i < cnt_cv; i++) {
 		float r = mapRange(0.0, 1.0, 0, cnt_cv, i);
 		float g = mapRange(0.5, 1.0, 0, cnt_cv, i);
-		float b = mapRange(0.0, 1.0, 0, cnt_cv, i);
+		float b = mapRange(0.0, 1.0, 0, cnt_cv, i, false);
 		float a = mapRange(0.0, 1.0, 0, cnt_cv, i);
 		cube_03.verts.at(i)->set_color(Col4f(r, g, b, a));
 	}
@@ -86,7 +86,7 @@ void shapeApp::init() {
 	for (int i = 0; i < cnt_verts; i++) {
 		float r = mapRange(0.0, 1.0, 0, cnt_verts, i); 
 		float g = mapRange(0.5, 1.0, 0, cnt_verts, i);
-		float b = mapRange(0.0, 1.0, 0, cnt_verts, i);
+		float b = mapRange(0.0, 1.0, 0, cnt_verts, i, false);
 		float a = mapRange(0.0, 1.0, 0, cnt_verts, i);
 		sphere_03.verts.at(i)->set_color(Col4f(r, g, b, a));
 	}

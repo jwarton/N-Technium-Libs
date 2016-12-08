@@ -13,7 +13,8 @@ void ovisApp02::init() {
 	skin_00 = ntTriSkin(url_TXT, url_IMG, "OVIS");
 	skin_00.set_Gen(3);
 	skin_00.set_Parameters(TRI, DOT, 1.5);
-	skin_00.set_FileCnt(1,3);
+	skin_00.set_FileCnt(1);
+	skin_00.set_PanelRange(0,27500);
 	skin_00.setPathOut(path_Out);
 
 	//skin_00.save_IMG();
