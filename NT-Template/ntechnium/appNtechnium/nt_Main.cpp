@@ -109,7 +109,7 @@ int main(int argc, char const** argv){
 
 	///OVIS
 	//AppContent* c = new ovisApp();
-	AppContent* c = new ovisApp02();
+	//AppContent* c = new ovisApp02();
 
 	///KUKA SOURCE CODE APPLICATIONS
 	//AppContent* c = new krlApp();
@@ -120,8 +120,8 @@ int main(int argc, char const** argv){
 	//AppContent* c = new krlMatLab;
 
 	c->set_AppDim(x, y);
-	jpw::ntGLFWsetup program("NT-INTERFACE", new genApp(c));
-	//jpw::ntGLFWsetup program(x,y, "NT-INTERFACE", new genApp(c)); 
+	//jpw::ntGLFWsetup program("NT-INTERFACE", new genApp(c));
+	jpw::ntGLFWsetup program(x,y, "NT-INTERFACE", new genApp(c)); 
 	//simple app minimal ogl setup/ test
 	//jpw::ntSimpleApp simpleApp = ntSimpleApp(900, 900,"SIMPLE APP_TITLE");
 
