@@ -260,3 +260,14 @@ Install MinGW Packages
 		Environment Variables can be accessed through Advanced System Properties, or command prompt entry:
 			example appends PATH
 			setx PATH "%PATH%;C:\............."
+
+/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+GIT COMMAND CONSOLE
+
+////GIT ROLL BACK COMMIT- CHANGES TO LOCAL REVERT TO SELECTED COMMIT HASH
+	git reflog or git log 
+		//note SHA key for each commit in log
+	q 	//exit log 
+	git reset --hard <SHA for commit to roll back to>
+
+////GIT ROLL BACK COMMIT- RETAIN CHANGES ON LOCAL DRIVE
