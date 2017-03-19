@@ -723,15 +723,15 @@ void ntTriSkin::write_Panel_IMG(ntPanel* panel_ptr) {
 	const char * file = url.c_str();
 
 	// MAXIMUM PANEL SIZE;
-	int pX_max = 195;
-	int pY_max = 45;
+	int pX_max = 72;// 195;
+	int pY_max = 72;// 45;
 
 	// IMAGE SIZE
 	bool isDPI = false;
 	//isDPI = true;
-	int dpi = 12;
-	int img_x = 3400;
-	int img_y = mapRange(0, pY_max, 0, pX_max, img_x);
+	int dpi = 72;
+	int img_x = 1024;
+	int img_y = mapRange(0, img_x, 0, pX_max, pY_max);
 
 	// MINIMIZE SEARCH AREA | PIXEL RANGE LOOP
 	int dim_X = mapRange(0, img_x, 0, pX_max, panel_ptr->v1->x); //img_X;// OR = pX_max * dpi
@@ -762,8 +762,8 @@ void ntTriSkin::write_Panel_IMG(ntPanel* panel_ptr) {
 			img_y = pY_max * dpi;
 		}
 		// IMAGE ARRAY
-		arma::mat img_OUT = zeros<mat>(img_y, img_x);
-
+		arma::fmat img_OUT = zeros<fmat>(img_y, img_x);
+		
 		for (int i = 0; i < dim_Y; i++) {
 			for (int j = 0; j < dim_X; j++) {
 
@@ -789,11 +789,11 @@ void ntTriSkin::write_Panel_IMG(ntPanel* panel_ptr) {
 				}
 				// SET PIXEL TO OPAQUE
 				if (isPtAlpha == false) {
-					img_OUT(i, j) = 255;
+					img_OUT(i, j) = 255; ///confirm column row 
 				}
 			}
 		}
-		// RETURN IIMAGE TO HOST AND SAVE
+		// RETURN IMAGE TO HOST AND SAVE
 		af::array img_AF(img_y, img_x, img_OUT.memptr());
 		img_AF = af::flip(img_AF, 0);
 		af::saveImage(file, img_AF);
