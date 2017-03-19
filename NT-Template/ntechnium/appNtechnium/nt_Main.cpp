@@ -109,7 +109,7 @@ int main(int argc, char const** argv){
 
 	///OVIS
 	//AppContent* c = new ovisApp();
-	//AppContent* c = new ovisApp02();
+	AppContent* c = new ovisApp02();
 
 	///KUKA SOURCE CODE APPLICATIONS
 	//AppContent* c = new krlApp();

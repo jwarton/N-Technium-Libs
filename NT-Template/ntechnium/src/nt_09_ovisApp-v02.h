@@ -31,10 +31,10 @@ private:
 	string path_TXT_IN = path_IN + "txt\\" + projectName;
 	string path_IMG_IN = path_IN + "imgs\\" + projectName;
 
-	string file_TXT = "JW_composite_";// "Z";
-	string file_IMG	= "ovis_4x4_CBJW-10k";
+	string file_TXT = "CD_";// "Z"; //"JW_composite_";// 
+	string file_IMG = "ovis_4x4_CBJW-10k-edge";// "ovis_4x4_CBJW-10k";
 
-	string path_Out = nt_Utility::getPathToOutput() + projectName;
+	string path_Out = nt_Utility::getPathToOutput() + projectName + "issue170317\\";
 	
 	ntImage img_00;
 	ntTextIO ptData_00;

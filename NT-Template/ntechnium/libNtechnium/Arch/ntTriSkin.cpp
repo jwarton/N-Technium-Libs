@@ -94,6 +94,9 @@ void ntTriSkin::init() {
 		std::cout << "\n\n///////////////////////////////////////////////////////////////\n";
 		std::cout << "READ TXT COMPLETE           -----------------------------------" << endl;
 		panel_Dim = panels.size();
+		if (panel_end > panel_Dim || panel_end == 1) {
+			panel_end = panel_Dim;
+		}
 		std::cout << "TOTAL PANELS LOADED:        " << panel_Dim << "\n" << endl;
 		///////////////////////////////////////////////////////////////////////
 		//////////////////////////////////////////////////////////// READ IMAGE
@@ -115,8 +118,6 @@ void ntTriSkin::init() {
 		/// START TOTAL PROCESSING TIME CLOCK
 		auto t_eval = std::chrono::steady_clock::now();
 		t0 = std::chrono::steady_clock::now();
-
-		panel_Dim = panel_end - panel_begin;
 
 		if (isMultiThread == true) {
 				std::vector <std::future<bool>> threads;
@@ -142,7 +143,7 @@ void ntTriSkin::init() {
 					//}
 				//}
 		} else {
-			for (int i = panel_begin; i < panel_Dim; i++) {
+			for (int i = panel_begin; i < panel_end; i++) {
 				ntPanel* panel_ptr(panels.at(i));
 				//std::cout << panel_ptr->get_ID() << endl;
 				funct(panel_ptr);
