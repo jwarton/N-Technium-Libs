@@ -619,19 +619,25 @@ void ntTriSkin::write_Panel_TXT(ntPanel* panel_ptr) {
 	file << "     POS: " << format_VEC(panel_ptr->get_c_G().at(0)) << "\n";
 	file << "     POS: " << format_VEC(panel_ptr->get_c_G().at(1)) << "\n";
 	file << "     POS: " << format_VEC(panel_ptr->get_c_G().at(2)) << "\n";
-	file << "     POS: " << format_VEC(panel_ptr->get_c_G().at(3)) << "\n";
-	file << "     POS: " << format_VEC(panel_ptr->get_c_G().at(4)) << "\n";
+	if (panel_ptr->get_c_G().at(3)->x != 0 && panel_ptr->get_c_G().at(3)->y != 0 && panel_ptr->get_c_G().at(3)->z != 0) {
+		file << "     POS: " << format_VEC(panel_ptr->get_c_G().at(3)) << "\n";
+	}
+	if (panel_ptr->get_c_G().at(4)->x != 0 && panel_ptr->get_c_G().at(4)->y != 0 && panel_ptr->get_c_G().at(4)->z != 0) {
+		file << "     POS: " << format_VEC(panel_ptr->get_c_G().at(4)) << "\n";
+	}
 	file << "\n";
 	file << "//  PANEL ORIENTATION VECTOR:\n";
 	file << "//   VEC" << panel_ptr->get_n_G();
 	file << "//   UVW" << panel_ptr->get_UVW();
 	file << "//   DIR:" << panel_ptr->get_Dir() << "\n";
 	file << "//   WHT: " << panel_ptr->get_Weight() << "\n";
-	file << "//   REG: " << panel_ptr->get_Region() << "\n\n";
+	///REGIONS REMOVED FROM SPECIFICATION
+	///file << "//   REG: " << panel_ptr->get_Region() << "\n";
+	file << "\n";
 	file << "//  AREA GROSS:   " << to_string(panel_ptr->get_Area()) << "          [ SQ.INCH ]\n";
 	file << "//  AREA NET:     " << to_string(panel_ptr->get_Area() - panel_ptr->perf_area) << "          [ SQ.INCH ]\n";
 	file << "//  OPACITY:      " << to_string(panel_ptr->perf_perc) << "                  [ % ]\n\n";
-	
+
 	stringstream a0, a1, a2;
 	a0 << std::setw(8) << std::setfill('_');
 	a1 << std::setw(8) << std::setfill('_');
@@ -661,24 +667,35 @@ void ntTriSkin::write_Panel_TXT(ntPanel* panel_ptr) {
 	file << "     POS: " << format_VEC(panel_ptr->get_c_L().at(0)) << "\n";
 	file << "     POS: " << format_VEC(panel_ptr->get_c_L().at(1)) << "\n";
 	file << "     POS: " << format_VEC(panel_ptr->get_c_L().at(2)) << "\n";
-	///file << "     POS: " << format_VEC(panel_ptr->get_c_L().at(3)) << "\n";
-	///file << "     POS: " << format_VEC(panel_ptr->get_c_L().at(4)) << "\n";
+	if (panel_ptr->get_c_L().at(3)->x != 0 && panel_ptr->get_c_L().at(3)->y != 0) {
+		file << "     POS: " << format_VEC(panel_ptr->get_c_L().at(3)) << "\n";
+	}
+	if (panel_ptr->get_c_L().at(4)->x != 0 && panel_ptr->get_c_L().at(4)->y != 0) {
+		file << "     POS: " << format_VEC(panel_ptr->get_c_L().at(4)) << "\n";
+	}
 	file << "\n";
-	file << "//  FASTENER CENTERLINE POINTS: {POS:            }\n";
+	file << "//  FASTENER POSITIONS:         {POS:            }\n";
+	//file << "//  FASTENER CENTERLINE POINTS: {POS:            }\n";
 	file << "     POS: " << format_VEC(panel_ptr->get_f_L().at(0)) << "\n";
 	file << "     POS: " << format_VEC(panel_ptr->get_f_L().at(1)) << "\n";
 	file << "     POS: " << format_VEC(panel_ptr->get_f_L().at(2)) << "\n";
-	///file << "     POS: " << format_VEC(panel_ptr->get_f_L().at(3)) << "\n";
-	///file << "     POS: " << format_VEC(panel_ptr->get_f_L().at(4)) << "\n";
+	if (panel_ptr->get_f_L().at(3)->x != 0 && panel_ptr->get_f_L().at(3)->y != 0) {
+		file << "     POS: " << format_VEC(panel_ptr->get_f_L().at(3)) << "\n";
+	}
+	if (panel_ptr->get_f_L().at(4)->x != 0 && panel_ptr->get_f_L().at(4)->y != 0) {
+		file << "     POS: " << format_VEC(panel_ptr->get_f_L().at(4)) << "\n";
+	}
 	file << "\n";
+	/*
 	file << "//  FASTENER POSITIONS:         {POS:            }\n";
 	for (int i = 0; i < panel_ptr->get_Fast().size(); i++) {
 		file << "     POS: " << format_VEC(panel_ptr->get_Fast().at(i)) << "\n";
 
 	}
+	*/
 	file << "\n";
 
-	int perf_cnt = panel_ptr->get_Perf().size();
+	int perf_cnt = panel_ptr->perfs.size();
 	int poly_cnt = panel_ptr->get_PLin().size();
 	int p_dim;
 
@@ -686,6 +703,7 @@ void ntTriSkin::write_Panel_TXT(ntPanel* panel_ptr) {
 		p_dim = perf_cnt;
 		file << "//  PERFORATION DATA:           {POS:  DIAMETER: }\n";
 		file << "//  PERFORATION COUNT:  " << to_string(p_dim) << "\n\n";
+		
 		for (int i = 0; i < perf_cnt; i++) {
 			float radius = panel_ptr->get_Perf_R().at(i) * 2;
 			if (radius > 0) {
@@ -730,7 +748,7 @@ void ntTriSkin::write_Panel_IMG(ntPanel* panel_ptr) {
 	bool isDPI = false;
 	//isDPI = true;
 	int dpi = 72;
-	int img_x = 1024;
+	int img_x = 936;// 1024;
 	int img_y = mapRange(0, img_x, 0, pX_max, pY_max);
 
 	// MINIMIZE SEARCH AREA | PIXEL RANGE LOOP
@@ -789,13 +807,18 @@ void ntTriSkin::write_Panel_IMG(ntPanel* panel_ptr) {
 				}
 				// SET PIXEL TO OPAQUE
 				if (isPtAlpha == false) {
-					img_OUT(i, j) = 255; ///confirm column row 
+					img_OUT(i, j) = 1;///255; ///confirm column row 
 				}
 			}
 		}
 		// RETURN IMAGE TO HOST AND SAVE
 		af::array img_AF(img_y, img_x, img_OUT.memptr());
 		img_AF = af::flip(img_AF, 0);
+
+
+
+
+
 		af::saveImage(file, img_AF);
 		std::cout << "PANEL:: " + ss.str() << " IMG SAVED\n" << endl;
 	}
@@ -1230,7 +1253,7 @@ string ntTriSkin::format_STR(string line){
 	string norm = ": (";
 	
 	if (line.find(token) != string::npos) {
-		char chars[] = "/PANELNORMUV:{";
+		char chars[] = "/PANELNORMUV:{}";
 		for (unsigned int j = 0; j < strlen(chars); ++j)
 		{
 			line.erase(std::remove(line.begin(), line.end(), chars[j]), line.end());
@@ -1273,6 +1296,8 @@ string ntTriSkin::format_VEC(ntVec3* vec) {
 		else if (i == 2) {
 			val = vec->z;
 		}
+		//EXCEPTION FOR SIGNED ZERO -- REMOVE SIGN
+		if (val == 0) { val = abs(val); }
 
 		stringstream ss;
 		ss.precision(10);
@@ -1330,8 +1355,10 @@ void ntTriSkin::align_Panel(ntPanel* panel_ptr, ntVec3* axis_A, ntVec3* axis_B, 
 	/////////////////////////////////////////////////////////////////////////////////////////////// TRANSLATE TO POS
 	Vec3 trans_V = Vec3(pos->x, pos->y, pos->z);	///TRANSLATION VECTOR
 	for (int i = 0; i < cnt; i++) {
-		panel_ptr->vecs[i]->sub(&trans_V);
-		panel_ptr->vecs[i]->orient(axis_A, axis_B);
+		if (panel_ptr->vecs[i]->x != 0 && panel_ptr->vecs[i]->y != 0 && panel_ptr->vecs[i]->z != 0) {
+			panel_ptr->vecs[i]->sub(&trans_V);
+			panel_ptr->vecs[i]->orient(axis_A, axis_B);
+		}
 	}
 	panel_ptr->calcCentroid();
 	panel_ptr->calcNorm();
@@ -1589,7 +1616,7 @@ void ntTriSkin::display_Next() {
 			panels.at(panel_Index)->faces_G.at(0)->at(0).set_color(col);
 		}
 		panel_Index = panel_Index + 1;
-		std::cout << panel_Index << endl;
+		std::cout << panels.at(panel_Index)->get_ID() << " : " << panel_Index << endl;
 	}
 	else {
 		float c = panels.at(panel_Dim - 1)->image_Val;
@@ -1599,7 +1626,7 @@ void ntTriSkin::display_Next() {
 			panels.at(panel_Index)->faces_G.at(0)->at(0).set_color(col);
 		}
 		panel_Index = 0;
-		std::cout << panel_Index << endl;
+		std::cout << panels.at(panel_Index)->get_ID() << " : " << panel_Index << endl;
 	}
 	if (mode_M == vW || mode_M == vA) {
 		panels.at(panel_Index)->faces_G.at(0)->at(0).set_color(col_Select);
@@ -1614,7 +1641,7 @@ void ntTriSkin::display_Prev() {
 			panels.at(panel_Index)->faces_G.at(0)->at(0).set_color(col);
 		}
 		panel_Index = panel_Index - 1;
-		std::cout << panel_Index << endl;
+		std::cout << panels.at(panel_Index)->get_ID() << " : " << panel_Index << endl;
 	}
 	else {
 		float c = panels.at(0)->image_Val;
@@ -1624,7 +1651,7 @@ void ntTriSkin::display_Prev() {
 			panels.at(panel_Index)->faces_G.at(0)->at(0).set_color(col);
 		}
 		panel_Index = panel_Dim - 1;
-		std::cout << panel_Index << endl;
+		std::cout << panels.at(panel_Index)->get_ID() << " : " << panel_Index << endl;
 	}
 	if (mode_M == vW || mode_M == vA) {
 		panels.at(panel_Index)->faces_G.at(0)->at(0).set_color(col_Select);

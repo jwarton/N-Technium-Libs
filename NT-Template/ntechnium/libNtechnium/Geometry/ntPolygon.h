@@ -15,9 +15,6 @@ using namespace std;
 class ntPolygon : public ntPolyline{
 private:
 
-	int sides;
-	double radius;
-
 	void calc_norm();
 	void calc_centroid();
 	void calc_area();
@@ -26,6 +23,8 @@ private:
 protected:
 	ntPolygon(const ntVec3& pos);
 
+	int sides;
+	double radius;
 	double area;
 	ntVec3 norm;
 	ntVec3* cent;
@@ -43,5 +42,6 @@ public:
 
 	bool pt_isInside(ntVec3* point);
 	double get_area();
+	int get_seg_count();
 };
 #endif

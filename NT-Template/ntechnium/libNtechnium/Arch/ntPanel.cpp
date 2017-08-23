@@ -423,7 +423,7 @@ void ntPanel::plot_Perf(int div, grid_Type grid, perf_Type type) {
 	else if (grid == DIA || grid == SQU) {
 		plot_Perf_GR(div, grid);
 	}
-	plot_Fast(div);
+	//plot_Fast(div);
 }
 void ntPanel::plot_Perf_GR(int div, enum grid_Type grid) {
 	ntVec3* vec;
@@ -628,7 +628,7 @@ void ntPanel::add_Perf() {
 				}
 			}
 		//}
-		perf_perc = (perf_area / area) * 100;
+		perf_perc = 100 - (perf_area / area) * 100;
 		perf_size = perfs.size();
 	}
 }

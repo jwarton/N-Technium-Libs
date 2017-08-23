@@ -51,6 +51,8 @@ void ntCircle::init(){
 	//calcCentroid();
 	//calcNorm();
 	calc_area();
+	this->sides = seg;
+	this->radius = rad;
 }
 
 void ntCircle::display_dots() {

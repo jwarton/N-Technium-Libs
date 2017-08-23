@@ -113,7 +113,7 @@ public:
 	std::vector<ntVec3*>			p_UVs;		//  LIST OF UV AT PERF POS
 	std::vector<float>				p_Col;		//  LIST OF VAL AT PERF POS
 	std::vector <ntCircle*>			fastr;		//  LIST OF ALL FASTENERS
-	std::vector <ntVec3*>			f_Pos;		// LIST OF FASTENER POS
+	std::vector <ntVec3*>			f_Pos;		//  LIST OF FASTENER POS
 
 	///////////////////////////////////////////////////////////////
 	//////////////////////////////////////// PERFORATION PARAMETERS

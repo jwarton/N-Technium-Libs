@@ -93,7 +93,9 @@ void ntPolygon::calc_area() {
 double ntPolygon::get_area() {
 	return area;
 }
-
+int ntPolygon::get_seg_count() {
+	return sides;
+}
 bool ntPolygon::pt_isInside(ntVec3* point) {
 	int i, j, nvert = vecs.size();
 	bool c = false;
