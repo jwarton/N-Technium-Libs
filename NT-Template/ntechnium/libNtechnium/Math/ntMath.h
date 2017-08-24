@@ -44,12 +44,12 @@ static float mapRange(float minA, float maxA, float minB, float maxB, float valB
 		return (rangeA - perc) + minA;
 	}
 }
-static float toRadians(double theta) {
-	theta = theta / 180 * M_PI;
+static double toRadians(double theta) {
+	theta = (theta * M_PI) / 180;
 	return theta;
 }
-static float toDegrees(double theta) {
-	theta = theta / M_PI * 180;
+static double toDegrees(double theta) {
+	theta = (theta * 180) / M_PI;
 	return theta;
 }
 /// STRING FORMAT FUNCTIONS

@@ -63,7 +63,7 @@ float ntVec3::dot(ntVec3* v){
 }
 ///////////////////////////////////////////////////////////////
 /////////////////////////////////////// RETURNS THETA [RADIANS]
-float ntVec3::angle(ntVec3* v) {
+double ntVec3::angle(ntVec3* v) {
 	double phi = acos(dot(v));
 	return phi;
 }
@@ -363,7 +363,7 @@ ntVec3*  ntVec3::operator/(Vec3* v) {
 	return &vec;
 }
 
-void  ntVec3::operator=(Vec3* v) {
+void ntVec3::operator=(Vec3* v) {
 	if (this != v) {
 		x = v->x;
 		y = v->y;

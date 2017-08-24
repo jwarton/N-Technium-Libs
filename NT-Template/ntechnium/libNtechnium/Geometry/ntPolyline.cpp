@@ -13,9 +13,6 @@ ntPolyline::ntPolyline(std::vector<ntVec3*> vecs) :
 }
 ntPolyline::ntPolyline(std::vector <ntVec3*> vecs, bool isClosed):
 	BaseShape(vecs), isClosed(isClosed) {
-	if (isClosed == true) {
-		this->vecs.push_back(vecs[0]);
-	}
 	init();
 }
 
@@ -77,6 +74,7 @@ void ntPolyline::close() {
 		isClosed = true;
 	}
 }
+
 void ntPolyline::set_color(ntCol4 col){
 	this->col = col;
 	set_edge_color(col);

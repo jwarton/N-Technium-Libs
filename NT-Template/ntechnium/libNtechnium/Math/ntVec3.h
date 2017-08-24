@@ -36,7 +36,7 @@ namespace jpw{
 
 		//RETURNS DOT PRODUCT AS COSINE OF ANGLE BETWEEN VECTORS
 		float dot(ntVec3* v);
-		float angle(ntVec3* v);
+		double angle(ntVec3* v);
 		//RETURNS CROSS PRODUCT AS NEW VECTOR OBJECT PERPENDICULAR TO V AND V'
 		ntVec3 cross(ntVec3* v);
 

@@ -237,10 +237,24 @@ void ntPanel::sub_Div(int div, bool isPerf) {
 	if (isPerf) {
 		///////////////////////////////////////////////////////////////
 		////////////////////////////////////// COPY PANEL CORNER POINTS
+		ntVec3	v00 = ntVec3(v0->x, v0->y, v0->z);
+		ntVec3	v01 = ntVec3(v1->x, v1->y, v1->z);
+		ntVec3	v02 = ntVec3(v2->x, v2->y, v2->z);
+		/*	OLD METHOD - ALIGNED SUB D TO FASTENER BOUNDARY
 		ntVec3	v00 = ntVec3(f_L.at(0)->x, f_L.at(0)->y, f_L.at(0)->z);
 		ntVec3	v01 = ntVec3(f_L.at(1)->x, f_L.at(1)->y, f_L.at(1)->z);
 		ntVec3	v02 = ntVec3(f_L.at(2)->x, f_L.at(2)->y, f_L.at(2)->z);
-		
+		*/
+		///CONSTRUCT POLYLINE FROM VECS
+		std::vector <ntVec3*> pline_verts;
+		pline_verts.push_back(&v00);
+		pline_verts.push_back(&v01);
+		pline_verts.push_back(&v02);
+		ntPolyline perf_boundary = ntPolyline(pline_verts,true);
+
+		///OFFSET POLYLINE BY EDGE WED DISTANCE CONSTRAINT
+		perf_boundary.offset(1.375);
+		//ntFace3 face = ntFace3(perf_boundary.vecs[0], perf_boundary.vecs[1], perf_boundary.vecs[2]);
 		ntFace3 face = ntFace3(&v00, &v01, &v02);
 
 		///////////////////////////////////////////////////////////////
@@ -344,6 +358,15 @@ void ntPanel::plot_Fast(int div){
 	double inc;
 	double param = 0;
 
+	if (fast_type == CORNER) {
+	//////////////////////////////////////////////////
+	/// DEFINE FASTENERS AT CORNER POINTS
+		for (int i = 3; i < 6; i++) {
+			ntVec3* pt = edges.at(i).v0;
+			f_Pos.push_back(pt);
+		}
+	}
+	else if (fast_type == EQ_DIV) {
 	//////////////////////////////////////////////////
 	/// DEFINE FASTENER EDGE CENTERLINE
 	for (int i = 3; i < 6; i++) {
@@ -405,6 +428,7 @@ void ntPanel::plot_Fast(int div){
 			f_Pos.push_back(pt);
 		}
 	}
+	}
 	/// ADD DISPLAY SYMBOLS FOR EACH FASTENER
 	float rad = ((r_Max - r_Min) * 0.5) + r_Min;
 	for (int i = 0; i < f_Pos.size(); i++) {
@@ -423,7 +447,7 @@ void ntPanel::plot_Perf(int div, grid_Type grid, perf_Type type) {
 	else if (grid == DIA || grid == SQU) {
 		plot_Perf_GR(div, grid);
 	}
-	//plot_Fast(div);
+	plot_Fast(div);
 }
 void ntPanel::plot_Perf_GR(int div, enum grid_Type grid) {
 	ntVec3* vec;

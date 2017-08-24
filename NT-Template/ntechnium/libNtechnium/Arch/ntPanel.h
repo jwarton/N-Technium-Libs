@@ -34,6 +34,7 @@ using namespace jpw;
 enum grid_Type { SQU, TRI, DIA };  // ADD: DIV, EQU
 enum perf_Mode { GRID, SUBD };
 enum perf_Type { TRICELL, DOT };
+enum fast_Type { CORNER, EQ_DIV};
 
 class ntPanel{
 private:
@@ -41,6 +42,7 @@ private:
 	perf_Type	perf_type	=	TRICELL;
 	perf_Style  perf_style	=	perf_03;
 	grid_Type	grid_type	=	TRI;
+	fast_Type	fast_type   =   CORNER;
 
 	void init();
 	///////////////////////////////////////////////////////////////

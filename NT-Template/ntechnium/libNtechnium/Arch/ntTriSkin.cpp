@@ -667,32 +667,31 @@ void ntTriSkin::write_Panel_TXT(ntPanel* panel_ptr) {
 	file << "     POS: " << format_VEC(panel_ptr->get_c_L().at(0)) << "\n";
 	file << "     POS: " << format_VEC(panel_ptr->get_c_L().at(1)) << "\n";
 	file << "     POS: " << format_VEC(panel_ptr->get_c_L().at(2)) << "\n";
-	if (panel_ptr->get_c_L().at(3)->x != 0 && panel_ptr->get_c_L().at(3)->y != 0) {
+	if (panel_ptr->get_c_L().at(3)->z == 0) {
 		file << "     POS: " << format_VEC(panel_ptr->get_c_L().at(3)) << "\n";
 	}
-	if (panel_ptr->get_c_L().at(4)->x != 0 && panel_ptr->get_c_L().at(4)->y != 0) {
+	if (panel_ptr->get_c_L().at(4)->z == 0) {
 		file << "     POS: " << format_VEC(panel_ptr->get_c_L().at(4)) << "\n";
 	}
 	file << "\n";
-	file << "//  FASTENER POSITIONS:         {POS:            }\n";
-	//file << "//  FASTENER CENTERLINE POINTS: {POS:            }\n";
+	//file << "//  FASTENER POSITIONS:         {POS:            }\n";
+	file << "//  FASTENER CENTERLINE POINTS: {POS:            }\n";
 	file << "     POS: " << format_VEC(panel_ptr->get_f_L().at(0)) << "\n";
 	file << "     POS: " << format_VEC(panel_ptr->get_f_L().at(1)) << "\n";
 	file << "     POS: " << format_VEC(panel_ptr->get_f_L().at(2)) << "\n";
-	if (panel_ptr->get_f_L().at(3)->x != 0 && panel_ptr->get_f_L().at(3)->y != 0) {
+	if (panel_ptr->get_f_L().at(3)->z == 0) {
 		file << "     POS: " << format_VEC(panel_ptr->get_f_L().at(3)) << "\n";
 	}
-	if (panel_ptr->get_f_L().at(4)->x != 0 && panel_ptr->get_f_L().at(4)->y != 0) {
+	if (panel_ptr->get_f_L().at(4)->z == 0) {
 		file << "     POS: " << format_VEC(panel_ptr->get_f_L().at(4)) << "\n";
 	}
 	file << "\n";
-	/*
+
 	file << "//  FASTENER POSITIONS:         {POS:            }\n";
 	for (int i = 0; i < panel_ptr->get_Fast().size(); i++) {
 		file << "     POS: " << format_VEC(panel_ptr->get_Fast().at(i)) << "\n";
 
 	}
-	*/
 	file << "\n";
 
 	int perf_cnt = panel_ptr->perfs.size();
@@ -1355,10 +1354,8 @@ void ntTriSkin::align_Panel(ntPanel* panel_ptr, ntVec3* axis_A, ntVec3* axis_B, 
 	/////////////////////////////////////////////////////////////////////////////////////////////// TRANSLATE TO POS
 	Vec3 trans_V = Vec3(pos->x, pos->y, pos->z);	///TRANSLATION VECTOR
 	for (int i = 0; i < cnt; i++) {
-		if (panel_ptr->vecs[i]->x != 0 && panel_ptr->vecs[i]->y != 0 && panel_ptr->vecs[i]->z != 0) {
-			panel_ptr->vecs[i]->sub(&trans_V);
-			panel_ptr->vecs[i]->orient(axis_A, axis_B);
-		}
+		panel_ptr->vecs[i]->sub(&trans_V);
+		panel_ptr->vecs[i]->orient(axis_A, axis_B);
 	}
 	panel_ptr->calcCentroid();
 	panel_ptr->calcNorm();

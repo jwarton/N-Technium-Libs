@@ -38,11 +38,14 @@ public:
 
 	double length();
 	double length_seg(int seg);
+	double angle_vert(int index);
+	ntVec3 vec_bisect(int index);
 	std::vector <ntVec3*> get_Vecs();
 
 	void set_color(ntCol4 col);
 	void set_stroke(float w);
 	void close();
+	void offset(float dist);
 
 	void display(float w);
 	void display();
@@ -67,6 +70,101 @@ inline double ntPolyline::length_seg(int seg) {
 	}
 	length = edges.at(i).getLength();
 	return length;
+}
+inline double ntPolyline::angle_vert(int index){
+
+	if (index == vecs.size()) { index = 0;}
+
+	double theta;
+	int val_00 = index;
+	int val_01 = index + 1;
+	int val_02 = index - 1;
+
+	if (index > vecs.size() || index < 0) {
+		std::cout << "ERROR:: INDEX EXCEEDS VERTEX COUNT FOR POLYLINE OBJECT" << endl;
+	} else {
+		if (isClosed == true) {
+			if (index == vecs.size() - 1){
+				val_01 = 0;
+			}
+			if (index == 0) {
+				val_01 = 1;
+				val_02 = vecs.size() - 2;
+			}
+			ntVec3 v00, v01, v02;
+			v00 = vecs.at(val_00);
+			v01 = vecs.at(val_01);
+			v02 = vecs.at(val_02);
+
+			v01 -= v00;
+			v02 -= v00;
+
+			v01.unitize();
+			v02.unitize();
+
+			theta = v01.angle(&v02);
+		}
+	}
+	return theta;
+
+}
+inline ntVec3 ntPolyline::vec_bisect(int index)
+{
+	if (index == vecs.size()) { index = 0; }
+
+	ntVec3 bisect;
+	int val_00 = index;
+	int val_01 = index + 1;
+	int val_02 = index - 1;
+
+	if (index > vecs.size() || index < 0) {
+		std::cout << "ERROR:: INDEX EXCEEDS VERTEX COUNT FOR POLYLINE OBJECT" << endl;
+	}
+	else {
+		if (isClosed == true) {
+			if (index == vecs.size() - 1) {
+				val_01 = 0;
+			}
+			if (index == 0) {
+				val_01 = 1;
+				val_02 = vecs.size() - 2;
+			}
+
+			ntVec3 v00, v01, v02;
+			v00 = vecs.at(val_00);
+			v01 = vecs.at(val_01);
+			v02 = vecs.at(val_02);
+
+			v01 -= v00;
+			v02 -= v00;
+
+			v01.div(v01.mag());
+			v02.div(v02.mag());
+
+			bisect = (v01 + v02);
+			bisect.mult(0.5);
+		}
+	}
+	return bisect;
+}
+
+inline void ntPolyline::offset(float dist)
+{
+	double a = dist;
+	if (isClosed == true) {
+		for (int i = 0; i < vecs.size()-1; i++) {
+
+			ntVec3 vector_bi = vec_bisect(i);
+			double theta = angle_vert(i) * 0.5;
+			double c = a / tan(theta);
+
+			vector_bi.mult(c);
+			vecs.at(i)->add(&vector_bi);
+			if (i == 0) {
+				vecs.at(vecs.size() - 1)->set(vecs.at(0));
+			}
+		}
+	}
 }
 /// MOVE TO BASE SHAPE
 inline std::vector <ntVec3*> ntPolyline::get_Vecs() {
