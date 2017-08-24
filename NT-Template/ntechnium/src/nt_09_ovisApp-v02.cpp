@@ -14,7 +14,7 @@ void ovisApp02::init() {
 	skin_00.set_Gen(3);
 	skin_00.set_Parameters(TRI, DOT, 1.5);
 	skin_00.set_FileCnt(1);
-	skin_00.set_PanelRange(0,50);
+	//skin_00.set_PanelRange(0,2);
 	//skin_00.set_PanelRange(21308, 23061);
 	skin_00.setPathOut(path_Out);
 

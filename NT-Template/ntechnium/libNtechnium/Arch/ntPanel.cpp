@@ -114,8 +114,8 @@ void ntPanel::calcArea() {
 }
 void ntPanel::calcPhi() {
 	double theta;
-	int ind1 = 1;
-	int ind2 = 2;
+	int ind1 =  1;
+	int ind2 =  2;
 	ntVec3* v  = new ntVec3(0, 0, 0);
 	ntVec3* d1 = new ntVec3(0, 0, 0);
 	ntVec3* d2 = new ntVec3(0, 0, 0);
@@ -144,6 +144,7 @@ void ntPanel::calcPhi() {
 			ind2 = 0;
 		}
 	}
+
 	delete v, d1, d2;
 }
 
@@ -237,25 +238,30 @@ void ntPanel::sub_Div(int div, bool isPerf) {
 	if (isPerf) {
 		///////////////////////////////////////////////////////////////
 		////////////////////////////////////// COPY PANEL CORNER POINTS
-		ntVec3	v00 = ntVec3(v0->x, v0->y, v0->z);
-		ntVec3	v01 = ntVec3(v1->x, v1->y, v1->z);
-		ntVec3	v02 = ntVec3(v2->x, v2->y, v2->z);
+		ntVec3*	v00 = new ntVec3(v0->x, v0->y, v0->z);
+		ntVec3*	v01 = new ntVec3(v1->x, v1->y, v1->z);
+		ntVec3*	v02 = new ntVec3(v2->x, v2->y, v2->z);
 		/*	OLD METHOD - ALIGNED SUB D TO FASTENER BOUNDARY
 		ntVec3	v00 = ntVec3(f_L.at(0)->x, f_L.at(0)->y, f_L.at(0)->z);
 		ntVec3	v01 = ntVec3(f_L.at(1)->x, f_L.at(1)->y, f_L.at(1)->z);
 		ntVec3	v02 = ntVec3(f_L.at(2)->x, f_L.at(2)->y, f_L.at(2)->z);
 		*/
-		///CONSTRUCT POLYLINE FROM VECS
+		//CONSTRUCT POLYLINE FROM VECS
 		std::vector <ntVec3*> pline_verts;
-		pline_verts.push_back(&v00);
-		pline_verts.push_back(&v01);
-		pline_verts.push_back(&v02);
+		pline_verts.push_back(v00);
+		pline_verts.push_back(v01);
+		pline_verts.push_back(v02);
 		ntPolyline perf_boundary = ntPolyline(pline_verts,true);
-
-		///OFFSET POLYLINE BY EDGE WED DISTANCE CONSTRAINT
-		perf_boundary.offset(1.375);
-		//ntFace3 face = ntFace3(perf_boundary.vecs[0], perf_boundary.vecs[1], perf_boundary.vecs[2]);
-		ntFace3 face = ntFace3(&v00, &v01, &v02);
+		/// ////////////////////////////////////////////////////////////////////////////////////////
+		//OFFSET POLYLINE BY EDGE WED DISTANCE CONSTRAINT
+		double offset_dist = web_Min + r_Max + gap_dist;
+		perf_boundary.offset(offset_dist);
+		///OVERIDE DIV ---TEMPORARY FIX
+		div = floor(perf_boundary.get_edge_min() / perf_spaceMin);
+		n_cols = div + 1;
+		n_rows = div + 1;
+		///
+		ntFace3 face = ntFace3(v00, v01, v02);
 
 		///////////////////////////////////////////////////////////////
 		/////////////////////////// COPY PANEL UV PARAMETERS AT CORNERS
@@ -265,8 +271,8 @@ void ntPanel::sub_Div(int div, bool isPerf) {
 
 		///////////////////////////////////////////////////////////////
 		////////////////// SCALE CORNER POINTS TO SUBDIVISION INCREMENT
-		orig_X = v00.x;
-		orig_Y = v00.y;
+		orig_X = v00->x;
+		orig_Y = v00->y;
 
 		double scFactor = 1.0 / div;
 		for (int i = 0; i < 3; i++) {
@@ -281,14 +287,14 @@ void ntPanel::sub_Div(int div, bool isPerf) {
 				face.vecs[i]->y += orig_Y;
 		}
 
-		step_X = v01.x - orig_X;
-		shif_X = v02.x - orig_X;
-		step_Y = v02.y - orig_Y;
+		step_X = v01->x - orig_X;
+		shif_X = v02->x - orig_X;
+		step_Y = v02->y - orig_Y;
 
 		std::vector <ntVec3*> vecs_F;
-		vecs_F.push_back(&v00);
-		vecs_F.push_back(&v01);
-		vecs_F.push_back(&v02);
+		vecs_F.push_back(v00);
+		vecs_F.push_back(v01);
+		vecs_F.push_back(v02);
 
 		////AFFINE TRANSFORMATION OF POINT IN XYZ TO UVW
 		arma::mat T = arma::eye<arma::mat>(3, 3);
@@ -626,34 +632,47 @@ void ntPanel::add_Perf() {
 		if (p_Pos.size() > 0) {
 			for (int i = 0; i < p_Pos.size(); i++) {
 				ntVec3* vec = p_Pos.at(i);
-				float	val = p_Col.at(i);
-				float	r	= calc_Perf_R(vec, val);
+float	val = p_Col.at(i);
+float	r = calc_Perf_R(vec, val);
 
-				p_Rad.push_back(r);	
+p_Rad.push_back(r);
 
-				bool isUnique = true;
-				double rSq = pow(r,2);
+bool isUnique = true;
+double rSq = pow(r, 2);
+double wSq = pow(web_Min * 2, 2);
 
-				// OMMIT PERFORATIONS WITHIN FASTENER LOCATIONS
-				for (int j = 0; j < f_Pos.size(); j++) {
-					double distSq = vec->distSqrd(f_Pos.at(j));
-					if (distSq < rSq) {
-						isUnique = false;
-						r = 0;
-						p_Rad.back() = r;
-					}
-				}
-
-				// ADD RADIUS PERFORATIONS TO VECTOR
-				if (r > 0 && isUnique == true) {
-					ntCircle * perf = new ntCircle(vec, r, n_seg, Col4(.25, .25, .25, 1));
-					perfs.push_back(perf);
-					perf_area += perf->get_area();
-				}
+// OMMIT PERFORATIONS WITHIN FASTENER LOCATIONS
+for (int j = 0; j < f_Pos.size(); j++) {
+	double distSq = vec->distSqrd(f_Pos.at(j));
+	if (distSq < (rSq + wSq)) {
+		isUnique = false;
+		r = 0;
+		p_Rad.back() = r;
+	}
+}
+/// ///////////////////////////////////////////////////////
+// OMMIT PERFORATION OUTSIDE CUT BOUNDARY
+std::vector <ntVec3*> pline_verts;
+for (int i = 0; i < 3; i++) {
+	ntVec3*	v00 = new ntVec3(f_L.at(i)->x, f_L.at(i)->y, f_L.at(i)->z);
+	pline_verts.push_back(v00);
+}
+//CONSTRUCT POLYLINE FROM TRIMMED PANEL VECS
+ntPolyline pline = ntPolyline(pline_verts, true);
+if (isUnique == true) {
+	isUnique = pline.pt_isInside(vec);
+}
+/// ///////////////////////////////////////////////////////
+// ADD RADIUS PERFORATIONS TO VECTOR
+if (r > 0 && isUnique == true) {
+	ntCircle * perf = new ntCircle(vec, r, n_seg, Col4(.25, .25, .25, 1));
+	perfs.push_back(perf);
+	perf_area += perf->get_area();
+}
 			}
-		//}
-		perf_perc = 100 - (perf_area / area) * 100;
-		perf_size = perfs.size();
+			//}
+			perf_perc = 100 - (perf_area / area) * 100;
+			perf_size = perfs.size();
 	}
 }
 void ntPanel::reparam_UV() {
@@ -667,13 +686,13 @@ void ntPanel::reparam_UV() {
 	}
 }
 ///////////////////////////////////////////////////////////////
-void ntPanel::set_Color(ntColor4f col){
+void ntPanel::set_Color(ntColor4f col) {
 	this->col = col;
-	for(int i = 0; i<verts.size(); i++){
+	for (int i = 0; i < verts.size(); i++) {
 		verts.at(i)->set_color(col);
 	}
 }
-void ntPanel::set_ID(string panel_ID){
+void ntPanel::set_ID(string panel_ID) {
 	this->panel_ID = panel_ID;
 }
 void ntPanel::set_nG(string n_G) {
@@ -706,24 +725,29 @@ void ntPanel::set_fG(ntVec3* pt, int index) {
 }
 void ntPanel::set_Edges() {
 	int cnt = f_L.size();
-	cnt = 3;	//TEMPORARY OVER WRITE  | 0,0,0 FOR NON-INIT POINTS FAULTY
+	cnt = 3;
+	//std::cout << f_L.size() << endl;
+
 	for (int i = 0; i < cnt; i++) {
 		int ind_0 = i;
 		int ind_1 = i + 1;
-		if (i == cnt - 1) {
+		if (i == cnt - 1 || f_G.at(ind_1)->z == 0) {
 			ind_1 = 0;
+			i = cnt;
 		}
+
 		ntEdge e = ntEdge(f_L.at(ind_0), f_L.at(ind_1));
 		e.setCol(ntCol4(1, 0, 0, 0.25));
 		edges.push_back(e);
 	}	
-	
+
 	for (int i = 0; i < cnt; i++) {
 		int ind_0 = i;
 		int ind_1 = i + 1;
 		if (i == cnt - 1) {
 			ind_1 = 0;
 		}
+
 		ntEdge e = ntEdge(c_L.at(ind_0), c_L.at(ind_1));
 		e.setCol(ntCol4(1, 1, 1, 0.25));
 		edges.push_back(e);
@@ -845,7 +869,7 @@ float ntPanel::get_AngleMax() {
 	return val;
 }
 float ntPanel::get_EdgeMin() {
-
+	/*
 	float lenMin = 999999999999;
 	float d2;
 	ntVec3* vS   = new ntVec3();
@@ -853,18 +877,37 @@ float ntPanel::get_EdgeMin() {
 	int index;
 
 	for (int i = 3; i < 6; i++) {
-		vS->set(edges[i].v0);
-		vE->set(edges[i].v1);
-		d2 = vS->distSqrd(vE);
+	vS->set(edges[i].v0);
+	vE->set(edges[i].v1);
+	d2 = vS->distSqrd(vE);
 
-		if (d2 < lenMin) {
-			lenMin = d2;
-			index = i;
-		}
+	if (d2 < lenMin) {
+	lenMin = d2;
+	index = i;
+	}
 	}
 	delete vS, vE;
 	//SET LENGTH TO ACTUAL EDGE LENGTH
 	lenMin = edges[index].getLength();
+	*/
+	///TEMPORARY SOLUTION TO OVERRIDE THEORETICAL EDGES WITLL OFFSET BOUNDARY
+	///////////////////////////////////////////////////////////////
+	////////////////////////////////////// COPY PANEL CORNER POINTS
+	ntVec3	v00 = ntVec3(v0->x, v0->y, v0->z);
+	ntVec3	v01 = ntVec3(v1->x, v1->y, v1->z);
+	ntVec3	v02 = ntVec3(v2->x, v2->y, v2->z);
+	//CONSTRUCT POLYLINE FROM VECS
+	std::vector <ntVec3*> pline_verts;
+	pline_verts.push_back(&v00);
+	pline_verts.push_back(&v01);
+	pline_verts.push_back(&v02);
+	ntPolyline perf_boundary = ntPolyline(pline_verts, true);
+
+	//OFFSET POLYLINE BY EDGE WED DISTANCE CONSTRAINT
+	perf_boundary.offset(web_Min + r_Max + gap_dist);
+	float edge_min = perf_boundary.get_edge_min();
+	float lenMin = edge_min;
+
 	return lenMin;
 }
 float ntPanel::get_Weight() {

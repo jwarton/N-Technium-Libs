@@ -128,6 +128,8 @@ public:
 	double	perf_area;
 	double  perf_perc;
 	double  fast_spaceMax	= 14.5;
+	double	web_Min			= 0.5;
+	float	gap_dist		= 0.375;
 
 	bool is_Increment =		true;
 	bool is_Noise =			false;	//true;// 
