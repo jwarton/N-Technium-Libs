@@ -18,7 +18,7 @@ void ovisApp02::init() {
 	//skin_00.set_PanelRange(21308, 23061);
 	skin_00.setPathOut(path_Out);
 
-	//skin_00.save_IMG();
+	skin_00.save_IMG();
 	skin_00.save_TXT();
 	skin_00.init();
 

@@ -384,6 +384,10 @@ void ntTriSkin::read_DATA(string url){
 			isCorner =		false;
 			isFastener =	true;
 			cnt = 0;
+			ntVec3 vec = ntVec3(0, 0, 0);
+			for (int i = 0; i < 5; i++) {
+				fpts[i] = vec;
+			}
 		}
 		///////////////////////////////////////////////////////////////
 		// SET PANEL NAME
@@ -437,10 +441,7 @@ void ntTriSkin::read_DATA(string url){
 			verts[cnt] = vec;
 			if (cnt < 2) {
 				cnt = cnt + 1;
-			}
-			else {
-				cnt = 0;
-			}
+			} 
 		}
 		///////////////////////////////////////////////////////////////
 		// SET CORNER POSITONS
@@ -705,9 +706,11 @@ void ntTriSkin::write_Panel_TXT(ntPanel* panel_ptr) {
 		
 		for (int i = 0; i < perf_cnt; i++) {
 			float radius = panel_ptr->get_Perf_R().at(i) * 2;
-			if (radius > 0) {
-				file << "     POS:  " << format_VEC(panel_ptr->get_Perf().at(i)) << "       DIA:  " << radius << "\n";
-			}
+			ntVec3 position = panel_ptr->perfs.at(i)->get_pos();
+			file << "     POS:  " << format_VEC(&position) << "       DIA:  " << radius << "\n";
+			//if (radius > 0) {
+				//file << "     POS:  " << format_VEC(panel_ptr->get_Perf().at(i)) << "       DIA:  " << radius << "\n";
+			//}
 		}
 	}	
 	if (perf_type == TRICELL) {
@@ -1334,10 +1337,7 @@ Vec3 ntTriSkin::add_VEC(string line) {
 		ss >> val;
 		str = ss.str();
 		
-		if (cnt <2) {
-vertPos[cnt] = val;
-		}
-		else if (cnt == 2) {
+		if (cnt <=2) {
 			vertPos[cnt] = val;
 		}
 		cnt += 1;

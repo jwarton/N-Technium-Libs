@@ -175,9 +175,6 @@ inline void ntPolyline::offset(double dist)
 				vecs.at(vecs.size() - 1)->set(vecs.at(0));
 			}
 		}
-		for (int i = 0; i < vecs.size() - 1; i++) {
-			std::cout << vecs.at(i)->y << endl;
-		}
 	}
 }
 /// MOVE TO BASE SHAPE

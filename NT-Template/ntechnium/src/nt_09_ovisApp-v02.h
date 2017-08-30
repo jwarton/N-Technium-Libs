@@ -34,7 +34,7 @@ private:
 	string file_TXT = "CD_20170823_";//"CD_";// "Z"; //"JW_composite_";//
 	string file_IMG = "ovis_4x4_CBJW-10k-edge";// "ovis_4x4_CBJW-10k";
 
-	string path_Out = nt_Utility::getPathToOutput() + projectName + "issue170823\\";
+	string path_Out = nt_Utility::getPathToOutput() + projectName + "issue170828\\";
 	
 	ntImage img_00;
 	ntTextIO ptData_00;

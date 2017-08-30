@@ -625,54 +625,53 @@ void ntPanel::add_Perf() {
 			}
 		}
 	}
-
 	///////////////////////////////////////////////////////////////
 	// LOOP THROUGH POS|RAD DATA STRUCTURES AND CREATE PERF OBJECTS
 	//if (perf_type == DOT) {
-		if (p_Pos.size() > 0) {
-			for (int i = 0; i < p_Pos.size(); i++) {
-				ntVec3* vec = p_Pos.at(i);
-float	val = p_Col.at(i);
-float	r = calc_Perf_R(vec, val);
+	if (p_Pos.size() > 0) {
+		for (int i = 0; i < p_Pos.size(); i++) {
+			ntVec3* vec = p_Pos.at(i);
+			float	val = p_Col.at(i);
+			float	r = calc_Perf_R(vec, val);
 
-p_Rad.push_back(r);
+			bool isUnique = true;
+			double rSq = pow(r, 2);
+			double wSq = pow(web_Min * 2, 2);
 
-bool isUnique = true;
-double rSq = pow(r, 2);
-double wSq = pow(web_Min * 2, 2);
-
-// OMMIT PERFORATIONS WITHIN FASTENER LOCATIONS
-for (int j = 0; j < f_Pos.size(); j++) {
-	double distSq = vec->distSqrd(f_Pos.at(j));
-	if (distSq < (rSq + wSq)) {
-		isUnique = false;
-		r = 0;
-		p_Rad.back() = r;
-	}
-}
-/// ///////////////////////////////////////////////////////
-// OMMIT PERFORATION OUTSIDE CUT BOUNDARY
-std::vector <ntVec3*> pline_verts;
-for (int i = 0; i < 3; i++) {
-	ntVec3*	v00 = new ntVec3(f_L.at(i)->x, f_L.at(i)->y, f_L.at(i)->z);
-	pline_verts.push_back(v00);
-}
-//CONSTRUCT POLYLINE FROM TRIMMED PANEL VECS
-ntPolyline pline = ntPolyline(pline_verts, true);
-if (isUnique == true) {
-	isUnique = pline.pt_isInside(vec);
-}
-/// ///////////////////////////////////////////////////////
-// ADD RADIUS PERFORATIONS TO VECTOR
-if (r > 0 && isUnique == true) {
-	ntCircle * perf = new ntCircle(vec, r, n_seg, Col4(.25, .25, .25, 1));
-	perfs.push_back(perf);
-	perf_area += perf->get_area();
-}
+			// OMMIT PERFORATIONS WITHIN FASTENER LOCATIONS
+			for (int j = 0; j < f_Pos.size(); j++) {
+				double distSq = vec->distSqrd(f_Pos.at(j));
+				if (distSq < (rSq + wSq)) {
+					isUnique = false;
+					r = 0;
+				}
 			}
-			//}
-			perf_perc = 100 - (perf_area / area) * 100;
-			perf_size = perfs.size();
+			/// ///////////////////////////////////////////////////////
+			// OMMIT PERFORATION OUTSIDE CUT BOUNDARY
+			std::vector <ntVec3*> pline_verts;
+			for (int i = 0; i < 3; i++) {
+				ntVec3*	v00 = new ntVec3(f_L.at(i)->x, f_L.at(i)->y, f_L.at(i)->z);
+				pline_verts.push_back(v00);
+			}
+			//CONSTRUCT POLYLINE FROM TRIMMED PANEL VECS
+			ntPolyline pline = ntPolyline(pline_verts, true);
+			//pline.offset(r - 0.125);
+			if (isUnique == true) {
+				isUnique = pline.pt_isInside(vec);
+			}
+			/// ///////////////////////////////////////////////////////
+			// ADD RADIUS PERFORATIONS TO VECTOR
+			if (r > 0 && isUnique == true) {
+				ntCircle * perf = new ntCircle(vec, r, n_seg, Col4(.25, .25, .25, 1));
+				perfs.push_back(perf);
+				p_Rad.push_back(r);
+				perf_area += perf->get_area();
+			}
+		}
+		//}
+		perf_perc = 100 - (perf_area / area) * 100;
+		perf_size = perfs.size();
+		std::cout << perfs.size() << "  : "<< p_Rad.size() <<endl;
 	}
 }
 void ntPanel::reparam_UV() {
